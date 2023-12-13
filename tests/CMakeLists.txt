@@ -6,6 +6,8 @@ add_executable(test-runner
 	${test-runner_SOURCES}
 )
 
+set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
+
 target_compile_definitions(test-runner PRIVATE -DUNIT_TEST=1)
 
 set(TESTS_LINK_DEPS
@@ -43,6 +45,7 @@ catch_discover_tests(test-runner)
 add_custom_target(ctest
 	COMMAND ctest -c $configuration --test-dir . --output-on-failure
 )
+set_target_properties(ctest PROPERTIES EXCLUDE_FROM_ALL 1)
 add_dependencies(ctest
 	test-runner
 	copy_assets

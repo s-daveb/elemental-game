@@ -3,6 +3,12 @@ add_library(elementalobj OBJECT
 	library.cpp
 )
 
+# Add a target to copy this project's header files to the build dir
+add_custom_target(include_files
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/include ${OUTPUT_DIR}/include
+)
+add_dependencies(elementalobj include_files)
+
 set(ELEMENTAL_LINK_DEPS
 	SDL2_LINK_TARGETS
 	# other libraries here
