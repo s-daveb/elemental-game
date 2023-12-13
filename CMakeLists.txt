@@ -9,25 +9,29 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
 	cmake_policy(SET CMP0135 NEW)
 endif()
 
-# When this package is included as a subproject, there's no need to
-# build and run the unit-tests. Setting -DENABLE_TESTS to false could
-# speed up build time for pacakge maintainers
+# Check if this CMakeFile is being built as part of a FetchContent CMake
+# dependency download.
 if (NOT DEFINED PROJECT_NAME)
+	# When this package is included as a subproject, save some time by skipping
+ 	# the unit test build and execution.
+ 	# To override this, set -DENABLE_TESTS=true when you call CMake
 	option(ENABLE_TESTS "Build and run unit tests" ON)
 else()
 	option(ENABLE_TESTS "Build and run unit tests" OFF)
 endif()
 
+project(Elemental
+	VERSION 0.0.1
+	LANGUAGES C CXX
+	# Save this for later:
+	# HOMEPAGE_URL <URL>
+	DESCRIPTION "A simple top-down strategy game"
+)
+
+# Custom CMake Defines / Command-line options
 option(USE_SYSTEM_CATCH2
 	"Do not download & compile catch2 library for unit tests"
 	ON
-)
-
-project(<APPLICATION-NAME>
-	VERSION 0.1
-	LANGUAGES C CXX
-	# HOMEPAGE_URL <URL>
-	DESCRIPTION "Description"
 )
 
 IF( NOT CMAKE_BUILD_TYPE )
@@ -37,11 +41,11 @@ ENDIF()
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 
-# Disable GNU compiler extensions
+# Disable non-portable GNU compiler extensions
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Search for the code caching compiler wrapper, ccache and enable it
+# Check if ccache is installed and enable CMake integration
 # if found. This will speed up repeated builds.
 find_program(CCACHE_PATH ccache)
 if(CCACHE_PATH)
@@ -69,23 +73,37 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 include(FetchContent)
 
 # Initialize pkgconf
-#find_package(PkgConfig REQUIRED)
+find_package(PkgConfig REQUIRED)
 
 # Example: Find SDL2, SDL2_image, and SDL2_gfx using PkgConfig
 # add IMPORTED_TARGET to enable fancy PkgConfig::SDL2 syntax
-#pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET SDL2)
-#pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
-#pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
+pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET SDL2)
+pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
+pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
+pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
 
-#set(engine_DEP_LIBS
-#	PkgConfig::SDL2
-#	PkgConfig::SDL2_IMAGE
-#	PkgConfig::SDL2for_GFX
-#	# if not using PkgConfig:: IMPORTED_TARGET syntax
-#	${SDL2_LIBRARIES}
-#	${SDL2_IMG_LIBRARIES}
-#	${SDL2_GFX_LIBRARIES}
-#)
+if (SDL2_FOUND)
+	include_directories(${SDL2_INCLUDE_DIRS})
+	link_directories(AFTER ${SDL2_IMG_LIBRARY_DIRS})
+endif()
+if (SDL2_IMG_FOUND)
+	include_directories(${SDL2_IMG_INCLUDE_DIRS})
+	link_directories(AFTER ${SDL2_LIBRARY_DIRS})
+endif()
+if (SDL2_GFX_FOUND)
+	include_directories(${SDL2_GFX_INCLUDE_DIRS})
+	link_directories(AFTER ${SDL2_GFX_LIBRARY_DIRS})
+endif()
+if (NLOHMANN_JSON_FOUND)
+	include_directories(${NLOHMANN_JSON_INCLUDE_DIRS})
+	#add_link_options(${NLOHMANN_JSON_LDFLAGS})
+endif()
+
+set(SDL2_LINK_DEPS
+	PkgConfig::SDL2
+	PkgConfig::SDL2_IMAGE
+	PkgConfig::SDL2_GFX
+)
 
 if (ENABLE_TESTS)
 	if (NOT USE_SYSTEM_CATCH2)
@@ -99,6 +117,7 @@ if (ENABLE_TESTS)
 		include_directories(${CATCH2_INCLUDE_DIRS})
 		link_directories(${CATCH2_LIBRARY_DIRS})
 	endif()
+
 	FetchContent_Declare(
 		FakeIt
 		URL https://github.com/eranpeer/FakeIt/archive/refs/tags/2.4.0.zip
@@ -122,19 +141,20 @@ if (ENABLE_TESTS)
 endif()
 
 # Set output directories for build targets
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/bin)
+set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/out)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/bin)
 
 # Include directories
-include_directories(${CMAKE_SOURCE_DIR}/src)
+#include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# Example: Add a target to copy application resource files to the build dir
-#add_custom_target(copy_assets
-#COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/artifacts/share/data
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
-	#)
+# Add a target to copy application resource files to the build dir
+add_custom_target(copy_assets
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${OUTPUT_DIR}/share/data
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
+)
 
 # Add subdirectories
 add_subdirectory(src)
@@ -143,6 +163,5 @@ add_subdirectory(app)
 if(ENABLE_TESTS)
 	add_subdirectory(tests)
 endif()
-
 
 # vim: ts=2 sw=2 noet foldmethod=indent :

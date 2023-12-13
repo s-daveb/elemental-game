@@ -1,17 +1,26 @@
 # Define the library 'engine'
-add_library(libraryobj OBJECT
+add_library(elementalobj OBJECT
 	library.cpp
 )
 
-# Define build targets for 'engine', 'engine-static', and 'engine-test'
-add_library(library SHARED $<TARGET_OBJECTS:libraryobj>)
-add_library(library-static STATIC $<TARGET_OBJECTS:libraryobj>)
-add_library(library-testing $<TARGET_OBJECTS:libraryobj>)
+set(ELEMENTAL_LINK_DEPS
+	SDL2_LINK_TARGETS
+	# other libraries here
+)
 
+# build three different variants of this library
+add_library(elemental SHARED $<TARGET_OBJECTS:elementalobj>)
+add_library(elemental-static STATIC $<TARGET_OBJECTS:elementalobj>)
+add_library(elemental-testing $<TARGET_OBJECTS:elementalobj>)
 
-# Link the SDL dependencies
-target_link_libraries(library PUBLIC ${library_dep_libs} )
-target_link_libraries(library-static PUBLIC ${library_dep_libs} )
-target_link_libraries(library-testing PUBLIC ${library_dep_libs})
+# Define a preprocessor flag to enable helper code for unit-testing
+# This flag will propagate to programs that link to this library (PUBLIC)
+target_compile_definitions(elemental-testing PUBLIC -DUNIT_TEST=1)
+
+# Link the library dependencies publicly so that that users of this library
+# Also get the same dependencies.
+target_link_libraries(elemental PUBLIC ${elemental_dep_libs} )
+target_link_libraries(elemental-static PUBLIC ${elemental_dep_libs} )
+target_link_libraries(elemental-testing PUBLIC ${elemental_dep_libs})
 
 # vim: ts=2 sw=2 noet foldmethod=indent :

@@ -132,3 +132,10 @@ Thumbs.db
 venv/
 env/
 
+### Manually Entered
+vim-debug/
+**/out/bin
+**/out/lib
+**/out/share
+_deps
+
