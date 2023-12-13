@@ -48,7 +48,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Check if ccache is installed and enable CMake integration
 # if found. This will speed up repeated builds.
 find_program(CCACHE_PATH ccache)
-if(CCACHE_PATH)
+if(ccache_path)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PATH})
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PATH})
 endif(CCACHE_PATH)
@@ -77,7 +77,7 @@ find_package(PkgConfig REQUIRED)
 
 # Example: Find SDL2, SDL2_image, and SDL2_gfx using PkgConfig
 # add IMPORTED_TARGET to enable fancy PkgConfig::SDL2 syntax
-pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET SDL2)
+pkg_check_modules(sdl2 REQUIRED IMPORTED_TARGET SDL2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
 pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
