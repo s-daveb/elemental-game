@@ -66,13 +66,24 @@ if (USE_SYSTEM_CATCH2)
 	endif()
 endif()
 
+if (UNIX AND NOT(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux"))
+	option(USE_BOOST_STACKTRACE "Use Boost::stacktrace for stack traces" OFF)
+	option(USE_EXECINFO_STACKTRACE "Use BSD/UNIX execinfo for stack traces" ON)
+else()
+	option(USE_BOOST_STACKTRACE "Use Boost::stacktrace for stack traces" ON)
+	option(USE_EXECINFO_STACKTRACE "Use BSD/UNIX execinfo for stack traces" OFF)
+endif()
+
+
 # enable compile_commands.json generation for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 
 # Initialize FetchContent
 include(FetchContent)
+include(CheckIncludeFile)
 
 # Initialize pkgconf
+find_package(Threads)
 find_package(PkgConfig REQUIRED)
 
 # Example: Find SDL2, SDL2_image, and SDL2_gfx using PkgConfig
@@ -104,6 +115,35 @@ set(SDL2_LINK_DEPS
 	PkgConfig::SDL2_IMAGE
 	PkgConfig::SDL2_GFX
 )
+
+if (USE_EXECINFO_STACKTRACE AND (NOT USE_BOOST_STACKTRACE))
+	CHECK_INCLUDE_FILE("execinfo.h" HAVE_EXECINFO_H)
+
+	if (HAVE_EXECINFO_H)
+		add_definitions(-DHAVE_EXECINFO_H=1)
+	endif()
+
+	find_library(LIB_EXEC_INFO
+		NAMES execinfo  # Specify the library name without the 'lib' prefix or file extension
+		HINTS /usr/lib /usr/local/lib  # Optional hint for the library location
+	)
+	if (LIB_EXEC_INFO)
+		message(STATUS "Found libexecinfo: ${LIB_EXEC_INFO}")
+		set(STACKTRACE_DEP_LIBS ${LIB_EXEC_INFO})
+	endif()
+elseif((NOT USE_EXECINFO_STACKTRACE) AND USE_BOOST_STACKTRACE)
+	set(Boost_USE_STATIC_LIBS OFF)
+	set(Boost_USE_STATIC_RUNTIME OFF)  # Do not require static C++ runtime
+	set(Boost_USE_MULTITHREADED ON)
+	find_package(Boost 1.82.0 COMPONENTS system filesystem REQUIRED)
+
+
+	if (Boost_FOUND)
+		add_definitions(-DBOOST_STACKTRACE_USE_ADDR2LINE=1)
+
+		include_directories(${Boost_INCLUDE_DIRS})
+	endif()
+endif()
 
 if (ENABLE_TESTS)
 	if (NOT USE_SYSTEM_CATCH2)

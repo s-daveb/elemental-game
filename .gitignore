@@ -141,3 +141,4 @@ _deps
 .cache/
 compile_commands.json
 
+*.bak

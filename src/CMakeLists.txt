@@ -1,6 +1,9 @@
 # Define the library 'engine'
 add_library(elementalobj OBJECT
 	library.cpp
+	debuginfo.cpp
+	exception.cpp
+	Application.cpp
 )
 
 # Add a target to copy this project's header files to the build dir
@@ -10,7 +13,9 @@ add_custom_target(include_files
 add_dependencies(elementalobj include_files)
 
 set(ELEMENTAL_LINK_DEPS
-	SDL2_LINK_TARGETS
+	${SDL2_LINK_TARGETS}
+	${STACKTRACE_DEP_LIBS}
+	Threads::Threads
 	# other libraries here
 )
 

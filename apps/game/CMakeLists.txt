@@ -1,6 +1,7 @@
 
 set(game_SOURCES
 	main.cpp
+	ElementalGame.cpp
 )
 
 add_executable(game

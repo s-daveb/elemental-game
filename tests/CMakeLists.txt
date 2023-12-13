@@ -1,7 +1,9 @@
 # Define the executable 'test-runner'
 set(test-runner_SOURCES
-	runtime-tests.cpp
+	runtime.test.cpp
+	exception.test.cpp
 )
+
 add_executable(test-runner
 	${test-runner_SOURCES}
 )
@@ -51,4 +53,4 @@ add_dependencies(ctest
 	copy_assets
 )
 
-# vim: ts=2 sw=2 noet foldmethod=indent :
+# vim: ts=2 sw=2 noet foldmethod=indent foldlevel=99 :
