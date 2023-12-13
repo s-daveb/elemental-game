@@ -113,9 +113,6 @@ if (ENABLE_TESTS)
 	    	URL_HASH MD5=c426e77d4ee0055410bc930182959ae5
 		)
 		FetchContent_MakeAvailable(Catch2)
-	else()
-		include_directories(${CATCH2_INCLUDE_DIRS})
-		link_directories(${CATCH2_LIBRARY_DIRS})
 	endif()
 
 	FetchContent_Declare(

@@ -20,6 +20,8 @@ target_include_directories(test-runner PRIVATE
 	${CMAKE_SOURCE_DIR}/src/tests/common
 )
 
+target_link_directories(test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})
+
 target_link_libraries(test-runner
 PRIVATE
 	${TESTS_LINK_DEPS}
