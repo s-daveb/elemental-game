@@ -138,4 +138,6 @@ vim-debug/
 **/out/lib
 **/out/share
 _deps
+.cache/
+compile_commands.json
 
