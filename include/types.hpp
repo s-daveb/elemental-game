@@ -23,8 +23,8 @@ namespace elemental {
  * example: the type char* does not immediately scream "STRING", and
  * 	    socket libraries return `int`, rather than a typedef socket_fd_t. */
 namespace c {
-using string = char *;
-using const_string = const char *;
+using string = char*;
+using const_string = const char*;
 using count_t = size_t;
 
 namespace fd {
@@ -32,9 +32,13 @@ using socket = int;
 } // namespace fd
 } // namespace c
 
-enum error_t : bool { NO_ERROR = false, ERROR = true };
+enum error_t : bool
+{
+	NO_ERROR = false,
+	ERROR = true
+};
 
-template <typename value_t>
+template<typename value_t>
 using Dictionary = std::map<const std::string, value_t>;
 
 } // namespace elemental

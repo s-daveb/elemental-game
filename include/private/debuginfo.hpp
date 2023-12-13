@@ -22,7 +22,7 @@ namespace elemental {
 
 std::string generate_stacktrace(unsigned short framesToRemove = 1);
 
-void print_cmdline(int argc, const char *argv[]);
+void print_cmdline(int argc, const char* argv[]);
 
 } // namespace elemental
 

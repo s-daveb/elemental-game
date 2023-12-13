@@ -13,7 +13,8 @@
 
 namespace elemental {
 
-class IApplication {
+class IApplication
+{
   public:
 	virtual ~IApplication() = default;
 

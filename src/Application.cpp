@@ -17,8 +17,9 @@
 
 using namespace elemental;
 
-void Application::Init(int argc, c::const_string argv[],
-                       c::const_string envp[]) {
+void
+Application::Init(int argc, c::const_string argv[], c::const_string envp[])
+{
 	if (argv == nullptr || envp == nullptr) {
 		std::string problem = (argv == nullptr) ? "argv " : "envp ";
 		auto message = "Cannot instantiate the application class "
@@ -34,17 +35,23 @@ void Application::Init(int argc, c::const_string argv[],
 }
 
 Application::Application()
-    : IApplication(),
-      arguments(),
-      environment_variables() {}
+    : IApplication()
+    , arguments()
+    , environment_variables()
+{
+}
 
-void Application::parse_arguments(int argc, c::const_string argv[]) {
+void
+Application::parse_arguments(int argc, c::const_string argv[])
+{
 	for (c::count_t index = 0; index < argc; ++index) {
 		this->arguments.push_back(argv[index]);
 	}
 }
 
-void Application::create_env_dictionary(c::const_string envp[]) {
+void
+Application::create_env_dictionary(c::const_string envp[])
+{
 	for (c::count_t num = 0; envp[num] != nullptr; ++num) {
 		auto encoded_pair = std::string_view(envp[num]);
 

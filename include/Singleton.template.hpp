@@ -12,10 +12,12 @@
 #include <utility>
 
 namespace elemental {
-template <typename T>
-struct Singleton {
+template<typename T>
+struct Singleton
+{
   public:
-	static T& GetInstance() {
+	static T& GetInstance()
+	{
 		static T instance;
 		return instance;
 	}

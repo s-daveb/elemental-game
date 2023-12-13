@@ -23,24 +23,30 @@ namespace Match = Catch::Matchers;
 
 /* A simple test suite checking that the Catch2 API works the way I think it
  * does */
-BEGIN_TEST_SUITE("Catch2") {
-    TEST("Basic Functionality") {
-	auto throw_something = []() { throw std::runtime_error("ERROR"); };
-	try {
-	    CHECK_THROWS(throw_something());
-	    CHECK(true == true);
-	    REQUIRE_FALSE(true == false);
-	    CHECK_NOFAIL(false == true);
+BEGIN_TEST_SUITE("Catch2")
+{
+	TEST("Basic Functionality")
+	{
+		auto throw_something = []() {
+			throw std::runtime_error("ERROR");
+		};
+		try {
+			CHECK_THROWS(throw_something());
+			CHECK(true == true);
+			REQUIRE_FALSE(true == false);
+			CHECK_NOFAIL(false == true);
 
-	} catch (std::exception &e) {
-	    FAIL("Manual exception handler!\nCatch2 failed to catch"
-	         " an exception!");
+		} catch (std::exception& e) {
+			FAIL("Manual exception handler!\nCatch2 failed to catch"
+			     " an exception!");
+		}
 	}
-    }
-    TEST("Matchers") {
-	REQUIRE_THAT("Test string", Match::EndsWith("string"));
-	REQUIRE_THAT("LOREM IPSUM", Match::ContainsSubstring("REM IPS"));
-    }
+	TEST("Matchers")
+	{
+		REQUIRE_THAT("Test string", Match::EndsWith("string"));
+		REQUIRE_THAT("LOREM IPSUM",
+		             Match::ContainsSubstring("REM IPS"));
+	}
 }
 
 // clang-format off

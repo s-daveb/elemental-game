@@ -21,30 +21,31 @@
 
 namespace elemental {
 
-class exception : public std::exception {
+class exception : public std::exception
+{
 
   public:
-    exception(c::const_string _message = default_error);
-    exception(const std::string &message);
+	exception(c::const_string _message = default_error);
+	exception(const std::string& message);
 
-    exception(const elemental::exception &other) = default;
-    exception(const std::exception &inner);
+	exception(const elemental::exception& other) = default;
+	exception(const std::exception& inner);
 
-    exception &operator=(const exception &) = delete;
+	exception& operator=(const exception&) = delete;
 
-    virtual const char *what() const noexcept override;
-    const std::string &stacktrace() const noexcept;
+	virtual const char* what() const noexcept override;
+	const std::string& stacktrace() const noexcept;
 
-    constexpr static auto default_error = "An exception has ocurred!";
+	constexpr static auto default_error = "An exception has ocurred!";
 
   private:
-    void build_what_message();
+	void build_what_message();
 
-    std::string error_message;
-    std::string what_message;
-    std::string stack_trace;
+	std::string error_message;
+	std::string what_message;
+	std::string stack_trace;
 
-    std::exception_ptr inner_exception_ptr;
+	std::exception_ptr inner_exception_ptr;
 };
 } // namespace elemental
   // clang-format off

@@ -13,29 +13,36 @@
 
 namespace elemental {
 
-template <typename T> struct Result {
+template<typename T>
+struct Result
+{
 
-    inline Result(const error_t &error_flag, const T error_data)
-	: val(error_flag, error_data),
-	  IsError(this->val.first),
-	  ErrorData(this->val.second) {}
-    inline Result(const bool &error_flag, const T error_data)
-	: val(error_t(error_flag), error_data),
-	  IsError(this->val.first),
-	  ErrorData(this->val.second) {}
+	inline Result(const error_t& error_flag, const T error_data)
+	    : val(error_flag, error_data)
+	    , IsError(this->val.first)
+	    , ErrorData(this->val.second)
+	{
+	}
+	inline Result(const bool& error_flag, const T error_data)
+	    : val(error_t(error_flag), error_data)
+	    , IsError(this->val.first)
+	    , ErrorData(this->val.second)
+	{
+	}
 
-    virtual ~Result() = default;
-    Result(const Result &other) = default;
-    inline Result &operator=(const Result &other) {
-	this->val = other.val;
-	this->IsError = this->val.first;
-	this->ErrorData = this->val.data;
-    }
-    error_t &IsError;
-    T &ErrorData;
+	virtual ~Result() = default;
+	Result(const Result& other) = default;
+	inline Result& operator=(const Result& other)
+	{
+		this->val = other.val;
+		this->IsError = this->val.first;
+		this->ErrorData = this->val.data;
+	}
+	error_t& IsError;
+	T& ErrorData;
 
   private:
-    std::pair<error_t, T> val;
+	std::pair<error_t, T> val;
 };
 
 } // namespace elemental

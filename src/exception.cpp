@@ -27,72 +27,83 @@ constexpr unsigned DEFAULT_STACKFRAMES_TO_STRIP = 3;
 // Helper classes and functions. #region
 
 exception::exception(c::const_string error_message)
-    : std::exception(),
-      error_message(error_message),
-      what_message(),
-      stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP)),
-      inner_exception_ptr() {
-    build_what_message();
+    : std::exception()
+    , error_message(error_message)
+    , what_message()
+    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+    , inner_exception_ptr()
+{
+	build_what_message();
 }
 
-exception::exception(const std::string &error_message)
-    : std::exception(),
-      error_message(error_message),
-      what_message(),
-      stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP)),
-      inner_exception_ptr() {
-    build_what_message();
+exception::exception(const std::string& error_message)
+    : std::exception()
+    , error_message(error_message)
+    , what_message()
+    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+    , inner_exception_ptr()
+{
+	build_what_message();
 }
 
-exception::exception(const std::exception &inner)
-    : std::exception(inner),
-      error_message(inner.what()),
-      what_message(),
-      inner_exception_ptr(std::make_exception_ptr(&inner)),
-      stack_trace(
-	  elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP)) {
-    build_what_message();
+exception::exception(const std::exception& inner)
+    : std::exception(inner)
+    , error_message(inner.what())
+    , what_message()
+    , inner_exception_ptr(std::make_exception_ptr(&inner))
+    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+{
+	build_what_message();
 }
 
-const char *exception::what() const noexcept {
-    return this->what_message.c_str();
+const char*
+exception::what() const noexcept
+{
+	return this->what_message.c_str();
 }
 
-const std::string &exception::stacktrace() const noexcept {
-    return this->stack_trace;
+const std::string&
+exception::stacktrace() const noexcept
+{
+	return this->stack_trace;
 }
 
-std::string prepend_tabs_to_lines(const std::string &input) {
-    std::ostringstream results_buffer;
-    std::istringstream input_buffer(input);
+std::string
+prepend_tabs_to_lines(const std::string& input)
+{
+	std::ostringstream results_buffer;
+	std::istringstream input_buffer(input);
 
-    // Function to add a tab character before each line
-    auto addTabBeforeLine = [&results_buffer](const std::string &line) {
-	results_buffer << '\t' << line << '\n';
-    };
+	// Function to add a tab character before each line
+	auto addTabBeforeLine = [&results_buffer](const std::string& line) {
+		results_buffer << '\t' << line << '\n';
+	};
 
-    // Process each line and add a tab character before it
-    std::string line;
-    while (std::getline(input_buffer, line)) {
-	addTabBeforeLine(line);
-    }
+	// Process each line and add a tab character before it
+	std::string line;
+	while (std::getline(input_buffer, line)) {
+		addTabBeforeLine(line);
+	}
 
-    return results_buffer.str();
+	return results_buffer.str();
 }
-void exception::build_what_message() {
-    std::stringstream buffer;
+void
+exception::build_what_message()
+{
+	std::stringstream buffer;
 
-    this->what_message = error_message;
+	this->what_message = error_message;
 
-    std::string indented_stacktrace = prepend_tabs_to_lines(this->stack_trace);
+	std::string indented_stacktrace =
+	    prepend_tabs_to_lines(this->stack_trace);
 
-    buffer << "elemental::exception::what(): { " << std::endl
-	   << "\terror: " << error_message.c_str() << std::endl
-	   << "\tstack_trace: " << std::endl
-	   << indented_stacktrace << std::endl
-	   << "};" << std::endl;
+	buffer << "elemental::exception::what(): { " << std::endl
+	       << "\terror: " << error_message.c_str() << std::endl
+	       << "\tstack_trace: " << std::endl
+	       << indented_stacktrace << std::endl
+	       << "};" << std::endl;
 
-    this->what_message = buffer.str().c_str();
+	this->what_message = buffer.str().c_str();
 }
 
 // clang-format off
