@@ -68,7 +68,7 @@ BEGIN_TEST_SUITE("elemental::Exception")
 			};
 			try {
 				nested_function_call();
-			} catch (std::Exception& e) {
+			} catch (std::exception& e) {
 				REQUIRE_THAT(e.what(),
 				             Match::ContainsSubstring(
 						 "This is a stack variable"));

@@ -1,7 +1,7 @@
 # Define the library 'engine'
 add_library(elementalobj OBJECT
 	debuginfo.cpp
-	exception.cpp
+	Exception.cpp
 	Application.cpp
 )
 
