@@ -24,7 +24,7 @@ set(ELEMENTAL_LINK_DEPS
 # build three different variants of this library
 add_library(elemental SHARED $<TARGET_OBJECTS:elementalobj>)
 add_library(elemental-static STATIC $<TARGET_OBJECTS:elementalobj>)
-add_library(elemental-testing $<TARGET_OBJECTS:elementalobj>)
+add_library(elemental-testing STATIC $<TARGET_OBJECTS:elementalobj>)
 
 
 set_target_properties(elemental-static PROPERTIES
