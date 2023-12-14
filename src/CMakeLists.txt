@@ -1,6 +1,5 @@
 # Define the library 'engine'
 add_library(elementalobj OBJECT
-	library.cpp
 	debuginfo.cpp
 	exception.cpp
 	Application.cpp
@@ -28,10 +27,10 @@ add_library(elemental-testing STATIC $<TARGET_OBJECTS:elementalobj>)
 
 
 set_target_properties(elemental-static PROPERTIES
-    CMAKE_POSITION_INDEPENDENT_CODE OFF  # This forces all linkages to be static (?)
+    CMAKE_POSITION_INDEPENDENT_CODE OFF
 )
 set_target_properties(elemental-testing PROPERTIES
-    CMAKE_POSITION_INDEPENDENT_CODE OFF  # This forces all linkages to be static (?)
+    CMAKE_POSITION_INDEPENDENT_CODE OFF
 )
 
 # Define a preprocessor flag to enable helper code for unit-testing

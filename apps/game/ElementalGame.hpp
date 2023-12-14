@@ -11,21 +11,39 @@
 
 #include "Application.hpp"
 #include "IApplication.hpp"
-
 #include "Singleton.template.hpp"
+#include "types.hpp"
+
+#include <memory>
+#include <thread>
 
 namespace elemental {
+
+// Forward declarations
+class IVideoDriver;
+class IInputDriver;
+class IEventSource;
 
 class ElementalGame : public Application
 {
   public:
+	virtual ~ElementalGame();
 	virtual int Run() override;
+	template<typename T>
+	using ptr = std::shared_ptr<T>;
 
   private:
-	ElementalGame();
-	virtual ~ElementalGame() = default;
-
 	friend class Singleton<ElementalGame>;
+
+	ElementalGame();
+	Dictionary<std::thread> running_threads;
+
+	bool is_running;
+	uint32_t ticks;
+
+	ptr<IVideoDriver> video_renderer;
+	ptr<IInputDriver> input_driver;
+	ptr<IEventSource> event_source;
 };
 
 } // namespace elemental
