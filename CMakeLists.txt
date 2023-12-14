@@ -139,6 +139,7 @@ elseif((NOT USE_EXECINFO_STACKTRACE) AND USE_BOOST_STACKTRACE)
 
 
 	if (Boost_FOUND)
+		add_definitions(-DBOOST_STACKTRACER=1)
 		add_definitions(-DBOOST_STACKTRACE_USE_ADDR2LINE=1)
 
 		include_directories(${Boost_INCLUDE_DIRS})

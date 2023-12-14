@@ -10,11 +10,12 @@
 #include "private/debuginfo.hpp"
 #include "private/platform.hpp"
 
-#if defined(HAVE_EXECINFO_H) && !defined(__linux__)
-#include <cxxabi.h>
+#if !defined(BOOST_STACKTRACER)
+#if defined(HAVE_EXECINFO_H)
 #include <execinfo.h>
+#endif
+#include <cxxabi.h>
 #else
-#define BOOST_STACKTRACER
 #include <boost/stacktrace.hpp>
 #endif
 
