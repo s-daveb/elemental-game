@@ -27,38 +27,38 @@ throw_wrapped_stl_exceptiong()
 {
 	auto local = std::logic_error("This is a stack variable");
 
-	throw elemental::exception(local);
+	throw elemental::Exception(local);
 }
 
-BEGIN_TEST_SUITE("elemental::exception")
+BEGIN_TEST_SUITE("elemental::Exception")
 {
 	auto throw_an_exception = []() {
-		throw elemental::exception("An error occurred!!");
+		throw elemental::Exception("An error occurred!!");
 	};
 
-	TEST("elemental::exception -  Can throw new exception type")
+	TEST("elemental::Exception -  Can throw new exception type")
 	{
 		REQUIRE_THROWS(throw_an_exception());
 	}
 
-	TEST("elemental::exception -  Can construct exception various ways")
+	TEST("elemental::Exception -  Can construct exception various ways")
 	{
 		SECTION("1. Blank constructor")
 		{
-			elemental::exception obj;
+			elemental::Exception obj;
 		}
 		SECTION("2a. With cstring parameter")
 		{
-			elemental::exception obj("Sample Error");
+			elemental::Exception obj("Sample Error");
 		}
 		SECTION("2b. With std::string parameter")
 		{
-			elemental::exception obj(std::string("Sample Error"));
+			elemental::Exception obj(std::string("Sample Error"));
 		}
 
 		SECTION("3. With STL exception")
 		{
-			elemental::exception obj(
+			elemental::Exception obj(
 			    std::runtime_error("Sample Error"));
 		}
 		SECTION("4. With destroyed stack")
@@ -68,7 +68,7 @@ BEGIN_TEST_SUITE("elemental::exception")
 			};
 			try {
 				nested_function_call();
-			} catch (std::exception& e) {
+			} catch (std::Exception& e) {
 				REQUIRE_THAT(e.what(),
 				             Match::ContainsSubstring(
 						 "This is a stack variable"));
@@ -76,31 +76,31 @@ BEGIN_TEST_SUITE("elemental::exception")
 		}
 	}
 
-	TEST("elemental::exception -  what() message reflects error")
+	TEST("elemental::Exception -  what() message reflects error")
 	{
 
 		SECTION("1. Unspecified error or exception")
 		{
-			elemental::exception obj;
+			elemental::Exception obj;
 
 			REQUIRE_THAT(obj.what(),
 			             Match::ContainsSubstring(
-					 elemental::exception::default_error,
+					 elemental::Exception::default_error,
 					 CaseSensitive::Yes));
 		}
 
 		SECTION("2. custom error or exception")
 		{
 			constexpr auto test_message = "This is a test.";
-			elemental::exception test_object_one(test_message);
-			elemental::exception test_object_two(
+			elemental::Exception test_object_one(test_message);
+			elemental::Exception test_object_two(
 			    std::logic_error("Makes no sense"));
 			SECTION(" a: what() does not contain default message")
 			{
 				REQUIRE_THAT(
 				    test_object_one.what(),
 				    !Match::ContainsSubstring(
-					elemental::exception::default_error));
+					elemental::Exception::default_error));
 			}
 			SECTION(" b: what() displays custom message")
 			{
@@ -117,10 +117,10 @@ BEGIN_TEST_SUITE("elemental::exception")
 		}
 	}
 
-	TEST("elemental::exception - what() contains stacktrace with Catch2 "
+	TEST("elemental::Exception - what() contains stacktrace with Catch2 "
 	     "runtime methods")
 	{
-		elemental::exception test_object("Test");
+		elemental::Exception test_object("Test");
 		SECTION(" a: what() does not contain default message")
 		{
 			REQUIRE_THAT(

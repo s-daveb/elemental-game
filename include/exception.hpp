@@ -21,17 +21,17 @@
 
 namespace elemental {
 
-class exception : public std::exception
+class Exception : public std::exception
 {
 
   public:
-	exception(c::const_string _message = default_error);
-	exception(const std::string& message);
+	Exception(c::const_string _message = default_error);
+	Exception(const std::string& message);
 
-	exception(const elemental::exception& other) = default;
-	exception(const std::exception& inner);
+	Exception(const elemental::Exception& other) = default;
+	Exception(const std::exception& inner);
 
-	exception& operator=(const exception&) = delete;
+	Exception& operator=(const Exception&) = delete;
 
 	virtual const char* what() const noexcept override;
 	const std::string& stacktrace() const noexcept;

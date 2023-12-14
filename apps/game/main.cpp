@@ -24,7 +24,7 @@ main(int argc, c::const_string argv[], c::const_string envp[])
 		game_instance.Init(argc, argv, envp);
 
 		return game_instance.Run();
-	} catch (elemental::exception& custom_exception) {
+	} catch (elemental::Exception& custom_exception) {
 		std::cerr << custom_exception.what() << std::endl;
 		return 1;
 	} catch (std::exception& stl_exception) {

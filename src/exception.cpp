@@ -20,13 +20,13 @@
 #include <stdexcept>
 #include <string>
 
-using elemental::exception;
+using elemental::Exception;
 
 constexpr unsigned DEFAULT_STACKFRAMES_TO_STRIP = 3;
 
 // Helper classes and functions. #region
 
-exception::exception(c::const_string error_message)
+Exception::Exception(c::const_string error_message)
     : std::exception()
     , error_message(error_message)
     , what_message()
@@ -36,7 +36,7 @@ exception::exception(c::const_string error_message)
 	build_what_message();
 }
 
-exception::exception(const std::string& error_message)
+Exception::Exception(const std::string& error_message)
     : std::exception()
     , error_message(error_message)
     , what_message()
@@ -46,7 +46,7 @@ exception::exception(const std::string& error_message)
 	build_what_message();
 }
 
-exception::exception(const std::exception& inner)
+Exception::Exception(const std::exception& inner)
     : std::exception(inner)
     , error_message(inner.what())
     , what_message()
@@ -57,13 +57,13 @@ exception::exception(const std::exception& inner)
 }
 
 const char*
-exception::what() const noexcept
+Exception::what() const noexcept
 {
 	return this->what_message.c_str();
 }
 
 const std::string&
-exception::stacktrace() const noexcept
+Exception::stacktrace() const noexcept
 {
 	return this->stack_trace;
 }
@@ -88,7 +88,7 @@ prepend_tabs_to_lines(const std::string& input)
 	return results_buffer.str();
 }
 void
-exception::build_what_message()
+Exception::build_what_message()
 {
 	std::stringstream buffer;
 

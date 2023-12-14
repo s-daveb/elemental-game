@@ -27,7 +27,7 @@ Application::Init(int argc, c::const_string argv[], c::const_string envp[])
 		               problem + "parameter";
 
 		auto fatal_exception = std::logic_error(message);
-		throw elemental::exception(fatal_exception);
+		throw elemental::Exception(fatal_exception);
 	}
 
 	this->parse_arguments(argc, argv);
