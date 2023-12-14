@@ -2,6 +2,8 @@
 set(test-runner_SOURCES
 	runtime.test.cpp
 	exception.test.cpp
+	Singleton.template.test.cpp
+	Application.test.cpp
 )
 
 add_executable(test-runner

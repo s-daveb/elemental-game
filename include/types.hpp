@@ -42,7 +42,6 @@ template<typename value_t>
 using Dictionary = std::map<const std::string, value_t>;
 
 } // namespace elemental
-#include "types/Result.hpp"
 
 // clang-format off
 // vim: set foldmethod=syntax foldlevel=99 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

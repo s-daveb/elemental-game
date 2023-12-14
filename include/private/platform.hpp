@@ -10,34 +10,33 @@
 
 namespace elemental {
 
-struct Platform
-{
+namespace platform {
 #ifdef __linux__
-	static constexpr bool LINUX = true;
+static constexpr bool LINUX = true;
 #else
-	static constexpr bool LINUX = false;
+static constexpr bool LINUX = false;
 #endif
 
 #ifdef _WIN32
-	static constexpr bool WINDOWS = true;
+static constexpr bool WINDOWS = true;
 #else
-	static constexpr bool WINDOWS = false;
+static constexpr bool WINDOWS = false;
 #endif
 
 #ifdef __APPLE__
-	static constexpr bool MACOS = true;
+static constexpr bool MACOS = true;
 #else
-	static constexpr bool MACOS = false;
+static constexpr bool MACOS = false;
 #endif
 
 #ifdef __FreeBSD__
-	static constexpr bool FREEBSD = true;
+static constexpr bool FREEBSD = true;
 #else
-	static constexpr bool FREEBSD = false;
+static constexpr bool FREEBSD = false;
 #endif
 
-	// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)
-	// To be added at a later date.
+// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)
+// To be added at a later date.
 };
 } // namespace elemental
 
