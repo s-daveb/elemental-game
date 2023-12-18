@@ -39,7 +39,7 @@ IF( NOT CMAKE_BUILD_TYPE )
 ENDIF()
 
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 # Disable non-portable GNU compiler extensions
 set(CMAKE_C_EXTENSIONS OFF)
@@ -166,13 +166,13 @@ if (ENABLE_TESTS)
 
 	if (TARGET Catch2)
 		set_target_properties(Catch2 PROPERTIES
-			CXX_STANDARD 20
+			CXX_STANDARD 17
 		)
 	endif()
 
 	if (TARGET Catch2WithMain)
 		set_target_properties(Catch2WithMain PROPERTIES
- 		       	CXX_STANDARD 20
+ 		       	CXX_STANDARD 17
 		)
 	endif()
 	list(APPEND cmake_module_path ${Catch2_source_dir}/extras)
