@@ -8,7 +8,7 @@
  */
 
 #include "Application.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 #include "types.hpp"
 
 #include <string>

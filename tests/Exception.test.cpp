@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "exception.hpp"
+#include "Exception.hpp"
 
 #include "./common.hpp"
 

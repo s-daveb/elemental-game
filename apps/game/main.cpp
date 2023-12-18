@@ -12,7 +12,7 @@
 #include "ElementalGame.hpp"
 #include "IApplication.hpp"
 #include "Singleton.template.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 
 using namespace elemental;
 

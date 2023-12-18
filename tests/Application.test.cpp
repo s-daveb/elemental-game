@@ -8,7 +8,7 @@
  */
 
 #include "Application.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 
 #include "./common.hpp"
 #include <catch2/matchers/catch_matchers_string.hpp>

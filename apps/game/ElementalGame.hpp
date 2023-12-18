@@ -29,6 +29,7 @@ class ElementalGame : public Application
   public:
 	virtual ~ElementalGame();
 	virtual int Run() override;
+
 	template<typename T>
 	using ptr = std::shared_ptr<T>;
 
