@@ -32,8 +32,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	FIXTURE_TEST("elemental::LoopRegulator - Initialization")
 	{
 		CHECK(test_object.elapsed_ms.count() == 0);
-		CHECK(test_object.start_time ==
-		      high_resolution_clock::time_point());
+		CHECK(test_object.start_time == steady_clock::time_point());
 	}
 	FIXTURE_TEST(
 	    "elemental::LoopRegulator - Time calculations work properly")

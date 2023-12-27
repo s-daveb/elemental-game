@@ -30,15 +30,15 @@ LoopRegulator::~LoopRegulator() {}
 void
 LoopRegulator::StartUpdate()
 {
-	end_time = high_resolution_clock::time_point();
-	start_time = high_resolution_clock::now();
+	end_time = steady_clock::time_point();
+	start_time = steady_clock::now();
 }
 
 // End the loop update and calculate elapsed time
 std::chrono::milliseconds
 LoopRegulator::EndUpdate()
 {
-	this->end_time = high_resolution_clock::now();
+	this->end_time = steady_clock::now();
 	this->elapsed_ms = duration_cast<milliseconds>(end_time - start_time);
 	return elapsed_ms;
 }
@@ -56,7 +56,7 @@ milliseconds
 LoopRegulator::Delay()
 {
 
-	if (end_time == high_resolution_clock::time_point()) {
+	if (end_time == steady_clock::time_point()) {
 		this->EndUpdate();
 	}
 

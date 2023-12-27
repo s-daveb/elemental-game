@@ -36,8 +36,8 @@ class LoopRegulator
 #endif
 	uint32_t desired_rate_per_second;
 
-	high_resolution_clock::time_point start_time;
-	high_resolution_clock::time_point end_time;
+	steady_clock::time_point start_time;
+	steady_clock::time_point end_time;
 
 	milliseconds elapsed_ms;
 	milliseconds desired_delay_ms;
