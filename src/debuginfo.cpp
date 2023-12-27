@@ -8,7 +8,7 @@
  */
 
 #include "private/debuginfo.hpp"
-#include "private/platform.hpp"
+#include "sys/platform.hpp"
 
 #if !defined(BOOST_STACKTRACER)
 #if defined(HAVE_EXECINFO_H)
