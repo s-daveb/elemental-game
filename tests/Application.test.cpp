@@ -27,14 +27,13 @@ inline const char* simulated_launch::env[] = {
 
 }
 
-struct DerivedApplication : public elemental::Application
-{
-	virtual int Run() { return 0; }
-};
-
 BEGIN_TEST_SUITE("elemental::Application")
 {
 	using namespace elemental;
+	struct DerivedApplication : public Application
+	{
+		virtual int Run() { return 0; }
+	};
 	struct TestFixture
 	{
 		TestFixture() : derived_app(), app(derived_app) {}
@@ -43,8 +42,8 @@ BEGIN_TEST_SUITE("elemental::Application")
 		Application& app;
 	};
 
-	FIXTURE_TEST("elemental::Applicationa - Init method populates "
-	             "Arguemnts list and Environment dictionary")
+	FIXTURE_TEST("elemental::Application - Init method populates "
+	             "Arguments list and Environment dictionary")
 	{
 		app.Init(3, simulated_launch::argv, simulated_launch::env);
 

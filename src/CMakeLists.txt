@@ -3,6 +3,8 @@ add_library(elementalobj OBJECT
 	debuginfo.cpp
 	Exception.cpp
 	Application.cpp
+	SdlRenderer.cpp
+	LoopRegulator.cpp
 )
 
 set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE ON)

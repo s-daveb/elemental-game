@@ -41,6 +41,9 @@ enum error_t : bool
 template<typename value_t>
 using Dictionary = std::map<const std::string, value_t>;
 
+template<typename T>
+using ptr = std::shared_ptr<T>;
+
 } // namespace elemental
 
 // clang-format off

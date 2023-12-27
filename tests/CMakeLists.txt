@@ -4,6 +4,9 @@ set(test-runner_SOURCES
 	Exception.test.cpp
 	Singleton.template.test.cpp
 	Application.test.cpp
+	IRenderer.test.cpp
+	SdlRenderer.test.cpp
+	LoopRegulator.test.cpp
 )
 
 add_executable(test-runner

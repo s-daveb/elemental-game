@@ -11,6 +11,16 @@
 
 #include <utility>
 
+#define SINGLETON_INTERFACE(TypeName)                                          \
+	template<typename T>                                                   \
+	static T* GetInstance()                                                \
+	{                                                                      \
+		static_assert(std::is_base_of<TypeName, T>::value,             \
+		              "T must be a derivative of " #TypeName);         \
+		static T instance;                                             \
+		return &instance;                                              \
+	};
+
 namespace elemental {
 template<typename T>
 struct Singleton

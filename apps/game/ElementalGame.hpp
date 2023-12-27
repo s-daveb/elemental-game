@@ -9,8 +9,13 @@
 
 #pragma once
 
-#include "Application.hpp"
 #include "IApplication.hpp"
+#include "IRenderer.hpp"
+
+#include "Application.hpp"
+#include "LoopRegulator.hpp"
+#include "renderers/SdlRenderer.hpp"
+
 #include "Singleton.template.hpp"
 #include "types.hpp"
 
@@ -20,9 +25,9 @@
 namespace elemental {
 
 // Forward declarations
-class IVideoDriver;
+class IRenderer;
 class IInputDriver;
-class IEventSource;
+class IEventEmitter;
 
 class ElementalGame : public Application
 {
@@ -30,10 +35,7 @@ class ElementalGame : public Application
 	virtual ~ElementalGame();
 	virtual int Run() override;
 
-	template<typename T>
-	using ptr = std::shared_ptr<T>;
-
-  private:
+  protected:
 	friend class Singleton<ElementalGame>;
 
 	ElementalGame();
@@ -42,9 +44,10 @@ class ElementalGame : public Application
 	bool is_running;
 	uint32_t ticks;
 
-	ptr<IVideoDriver> video_renderer;
-	ptr<IInputDriver> input_driver;
-	ptr<IEventSource> event_source;
+	LoopRegulator loop_regulator;
+	IRenderer* video_renderer;
+	IInputDriver* input_driver;
+	IEventEmitter* event_emitter;
 };
 
 } // namespace elemental
