@@ -19,6 +19,7 @@ if (NOT DEFINED PROJECT_NAME)
 else()
 	option(ENABLE_TESTS "Build and run unit tests" OFF)
 endif()
+option(CI_BUILD "Defines a C preprocessor macro used to disable some code paths in CI servers" OFF)
 
 project(Elemental
 	VERSION 0.0.1
@@ -34,9 +35,13 @@ option(USE_SYSTEM_CATCH2
 	ON
 )
 
-IF( NOT CMAKE_BUILD_TYPE )
+if (CI_BUILD)
+	add_compile_definitions(-DCI_BUILD=1)
+endif()
+
+if( NOT CMAKE_BUILD_TYPE )
   SET( CMAKE_BUILD_TYPE Debug )
-ENDIF()
+endif()
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
