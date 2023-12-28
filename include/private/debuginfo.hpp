@@ -13,7 +13,7 @@
 
 #ifdef DEBUG // #region
 #include <iostream>
-#define debugprint(msg) std::cout << "#*!* " << msg << std::endl
+#define debugprint(msg) std::cout << "[DBG]  " << msg << std::endl
 #else
 #define debugprint(msg) ;
 #endif // #endregion
@@ -28,4 +28,3 @@ void print_cmdline(int argc, const char* argv[]);
 
 // clang-format off
 // vim: set foldmethod=syntax foldlevel=99 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
-

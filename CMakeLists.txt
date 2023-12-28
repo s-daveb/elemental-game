@@ -183,6 +183,10 @@ if (ENABLE_TESTS)
 	list(APPEND cmake_module_path ${Catch2_source_dir}/extras)
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_compile_definitions(-DDEBUG=1)
+endif()
+
 # Set output directories for build targets
 set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib)

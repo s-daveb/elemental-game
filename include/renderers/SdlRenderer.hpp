@@ -11,17 +11,23 @@
 
 namespace elemental {
 
-struct Area;
+struct Rectangle;
 
 struct SdlRenderer : public IRenderer
 {
 	friend class IRenderer;
 	virtual ~SdlRenderer();
 
+	virtual error_t Init() override;
+	virtual void Deactivate() override;
+
+	virtual error_t Flip() override;
+	virtual error_t Blit(std::any& image, Rectangle& placement) override;
+
 #ifndef UNIT_TEST
   protected:
 #endif
-	SDL_Rect get_SDL_Rect(const Area&) const;
+	SDL_Rect get_SDL_Rect(const Rectangle&) const;
 	SdlRenderer();
 };
 

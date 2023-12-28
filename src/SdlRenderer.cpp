@@ -14,12 +14,35 @@ using namespace elemental;
 
 SdlRenderer::~SdlRenderer() {}
 
+error_t
+SdlRenderer::Init()
+{
+	return ERROR;
+}
+
+void
+SdlRenderer::Deactivate()
+{
+}
 SDL_Rect
-SdlRenderer::get_SDL_Rect(const Area& area) const
+SdlRenderer::get_SDL_Rect(const Rectangle& area) const
 {
 	return SDL_Rect{ static_cast<int>(area.x), static_cast<int>(area.y),
 		         static_cast<int>(area.width),
 		         static_cast<int>(area.height) };
+}
+
+error_t
+SdlRenderer::Flip()
+{
+
+	return ERROR;
+}
+
+error_t
+SdlRenderer::Blit(std::any& image_data, Rectangle& placement)
+{
+	return ERROR;
 }
 
 SdlRenderer::SdlRenderer() : IRenderer() {}

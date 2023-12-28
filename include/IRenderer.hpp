@@ -12,13 +12,14 @@
 #include "Singleton.template.hpp"
 #include "types.hpp"
 
+#include <any>
 #include <type_traits>
 
 #include <SDL.h>
 
 namespace elemental {
 
-struct Area
+struct Rectangle
 {
 	uint32_t x, y, width, height;
 };
@@ -29,7 +30,11 @@ struct IRenderer
 
 	virtual ~IRenderer() {}
 
-	bool Flip();
+	virtual error_t Init() = 0;
+	virtual void Deactivate() = 0;
+
+	virtual error_t Flip() = 0;
+	virtual error_t Blit(std::any& image_data, Rectangle& placement) = 0;
 
   protected:
 	IRenderer() = default;

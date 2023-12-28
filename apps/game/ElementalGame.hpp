@@ -41,11 +41,14 @@ class ElementalGame : public Application
 	ElementalGame();
 	Dictionary<std::thread> running_threads;
 
+	void render_thread_loop();
+	void simulation_thread_loop();
+
 	bool is_running;
 	uint32_t ticks;
 
 	LoopRegulator loop_regulator;
-	IRenderer* video_renderer;
+	IRenderer* video_renderer_ptr;
 	IInputDriver* input_driver;
 	IEventEmitter* event_emitter;
 };

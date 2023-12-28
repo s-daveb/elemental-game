@@ -7,6 +7,9 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+/** @TODO:  move this to a manual test suite that configures a window and
+ * renderer and does some automated tests */
+
 #include "IRenderer.hpp"
 #include "renderers/SdlRenderer.hpp"
 
@@ -26,11 +29,11 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		SUCCEED();
 	}
 
-	TEST("elemental::SdlRenderer - convert Area to SDL_Rect")
+	TEST("elemental::SdlRenderer - convert Rectangle to SDL_Rect")
 	{
 		REQUIRE_NOTHROW([&]() {
 			auto* renderer = IRenderer::GetInstance<SdlRenderer>();
-			auto test_input = Area{ 0, 1, 10, 20 };
+			auto test_input = Rectangle{ 0, 1, 10, 20 };
 			auto result = renderer->get_SDL_Rect(test_input);
 
 			CHECK(result.x == test_input.x);
