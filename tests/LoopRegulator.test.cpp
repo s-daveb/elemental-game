@@ -46,31 +46,27 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		REQUIRE(test_object.elapsed_ms.count() > 900);
 	};
 
-#ifdef CI_BUILD
-	TEST("elemental::LoopRegulator:Delay works within 5ms tolerance")
-	{
-		if (platform::MACOS) {
-			WARN("(macos) this test always fails due to low "
-			     "priority processor scheduling in CI build env");
-			SUCCEED();
-			return;
-		}
-	}
-#else
 	FIXTURE_TEST(
 	    "elemental::LoopRegulator:Delay works within 5ms tolerance")
 	{
-
+#if defined(CI_BUILD) && defined(__APPLE__)
+		WARN("(macos) this test always fails due to low "
+		     "priority processor scheduling in CI build env");
+		SUCCEED();
+		return;
+	}
+#else
 		const auto acceptable_margin_error_ms = 5ms;
 
-		// Seed the random number generator with the current time
+		// Seed the random number generator with the current
+		// time
 		unsigned seed =
 
 		    std::chrono::system_clock::now().time_since_epoch().count();
 		std::default_random_engine gen(seed);
 
-		// Define the distribution for random delays (0 to 1000/60
-		// milliseconds)
+		// Define the distribution for random delays (0 to
+		// 1000/60 milliseconds)
 		std::uniform_int_distribution<int> delay_generator(
 		    0, static_cast<int>(1000.0 / 60));
 
@@ -94,8 +90,8 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 				      acceptable_margin_error_ms);
 			}
 		}
-	};
+	}
 #endif
-}
+};
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
