@@ -172,7 +172,7 @@ FILE_PATTERNS          = *.c \
                          *.qsf \
                          *.ice
 RECURSIVE              = YES
-EXCLUDE                = src/tests
+EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
@@ -341,7 +341,7 @@ INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = UNIT_TEST
 EXPAND_AS_DEFINED      =
-SKIP_FUNCTION_MACROS   = YES
+SKIP_FUNCTION_MACROS   = NO
 #---------------------------------------------------------------------------
 # Configuration options related to external references
 #---------------------------------------------------------------------------
@@ -368,7 +368,7 @@ UML_LOOK               = YES
 UML_LIMIT_NUM_FIELDS   = 10
 DOT_UML_DETAILS        = YES
 DOT_WRAP_THRESHOLD     = 24
-TEMPLATE_RELATIONS     = NO
+TEMPLATE_RELATIONS     = YES
 INCLUDE_GRAPH          = YES
 INCLUDED_BY_GRAPH      = YES
 CALL_GRAPH             = NO

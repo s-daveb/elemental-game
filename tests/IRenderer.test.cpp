@@ -11,6 +11,9 @@
 
 #include "./common.hpp"
 
+#include <any>
+#include <utility>
+
 BEGIN_TEST_SUITE("elemental::IRenderer")
 {
 	using namespace elemental;
@@ -19,15 +22,21 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		friend class IRenderer;
 		virtual ~dummy_renderer(){};
 
-		virtual error_flag Flip() override { return NO_ERROR; }
-		virtual error_flag Blit(std::any& image_data,
-		                          Rectangle& placement) override
+		virtual void Init() override { return; }
+		virtual void Deactivate() override { return; }
+		virtual bool IsInitialized() override { return false; }
+		virtual std::pair<uint32_t, uint32_t> GetResolution() override
 		{
-			return NO_ERROR;
+			return std::make_pair(0, 0);
 		}
 
-		virtual error_flag Init() override { return NO_ERROR; }
-		virtual void Deactivate() override { return; }
+		virtual void Clear() override { return; }
+		virtual void Flip() override { return; }
+		virtual void Blit(void* image_data,
+		                  Rectangle& placement) override
+		{
+			return;
+		}
 
 	  protected:
 		dummy_renderer() : IRenderer() {}

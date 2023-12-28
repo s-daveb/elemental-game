@@ -19,6 +19,11 @@
 #include <stdexcept>
 #include <string>
 
+#define ASSERT(condition)                                                      \
+	if (condition == false) {                                              \
+		elemental::assert_impl(#condition);                            \
+	}
+
 namespace elemental {
 
 class Exception : public std::exception
@@ -47,6 +52,13 @@ class Exception : public std::exception
 
 	std::exception_ptr inner_exception_ptr;
 };
+
+void inline assert_impl(c::const_string failed_condition)
+{
+	std::stringstream assert_buffer;
+	assert_buffer << failed_condition << " is false!" << std::flush;
+	throw Exception(assert_buffer.str());
+}
 } // namespace elemental
   // clang-format off
 // vim: set foldmethod=marker foldmarker=@{,@} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

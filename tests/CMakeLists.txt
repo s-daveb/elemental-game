@@ -5,8 +5,8 @@ set(test-runner_SOURCES
 	Singleton.template.test.cpp
 	Application.test.cpp
 	IRenderer.test.cpp
-	SdlRenderer.test.cpp
 	LoopRegulator.test.cpp
+	sdl/SdlRenderer.test.cpp
 )
 
 add_executable(test-runner
@@ -15,7 +15,10 @@ add_executable(test-runner
 
 set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
 
-target_compile_definitions(test-runner PRIVATE -DUNIT_TEST=1)
+target_compile_definitions(test-runner PRIVATE
+	-DUNIT_TEST=1
+	-DNO_GUI=1
+)
 
 set(TESTS_LINK_DEPS
 	Catch2::Catch2WithMain
@@ -25,8 +28,7 @@ set(TESTS_LINK_DEPS
 
 target_include_directories(test-runner PRIVATE
 	${Catch2_INCLUDE_DIRS}
-	${CMAKE_SOURCE_DIR}/src/tests
-	${CMAKE_SOURCE_DIR}/src/tests/common
+	${CMAKE_SOURCE_DIR}/tests
 )
 
 target_link_directories(test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})
@@ -57,5 +59,7 @@ add_dependencies(ctest
 	test-runner
 	copy_assets
 )
+
+add_subdirectory(sdl)
 
 # vim: ts=2 sw=2 noet foldmethod=indent foldlevel=99 :

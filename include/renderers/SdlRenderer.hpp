@@ -11,27 +11,50 @@
 
 namespace elemental {
 
-struct Rectangle;
-
 struct SdlRenderer : public IRenderer
 {
 	friend class IRenderer;
+
 	virtual ~SdlRenderer();
 
-	virtual error_flag Init() override;
+	virtual void Init() override;
 	virtual void Deactivate() override;
+	inline virtual bool IsInitialized() override
+	{
+		return this->is_initialized;
+	};
+	virtual std::pair<uint32_t, uint32_t> GetResolution() override;
 
-	virtual error_flag Flip() override;
-	virtual error_flag Blit(std::any& image,
-	                          Rectangle& placement) override;
+	virtual void Clear() override;
+	virtual void Flip() override;
+	virtual void Blit(void* image_data, Rectangle& placement) override;
 
 #ifndef UNIT_TEST
   protected:
 #endif
-	SDL_Rect get_SDL_Rect(const Rectangle&) const;
+	bool is_initialized;
 	SdlRenderer();
+
+	SDL_Window* sdl_window_ptr;
+	SDL_Renderer* sdl_renderer_ptr;
 };
 
+template<>
+inline Rectangle
+IRenderer::ToRectangle<SDL_Rect>(const SDL_Rect& other)
+{
+	return { static_cast<uint32_t>(other.x), static_cast<uint32_t>(other.y),
+		 static_cast<uint32_t>(other.w),
+		 static_cast<uint32_t>(other.h) };
+}
+template<>
+inline SDL_Rect
+IRenderer::FromRectangle<SDL_Rect>(const Rectangle& other)
+{
+	return { static_cast<int>(other.x), static_cast<int>(other.y),
+		 static_cast<int>(other.width),
+		 static_cast<int>(other.height) };
+}
 }
 
 // clang-format off

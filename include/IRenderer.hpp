@@ -14,33 +14,86 @@
 
 #include <any>
 #include <type_traits>
+#include <utility>
 
 #include <SDL.h>
 
 namespace elemental {
 
-struct Rectangle
-{
-	uint32_t x, y, width, height;
-};
-
 struct IRenderer
 {
+	//! \brief This macro is used in child classes to construct instances of
+	//! the derived classes.
+	//! \see Singleton.template.hpp
+	//
 	SINGLETON_INTERFACE(IRenderer);
+
+	struct Rectangle
+	{
+		uint32_t x, y, width, height;
+	};
 
 	virtual ~IRenderer() {}
 
-	virtual error_flag Init() = 0;
+	/*! \name Lazy Initialization Methods
+	 * These initialize the current rendering subsystema and de-initialize
+	 * it on-demand */
+	//! @{
+	virtual void Init() = 0;
 	virtual void Deactivate() = 0;
+	virtual bool IsInitialized() = 0;
+	//! @}
 
-	virtual error_flag Flip() = 0;
-	virtual error_flag Blit(std::any& image_data,
-	                          Rectangle& placement) = 0;
+	//! \brief Does what it says on the tin.
+	//! \return std::pair of integers, .first = x, .second = y
+	virtual std::pair<uint32_t, uint32_t> GetResolution() = 0;
+
+	/*! \name Screen Management Methods
+	 *  Methods used to clear and update the game display  */
+	//! @{
+	//! \brief Clears the screen before new drawing cycles. Throws
+	//! exceptions.
+	virtual void Clear() = 0;
+	//! \brief swaps backbuffer with new frame displays new image. Throws
+	//! exceptions.
+	virtual void Flip() = 0;
+	//! @}
+
+	//! \brief Draw an untyped blob of image data at the area indicated by
+	//! second argument.
+	//!
+	//! I wanted to use std::any here, but to use pass-by-reference, I'd
+	//! need to use pointers - however, std::any seemed to think that
+	//! SDL_Texture* values from the unit test scopes were different types
+	//! from the SDL_Texture* type in the game engine.
+	//!
+	//! \todo  Change this to boost::any and use any_cast, when possible -
+	//! investigate how the test-runner is being linked.
+	virtual void Blit(void* image_data, Rectangle& placement) = 0;
 
   protected:
 	IRenderer() = default;
+
+#ifdef UNIT_TEST
+  public:
+#endif
+	/*! \name DataType Conversion methods
+	 * \brief Conversion functions to convert Rectangle objects to the types
+	 * used by native APIs to update blocks of the screen.
+	 *
+	 * Template method bodies shall be  defined by child classes.
+	 * \note These are only exposed on the public interface for test builds
+	 */
+	//! @{
+	template<typename R>
+	Rectangle ToRectangle(const R& data);
+
+	template<typename R>
+	R FromRectangle(const Rectangle& rectangle);
+	//! @}
 };
 
+using Rectangle = IRenderer::Rectangle;
 }
 
 // clang-format off

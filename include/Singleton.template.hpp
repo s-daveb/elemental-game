@@ -11,6 +11,13 @@
 
 #include <utility>
 
+//! \brief Inserts a GetInstance<T>() template method into your class
+//! class so that child classes can be easily made into singletons.
+//! typename T must be a child class of whatever class into which you add this
+//! macro.
+//!\note
+//! Make sure to make your child class's Constructor "protected", and declare
+//! the parent class with this SINLGETON_INTERFACE as a friend class!
 #define SINGLETON_INTERFACE(TypeName)                                          \
 	template<typename T>                                                   \
 	static T* GetInstance()                                                \

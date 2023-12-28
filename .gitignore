@@ -142,3 +142,4 @@ _deps
 compile_commands.json
 *.bak
 docs/
+*.old
