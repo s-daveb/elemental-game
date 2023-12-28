@@ -30,11 +30,12 @@ struct IRenderer
 
 	virtual ~IRenderer() {}
 
-	virtual error_t Init() = 0;
+	virtual error_flag Init() = 0;
 	virtual void Deactivate() = 0;
 
-	virtual error_t Flip() = 0;
-	virtual error_t Blit(std::any& image_data, Rectangle& placement) = 0;
+	virtual error_flag Flip() = 0;
+	virtual error_flag Blit(std::any& image_data,
+	                          Rectangle& placement) = 0;
 
   protected:
 	IRenderer() = default;

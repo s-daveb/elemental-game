@@ -18,11 +18,12 @@ struct SdlRenderer : public IRenderer
 	friend class IRenderer;
 	virtual ~SdlRenderer();
 
-	virtual error_t Init() override;
+	virtual error_flag Init() override;
 	virtual void Deactivate() override;
 
-	virtual error_t Flip() override;
-	virtual error_t Blit(std::any& image, Rectangle& placement) override;
+	virtual error_flag Flip() override;
+	virtual error_flag Blit(std::any& image,
+	                          Rectangle& placement) override;
 
 #ifndef UNIT_TEST
   protected:

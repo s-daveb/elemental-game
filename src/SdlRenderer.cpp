@@ -17,7 +17,7 @@ using namespace elemental;
 
 SdlRenderer::~SdlRenderer() {}
 
-error_t
+error_flag
 SdlRenderer::Init()
 {
 	return ERROR;
@@ -35,14 +35,14 @@ SdlRenderer::get_SDL_Rect(const Rectangle& area) const
 		         static_cast<int>(area.height) };
 }
 
-error_t
+error_flag
 SdlRenderer::Flip()
 {
 
 	return ERROR;
 }
 
-error_t
+error_flag
 SdlRenderer::Blit(std::any& image_data, Rectangle& placement)
 {
 	return ERROR;

@@ -19,14 +19,14 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		friend class IRenderer;
 		virtual ~dummy_renderer(){};
 
-		virtual error_t Flip() override { return NO_ERROR; }
-		virtual error_t Blit(std::any& image_data,
-		                     Rectangle& placement) override
+		virtual error_flag Flip() override { return NO_ERROR; }
+		virtual error_flag Blit(std::any& image_data,
+		                          Rectangle& placement) override
 		{
 			return NO_ERROR;
 		}
 
-		virtual error_t Init() override { return NO_ERROR; }
+		virtual error_flag Init() override { return NO_ERROR; }
 		virtual void Deactivate() override { return; }
 
 	  protected:
