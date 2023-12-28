@@ -10,6 +10,8 @@
 #include "IRenderer.hpp"
 #include "renderers/SdlRenderer.hpp"
 
+#include "private/debuginfo.hpp"
+
 using namespace elemental;
 
 SdlRenderer::~SdlRenderer() {}

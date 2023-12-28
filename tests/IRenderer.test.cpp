@@ -26,6 +26,9 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 			return NO_ERROR;
 		}
 
+		virtual error_t Init() override { return NO_ERROR; }
+		virtual void Deactivate() override { return; }
+
 	  protected:
 		dummy_renderer() : IRenderer() {}
 	};
