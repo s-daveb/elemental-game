@@ -11,6 +11,7 @@
 #include "renderers/SdlRenderer.hpp"
 
 #include "private/debuginfo.hpp"
+#include "types.hpp"
 
 using namespace elemental;
 
