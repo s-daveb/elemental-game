@@ -11,8 +11,8 @@
 #include "renderers/SdlRenderer.hpp"
 #include "sys/platform.hpp"
 
-#include "common.hpp"
-#include "utils/SdlHelpers.hpp"
+#include "test-utils/SdlHelpers.hpp"
+#include "test-utils/common.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
