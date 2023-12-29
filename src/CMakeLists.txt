@@ -25,26 +25,18 @@ set(ELEMENTAL_LINK_DEPS
 # build three different variants of this library
 add_library(elemental SHARED $<TARGET_OBJECTS:elementalobj>)
 add_library(elemental-static STATIC $<TARGET_OBJECTS:elementalobj>)
-add_library(elemental-testing STATIC $<TARGET_OBJECTS:elementalobj>)
 
 
 set_target_properties(elemental-static PROPERTIES
     CMAKE_POSITION_INDEPENDENT_CODE OFF
 )
-set_target_properties(elemental-testing PROPERTIES
-    CMAKE_POSITION_INDEPENDENT_CODE OFF
-)
 
-# Define a preprocessor flag to enable helper code for unit-testing
-# This flag will propagate to programs that link to this library (PUBLIC)
-target_compile_definitions(elemental-testing PUBLIC -DUNIT_TEST=1)
 
 # Check if the system is Linux
 if (USE_BOOST_STACKTRACE)
     # Add the -rdynamic linker option
     target_link_options(elemental PUBLIC -rdynamic)
     target_link_options(elemental-static PUBLIC -rdynamic)
-    target_link_options(elemental-testing PUBLIC -rdynamic)
 endif()
 
 
@@ -52,6 +44,19 @@ endif()
 # Also get the same dependencies.
 target_link_libraries(elemental PUBLIC ${ELEMENTAL_LINK_DEPS} )
 target_link_libraries(elemental-static PUBLIC ${ELEMENTAL_LINK_DEPS} )
-target_link_libraries(elemental-testing PUBLIC ${ELEMENTAL_LINK_DEPS})
 
-# vim: ts=2 sw=2 noet foldmethod=indent :
+if (ENABLE_TESTS)
+	add_library(elemental-testing STATIC $<TARGET_OBJECTS:elementalobj>)
+	set_target_properties(elemental-testing PROPERTIES
+    	CMAKE_POSITION_INDEPENDENT_CODE OFF
+	)
+	target_link_options(elemental-testing PUBLIC -rdynamic)
+	target_link_libraries(elemental-testing PUBLIC ${ELEMENTAL_LINK_DEPS})
+
+	# Define a preprocessor flag to enable helper code for unit-testing
+	# This flag will propagate to programs that link to this library (PUBLIC)
+	target_compile_definitions(elemental-testing PUBLIC -DUNIT_TEST=1)
+
+endif()
+
+# vim: ts=4 sw=4 noet foldmethod=indent :
