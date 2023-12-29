@@ -11,7 +11,7 @@
 #include "LoopRegulator.hpp"
 #include "sys/platform.hpp"
 
-#include "./common.hpp"
+#include "test-utils/common.hpp"
 
 #include <catch2/matchers/catch_matchers_string.hpp>
 

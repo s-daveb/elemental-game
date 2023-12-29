@@ -8,8 +8,7 @@
  */
 
 #include "IRenderer.hpp"
-
-#include "./common.hpp"
+#include "test-utils/common.hpp"
 
 #include <any>
 #include <utility>
