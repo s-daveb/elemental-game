@@ -98,24 +98,19 @@ pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
 pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
 
+SET(SDL2_COMBINED_INCLUDE_DIRS "")
 if (SDL2_FOUND)
-	include_directories(${SDL2_INCLUDE_DIRS})
-	link_directories(AFTER ${SDL2_IMG_LIBRARY_DIRS})
+	list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
 endif()
-if (SDL2_IMG_FOUND)
-	include_directories(${SDL2_IMG_INCLUDE_DIRS})
-	link_directories(AFTER ${SDL2_LIBRARY_DIRS})
+if (SDL2_IMAGE_FOUND)
+	list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
 endif()
 if (SDL2_GFX_FOUND)
-	include_directories(${SDL2_GFX_INCLUDE_DIRS})
-	link_directories(AFTER ${SDL2_GFX_LIBRARY_DIRS})
+	list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
 endif()
-if (NLOHMANN_JSON_FOUND)
-	include_directories(${NLOHMANN_JSON_INCLUDE_DIRS})
-	#add_link_options(${NLOHMANN_JSON_LDFLAGS})
-endif()
+list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
 
-set(SDL2_LINK_DEPS
+set(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2
 	PkgConfig::SDL2_IMAGE
 	PkgConfig::SDL2_GFX
@@ -165,21 +160,24 @@ if (ENABLE_TESTS)
 		FakeIt
 		URL https://github.com/eranpeer/FakeIt/archive/refs/tags/2.4.0.zip
 		URL_HASH MD5=72e4ce7f1c0de97074d2d5b517753286
-		FIND_PACKAGE_ARGS
 	)
 	FetchContent_MakeAvailable(FakeIt)
 
-	if (TARGET Catch2)
-		set_target_properties(Catch2 PROPERTIES
+	if (TARGET Catch2::Catch2)
+		set_target_properties(Catch2::Catch2 PROPERTIES
 			CXX_STANDARD 17
 		)
 	endif()
 
-	if (TARGET Catch2WithMain)
-		set_target_properties(Catch2WithMain PROPERTIES
+	if (TARGET Catch2::Catch2WithMain)
+		set_target_properties(Catch2::Catch2WithMain PROPERTIES
  		       	CXX_STANDARD 17
 		)
 	endif()
+	if (TARGET FakeIt::FakeIt-catch)
+		set(FakeIt_INCLUDE_DIRS "${FakeIt_SOURCE_DIR}/single_header/catch")
+	endif()
+
 	list(APPEND cmake_module_path ${Catch2_source_dir}/extras)
 endif()
 

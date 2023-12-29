@@ -10,18 +10,12 @@ add_executable(SDL_test-runner
 
 set_target_properties(SDL_test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
 
-target_include_directories(SDL_test-runner PRIVATE ..)
 target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
 
-set(TESTS_LINK_DEPS
-	Catch2::Catch2
-	${SDL2_LINK_DEPS}
-	elemental-testing
-)
-
 target_include_directories(SDL_test-runner PRIVATE
-	${Catch2_INCLUDE_DIRS}
-	${CMAKE_SOURCE_DIR}/tests
+	Catch2::Catch2WithMain
+	FakeIt::FakeIt-catch
+	..
 )
 
 target_link_directories(SDL_test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})

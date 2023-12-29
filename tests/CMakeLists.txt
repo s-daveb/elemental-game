@@ -7,6 +7,7 @@ set(test-runner_SOURCES
 	IRenderer.test.cpp
 	LoopRegulator.test.cpp
 	sdl/SdlRenderer.test.cpp
+	Observable.test.cpp
 )
 
 add_executable(test-runner
@@ -21,15 +22,26 @@ target_compile_definitions(test-runner PRIVATE
 )
 
 set(TESTS_LINK_DEPS
+	${SDL2_LINK_LIBRARIES}
 	Catch2::Catch2WithMain
-	${SDL2_LINK_DEPS}
+	FakeIt::FakeIt-catch
 	elemental-testing
 )
 
-target_include_directories(test-runner PRIVATE
-	${Catch2_INCLUDE_DIRS}
-	${CMAKE_SOURCE_DIR}/tests
+target_include_directories(test-runner SYSTEM BEFORE
+	PRIVATE ${Catch2_INCLUDE_DIRS}
+	PRIVATE ${FakeIt_INCLUDE_DIRS}
 )
+
+target_include_directories(test-runner
+	PRIVATE	${CMAKE_SOURCE_DIR}/include
+	PRIVATE ${CMAKE_SOURCE_DIR}/tests
+)
+
+# Assume your target is named "your_target_name"
+#get_target_property(target_include_dirs test-runner INCLUDE_DIRECTORIES)
+# Print the include directories
+#message("Include Directories for target test-runner: ${target_include_dirs}")
 
 target_link_directories(test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})
 
