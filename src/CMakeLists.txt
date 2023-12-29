@@ -16,7 +16,7 @@ add_custom_target(include_files
 add_dependencies(elementalobj include_files)
 
 set(ELEMENTAL_LINK_DEPS
-	${SDL2_LINK_TARGETS}
+	${SDL2_LINK_DEPS}
 	${STACKTRACE_DEP_LIBS}
 	Threads::Threads
 	# other libraries here
