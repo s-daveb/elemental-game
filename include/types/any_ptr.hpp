@@ -39,7 +39,7 @@ class any_ptr
 
 	any_ptr(const any_ptr& other)
 	    : saved_type_index(other.saved_type_index)
-	    , data(other.copy())
+	    , data(other.data)
 	{
 	}
 
@@ -47,7 +47,7 @@ class any_ptr
 	{
 		if (this != &other) {
 			saved_type_index = other.saved_type_index;
-			data = other.copy();
+			data = other.data;
 		}
 		return *this;
 	}
@@ -74,13 +74,6 @@ class any_ptr
   private:
 	void* data;
 	std::type_index saved_type_index;
-
-	void* copy() const
-	{
-		return saved_type_index == typeid(void*)
-		           ? nullptr
-		           : new auto(*static_cast<decltype(data)*>(data));
-	}
 };
 
 template<typename TP>
