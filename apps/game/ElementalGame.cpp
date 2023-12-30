@@ -42,36 +42,43 @@ print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
 ElementalGame::~ElementalGame()
 {
 	video_renderer_ptr->Deactivate();
-
-	/* threading clean-up:
-	 * wait for all child threads to finish */
-	for (auto& [key, values] : this->running_threads) {
-		values.join();
-	}
 }
 
 int
 ElementalGame::Run()
 {
-	LoopRegulator frame_regulator(60_Hz);
+	try {
+		LoopRegulator frame_regulator(60_Hz);
 
-	this->is_running = true;
-	this->running_threads["simulation_thread"] =
-	    std::thread([this]() { this->simulation_thread_loop(); });
+		this->is_running = true;
+		this->running_threads["simulation_thread"] =
+		    std::thread([this]() { this->simulation_thread_loop(); });
 
-	while (this->is_running) {
-		frame_regulator.StartUpdate();
-		this->video_renderer_ptr->Clear();
+		while (this->is_running) {
+			frame_regulator.StartUpdate();
+			this->video_renderer_ptr->Clear();
 
-		this->event_emitter_ptr->PollEvents();
+			this->event_emitter_ptr->PollEvents();
 
-		auto cycle_delay_ms = frame_regulator.Delay();
-		print_cps(cycle_delay_ms, "frame delay");
-		video_renderer_ptr->Flip();
+			auto cycle_delay_ms = frame_regulator.Delay();
+			print_cps(cycle_delay_ms, "frame delay");
+			video_renderer_ptr->Flip();
+		}
+
+		this->is_running = false;
+
+		/* threading clean-up:
+		 * wait for all child threads to finish */
+		for (auto& [key, values] : this->running_threads) {
+			values.join();
+		}
+		return NO_ERROR;
+	} catch (Exception& exc) {
+		throw;
+	} catch (std::exception& excp) {
+		throw Exception(excp);
 	}
-
-	this->is_running = false;
-	return -1;
+	return ERROR;
 }
 
 void
