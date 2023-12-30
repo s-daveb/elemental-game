@@ -38,7 +38,7 @@ BEGIN_TEST_SUITE("elemental::Observable")
 		}
 	};
 
-	TEST_CASE("Register IObservers", TEST_SUITE_NAME)
+	TEST_CASE("elemental::Observable- Register IObservers", TEST_SUITE_NAME)
 	{
 		Mock<IObserver> observerType1;
 		Mock<IObserver> observerType2;
@@ -52,7 +52,8 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		REQUIRE(2 == subject.GetObserverCount());
 	}
-	TEST_CASE("Can notify observers", TEST_SUITE_NAME)
+	TEST_CASE("elemental::Observable- Can notify observers",
+	          TEST_SUITE_NAME)
 	{
 		Mock<IObserver> observerType1;
 		Mock<IObserver> observerType2;
