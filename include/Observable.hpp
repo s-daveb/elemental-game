@@ -29,6 +29,7 @@ class Observable
 	virtual void Notify() = 0;
 
   protected:
+	inline Observable(){};
 	void NotifyAll(std::any message = std::any());
 	observer_list observers;
 };

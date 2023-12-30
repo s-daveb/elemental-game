@@ -10,6 +10,7 @@
 #pragma once
 
 #include "IApplication.hpp"
+#include "IObserver.hpp"
 #include "IRenderer.hpp"
 
 #include "Application.hpp"
@@ -28,11 +29,16 @@ class IRenderer;
 class IInputDriver;
 class IEventEmitter;
 
-class ElementalGame : public Application
+class ElementalGame
+    : public Application
+    , public IObserver
 {
   public:
 	virtual ~ElementalGame();
 	virtual int Run() override;
+
+	virtual void OnNotice(const Observable& sender,
+	                      std::any message = std::any()) override;
 
   protected:
 	friend class Singleton<ElementalGame>;
@@ -40,15 +46,13 @@ class ElementalGame : public Application
 	ElementalGame();
 	Dictionary<std::thread> running_threads;
 
-	void render_step();
 	void simulation_thread_loop();
 
 	bool is_running;
 	uint32_t ticks;
 
-	LoopRegulator loop_regulator;
 	IRenderer* video_renderer_ptr;
-	IEventEmitter* event_emitter;
+	IEventEmitter* event_emitter_ptr;
 	IInputDriver* input_driver;
 };
 
