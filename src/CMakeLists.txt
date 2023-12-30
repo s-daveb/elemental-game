@@ -9,7 +9,7 @@ add_library(elementalobj OBJECT
 	SdlEventEmitter.cpp
 )
 
-set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE OFF)
+set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(elementalobj SYSTEM BEFORE
 	PUBLIC ${SDL2_COMBINED_INCLUDE_DIRS})
