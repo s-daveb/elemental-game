@@ -14,7 +14,7 @@ add_executable(test-runner
 	${test-runner_SOURCES}
 )
 
-set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
+set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 0)
 
 target_compile_definitions(test-runner PRIVATE
 	-DUNIT_TEST=1
