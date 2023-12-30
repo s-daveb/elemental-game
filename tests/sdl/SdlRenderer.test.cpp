@@ -172,20 +172,19 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		REQUIRE(img_texture_ptr != nullptr);
 
 		// 1. Renderer becomes invalid before blitting!
-		/*
+
 		auto* temporary_render_storage =
 		    this->test_subject->sdl_renderer_ptr;
 		REQUIRE_THROWS([&]() {
-		        // set an invalid SDL_Renderer pointer
-		        test_subject->sdl_renderer_ptr = nullptr;
-		        // 1. Before initialization, throws error
-		        test_subject->Blit(img_texture_ptr, location);
+			// set an invalid SDL_Renderer pointer
+			test_subject->sdl_renderer_ptr = nullptr;
+			// 1. Before initialization, throws error
+			test_subject->Blit(img_texture_ptr, location);
 		}());
 
 		// 2. With a valid, initialized SdlRenderer, the
 		//   method works
-*		test_subject->sdl_renderer_ptr = temporary_render_storage;
-*/
+		test_subject->sdl_renderer_ptr = temporary_render_storage;
 		test_subject->Blit(img_texture_ptr, location);
 		// Display the image and pause so the user can see it!
 		test_subject->Flip();
