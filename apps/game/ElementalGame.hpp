@@ -14,7 +14,6 @@
 
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
-#include "renderers/SdlRenderer.hpp"
 
 #include "Singleton.template.hpp"
 #include "types.hpp"
@@ -41,7 +40,7 @@ class ElementalGame : public Application
 	ElementalGame();
 	Dictionary<std::thread> running_threads;
 
-	void render_thread_loop();
+	void render_step();
 	void simulation_thread_loop();
 
 	bool is_running;
@@ -49,8 +48,8 @@ class ElementalGame : public Application
 
 	LoopRegulator loop_regulator;
 	IRenderer* video_renderer_ptr;
-	IInputDriver* input_driver;
 	IEventEmitter* event_emitter;
+	IInputDriver* input_driver;
 };
 
 } // namespace elemental
