@@ -12,6 +12,7 @@
 #include <chrono>
 #include <thread>
 
+using namespace elemental;
 using namespace std::chrono;
 
 // Constructor with default desired framerate of 30 frames per second

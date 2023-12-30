@@ -7,6 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#pragma once
+
 #include <SDL.h>
 #include <chrono>
 #include <ratio>
@@ -14,11 +16,20 @@
 
 using namespace std::chrono;
 
+namespace elemental {
+
+// Define a user-defined literal for 'fps'
+constexpr unsigned long long
+operator"" _Hz(unsigned long long value)
+{
+	return value;
+}
+
 class LoopRegulator
 {
   public:
 	// Constructor with default desired framerate of 30 frames per second
-	LoopRegulator(uint32_t rate_per_second = 30);
+	LoopRegulator(uint32_t rate_per_second = 30_Hz);
 	virtual ~LoopRegulator();
 
 	// Start the loop update
@@ -42,6 +53,6 @@ class LoopRegulator
 	milliseconds elapsed_ms;
 	milliseconds desired_delay_ms;
 };
-
+}
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :
