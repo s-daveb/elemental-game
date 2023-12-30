@@ -8,6 +8,7 @@
  */
 
 #include "IRenderer.hpp"
+#include "types/any_ptr.hpp"
 
 namespace elemental {
 
@@ -27,7 +28,7 @@ struct SdlRenderer : public IRenderer
 
 	virtual void Clear() override;
 	virtual void Flip() override;
-	virtual void Blit(void* image_data, Rectangle& placement) override;
+	virtual void Blit(any_ptr image_data, Rectangle& placement) override;
 
 #ifndef UNIT_TEST
   protected:

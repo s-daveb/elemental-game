@@ -10,6 +10,8 @@
 #include "IRenderer.hpp"
 #include "test-utils/common.hpp"
 
+#include "types/any_ptr.hpp"
+
 #include <any>
 #include <utility>
 
@@ -31,7 +33,7 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 
 		virtual void Clear() override { return; }
 		virtual void Flip() override { return; }
-		virtual void Blit(void* image_data,
+		virtual void Blit(any_ptr image_data,
 		                  Rectangle& placement) override
 		{
 			return;

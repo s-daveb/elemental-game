@@ -13,9 +13,11 @@
 
 #include "private/debuginfo.hpp"
 #include "types.hpp"
+#include "types/any_ptr.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_render.h>
 
 #include <any>
 #include <sstream>
@@ -134,18 +136,27 @@ SdlRenderer::Flip()
 }
 
 void
-SdlRenderer::Blit(void* image_data, Rectangle& placement)
+// SdlRenderer::Blit(void* image_data, Rectangle& placement)
+SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	try {
-		auto* to_draw = reinterpret_cast<SDL_Texture*>(image_data);
+		// auto* to_draw = reinterpret_cast<SDL_Texture*>(image_data);
+		auto to_draw = any_ptr_cast<SDL_Texture*>(image_data);
+		// auto* to_draw = std::any_cast<void*>(image_data);
 		auto position = FromRectangle<SDL_Rect>(placement);
 
 		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr, to_draw,
 		                            nullptr, &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
+	} catch (std::bad_cast& cast_exc) {
+		std::stringstream buffer;
+		buffer << "bad_any_cast" << std::endl
+		       << "image_data.type: " << image_data.type().name()
+		       << std::endl;
+		throw Exception(buffer.str());
 	} catch (Exception& thrown_exception) {
 		throw;
 	} catch (std::exception& thrown_exception) {

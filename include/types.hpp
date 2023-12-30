@@ -17,6 +17,8 @@
 #include <string>
 #include <utility>
 
+#include "types/any_ptr.hpp"
+
 namespace elemental {
 
 /* Aliases for C-types that are unclear.

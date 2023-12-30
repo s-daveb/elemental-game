@@ -1,6 +1,7 @@
 # Define the executable 'test-runner'
 set(test-runner_SOURCES
 	runtime.test.cpp
+  any_ptr.test.cpp
 	Exception.test.cpp
 	Singleton.template.test.cpp
 	Application.test.cpp

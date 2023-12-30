@@ -11,6 +11,7 @@
 
 #include "Singleton.template.hpp"
 #include "types.hpp"
+#include "types/any_ptr.hpp"
 
 #include <any>
 #include <type_traits>
@@ -62,14 +63,14 @@ struct IRenderer
 	//! \brief Draw an untyped blob of image data at the area indicated by
 	//! second argument.
 	//!
-	//! I wanted to use std::any here, but to use pass-by-reference, I'd
-	//! need to use pointers - however, std::any seemed to think that
+	//! I wanted to use any_ptr here, but to use pass-by-reference, I'd
+	//! need to use pointers - however, any_ptr seemed to think that
 	//! SDL_Texture* values from the unit test scopes were different types
 	//! from the SDL_Texture* type in the game engine.
 	//!
 	//! \todo  Change this to boost::any and use any_cast, when possible -
 	//! investigate how the test-runner is being linked.
-	virtual void Blit(void* image_data, Rectangle& placement) = 0;
+	virtual void Blit(any_ptr img_data, Rectangle& placement) = 0;
 
   protected:
 	IRenderer() = default;
