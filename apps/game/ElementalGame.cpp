@@ -12,7 +12,7 @@
 #include "Exception.hpp"
 #include "IRenderer.hpp"
 #include "LoopRegulator.hpp"
-#include "renderers/SdlRenderer.hpp"
+#include "SdlRenderer.hpp"
 
 #include "private/debuginfo.hpp"
 

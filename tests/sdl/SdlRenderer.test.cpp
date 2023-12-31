@@ -8,7 +8,7 @@
  */
 
 #include "IRenderer.hpp"
-#include "renderers/SdlRenderer.hpp"
+#include "SdlRenderer.hpp"
 #include "sys/platform.hpp"
 
 #include "test-utils/SdlHelpers.hpp"

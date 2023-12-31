@@ -9,7 +9,7 @@
 
 #include "Exception.hpp"
 #include "IRenderer.hpp"
-#include "renderers/SdlRenderer.hpp"
+#include "SdlRenderer.hpp"
 
 #include "private/debuginfo.hpp"
 #include "type-aliases.hpp"
