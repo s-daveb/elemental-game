@@ -10,7 +10,7 @@
 #include "IRenderer.hpp"
 #include "test-utils/common.hpp"
 
-#include "types/any_ptr.hpp"
+#include "any_ptr.hpp"
 
 #include <any>
 #include <utility>

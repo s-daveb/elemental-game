@@ -14,7 +14,7 @@
 #include "IApplication.hpp"
 #include "Singleton.template.hpp"
 
-#include "types/any_ptr.hpp"
+#include "any_ptr.hpp"
 
 using namespace elemental;
 

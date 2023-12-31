@@ -13,7 +13,7 @@
 
 #include "private/debuginfo.hpp"
 #include "types.hpp"
-#include "types/any_ptr.hpp"
+#include "any_ptr.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
