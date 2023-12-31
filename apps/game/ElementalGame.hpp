@@ -27,7 +27,7 @@ namespace elemental {
 // Forward declarations
 class IRenderer;
 class IInputDriver;
-class IEventEmitter;
+class IEventSource;
 
 class ElementalGame
     : public Application
@@ -52,7 +52,7 @@ class ElementalGame
 	uint32_t ticks;
 
 	IRenderer* video_renderer_ptr;
-	IEventEmitter* event_emitter_ptr;
+	IEventSource* event_emitter_ptr;
 	IInputDriver* input_driver;
 };
 

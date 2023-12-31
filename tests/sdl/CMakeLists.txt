@@ -2,6 +2,7 @@
 set(SDL_test-runner_SOURCES
 	SdlMain.cpp
 	SdlRenderer.test.cpp
+	SdlEventSource.test.cpp
 )
 
 add_executable(SDL_test-runner

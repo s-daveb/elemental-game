@@ -1,4 +1,4 @@
-/* IEventEmitter.hpp
+/* IEventSource.hpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -23,23 +23,23 @@ enum DeviceFlags : int
 	ALL = KEYBOARD | MOUSE | JOYSTICK // 0111 in binary
 };
 
-struct IEventEmitter
+struct IEventSource
     : public INonCopyable
     , public Observable
 {
 	// using any = std::any;
 	using any = void*;
 
-	SINGLETON_INTERFACE(IEventEmitter);
+	SINGLETON_INTERFACE(IEventSource);
 
-	virtual ~IEventEmitter() {}
+	virtual ~IEventSource() {}
 	virtual void InitDevices(DeviceFlags flags = ALL) = 0;
 
 	virtual void Enqueue(any event) = 0;
 	virtual void PollEvents() = 0;
 
   protected:
-	IEventEmitter() : INonCopyable(), Observable() {}
+	IEventSource() : INonCopyable(), Observable() {}
 };
 }
 

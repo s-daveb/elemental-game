@@ -9,6 +9,7 @@ set(test-runner_SOURCES
 	LoopRegulator.test.cpp
 	sdl/SdlRenderer.test.cpp
 	Observable.test.cpp
+	sdl/SdlEventSource.test.cpp
 )
 
 add_executable(test-runner

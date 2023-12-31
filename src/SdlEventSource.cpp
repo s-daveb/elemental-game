@@ -1,4 +1,4 @@
-/* SdlEventEmitter.cpp
+/* SdlEventSource.cpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -8,9 +8,9 @@
  */
 
 #include "Exception.hpp"
-#include "IEventEmitter.hpp"
+#include "IEventSource.hpp"
 #include "IObserver.hpp"
-#include "SdlEventEmitter.hpp"
+#include "SdlEventSource.hpp"
 
 #include <SDL.h>
 
@@ -29,25 +29,26 @@ init_joystick_impl(SDL_JoystickDevice_ptr& joydev)
 	if (SDL_NumJoysticks() > 0) {
 		joydev = SDL_JoystickDevice_ptr(SDL_JoystickOpen(0),
 		                                SDL_JoystickClose);
-		std::cout << "Opened Joystick 0" << std::endl;
-		std::cout << "Name: " << SDL_JoystickNameForIndex(0)
-			  << std::endl;
-		std::cout << "Number of Axes: "
-			  << SDL_JoystickNumAxes(joydev.get()) << std::endl;
-		std::cout << "Number of Buttons: "
-			  << SDL_JoystickNumButtons(joydev.get()) << std::endl;
-		std::cout << "Number of Balls: "
-			  << SDL_JoystickNumBalls(joydev.get()) << std::endl;
+		debugprint("Opened Joystick 0" << std::endl);
+		debugprint("Name: " << SDL_JoystickNameForIndex(0)
+		                    << std::endl);
+		debugprint("Number of Axes: "
+		           << SDL_JoystickNumAxes(joydev.get()) << std::endl);
+		debugprint("Number of Buttons: "
+		           << SDL_JoystickNumButtons(joydev.get())
+		           << std::endl);
+		debugprint("Number of Balls: "
+		           << SDL_JoystickNumBalls(joydev.get()) << std::endl);
 
 		SDL_GameControllerEventState(SDL_ENABLE);
 	} else {
-		std::cout << "Warning: No Joystick or Core::Input "
-			     "detected"
-			  << std::endl;
+		debugprint("Warning: No Joystick or Core::Input "
+		           "detected"
+		           << std::endl);
 	}
 }
 void
-SdlEventEmitter::InitDevices(DeviceFlags dflags)
+SdlEventSource::InitDevices(DeviceFlags dflags)
 {
 	if (dflags == 0) {
 		dflags = ALL;
@@ -59,7 +60,7 @@ SdlEventEmitter::InitDevices(DeviceFlags dflags)
 }
 
 void
-SdlEventEmitter::Enqueue(any event)
+SdlEventSource::Enqueue(any event)
 {
 	ASSERT(event != nullptr);
 	auto* unwrapped_event = static_cast<SDL_Event*>(event);
@@ -70,7 +71,7 @@ SdlEventEmitter::Enqueue(any event)
 }
 
 void
-SdlEventEmitter::Notify()
+SdlEventSource::Notify()
 {
 	std::lock_guard<std::mutex> lock(event_queue_mutex);
 	while (!event_queue.empty()) {
@@ -85,7 +86,7 @@ SdlEventEmitter::Notify()
 }
 
 void
-SdlEventEmitter::PollEvents()
+SdlEventSource::PollEvents()
 {
 	std::lock_guard<std::mutex> lock(event_queue_mutex);
 	SDL_Event event;
@@ -95,8 +96,8 @@ SdlEventEmitter::PollEvents()
 	}
 }
 
-SdlEventEmitter::SdlEventEmitter()
-    : IEventEmitter()
+SdlEventSource::SdlEventSource()
+    : IEventSource()
     , event_queue()
     , joydev(nullptr, nullptr)
     , event_queue_mutex()

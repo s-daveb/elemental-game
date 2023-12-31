@@ -16,12 +16,12 @@
 
 #include "private/debuginfo.hpp"
 
-#include "IEventEmitter.hpp"
-#include "SdlEventEmitter.hpp"
+#include "IEventSource.hpp"
+#include "SdlEventSource.hpp"
 
 /*
 #include "IInputDriver.hpp"
-#include "SdlEventEmitter.hpp"
+#include "SdlEventSource.hpp"
 */
 
 #include <chrono>
@@ -101,7 +101,7 @@ ElementalGame::ElementalGame()
     , ticks(0)
 {
 	video_renderer_ptr = IRenderer::GetInstance<SdlRenderer>();
-	event_emitter_ptr = IEventEmitter::GetInstance<SdlEventEmitter>();
+	event_emitter_ptr = IEventSource::GetInstance<SdlEventSource>();
 
 	video_renderer_ptr->Init();
 	event_emitter_ptr->InitDevices(

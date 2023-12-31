@@ -193,7 +193,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 				SDL_PumpEvents();
 			}
 		}
-		std::this_thread::sleep_for(seconds(5));
+		std::this_thread::sleep_for(seconds(2));
 
 		SDL_FreeSurface(image_surf_ptr);
 	}

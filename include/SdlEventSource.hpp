@@ -1,4 +1,4 @@
-/* SdlEventEmitter.hpp
+/* SdlEventSource.hpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "IEventEmitter.hpp"
+#include "IEventSource.hpp"
 
 #include <SDL.h>
 
@@ -22,11 +22,11 @@ namespace elemental {
 using SDL_JoystickDevice_ptr =
     std::unique_ptr<SDL_Joystick, decltype(&SDL_JoystickClose)>;
 
-struct SdlEventEmitter : public IEventEmitter
+struct SdlEventSource : public IEventSource
 {
-	friend class IEventEmitter;
+	friend class IEventSource;
 
-	virtual ~SdlEventEmitter() {}
+	virtual ~SdlEventSource() {}
 	virtual void InitDevices(DeviceFlags flags = ALL);
 
 	virtual void Enqueue(any event);
@@ -35,7 +35,7 @@ struct SdlEventEmitter : public IEventEmitter
 	virtual void PollEvents();
 
   protected:
-	SdlEventEmitter();
+	SdlEventSource();
 
   private:
 	std::queue<SDL_Event> event_queue;
