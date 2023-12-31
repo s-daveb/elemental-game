@@ -10,9 +10,11 @@
 #include <iostream>
 
 #include "ElementalGame.hpp"
+#include "Exception.hpp"
 #include "IApplication.hpp"
 #include "Singleton.template.hpp"
-#include "Exception.hpp"
+
+#include "types/any_ptr.hpp"
 
 using namespace elemental;
 

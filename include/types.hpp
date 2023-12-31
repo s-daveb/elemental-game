@@ -7,43 +7,13 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+/**! \file types.hpp
+ **! \brief An umbrella header for low-level aliases and custom types used
+ *throughout the engine
+ ***/
 #pragma once
 
-#include <filesystem>
-#include <functional>
-#include <map>
-#include <memory>
-#include <optional>
-#include <string>
-#include <utility>
-
-#include "types/any_ptr.hpp"
-
-namespace elemental {
-
-/* Aliases for C-types that are unclear.
- * example: the type char* does not immediately scream "STRING", and
- * 	    socket libraries return `int`, rather than a typedef socket_fd_t. */
-namespace c {
-using string = char*;
-using const_string = const char*;
-using count_t = size_t;
-
-namespace fd {
-using socket = int;
-} // namespace fd
-} // namespace c
-
-enum error_flag : bool
-{
-	NO_ERROR = false,
-	ERROR = true
-};
-
-template<typename value_t>
-using Dictionary = std::map<const std::string, value_t>;
-
-} // namespace elemental
+#include "types/aliases.hpp"
 
 // clang-format off
 // vim: set foldmethod=syntax foldlevel=99 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

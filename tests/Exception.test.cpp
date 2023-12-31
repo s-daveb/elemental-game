@@ -23,7 +23,7 @@ namespace Match = Catch::Matchers;
 using Catch::CaseSensitive;
 
 void
-throw_wrapped_stl_exceptiong()
+throw_wrapped_stl_exception()
 {
 	auto local = std::logic_error("This is a stack variable");
 
@@ -64,7 +64,7 @@ BEGIN_TEST_SUITE("elemental::Exception")
 		SECTION("4. With destroyed stack")
 		{
 			auto nested_function_call = []() {
-				throw_wrapped_stl_exceptiong();
+				throw_wrapped_stl_exception();
 			};
 			try {
 				nested_function_call();

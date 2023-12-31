@@ -10,7 +10,7 @@
 #pragma once
 
 #include "private/debuginfo.hpp"
-#include "types.hpp"
+#include "types/aliases.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -30,7 +30,7 @@ class Exception : public std::exception
 {
 
   public:
-	Exception(c::const_string _message = default_error);
+	Exception(c::const_string message = default_error);
 	Exception(const std::string& message);
 
 	Exception(const elemental::Exception& other) = default;
