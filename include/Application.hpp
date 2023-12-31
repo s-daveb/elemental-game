@@ -10,7 +10,7 @@
 #pragma once
 
 #include "IApplication.hpp"
-#include "types.hpp"
+#include "type-aliases.hpp"
 
 namespace elemental {
 class Application : public IApplication

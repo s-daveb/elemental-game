@@ -12,7 +12,7 @@
 #include "renderers/SdlRenderer.hpp"
 
 #include "private/debuginfo.hpp"
-#include "types.hpp"
+#include "type-aliases.hpp"
 #include "any_ptr.hpp"
 
 #include <SDL.h>

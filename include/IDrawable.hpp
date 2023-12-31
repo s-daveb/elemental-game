@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "types.hpp"
+#include "type-aliases.hpp"
 #include "types/rendering.hpp"
 
 namespace elemental {

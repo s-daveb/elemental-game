@@ -10,7 +10,7 @@
 #include "Exception.hpp"
 
 #include "private/debuginfo.hpp"
-#include "types.hpp"
+#include "type-aliases.hpp"
 
 #include <algorithm>
 #include <exception>

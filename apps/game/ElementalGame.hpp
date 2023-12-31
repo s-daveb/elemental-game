@@ -17,7 +17,7 @@
 #include "LoopRegulator.hpp"
 
 #include "Singleton.template.hpp"
-#include "types.hpp"
+#include "type-aliases.hpp"
 
 #include <memory>
 #include <thread>

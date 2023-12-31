@@ -10,7 +10,7 @@
 #pragma once
 
 #include "private/debuginfo.hpp"
-#include "types/aliases.hpp"
+#include "type-aliases.hpp"
 
 #include <algorithm>
 #include <exception>
