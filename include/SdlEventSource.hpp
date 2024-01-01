@@ -34,10 +34,11 @@ struct SdlEventSource : public IEventSource
 
 	virtual void PollEvents();
 
+#ifndef UNIT_TEST
   protected:
+#endif
 	SdlEventSource();
 
-  private:
 	std::queue<SDL_Event> event_queue;
 	SDL_JoystickDevice_ptr joydev;
 

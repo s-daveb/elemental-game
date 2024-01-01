@@ -7,7 +7,9 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "IObserver.hpp"
 #include "SdlEventSource.hpp"
+
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
 
@@ -28,21 +30,46 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	};
 	using TestFixture = SdlEventSourceFixture;
 
+	class EventRecorder : public IObserver
+	{
+	  public:
+		EventRecorder() : IObserver() {}
+
+		virtual void OnNotice(const Observable& sender,
+		                      std::any message)
+		{
+			auto event = std::any_cast<SDL_Event&>(message);
+			received.push_back(event);
+		}
+		virtual ~EventRecorder() = default;
+		std::vector<SDL_Event> received;
+	};
+	class SdlEventSourceViewer : public SdlEventSource
+	{
+	  public:
+		static const std::queue<SDL_Event>& GetEventQueue(
+		    SdlEventSource* other)
+		{
+			return other->event_queue;
+		}
+	}; // #endregion
+
 	FIXTURE_TEST("SdlEventSource - Initialization and Enqueue")
 	{
 
 		// Your test code goes here
 		test_subject->InitDevices(); // Example: Initialize devices
+		auto& event_queue_ref =
+		    SdlEventSourceViewer::GetEventQueue(test_subject);
 
+		REQUIRE(event_queue_ref.size() == 0);
 		// Enqueue an SDL_Event (replace this with your actual event
 		// creation logic)
 		SDL_Event testEvent;
 		testEvent.type = SDL_KEYDOWN;
 		test_subject->Enqueue(&testEvent);
 
-		// Add assertions to test the Enqueue method and any other
-		// relevant functionality
-		REQUIRE(true);
+		REQUIRE(event_queue_ref.size() == 1);
 	}
 
 	FIXTURE_TEST("SdlEventSource - Notify")
