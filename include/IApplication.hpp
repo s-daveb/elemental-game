@@ -11,6 +11,8 @@
 
 #include "type-aliases.hpp"
 
+#include <vector>
+
 namespace elemental {
 
 class IApplication
