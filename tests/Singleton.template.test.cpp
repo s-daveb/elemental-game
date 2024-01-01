@@ -34,14 +34,14 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 
 	  private:
 		non_constructible_structure(){};
-		friend class Singleton<non_constructible_structure>;
+		friend class Singleton;
 	};
 
 	TEST("elemental::Singleton<T> -  Can wrap a simple class")
 	{
 		simple_structure stack_obj;
 		auto& first_reference =
-		    elemental::Singleton<simple_structure>::GetInstance();
+		    Singleton::GetReference<simple_structure>();
 
 		SECTION("1. No exceptions were thrown")
 		{
@@ -51,8 +51,8 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		SECTION("2. Subsequent calls result in the same object being "
 		        "returned")
 		{
-			auto& second_reference = elemental::Singleton<
-			    simple_structure>::GetInstance();
+			auto& second_reference =
+			    Singleton::GetReference<simple_structure>();
 			CHECK(&stack_obj != &first_reference);
 			CHECK(&first_reference == &second_reference);
 		}
@@ -61,8 +61,8 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 	TEST("elemental::Singleton<T> - As a friend class, can call a "
 	     "private constructor")
 	{
-		auto& first_reference = elemental::Singleton<
-		    non_constructible_structure>::GetInstance();
+		auto& first_reference =
+		    Singleton::GetReference<simple_structure>();
 
 		SECTION("1. No exceptions were thrown")
 		{
@@ -72,8 +72,8 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		SECTION("2. Subsequent calls result in the same object being "
 		        "returned")
 		{
-			auto& second_reference = elemental::Singleton<
-			    non_constructible_structure>::GetInstance();
+			auto& second_reference =
+			    Singleton::GetReference<simple_structure>();
 			CHECK(&first_reference == &second_reference);
 		}
 	}

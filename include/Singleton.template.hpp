@@ -26,17 +26,23 @@
 		              "T must be a derivative of " #TypeName);         \
 		static T instance;                                             \
 		return &instance;                                              \
-	};
+	}
 
 namespace elemental {
-template<typename T>
 struct Singleton
 {
   public:
-	static T& GetInstance()
+	template<typename T>
+	static T& GetReference()
 	{
 		static T instance;
 		return instance;
+	}
+
+	template<typename T>
+	static T* GetPointer()
+	{
+		return &Singleton::GetReference<T>();
 	}
 };
 

@@ -22,7 +22,7 @@ int
 main(int argc, c::const_string argv[], c::const_string envp[])
 {
 	try {
-		auto& game_instance = Singleton<ElementalGame>::GetInstance();
+		auto& game_instance = Singleton::GetReference<ElementalGame>();
 		game_instance.Init(argc, argv, envp);
 
 		return game_instance.Run();

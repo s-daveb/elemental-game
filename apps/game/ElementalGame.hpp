@@ -41,7 +41,7 @@ class ElementalGame
 	                      std::any message = std::any()) override;
 
   protected:
-	friend class Singleton<ElementalGame>;
+	friend class Singleton;
 
 	ElementalGame();
 	Dictionary<std::thread> running_threads;
