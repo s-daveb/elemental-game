@@ -11,6 +11,8 @@
 
 #include <cstdint>
 #include <map>
+#include <string>
+
 namespace elemental {
 
 /**! \name Aliases for C-types that are unclear.
