@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "IApplication.hpp"
 #include "type-aliases.hpp"
 
