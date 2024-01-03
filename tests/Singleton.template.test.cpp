@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "Singleton.template.hpp"
+#include "Singleton.thpp"
 
 #include "test-utils/common.hpp"
 

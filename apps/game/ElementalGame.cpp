@@ -41,7 +41,7 @@ print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
 
 ElementalGame::~ElementalGame()
 {
-	video_renderer_ptr->Deactivate();
+	video_renderer.Deactivate();
 }
 
 int
@@ -56,13 +56,13 @@ ElementalGame::Run()
 
 		while (this->is_running) {
 			frame_regulator.StartUpdate();
-			this->video_renderer_ptr->Clear();
+			this->video_renderer.Clear();
 
-			this->event_emitter_ptr->PollEvents();
+			this->event_emitter.PollEvents();
 
 			auto cycle_delay_ms = frame_regulator.Delay();
 			print_cps(cycle_delay_ms, "frame delay");
-			video_renderer_ptr->Flip();
+			video_renderer.Flip();
 		}
 
 		this->is_running = false;
@@ -94,21 +94,16 @@ ElementalGame::OnNotice(const Observable& sender, std::any message)
 ElementalGame::ElementalGame()
     : Application()
     , IObserver()
-    , video_renderer_ptr(nullptr)
-    , input_driver(nullptr)
-    , event_emitter_ptr(nullptr)
-    , is_running(false)
     , ticks(0)
+    , is_running(false)
+    , video_renderer(IRenderer::GetInstance<SdlRenderer>())
+    , event_emitter(IEventSource::GetInstance<SdlEventSource>())
 {
-	video_renderer_ptr = IRenderer::GetInstance<SdlRenderer>();
-	event_emitter_ptr = IEventSource::GetInstance<SdlEventSource>();
+	video_renderer.Init();
 
-	video_renderer_ptr->Init();
-	event_emitter_ptr->InitDevices(
-	    DeviceFlags(MOUSE | KEYBOARD | JOYSTICK));
-
-	event_emitter_ptr->RegisterObserver(*this);
-	event_emitter_ptr->PollEvents();
+	event_emitter.InitDevices(DeviceFlags(MOUSE | KEYBOARD | JOYSTICK));
+	event_emitter.RegisterObserver(*this);
+	event_emitter.PollEvents();
 }
 
 void
@@ -117,13 +112,12 @@ ElementalGame::simulation_thread_loop()
 	LoopRegulator loop_regulator(30_Hz);
 	do {
 		loop_regulator.StartUpdate();
-		this->event_emitter_ptr->Notify();
+		this->event_emitter.Notify();
 		// Scene.Update()
 
 		auto cycle_delay_ms = loop_regulator.Delay();
 		print_cps(cycle_delay_ms);
 	} while (this->is_running);
 }
-// clang-format offsdfsad
-// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99
-// noexpandtab ft=cpp.doxygen :
+// clang-format off
+// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

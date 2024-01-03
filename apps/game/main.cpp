@@ -12,9 +12,9 @@
 #include "ElementalGame.hpp"
 #include "Exception.hpp"
 #include "IApplication.hpp"
-#include "Singleton.template.hpp"
+#include "Singleton.thpp"
 
-#include "any_ptr.hpp"
+#include "any_ptr.thpp"
 
 using namespace elemental;
 

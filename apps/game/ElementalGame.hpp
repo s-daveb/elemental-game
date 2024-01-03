@@ -16,7 +16,7 @@
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
 
-#include "Singleton.template.hpp"
+#include "Singleton.thpp"
 #include "type-aliases.hpp"
 
 #include <memory>
@@ -48,12 +48,12 @@ class ElementalGame
 
 	void simulation_thread_loop();
 
-	bool is_running;
 	uint32_t ticks;
+	bool is_running;
 
-	IRenderer* video_renderer_ptr;
-	IEventSource* event_emitter_ptr;
-	IInputDriver* input_driver;
+	IRenderer& video_renderer;
+	IEventSource& event_emitter;
+	// IInputDriver& input_driver;
 };
 
 } // namespace elemental

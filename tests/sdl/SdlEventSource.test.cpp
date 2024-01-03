@@ -38,9 +38,9 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	{
 	  public:
 		static std::queue<SDL_Event>& GetEventQueue(
-		    SdlEventSource* other)
+		    SdlEventSource& other)
 		{
-			return other->event_queue;
+			return other.event_queue;
 		}
 	}; // #endregion
 	using Inspector = SdlEventSourceInspector;
@@ -54,10 +54,13 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		    , event_queue_ref(Inspector::GetEventQueue(test_object))
 		    , dev_rand()
 		{
+			while (!event_queue_ref.empty()) {
+				event_queue_ref.pop();
+			}
 		}
 
 		~SdlEventSourceFixture() {}
-		SdlEventSource* test_object;
+		SdlEventSource& test_object;
 		EventRecorder recorder;
 		std::queue<SDL_Event>& event_queue_ref;
 
@@ -67,8 +70,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
 	{
-		REQUIRE_NOTHROW(
-		    [&]() { test_object->InitDevices(JOYSTICK); }());
+		REQUIRE_NOTHROW([&]() { test_object.InitDevices(JOYSTICK); }());
 		REQUIRE(event_queue_ref.size() == 0);
 	}
 	FIXTURE_TEST(
@@ -107,7 +109,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		    std::uniform_int_distribution(5, MAX_EVENTS)(dev_rand);
 
 		REQUIRE_NOTHROW(
-		    [&]() { test_object->RegisterObserver(recorder); }());
+		    [&]() { test_object.RegisterObserver(recorder); }());
 
 		for (unsigned i = 0; i < rand_count; ++i) {
 			auto& input = test_input[i];
@@ -115,7 +117,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			event_queue_ref.push(input);
 		}
 
-		test_object->Notify();
+		test_object.Notify();
 
 		REQUIRE(recorder.received.size() > 0);
 
@@ -134,7 +136,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			SdlEventSimulator::randomArrowKey();
 		}
 
-		test_object->PollEvents();
+		test_object.PollEvents();
 
 		REQUIRE(event_queue.size() == 10);
 	}

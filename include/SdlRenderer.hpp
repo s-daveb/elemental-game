@@ -8,7 +8,7 @@
  */
 
 #include "IRenderer.hpp"
-#include "any_ptr.hpp"
+#include "any_ptr.thpp"
 
 namespace elemental {
 

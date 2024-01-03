@@ -1,4 +1,4 @@
-/* Singleton.template.hpp
+/* Singleton.hpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -20,12 +20,12 @@
 //! the parent class with this SINLGETON_INTERFACE as a friend class!
 #define SINGLETON_INTERFACE(TypeName)                                          \
 	template<typename T>                                                   \
-	static T* GetInstance()                                                \
+	static T& GetInstance()                                                \
 	{                                                                      \
 		static_assert(std::is_base_of<TypeName, T>::value,             \
 		              "T must be a derivative of " #TypeName);         \
 		static T instance;                                             \
-		return &instance;                                              \
+		return instance;                                              \
 	}
 
 namespace elemental {

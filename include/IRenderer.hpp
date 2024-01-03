@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "Singleton.template.hpp"
+#include "Singleton.thpp"
 #include "type-aliases.hpp"
-#include "any_ptr.hpp"
+#include "any_ptr.thpp"
 
 #include <any>
 #include <type_traits>
@@ -25,7 +25,7 @@ struct IRenderer
 {
 	//! \brief This macro is used in child classes to construct instances of
 	//! the derived classes.
-	//! \see Singleton.template.hpp
+	//! \see Singleton.thpp
 	//
 	SINGLETON_INTERFACE(IRenderer);
 

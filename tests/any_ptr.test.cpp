@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "any_ptr.hpp"
+#include "any_ptr.thpp"
 #include "test-utils/common.hpp"
 
 #include "Exception.hpp"

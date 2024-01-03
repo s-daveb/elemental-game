@@ -11,9 +11,9 @@
 #include "IRenderer.hpp"
 #include "SdlRenderer.hpp"
 
+#include "any_ptr.thpp"
 #include "private/debuginfo.hpp"
 #include "type-aliases.hpp"
-#include "any_ptr.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>

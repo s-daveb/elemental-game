@@ -11,7 +11,7 @@
 
 #include "INonCopyable.hpp"
 #include "Observable.hpp"
-#include "Singleton.template.hpp"
+#include "Singleton.thpp"
 
 namespace elemental {
 enum DeviceFlags : int
