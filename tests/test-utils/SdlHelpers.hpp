@@ -86,6 +86,13 @@ struct SdlEventSimulator // #region
 				break;
 		}
 
+		// wiki.libsdl.org: The event queue can actually be used as a
+		// two way communication channel. Not only can events be read
+		// from the queue, but the user can also push their own events
+		// onto it. event is a pointer to the event structure you wish
+		// to push onto the queue. The event is copied into the queue,
+		// and the caller may dispose of the memory pointed to after
+		// SDL_PushEvent() returns.
 		SDL_PushEvent(&event);
 		return event;
 	}
@@ -120,5 +127,4 @@ struct SdlTestFixture
 } // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
-
+// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

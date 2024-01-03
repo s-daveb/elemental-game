@@ -27,15 +27,12 @@ struct IEventSource
     : public INonCopyable
     , public Observable
 {
-	// using any = std::any;
-	using any = void*;
 
 	SINGLETON_INTERFACE(IEventSource);
 
 	virtual ~IEventSource() {}
 	virtual void InitDevices(DeviceFlags flags = ALL) = 0;
 
-	virtual void Enqueue(any event) = 0;
 	virtual void PollEvents() = 0;
 
   protected:

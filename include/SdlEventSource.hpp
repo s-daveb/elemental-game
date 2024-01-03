@@ -10,6 +10,7 @@
 #pragma once
 
 #include "IEventSource.hpp"
+#include "any_ptr.hpp"
 
 #include <SDL.h>
 
@@ -29,7 +30,6 @@ struct SdlEventSource : public IEventSource
 	virtual ~SdlEventSource() {}
 	virtual void InitDevices(DeviceFlags flags = ALL);
 
-	virtual void Enqueue(any event);
 	virtual void Notify();
 
 	virtual void PollEvents();

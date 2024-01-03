@@ -7,28 +7,18 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "IEventSource.hpp"
 #include "IObserver.hpp"
 #include "SdlEventSource.hpp"
 
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
 
+#include <random>
+
 BEGIN_TEST_SUITE("elemental::SdlEventSource")
 {
 	using namespace elemental;
-
-	struct SdlEventSourceFixture : public SdlTestFixture
-	{
-		SdlEventSourceFixture() : SdlTestFixture()
-		{
-			test_subject =
-			    IEventSource::GetInstance<SdlEventSource>();
-		}
-
-		~SdlEventSourceFixture() {}
-		SdlEventSource* test_subject;
-	};
-	using TestFixture = SdlEventSourceFixture;
 
 	class EventRecorder : public IObserver
 	{
@@ -44,56 +34,107 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		virtual ~EventRecorder() = default;
 		std::vector<SDL_Event> received;
 	};
-	class SdlEventSourceViewer : public SdlEventSource
+	class SdlEventSourceInspector : public SdlEventSource
 	{
 	  public:
-		static const std::queue<SDL_Event>& GetEventQueue(
+		static std::queue<SDL_Event>& GetEventQueue(
 		    SdlEventSource* other)
 		{
 			return other->event_queue;
 		}
 	}; // #endregion
+	using Inspector = SdlEventSourceInspector;
 
-	FIXTURE_TEST("SdlEventSource - Initialization and Enqueue")
+	struct SdlEventSourceFixture : public SdlTestFixture
 	{
+		SdlEventSourceFixture()
+		    : SdlTestFixture()
+		    , test_object(IEventSource::GetInstance<SdlEventSource>())
+		    , recorder()
+		    , event_queue_ref(Inspector::GetEventQueue(test_object))
+		    , dev_rand()
+		{
+		}
 
-		// Your test code goes here
-		test_subject->InitDevices(); // Example: Initialize devices
-		auto& event_queue_ref =
-		    SdlEventSourceViewer::GetEventQueue(test_subject);
+		~SdlEventSourceFixture() {}
+		SdlEventSource* test_object;
+		EventRecorder recorder;
+		std::queue<SDL_Event>& event_queue_ref;
+
+		std::random_device dev_rand;
+	};
+	using TestFixture = SdlEventSourceFixture;
+
+	FIXTURE_TEST("SdlEventSource - Initialization")
+	{
+		test_object->InitDevices(JOYSTICK);
 
 		REQUIRE(event_queue_ref.size() == 0);
-		// Enqueue an SDL_Event (replace this with your actual event
-		// creation logic)
-		SDL_Event testEvent;
-		testEvent.type = SDL_KEYDOWN;
-		test_subject->Enqueue(&testEvent);
+	}
+	FIXTURE_TEST("SdlEventSource - Enqueue stores events in order")
+	{
+		const int MAX_EVENTS = 10;
+		SDL_Event test_input_list[MAX_EVENTS];
 
-		REQUIRE(event_queue_ref.size() == 1);
+		unsigned int rand_count =
+		    std::uniform_int_distribution(5, MAX_EVENTS)(dev_rand);
+
+		for (unsigned i = 0; i < rand_count; ++i) {
+			auto& input = test_input_list[i];
+			input = SdlEventSimulator::randomArrowKey();
+			event_queue_ref.push(input);
+		}
+
+		REQUIRE(event_queue_ref.size() == rand_count);
+
+		for (unsigned i = 0; i < rand_count; ++i) {
+			auto event = event_queue_ref.front();
+			event_queue_ref.pop();
+
+			REQUIRE(event.key.keysym.sym ==
+			        test_input_list[i].key.keysym.sym);
+		}
 	}
 
-	FIXTURE_TEST("SdlEventSource - Notify")
+	FIXTURE_TEST("EventDispatcher::Notify sends out events in order")
 	{
-		// Your test code goes here
-		// Example: Call Notify method and add assertions to test its
-		// functionality
-		test_subject->Notify();
+		const int MAX_EVENTS = 5;
+		SDL_Event test_input[MAX_EVENTS];
 
-		// Add assertions as needed
-		REQUIRE(true);
+		unsigned int rand_count =
+		    std::uniform_int_distribution(5, MAX_EVENTS)(dev_rand);
+
+		REQUIRE_NOTHROW(
+		    [&]() { test_object->RegisterObserver(recorder); }());
+
+		for (unsigned i = 0; i < rand_count; ++i) {
+			auto& input = test_input[i];
+			input = SdlEventSimulator::randomArrowKey();
+			event_queue_ref.push(input);
+		}
+
+		test_object->Notify();
+
+		REQUIRE(recorder.received.size() > 0);
+
+		for (unsigned i = 0; i < MAX_EVENTS; ++i) {
+			auto& event = recorder.received[i];
+
+			CHECK(event.key.keysym.sym ==
+			      test_input[i].key.keysym.sym);
+		}
 	}
 
 	FIXTURE_TEST("SdlEventSource - PollEvents")
 	{
-		SdlEventSourceFixture fixture; // Instantiate the fixture
+		auto& event_queue = Inspector::GetEventQueue(test_object);
+		for (unsigned n = 0; n < 10; ++n) {
+			SdlEventSimulator::randomArrowKey();
+		}
 
-		// Your test code goes here
-		// Example: Call PollEvents method and add assertions to test
-		// its functionality
-		fixture.test_subject->PollEvents();
+		test_object->PollEvents();
 
-		// Add assertions as needed
-		REQUIRE(true);
+		REQUIRE(event_queue.size() == 10);
 	}
 
 	// Add more tests as needed

@@ -14,6 +14,7 @@
 
 #include <SDL.h>
 
+#include <any>
 #include <iostream>
 
 using namespace elemental;
@@ -56,17 +57,6 @@ SdlEventSource::InitDevices(DeviceFlags dflags)
 
 	if (dflags == 0 || (dflags & JOYSTICK)) {
 		init_joystick_impl(this->joydev);
-	}
-}
-
-void
-SdlEventSource::Enqueue(any event)
-{
-	ASSERT(event != nullptr);
-	auto* unwrapped_event = static_cast<SDL_Event*>(event);
-	{
-		std::lock_guard<std::mutex> lock(event_queue_mutex);
-		this->event_queue.push(*unwrapped_event);
 	}
 }
 
