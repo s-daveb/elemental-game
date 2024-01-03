@@ -76,7 +76,7 @@ BEGIN_TEST_SUITE("elemental::Exception")
 		}
 	}
 
-	TEST("elemental::Exception -  what() message reflects error")
+	TEST("elemental::Exception::what() - message reflects error")
 	{
 
 		SECTION("1. Unspecified error or exception")
@@ -117,8 +117,8 @@ BEGIN_TEST_SUITE("elemental::Exception")
 		}
 	}
 
-	TEST("elemental::Exception - what() contains stacktrace with Catch2 "
-	     "runtime methods")
+	TEST("elemental::Exception::what() - contains stacktrace with Catch2 "
+	     "runtime method names")
 	{
 		elemental::Exception test_object("Test");
 		SECTION(" a: what() does not contain default message")

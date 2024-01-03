@@ -43,7 +43,7 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		dummy_renderer() : IRenderer() {}
 	};
 
-	TEST("elemental::IRenderer - GetInstance works with "
+	TEST("elemental::IRenderer::GetInstance works with "
 	     "properly-derived class")
 	{
 		REQUIRE_NOTHROW(

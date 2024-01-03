@@ -65,13 +65,14 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	};
 	using TestFixture = SdlEventSourceFixture;
 
-	FIXTURE_TEST("SdlEventSource - Initialization")
+	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
 	{
-		test_object->InitDevices(JOYSTICK);
-
+		REQUIRE_NOTHROW(
+		    [&]() { test_object->InitDevices(JOYSTICK); }());
 		REQUIRE(event_queue_ref.size() == 0);
 	}
-	FIXTURE_TEST("SdlEventSource - Enqueue stores events in order")
+	FIXTURE_TEST(
+	    "elemental::SdlEventSource::Enqueue stores events in order")
 	{
 		const int MAX_EVENTS = 10;
 		SDL_Event test_input_list[MAX_EVENTS];
@@ -96,7 +97,8 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		}
 	}
 
-	FIXTURE_TEST("EventDispatcher::Notify sends out events in order")
+	FIXTURE_TEST(
+	    "elemental::SdlEventSource::Notify sends out events in order")
 	{
 		const int MAX_EVENTS = 5;
 		SDL_Event test_input[MAX_EVENTS];
@@ -125,7 +127,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		}
 	}
 
-	FIXTURE_TEST("SdlEventSource - PollEvents")
+	FIXTURE_TEST("elemental::SdlEventSource::PollEvents works")
 	{
 		auto& event_queue = Inspector::GetEventQueue(test_object);
 		for (unsigned n = 0; n < 10; ++n) {

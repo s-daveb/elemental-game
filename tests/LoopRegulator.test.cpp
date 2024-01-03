@@ -47,7 +47,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	};
 
 	FIXTURE_TEST(
-	    "elemental::LoopRegulator:Delay works within 5ms tolerance")
+	    "elemental::LoopRegulator::Delay works within 5ms tolerance")
 	{
 #if defined(CI_BUILD) && defined(__APPLE__)
 		WARN("(macos) this test always fails due to low "

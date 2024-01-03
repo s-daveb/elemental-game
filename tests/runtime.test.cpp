@@ -25,7 +25,7 @@ namespace Match = Catch::Matchers;
  * does */
 BEGIN_TEST_SUITE("Catch2")
 {
-	TEST("Basic Functionality")
+	TEST("Catch2 - Basic Functionality")
 	{
 		auto throw_something = []() {
 			throw std::runtime_error("ERROR");
@@ -41,12 +41,13 @@ BEGIN_TEST_SUITE("Catch2")
 			     " an exception!");
 		}
 	}
-	TEST("Matchers")
+	TEST("Catch2 -Matchers")
 	{
 		REQUIRE_THAT("Test string", Match::EndsWith("string"));
 		REQUIRE_THAT("LOREM IPSUM",
 		             Match::ContainsSubstring("REM IPS"));
 	}
+	///! \todo: Test FakeIt - create a simple Mock class specification
 }
 
 // clang-format off

@@ -38,43 +38,42 @@ BEGIN_TEST_SUITE("elemental::Observable")
 		}
 	};
 
-	TEST_CASE("elemental::Observable- Register IObservers", TEST_SUITE_NAME)
+	TEST("elemental::Observable::RegisterObserver works")
 	{
-		Mock<IObserver> observerType1;
-		Mock<IObserver> observerType2;
+		Mock<IObserver> observer_type1;
+		Mock<IObserver> observer_type2;
 		ObservableSubject subject;
 
-		IObserver& observer1 = observerType1.get();
-		IObserver& observer2 = observerType2.get();
+		IObserver& observer1 = observer_type1.get();
+		IObserver& observer2 = observer_type2.get();
 
 		subject.RegisterObserver(observer1);
 		subject.RegisterObserver(observer2);
 
 		REQUIRE(2 == subject.GetObserverCount());
 	}
-	TEST_CASE("elemental::Observable- Can notify observers",
-	          TEST_SUITE_NAME)
+	TEST("elemental::Observabl::Notify - properly notifies observers")
 	{
-		Mock<IObserver> observerType1;
-		Mock<IObserver> observerType2;
+		Mock<IObserver> observer_type1;
+		Mock<IObserver> observer_type2;
 		ObservableSubject subject;
 
 		static std::vector<std::string> buffer;
 
-		When(Method(observerType1, OnNotice))
+		When(Method(observer_type1, OnNotice))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
-		When(Method(observerType2, OnNotice))
+		When(Method(observer_type2, OnNotice))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("Second Observer");
 		    })
 		    .AlwaysReturn();
 
-		IObserver& observer1 = observerType1.get();
-		IObserver& observer2 = observerType2.get();
+		IObserver& observer1 = observer_type1.get();
+		IObserver& observer2 = observer_type2.get();
 
 		subject.RegisterObserver(observer1);
 		subject.RegisterObserver(observer2);

@@ -37,7 +37,7 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		friend class Singleton;
 	};
 
-	TEST("elemental::Singleton<T> -  Can wrap a simple class")
+	TEST("elemental::Singleton<T> - Can wrap a simple class")
 	{
 		simple_structure stack_obj;
 		auto& first_reference =

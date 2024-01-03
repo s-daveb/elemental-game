@@ -42,7 +42,7 @@ BEGIN_TEST_SUITE("elemental::Application")
 		Application& app;
 	};
 
-	FIXTURE_TEST("elemental::Application - Init method populates "
+	FIXTURE_TEST("elemental::application::Init method populates "
 	             "Arguments list and Environment dictionary")
 	{
 		app.Init(3, simulated_launch::argv, simulated_launch::env);

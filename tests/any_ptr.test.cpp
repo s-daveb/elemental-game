@@ -7,8 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "test-utils/common.hpp"
 #include "any_ptr.hpp"
+#include "test-utils/common.hpp"
 
 #include "Exception.hpp"
 
@@ -116,12 +116,12 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		REQUIRE(ptr1.stored_raw_ptr == &double_value);
 	}
 
-	TEST("elemental::any_ptr - type() method returns saved_type_index")
+	TEST("elemental::any_ptr::type() - returns saved_type_index")
 	{
 		any_ptr ptr;
 		REQUIRE(&(ptr.type()) == &ptr.saved_type_index);
 	}
-	TEST("elemental::any_ptr has_value")
+	TEST("elemental::any_ptr::has_value")
 	{
 		int int_value = 42;
 		any_ptr test_any_ptr(&int_value);
@@ -130,7 +130,7 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		REQUIRE_FALSE(null_any_ptr.has_value());
 		REQUIRE(test_any_ptr.has_value());
 	}
-	TEST("elemental::any_ptr operator_bool_with_value")
+	TEST("elemental::any_ptr::operator_bool")
 	{
 		int int_value = 42;
 		any_ptr test_any_ptr(&int_value);
@@ -140,7 +140,7 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		REQUIRE(test_any_ptr);
 	}
 
-	TEST("elemental::any_ptr_cast works as expected")
+	TEST("elemental::any_ptr_cast to void always works")
 	{
 		int int_value = 42;
 		short short_value = 24;
@@ -151,7 +151,10 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		any_ptr int_ptr = &int_value;
 		any_ptr void_ptr = raw_void_ptr;
 
-		REQUIRE(any_ptr_cast<short*>(void_ptr) == raw_void_ptr);
+		REQUIRE_NOTHROW([&]() {
+			REQUIRE(any_ptr_cast<short*>(void_ptr) != nullptr);
+			REQUIRE(any_ptr_cast<short*>(void_ptr) == raw_void_ptr);
+		}());
 	}
 
 	TEST("elemental::any_ptr_cast with matching type")
@@ -161,9 +164,11 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 
 		int* casted_ptr = any_ptr_cast<int*>(ptr);
 
-		REQUIRE(casted_ptr != nullptr);
-		REQUIRE(*casted_ptr == int_value);
-		REQUIRE(casted_ptr == &int_value);
+		REQUIRE_NOTHROW([&]() {
+			REQUIRE(casted_ptr != nullptr);
+			REQUIRE(*casted_ptr == int_value);
+			REQUIRE(casted_ptr == &int_value);
+		}());
 	}
 
 	TEST("elemental::any_ptr_cast with nullptr and void*")
@@ -174,7 +179,8 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		void* casted_void_ptr = any_ptr_cast<void*>(void_ptr);
 		int* casted_nullptr_ptr = any_ptr_cast<int*>(nullptr_ptr);
 
-		REQUIRE(casted_void_ptr == nullptr);
+		REQUIRE_NOTHROW(
+		    [&]() { REQUIRE(casted_void_ptr == nullptr); }());
 		REQUIRE(casted_nullptr_ptr == nullptr);
 	}
 
@@ -188,7 +194,7 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		                  any_ptr::bad_cast);
 	}
 
-	TEST("elemental::any_ptr_cast with matching types")
+	TEST("elemental::any_ptr_cast with matching struct types")
 	{
 		ns1::dummy_type obj;
 		any_ptr dummy_ptr(&obj);
@@ -203,7 +209,7 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 		REQUIRE(result->num == obj.num);
 	}
 
-	TEST("elemental::any_ptr_cast with mismatched types")
+	TEST("elemental::any_ptr_cast with mismatched struct types")
 	{
 		ns1::dummy_type obj;
 		any_ptr dummy_ptr(&obj);
@@ -219,7 +225,7 @@ BEGIN_TEST_SUITE("elemental::any_ptr")
 	}
 
 	TEST("elemental::any_ptr_cast with mismatched type_info but matching "
-	     "hashes")
+	     "type_info::name hashes")
 	{
 		ns1::dummy_type obj;
 		any_ptr dummy_ptr(&obj);
