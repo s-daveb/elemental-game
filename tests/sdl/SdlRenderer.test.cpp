@@ -11,6 +11,8 @@
 #include "SdlRenderer.hpp"
 #include "sys/platform.hpp"
 
+#include "SDL_Memory.thpp"
+
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
 
@@ -85,8 +87,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 
 		// 2. Verify that an SDL_Window and SDL_Renderer have been
 		// created
-		REQUIRE(test_object.sdl_window_ptr != nullptr);
-		REQUIRE(test_object.sdl_renderer_ptr != nullptr);
+		REQUIRE(test_object.sdl_window_unique_ptr != nullptr);
+		REQUIRE(test_object.sdl_renderer_unique_ptr != nullptr);
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Deactivate Renderer")
@@ -100,8 +102,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 
 		// 2. Verify that an SDL_Window and SDL_Renderer ptrs have been
 		// cleared
-		REQUIRE(test_object.sdl_window_ptr == nullptr);
-		REQUIRE(test_object.sdl_renderer_ptr == nullptr);
+		REQUIRE(test_object.sdl_window_unique_ptr == nullptr);
+		REQUIRE(test_object.sdl_renderer_unique_ptr == nullptr);
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - IsInitialized Accessor")
@@ -152,38 +154,39 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - Blit works")
 	{
 		using std::chrono::seconds;
-		SDL_Surface* image_surf_ptr = nullptr;
-		SDL_Texture* img_texture_ptr = nullptr;
+		unique_sdl_ptr<SDL_Surface> image_surf_unique_ptr;
+		unique_sdl_ptr<SDL_Texture> img_texture_unique_ptr = nullptr;
 		Rectangle location{ 10, 10, 100, 100 };
-		any_ptr lolptr = &location;
 
 		// Prep: Initialize a SdlRenderer and load an image texture
 		// using the SDL_Renderer* ptr inside
 		test_object.Init();
 		test_object.Clear();
-		image_surf_ptr = IMG_Load("data/tests/test-skull.png");
-		REQUIRE(image_surf_ptr != nullptr);
+		image_surf_unique_ptr = IMG_Load("data/tests/test-skull.png");
+		REQUIRE(image_surf_unique_ptr != nullptr);
 
-		REQUIRE(test_object.sdl_renderer_ptr != nullptr);
-		img_texture_ptr = SDL_CreateTextureFromSurface(
-		    test_object.sdl_renderer_ptr, image_surf_ptr);
-		REQUIRE(img_texture_ptr != nullptr);
+		REQUIRE(test_object.sdl_renderer_unique_ptr != nullptr);
+		img_texture_unique_ptr = SDL_CreateTextureFromSurface(
+		    test_object.sdl_renderer_unique_ptr, image_surf_unique_ptr);
+		REQUIRE(img_texture_unique_ptr != nullptr);
 
 		// 1. Renderer becomes invalid before blitting!
 
 		auto& temporary_render_storage =
-		    this->test_object.sdl_renderer_ptr;
+		    this->test_object.sdl_renderer_unique_ptr;
 		REQUIRE_THROWS([&]() {
 			// set an invalid SDL_Renderer pointer
-			test_object.sdl_renderer_ptr = nullptr;
+			test_object.sdl_renderer_unique_ptr = nullptr;
 			// 1. Before initialization, throws error
-			test_object.Blit(img_texture_ptr, location);
+			test_object.Blit(img_texture_unique_ptr.get(),
+			                 location);
 		}());
 
 		// 2. With a valid, initialized SdlRenderer, the
 		//   method works
-		test_object.sdl_renderer_ptr = temporary_render_storage;
-		test_object.Blit(img_texture_ptr, location);
+		test_object.sdl_renderer_unique_ptr.reset(
+		    temporary_render_storage);
+		test_object.Blit(img_texture_unique_ptr.get(), location);
 		// Display the image and pause so the user can see it!
 		test_object.Flip();
 		if (platform::MACOS) {
@@ -192,8 +195,6 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 			}
 		}
 		std::this_thread::sleep_for(seconds(2));
-
-		SDL_FreeSurface(image_surf_ptr);
 	}
 #endif
 }

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "private/debuginfo.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 
 #pragma GCC diagnostic ignored "-Wunused-variable"

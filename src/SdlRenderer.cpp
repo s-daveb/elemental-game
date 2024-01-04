@@ -60,16 +60,16 @@ SdlRenderer::Init()
 	/*! @todo: Get desired resolution from .config or .xml file or maybe the
 	 *! function arguments. */
 
-	this->sdl_window_ptr = SDL_CreateWindow(
+	this->sdl_window_unique_ptr = SDL_CreateWindow(
 	    "SdlRenderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024,
 	    768, SDL_WINDOW_SHOWN);
-	if (nullptr == this->sdl_window_ptr) {
+	if (nullptr == this->sdl_window_unique_ptr) {
 		HANDLE_SDL_ERROR("Could not create SDL_Window");
 	}
 
-	this->sdl_renderer_ptr = SDL_CreateRenderer(this->sdl_window_ptr, 0,
-	                                            SDL_RENDERER_ACCELERATED);
-	if (nullptr == this->sdl_renderer_ptr) {
+	this->sdl_renderer_unique_ptr = SDL_CreateRenderer(
+	    this->sdl_window_unique_ptr, 0, SDL_RENDERER_ACCELERATED);
+	if (nullptr == this->sdl_renderer_unique_ptr) {
 		HANDLE_SDL_ERROR("Could not initialize SDL_Renderer");
 	}
 
@@ -79,18 +79,15 @@ SdlRenderer::Init()
 void
 SdlRenderer::Deactivate()
 {
-	debugprint("Deactivate called!");
-	if (this->sdl_window_ptr != nullptr) {
-		SDL_DestroyWindow(this->sdl_window_ptr);
+	debugprint("SdlRenderer::Deactivate called!");
+	if (this->sdl_window_unique_ptr != nullptr) {
+		this->sdl_window_unique_ptr.reset();
 	}
-	if (this->sdl_renderer_ptr != nullptr) {
-		SDL_DestroyRenderer(this->sdl_renderer_ptr);
+	if (this->sdl_renderer_unique_ptr != nullptr) {
+		this->sdl_renderer_unique_ptr.reset();
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	this->sdl_renderer_ptr = nullptr;
-	this->sdl_window_ptr = nullptr;
-
 	this->is_initialized = false;
 }
 
@@ -101,10 +98,10 @@ SdlRenderer::GetResolution()
 	w = h = -1;
 
 	/* SDL does not seem to catch this condition sometimes */
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
 
 	if (ERROR ==
-	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr, &w, &h)) {
+	    SDL_GetRendererOutputSize(this->sdl_renderer_unique_ptr, &w, &h)) {
 		error_buffer.clear();
 		error_buffer << "Could not get Renderer output size: ("
 			     << SDL_GetError() << ")" << std::flush;
@@ -117,29 +114,29 @@ SdlRenderer::GetResolution()
 void
 SdlRenderer::Clear()
 {
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
 
 	// Set bg to black
-	SDL_SetRenderDrawColor(this->sdl_renderer_ptr, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(this->sdl_renderer_unique_ptr, 0, 0, 0, 0);
 
-	if (ERROR == SDL_RenderClear(this->sdl_renderer_ptr)) {
+	if (ERROR == SDL_RenderClear(this->sdl_renderer_unique_ptr)) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
 void
 SdlRenderer::Flip()
 {
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
 
 	// Set bg to black
-	SDL_RenderPresent(this->sdl_renderer_ptr);
+	SDL_RenderPresent(this->sdl_renderer_unique_ptr);
 }
 
 void
 // SdlRenderer::Blit(void* image_data, Rectangle& placement)
 SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 {
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
 
 	try {
 		// auto* to_draw = reinterpret_cast<SDL_Texture*>(image_data);
@@ -147,8 +144,8 @@ SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 		// auto* to_draw = std::any_cast<void*>(image_data);
 		auto position = FromRectangle<SDL_Rect>(placement);
 
-		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr, to_draw,
-		                            nullptr, &position)) {
+		if (ERROR == SDL_RenderCopy(this->sdl_renderer_unique_ptr,
+		                            to_draw, nullptr, &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
 	} catch (std::bad_cast& cast_exc) {
@@ -167,8 +164,8 @@ SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 SdlRenderer::SdlRenderer()
     : IRenderer()
     , is_initialized(false)
-    , sdl_window_ptr(nullptr)
-    , sdl_renderer_ptr(nullptr)
+    , sdl_window_unique_ptr(nullptr)
+    , sdl_renderer_unique_ptr(nullptr)
 {
 }
 

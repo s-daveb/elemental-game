@@ -10,6 +10,7 @@ set(test-runner_SOURCES
 	sdl/SdlRenderer.test.cpp
 	Observable.test.cpp
 	sdl/SdlEventSource.test.cpp
+	SDL_Memory.test.cpp
 )
 
 add_executable(test-runner

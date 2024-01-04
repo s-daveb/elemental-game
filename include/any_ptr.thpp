@@ -103,6 +103,18 @@ class any_ptr
 
 		return *this;
 	}
+	template <typename T,typename D,
+              typename = std::enable_if_t<!is_pointer_type<T>::value>>
+	any_ptr& operator=(std::unique_ptr<T,D>&& smart_ptr)
+	{
+		saved_type_index = typeid(std::add_pointer_t<T>);
+		stored_raw_ptr = smart_ptr.get();
+		type_name_str = saved_type_index.name();
+		type_name_hashed = string_hasher(type_name_str);
+
+		return *this;
+	}
+
 
 	virtual ~any_ptr() {}
 

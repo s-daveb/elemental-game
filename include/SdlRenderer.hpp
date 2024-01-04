@@ -7,8 +7,13 @@
  * obtain one at https://mozilla.org/MPL/2.0/ .
  */
 
+#pragma once
+
 #include "IRenderer.hpp"
+#include "SDL_Memory.thpp"
 #include "any_ptr.thpp"
+
+#include <memory>
 
 namespace elemental {
 
@@ -36,8 +41,8 @@ struct SdlRenderer : public IRenderer
 	bool is_initialized;
 	SdlRenderer();
 
-	SDL_Window* sdl_window_ptr;
-	SDL_Renderer* sdl_renderer_ptr;
+	unique_sdl_ptr<SDL_Window> sdl_window_unique_ptr;
+	unique_sdl_ptr<SDL_Renderer> sdl_renderer_unique_ptr;
 };
 
 template<>
