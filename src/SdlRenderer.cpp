@@ -20,6 +20,7 @@
 #include <SDL_render.h>
 
 #include <any>
+#include <memory>
 #include <sstream>
 #include <utility>
 
