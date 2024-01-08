@@ -20,6 +20,7 @@
 #include "type-aliases.hpp"
 
 #include <memory>
+#include <stack>
 #include <thread>
 
 namespace elemental {

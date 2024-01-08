@@ -26,12 +26,12 @@ class Application : public IApplication
 	                  c::const_string envp[]) override;
 	virtual int Run() override = 0;
 
-	virtual inline const std::vector<std::string>& getArguments()
+	virtual inline const std::vector<std::string>& GetArguments()
 	    const override
 	{
 		return this->arguments;
 	}
-	virtual inline const Dictionary<const std::string>& getEnvironment()
+	virtual inline const Dictionary<const std::string>& GetEnvironment()
 	    const override
 	{
 		return this->environment_variables;

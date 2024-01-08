@@ -24,8 +24,8 @@ class IApplication
 	                  c::const_string envp[]) = 0;
 	virtual int Run() = 0;
 
-	virtual const std::vector<std::string>& getArguments() const = 0;
-	virtual const Dictionary<const std::string>& getEnvironment() const = 0;
+	virtual const std::vector<std::string>& GetArguments() const = 0;
+	virtual const Dictionary<const std::string>& GetEnvironment() const = 0;
 
   protected:
 	IApplication() {}

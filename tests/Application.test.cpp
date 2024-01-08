@@ -42,19 +42,19 @@ BEGIN_TEST_SUITE("elemental::Application")
 		Application& app;
 	};
 
-	FIXTURE_TEST("elemental::application::Init method populates "
+	FIXTURE_TEST("elemental::Application - Init method populates "
 	             "Arguments list and Environment dictionary")
 	{
 		app.Init(3, simulated_launch::argv, simulated_launch::env);
 
-		CHECK(app.getArguments().size() == 3);
-		CHECK(app.getArguments()[0] == "param1");
-		CHECK(app.getArguments()[1] == "param2");
-		CHECK(app.getArguments()[2] == "param3");
+		CHECK(app.GetArguments().size() == 3);
+		CHECK(app.GetArguments()[0] == "param1");
+		CHECK(app.GetArguments()[1] == "param2");
+		CHECK(app.GetArguments()[2] == "param3");
 
-		CHECK(app.getEnvironment().at("PATH") == "/usr/bin");
-		CHECK(app.getEnvironment().at("VAR2") == "TWO");
-		CHECK(app.getEnvironment().at("REQUEST_URI") ==
+		CHECK(app.GetEnvironment().at("PATH") == "/usr/bin");
+		CHECK(app.GetEnvironment().at("VAR2") == "TWO");
+		CHECK(app.GetEnvironment().at("REQUEST_URI") ==
 		      "markdown?msg=hello-world");
 	};
 }
