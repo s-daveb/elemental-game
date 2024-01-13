@@ -11,6 +11,7 @@
 
 #include <cstdint>
 #include <string>
+#include <unordered_map>
 
 namespace elemental {
 
