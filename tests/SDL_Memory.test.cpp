@@ -36,10 +36,11 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		void operator()(FakeSDL_Object* ptr)
 		{
 
-			debugprint("FakeDeleter::operator() called!");
+			// debugprint("FakeDeleter::operator() called!");
 			ptr->initialized = false;
-			debugprint(((ptr->initialized) ? " initialized"
-			                               : " not initialized"));
+			// debugprint(((ptr->initialized) ? " initialized"
+			//                                : " not
+			//                                initialized"));
 			delete ptr;
 			ptr = nullptr;
 		}

@@ -7,6 +7,7 @@ add_library(elementalobj OBJECT
 	LoopRegulator.cpp
 	Observable.cpp
 	SdlEventSource.cpp
+	Configuration.cpp
 )
 
 set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE ON)
