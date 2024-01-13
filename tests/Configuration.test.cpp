@@ -43,7 +43,9 @@ BEGIN_TEST_SUITE("elemental::Configuration")
 		~SampleFileGenerator()
 		{
 			try {
-
+				if (!fs::exists(TEST_FILE_PATH)) {
+					fs::remove(TEST_FILE_PATH);
+				}
 			} catch (std::exception& e) {
 				debugprint(e.what());
 			}
@@ -51,7 +53,7 @@ BEGIN_TEST_SUITE("elemental::Configuration")
 	};
 	using TestFixture = SampleFileGenerator;
 
-	TEST("Constructors")
+	FIXTURE_TEST("Constructors")
 	{
 		SECTION("Empty Constructor, empty file_path, no stored data")
 		{
