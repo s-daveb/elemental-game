@@ -25,7 +25,7 @@ class IApplication
 	virtual int Run() = 0;
 
 	virtual const std::vector<std::string>& GetArguments() const = 0;
-	virtual const Dictionary<const std::string>& GetEnvironment() const = 0;
+	virtual const dictionary<const std::string>& GetEnvironment() const = 0;
 
   protected:
 	IApplication() {}

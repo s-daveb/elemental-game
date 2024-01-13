@@ -12,53 +12,19 @@
 #include <filesystem>
 #include <functional>
 #include <string>
-#include <unordered_map>
-
-#include <nlohmann/json.hpp>
 
 #include "type-aliases.hpp"
 
 namespace elemental {
+namespace configuration {
 
-class Configuration : public Dictionary<std::string>
-{
-  public:
-	inline Configuration() : file_path() {}
-	Configuration(const std::filesystem::path& file_path);
+using dictionary = elemental::dictionary<std::string>;
 
-	void LoadConfig();
-	void LoadConfig(const std::filesystem::path& file_path);
-	void SaveConfig() const;
-
-	inline const std::filesystem::path& FilePath()
-	{
-		return this->file_path;
-	}
-
-  private:
-	std::filesystem::path file_path;
-};
-
-using json = nlohmann::json;
-
-namespace ns {
-inline void
-to_json(json& json_data, const Configuration& config)
-{
-	json_data = json{};
-	for (auto& [key, value] : config) {
-		json_data[key] = value;
-	}
+dictionary load(const std::filesystem::path&);
+void save(dictionary&, const std::filesystem::path&);
 }
 
-inline void
-from_json(const json& json_data, Configuration& config)
-{
-	auto options_map = json_data.get<Dictionary<std::string>>();
-	config.swap(options_map);
-}
-} // names[ace ns
-} // namespace elemental
+} // namespace elemental::configuration
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

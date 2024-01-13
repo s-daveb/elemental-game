@@ -31,7 +31,7 @@ class Application : public IApplication
 	{
 		return this->arguments;
 	}
-	virtual inline const Dictionary<const std::string>& GetEnvironment()
+	virtual inline const dictionary<const std::string>& GetEnvironment()
 	    const override
 	{
 		return this->environment_variables;
@@ -44,7 +44,7 @@ class Application : public IApplication
 	void create_env_dictionary(c::const_string envp[]);
 
 	std::vector<std::string> arguments;
-	Dictionary<const std::string> environment_variables;
+	dictionary<const std::string> environment_variables;
 };
 
 } // namespace elemental

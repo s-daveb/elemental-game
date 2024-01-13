@@ -45,7 +45,7 @@ class ElementalGame
 	friend class Singleton;
 
 	ElementalGame();
-	Dictionary<std::thread> running_threads;
+	dictionary<std::thread> running_threads;
 
 	void simulation_thread_loop();
 

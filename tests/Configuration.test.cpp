@@ -16,19 +16,22 @@
 #include <iostream>
 #include <string>
 
+#include <nlohmann/json.hpp>
+
 #include "private/debuginfo.hpp"
 
 #include "type-aliases.hpp"
 
 using namespace elemental;
+
 namespace fs = std::filesystem;
 
 constexpr c::const_string TEST_FILE_PATH = "/tmp/test_config.json";
 constexpr c::const_string INVALID_FILE_PATH = "/tmp/test_bad_config.json";
 
-BEGIN_TEST_SUITE("elemental::Configuration")
+BEGIN_TEST_SUITE("elemental::configuration")
 {
-
+	namespace { // Test fixtures
 	struct SampleFileGenerator
 	{
 		SampleFileGenerator()
@@ -52,74 +55,46 @@ BEGIN_TEST_SUITE("elemental::Configuration")
 		}
 	};
 	using TestFixture = SampleFileGenerator;
-
-	FIXTURE_TEST("Constructors")
-	{
-		SECTION("Empty Constructor, empty file_path, no stored data")
-		{
-			auto config = Configuration();
-
-			REQUIRE(config.FilePath().empty());
-			REQUIRE(config.empty());
-		}
-		SECTION("Parametrized constructor with valid file")
-		{
-			auto config = Configuration(TEST_FILE_PATH);
-
-			REQUIRE_FALSE(config.FilePath().empty());
-			REQUIRE_FALSE(config.empty());
-		}
-		SECTION(
-		    "Parametrized constructor w/ invalid path throws exception")
-		{
-
-			REQUIRE_THROWS_AS(
-			    [&]() {
-				    auto config =
-					Configuration("/tmp/does-not-exist");
-			    }(),
-			    Exception);
-		}
-		SECTION("Parametrized constructor w/ bad file throws exception")
-		{
-
-			if (!fs::exists(INVALID_FILE_PATH)) {
-				std::ofstream f(INVALID_FILE_PATH);
-				f << R"({"Hello World"})" << std::endl;
-				f.close();
-			}
-
-			REQUIRE_THROWS_AS(
-			    [&]() {
-				    auto config =
-					Configuration(INVALID_FILE_PATH);
-			    }(),
-			    Exception);
-		}
 	}
-	FIXTURE_TEST("Configuration::LoadFile")
+
+	TEST("elemental::configuration::dictionary is serializablable like "
+	     "std::map<std::string,std::string>")
 	{
-		auto config = Configuration();
-		SECTION("Configuration::LoadFile w/ valid file")
+		configuration::dictionary test_data;
+		nlohmann::json j_object;
+		test_data["one"] = "1";
+		test_data["resolution"] = "1280x720";
+		test_data["Hello"] = "world";
+
+		REQUIRE_NOTHROW([&]() { j_object = test_data; }());
+
+		REQUIRE(test_data["one"] == j_object["one"]);
+		REQUIRE(test_data["resolution"] == j_object["resolution"]);
+		REQUIRE(test_data["Hello"] == j_object["Hello"]);
+	}
+
+	FIXTURE_TEST("configuration::load")
+	{
+		SECTION("configuration::load w/ valid file")
 		{
-			config.LoadConfig(TEST_FILE_PATH);
+			auto config = configuration::load(TEST_FILE_PATH);
 
 			REQUIRE_FALSE(config.empty());
 			REQUIRE(config.size() == 2);
 			REQUIRE(config["key1"] == "value1");
 			REQUIRE(config["key2"] == "value2");
 		}
-		SECTION(
-		    "Configuration::LoadFile w/ invalid path throws exception")
+		SECTION("configuration::load w/ invalid path throws exception")
 		{
 
 			REQUIRE_THROWS_AS(
 			    [&]() {
-				    config.LoadConfig("/tmp/does-not-exists");
+				    auto config = configuration::load(
+					"/tmp/does-not-exists");
 			    }(),
 			    Exception);
 		}
-		SECTION("Configuration::LoadFile w/ bad file throws exception")
+		SECTION("configuration::load w/ bad file throws exception")
 		{
 			if (!fs::exists(INVALID_FILE_PATH)) {
 				std::ofstream f(INVALID_FILE_PATH);
@@ -128,24 +103,47 @@ BEGIN_TEST_SUITE("elemental::Configuration")
 			}
 
 			REQUIRE_THROWS_AS(
-			    [&]() { config.LoadConfig(INVALID_FILE_PATH); }(),
+			    [&]() {
+				    auto config =
+					configuration::load(INVALID_FILE_PATH);
+			    }(),
 			    Exception);
 		}
-		SECTION("Configuration::LoadFile w/ no file path specified")
-		{
-
-			REQUIRE_THROWS_AS([&]() { config.LoadConfig(); }(),
-			                  Exception);
-		}
 	}
-	FIXTURE_TEST("LoadConfig dumps old data and reloads new file")
+	FIXTURE_TEST("configuration::save()")
 	{
-		auto config = Configuration();
-		config["bad_data"] = "false";
+		const std::string ALT_FILE_PATH = "/tmp/save-test.json";
+		std::ifstream resulting_file;
+		nlohmann::json resulting_json;
 
-		config.LoadConfig(TEST_FILE_PATH);
-		REQUIRE(config.size() > 1);
-		REQUIRE_THROWS(config.at("bad_data"));
+		auto test_data = configuration::dictionary();
+		test_data["one"] = "1";
+		test_data["resolution"] = "1280x720";
+		test_data["Hello"] = "world";
+
+		SECTION("an invalid path is provided")
+		{
+			REQUIRE_THROWS_AS(
+			    [&]() {
+				    configuration::save(
+					test_data, "/BADPATH/lolfile.json");
+			    }(),
+			    Exception);
+		}
+		SECTION("a valid path is provided")
+		{
+			REQUIRE_NOTHROW([&]() {
+				configuration::save(test_data, ALT_FILE_PATH);
+			}());
+
+			resulting_file.open(ALT_FILE_PATH);
+			resulting_file >> resulting_json;
+
+			REQUIRE(test_data["one"] == resulting_json["one"]);
+			REQUIRE(test_data["resolution"] ==
+			        resulting_json["resolution"]);
+			REQUIRE(test_data["Hello"] == resulting_json["Hello"]);
+		}
 	}
 
 } // END_TEST_SUITE("elemental::Configuration")
