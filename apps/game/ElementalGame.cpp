@@ -19,11 +19,6 @@
 #include "IEventSource.hpp"
 #include "SdlEventSource.hpp"
 
-/*
-#include "IInputDriver.hpp"
-#include "SdlEventSource.hpp"
-*/
-
 #include <chrono>
 #include <iostream>
 #include <thread>

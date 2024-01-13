@@ -54,7 +54,6 @@ class ElementalGame
 
 	IRenderer& video_renderer;
 	IEventSource& event_emitter;
-	// IInputDriver& input_driver;
 };
 
 } // namespace elemental
