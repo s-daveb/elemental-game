@@ -110,7 +110,7 @@ BEGIN_TEST_SUITE("elemental::configuration")
 			    Exception);
 		}
 	}
-	FIXTURE_TEST("configuration::save()")
+	TEST("configuration::save()")
 	{
 		const std::string ALT_FILE_PATH = "/tmp/save-test.json";
 		std::ifstream resulting_file;
