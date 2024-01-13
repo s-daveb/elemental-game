@@ -31,7 +31,7 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 			return std::make_pair(0, 0);
 		}
 
-		virtual void Clear() override { return; }
+		virtual void ClearScreen() override { return; }
 		virtual void Flip() override { return; }
 		virtual void Blit(any_ptr image_data,
 		                  Rectangle& placement) override

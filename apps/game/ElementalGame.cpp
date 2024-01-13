@@ -56,7 +56,7 @@ ElementalGame::Run()
 
 		while (this->is_running) {
 			frame_regulator.StartUpdate();
-			this->video_renderer.Clear();
+			this->video_renderer.ClearScreen();
 
 			this->event_emitter.PollEvents();
 

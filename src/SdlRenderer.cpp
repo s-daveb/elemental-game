@@ -31,7 +31,7 @@ std::stringstream error_buffer;
 }
 
 #define HANDLE_SDL_ERROR(what)                                                 \
-	error_buffer.clear();                                                  \
+	error_buffer.str("");                                                  \
 	error_buffer << what << ", SDL Error:" << SDL_GetError()               \
 		     << std::flush;                                            \
 	throw elemental::Exception(error_buffer.str());
@@ -51,7 +51,7 @@ SdlRenderer::Init()
 	}
 	if (ERROR == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
 	                      IMG_INIT_WEBP)) {
-		error_buffer.clear();
+		error_buffer.str("");
 		error_buffer
 		    << "Could not initialize SDL_Image: IMG_INIT() == 0"
 		    << std::flush;
@@ -103,17 +103,14 @@ SdlRenderer::GetResolution()
 
 	if (ERROR ==
 	    SDL_GetRendererOutputSize(this->sdl_renderer_unique_ptr, &w, &h)) {
-		error_buffer.clear();
-		error_buffer << "Could not get Renderer output size: ("
-			     << SDL_GetError() << ")" << std::flush;
-		throw elemental::Exception(error_buffer.str());
+		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
 	return std::make_pair(w, h);
 }
 
 void
-SdlRenderer::Clear()
+SdlRenderer::ClearScreen()
 {
 	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
 

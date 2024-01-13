@@ -10,8 +10,8 @@
 #pragma once
 
 #include "Singleton.thpp"
-#include "type-aliases.hpp"
 #include "any_ptr.thpp"
+#include "type-aliases.hpp"
 
 #include <any>
 #include <type_traits>
@@ -54,7 +54,7 @@ struct IRenderer
 	//! @{
 	//! \brief Clears the screen before new drawing cycles. Throws
 	//! exceptions.
-	virtual void Clear() = 0;
+	virtual void ClearScreen() = 0;
 	//! \brief swaps backbuffer with new frame displays new image. Throws
 	//! exceptions.
 	virtual void Flip() = 0;

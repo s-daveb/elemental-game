@@ -31,7 +31,7 @@ struct SdlRenderer : public IRenderer
 	};
 	virtual std::pair<uint32_t, uint32_t> GetResolution() override;
 
-	virtual void Clear() override;
+	virtual void ClearScreen() override;
 	virtual void Flip() override;
 	virtual void Blit(any_ptr image_data, Rectangle& placement) override;
 

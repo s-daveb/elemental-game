@@ -144,6 +144,7 @@ BEGIN_TEST_SUITE("elemental::configuration")
 			        resulting_json["resolution"]);
 			REQUIRE(test_data["Hello"] == resulting_json["Hello"]);
 		}
+		fs::remove(ALT_FILE_PATH);
 	}
 
 } // END_TEST_SUITE("elemental::Configuration")

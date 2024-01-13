@@ -131,14 +131,14 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	}
 
 	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - Clear works")
+	                 "elemental::SdlRenderer - ClearScreen works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_object.Clear(); }());
+		REQUIRE_THROWS([this]() { test_object.ClearScreen(); }());
 
 		// 2. After initializtion, the method works
 		test_object.Init();
-		test_object.Clear();
+		test_object.ClearScreen();
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Flip works")
@@ -161,7 +161,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		// Prep: Initialize a SdlRenderer and load an image texture
 		// using the SDL_Renderer* ptr inside
 		test_object.Init();
-		test_object.Clear();
+		test_object.ClearScreen();
 		image_surf_unique_ptr = IMG_Load("data/tests/test-skull.png");
 		REQUIRE(image_surf_unique_ptr != nullptr);
 

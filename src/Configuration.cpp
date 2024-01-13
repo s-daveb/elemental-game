@@ -40,7 +40,7 @@ load(const fs::path& file_path)
 		// debugprint("Configuration::LoadConfig - Opening the file");
 		std::ifstream file(file_path);
 		if (!file.is_open()) {
-			error_buffer.clear();
+			error_buffer.str("");
 			error_buffer
 			    << "Error opening configuration file: " << file_path
 			    << std::endl;
@@ -54,7 +54,7 @@ load(const fs::path& file_path)
 			auto loaded_data = config_json.get<dictionary>();
 			result.swap(loaded_data);
 		} else {
-			error_buffer.clear();
+			error_buffer.str("");
 			error_buffer
 			    << "Error: Configuration file should contain "
 			       "a JSON object."
@@ -62,7 +62,7 @@ load(const fs::path& file_path)
 			throw Exception(error_buffer.str());
 		}
 	} catch (const std::exception& e) {
-		error_buffer.clear();
+		error_buffer.str("");
 		error_buffer << "Error loading configuration: " << e.what()
 			     << std::endl;
 		throw Exception(error_buffer.str());
@@ -73,26 +73,29 @@ load(const fs::path& file_path)
 void
 save(dictionary& data, const fs::path& file_path)
 {
+	ASSERT(data.empty() == false);
 	ASSERT(file_path.empty() == false);
 
 	try {
 		std::ofstream file(file_path);
 		if (!file.is_open()) {
-			error_buffer.clear();
+			error_buffer.str("");
 			error_buffer
 			    << "Error opening configuration file for writing: "
 			    << file_path << std::endl;
 			throw Exception(error_buffer.str());
 		}
 
-		json config_json = static_cast<dictionary>(data);
+		json config_json = data;
 		file << std::setw(4) << config_json
 		     << std::endl; // Indentation for better human readability
+		file.flush();
+		file.close();
 
 		return;
 	} catch (const std::exception& e) {
 
-		error_buffer.clear();
+		error_buffer.str("");
 		error_buffer << "Error saving configuration: " << e.what()
 			     << std::endl;
 		throw Exception(error_buffer.str());
