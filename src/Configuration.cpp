@@ -73,15 +73,16 @@ load(const fs::path& file_path)
 void
 save(dictionary& data, const fs::path& file_path)
 {
-	static std::stringstream berr;
+	ASSERT(file_path.empty() == false);
 
 	try {
 		std::ofstream file(file_path);
 		if (!file.is_open()) {
-			berr.clear();
-			berr << "Error opening configuration file for writing: "
-			     << file_path << std::endl;
-			throw Exception(berr.str());
+			error_buffer.clear();
+			error_buffer
+			    << "Error opening configuration file for writing: "
+			    << file_path << std::endl;
+			throw Exception(error_buffer.str());
 		}
 
 		json config_json = static_cast<dictionary>(data);
@@ -91,9 +92,10 @@ save(dictionary& data, const fs::path& file_path)
 		return;
 	} catch (const std::exception& e) {
 
-		berr.clear();
-		berr << "Error saving configuration: " << e.what() << std::endl;
-		throw Exception(berr.str());
+		error_buffer.clear();
+		error_buffer << "Error saving configuration: " << e.what()
+			     << std::endl;
+		throw Exception(error_buffer.str());
 	}
 }
 } // namespace elemental::configuration
