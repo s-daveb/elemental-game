@@ -35,6 +35,8 @@ class ElementalGame
     , public IObserver
 {
   public:
+	friend class Singleton;
+
 	virtual ~ElementalGame();
 	virtual int Run() override;
 
@@ -42,8 +44,6 @@ class ElementalGame
 	                      std::any message = std::any()) override;
 
   protected:
-	friend class Singleton;
-
 	ElementalGame();
 	dictionary<std::thread> running_threads;
 
