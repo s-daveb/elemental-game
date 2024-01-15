@@ -60,13 +60,13 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		static std::vector<std::string> buffer;
 
-		When(Method(observer_type1, OnNotice))
+		When(Method(observer_type1, RecieveMessage))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
-		When(Method(observer_type2, OnNotice))
+		When(Method(observer_type2, RecieveMessage))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("Second Observer");
 		    })
@@ -87,4 +87,4 @@ BEGIN_TEST_SUITE("elemental::Observable")
 }
 
 // clang-format off
-// vim: set foldmethod=syntax  textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldlevel=2 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

@@ -77,7 +77,7 @@ ElementalGame::Run()
 }
 
 void
-ElementalGame::OnNotice(const Observable& sender, std::any message)
+ElementalGame::RecieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	SDL_Event event = std::any_cast<SDL_Event>(message);

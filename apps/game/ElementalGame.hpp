@@ -40,8 +40,8 @@ class ElementalGame
 	virtual ~ElementalGame();
 	virtual int Run() override;
 
-	virtual void OnNotice(const Observable& sender,
-	                      std::any message = std::any()) override;
+	virtual void RecieveMessage(const Observable& sender,
+	                            std::any message = std::any()) override;
 
   protected:
 	ElementalGame();

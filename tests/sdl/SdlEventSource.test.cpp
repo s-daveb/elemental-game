@@ -26,8 +26,8 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	  public:
 		EventRecorder() : IObserver() {}
 
-		virtual void OnNotice(const Observable& sender,
-		                      std::any message)
+		virtual void RecieveMessage(const Observable& sender,
+		                            std::any message)
 		{
 			auto event = std::any_cast<SDL_Event&>(message);
 			received.push_back(event);

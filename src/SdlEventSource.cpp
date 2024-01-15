@@ -68,7 +68,7 @@ SdlEventSource::Notify()
 		auto& event = event_queue.front();
 
 		for (auto& observer_ref : observers) {
-			observer_ref.get().OnNotice(*this, event);
+			observer_ref.get().RecieveMessage(*this, event);
 		}
 
 		event_queue.pop();

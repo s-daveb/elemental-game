@@ -25,7 +25,7 @@ void
 Observable::NotifyAll(std::any message)
 {
 	for (auto& observer : this->observers) {
-		observer.get().OnNotice(*this, message);
+		observer.get().RecieveMessage(*this, message);
 	}
 }
 }
