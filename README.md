@@ -5,7 +5,7 @@ Welcome to Elemental Game, a game and custom-built game engine designed for crea
 ## Getting Started
 ### Build Tools 
 - CMake (version 3.21 or higher)
-- C++20-compatible compiler
+- C++17-compatible compiler
 
 ### Project Structure
 - src/: Contains the engine logic, defines a libray target
