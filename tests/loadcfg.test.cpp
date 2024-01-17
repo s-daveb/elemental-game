@@ -7,7 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "Configuration.hpp"
+#include "sys/loadcfg.hpp"
+
 #include "Exception.hpp"
 #include "test-utils/common.hpp"
 

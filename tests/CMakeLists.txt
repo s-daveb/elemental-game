@@ -11,7 +11,7 @@ set(test-runner_SOURCES
 	Observable.test.cpp
 	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
-	Configuration.test.cpp
+	loadcfg.test.cpp
 )
 
 add_executable(test-runner
