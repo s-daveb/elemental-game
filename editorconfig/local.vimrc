@@ -1,6 +1,6 @@
  
 " editorconfig/local.vimrc
-" Copyright © 2023 Saul D. Beniquez  @{
+" Copyright © 2023-2024 Saul D. Beniquez  @{
 "
 " Redistribution and use in source and binary forms, with or without
 " modification, are permitted provided that the following conditions are met:
@@ -23,6 +23,11 @@
 " CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 " ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 " POSSIBILITY OF SUCH DAMAGE. @}
+
+set foldmethod=expr
+  \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  \ foldtext=lsp#ui#vim#folding#foldtext()
+
 
 let s:build_dir = 'vim-debug'
 let s:build_cores = 2

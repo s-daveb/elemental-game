@@ -204,6 +204,7 @@ add_custom_target(copy_assets
 
 # Add subdirectories
 add_subdirectory(src)
+add_subdirectory(demo)
 add_subdirectory(apps)
 
 if(ENABLE_TESTS)
