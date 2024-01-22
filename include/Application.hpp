@@ -14,6 +14,8 @@
 #include "IApplication.hpp"
 #include "types.hpp"
 
+#include "any_ptr.thpp"
+
 #include <vector>
 
 namespace elemental {

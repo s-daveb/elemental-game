@@ -11,9 +11,13 @@
 
 #include "types.hpp"
 
+#include <functional>
 #include <vector>
 
 namespace elemental {
+
+struct IApplication;
+using IApplicationRef = std::reference_wrapper<IApplication>;
 
 class IApplication
 {

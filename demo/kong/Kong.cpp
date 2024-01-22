@@ -9,18 +9,25 @@
 
 #include "./Kong.hpp"
 
-#include "Exception.hpp"
+#include "IEventSource.hpp"
 #include "IRenderer.hpp"
+#include "ISceneOrchestrator.hpp"
+
+#include "Exception.hpp"
 #include "LoopRegulator.hpp"
+#include "Scene.hpp"
 #include "SdlRenderer.hpp"
+
+#include "./MenuScene.hpp"
+// #include "./GameScene.hpp"
 
 #include "private/debuginfo.hpp"
 
-#include "IEventSource.hpp"
 #include "SdlEventSource.hpp"
 
 #include <chrono>
 #include <iostream>
+#include <stack>
 #include <thread>
 
 using namespace elemental;
@@ -42,10 +49,10 @@ Kong::~Kong()
 int
 Kong::Run()
 {
+	this->is_running = true;
 	try {
 		LoopRegulator frame_regulator(60_Hz);
 
-		this->is_running = true;
 		this->running_threads["simulation_thread"] =
 		    std::thread([this]() { this->simulation_thread_loop(); });
 
@@ -67,6 +74,7 @@ Kong::Run()
 		for (auto& [key, values] : this->running_threads) {
 			values.join();
 		}
+
 		return NO_ERROR;
 	} catch (Exception& exc) {
 		throw;
@@ -86,13 +94,50 @@ Kong::RecieveMessage(const Observable& sender, std::any message)
 	}
 }
 
+Scene&
+Kong::GetCurrentScene()
+{
+
+	throw Exception("This code is untested");
+	return this->loaded_scenes.top().get();
+}
+void
+Kong::ChangeScene(Scene& new_scene)
+{
+	this->loaded_scenes.top().get().Terminate();
+	this->loaded_scenes.pop();
+	this->loaded_scenes.push(new_scene);
+
+	throw Exception("This code is untested");
+}
+void
+Kong::SetNextScene(Scene& next_scene)
+{
+	auto& scene_ref = this->GetCurrentScene();
+	this->loaded_scenes.pop();
+	this->loaded_scenes.push(next_scene);
+	this->loaded_scenes.push(scene_ref);
+
+	throw Exception("This code is untested");
+}
+
+SceneContainer&
+Kong::GetAllScenes()
+{
+
+	throw Exception("This code is untested");
+	return this->loaded_scenes;
+}
+
 Kong::Kong()
     : Application()
     , IObserver()
-    , ticks(0)
+    , ISceneOrchestrator()
     , is_running(false)
+    , running_threads()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(IEventSource::GetInstance<SdlEventSource>())
+    , loaded_scenes()
 {
 	video_renderer.Init();
 
@@ -104,7 +149,7 @@ Kong::Kong()
 void
 Kong::simulation_thread_loop()
 {
-	LoopRegulator loop_regulator(30_Hz);
+	LoopRegulator loop_regulator(60_Hz);
 	do {
 		loop_regulator.StartUpdate();
 		this->event_emitter.Notify();

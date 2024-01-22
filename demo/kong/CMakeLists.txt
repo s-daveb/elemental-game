@@ -1,6 +1,7 @@
 
 set(kong_SOURCES
 	main.cpp
+	Kong.cpp
 )
 
 add_executable(kong

@@ -15,8 +15,10 @@
 
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
+#include "Scene.hpp"
 
 #include "Singleton.thpp"
+#include "any_ptr.thpp"
 #include "types.hpp"
 
 #include <memory>
@@ -43,6 +45,8 @@ class ElementalGame
 	virtual void RecieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
 
+	virtual any_ptr GetSceneContainerPtr() { return &loaded_scenes; }
+
   protected:
 	ElementalGame();
 	dictionary<std::thread> running_threads;
@@ -54,6 +58,8 @@ class ElementalGame
 
 	IRenderer& video_renderer;
 	IEventSource& event_emitter;
+
+	SceneContainer loaded_scenes;
 };
 
 } // namespace elemental

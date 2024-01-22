@@ -11,14 +11,19 @@
 
 #include "IApplication.hpp"
 #include "IObserver.hpp"
-#include "IRenderer.hpp"
+#include "ISceneOrchestrator.hpp"
+
+#include "Scene.hpp"
 
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
 
 #include "Singleton.thpp"
+
+#include "sys/loadcfg.hpp"
 #include "type-aliases.hpp"
 
+#include <functional>
 #include <memory>
 #include <stack>
 #include <thread>
@@ -27,33 +32,50 @@ namespace elemental {
 
 // Forward declarations
 class IRenderer;
-class IInputDriver;
 class IEventSource;
 
 class Kong
     : public Application
     , public IObserver
+    , public ISceneOrchestrator
 {
   public:
 	friend class Singleton;
 
 	virtual ~Kong();
-	virtual int Run() override;
 
+	/// \name Application Interface
+	/// @{
+	virtual int Run() override;
+	/// @}
+
+	/// \name IObserver interface
+	/// @{
 	virtual void RecieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
+	/// @}
+
+	/// \name ISceneOrchestrator interface
+	/// @{
+	virtual Scene& GetCurrentScene() override;
+	virtual void ChangeScene(Scene& new_scene) override;
+	virtual void SetNextScene(Scene& next_scne) override;
+
+	virtual SceneContainer& GetAllScenes() override;
+	///
+	/// @}
 
   protected:
 	Kong();
-	dictionary<std::thread> running_threads;
-
-	void simulation_thread_loop();
-
-	uint32_t ticks;
 	bool is_running;
+
+	dictionary<std::thread> running_threads;
+	void simulation_thread_loop();
 
 	IRenderer& video_renderer;
 	IEventSource& event_emitter;
+
+	SceneContainer loaded_scenes;
 };
 
 } // namespace elemental
