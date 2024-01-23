@@ -7,7 +7,8 @@ add_library(elementalobj OBJECT
 	LoopRegulator.cpp
 	Observable.cpp
 	SdlEventSource.cpp
-	loadcfg.cpp
+	FileResource.cpp
+	JsonConfigFile.cpp
 )
 
 set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE ON)

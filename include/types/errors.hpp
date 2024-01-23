@@ -1,4 +1,4 @@
-/* loadcfg.hpp
+/* errors.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,22 +9,13 @@
 
 #pragma once
 
-#include <filesystem>
-#include <functional>
-#include <string>
-
-#include "type-aliases.hpp"
-
 namespace elemental {
-namespace configuration {
-
-using dictionary = elemental::dictionary<std::string>;
-
-dictionary load(const std::filesystem::path&);
-void save(dictionary&, const std::filesystem::path&);
+enum error_flag : bool
+{
+	NO_ERROR = false,
+	ERROR = true
+};
 }
-
-} // namespace elemental::configuration
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

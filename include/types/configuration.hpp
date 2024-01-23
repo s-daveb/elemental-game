@@ -1,5 +1,5 @@
-/* IDrawable.hpp
- * Copyright © 2023 Saul D. Beniquez
+/* types/configuration.hpp
+ * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -10,22 +10,17 @@
 #pragma once
 
 #include "types.hpp"
-#include "types/rendering.hpp"
+#include "types/containers.hpp"
+
+#include <string>
 
 namespace elemental {
+namespace configuration {
 
-struct IDrawable
-{
-	virtual ~IDrawable(){};
-
-	inline void Draw(Position& pos)
-	{
-		this->Draw(Area{ pos.x, pos.y, 0, 0 });
-	}
-	virtual void Draw(const Area& rect) = 0;
-};
+using dictionary = elemental::dictionary<std::string>;
 
 }
+} // namespace elemental::configuration
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

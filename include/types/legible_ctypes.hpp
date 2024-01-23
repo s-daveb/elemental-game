@@ -1,4 +1,4 @@
-/* aliases.hpp
+/* legible_ctypes.hpp
  * Copyright © 2023-2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,36 +9,18 @@
 
 #pragma once
 
-#include <cstdint>
-#include <string>
-#include <unordered_map>
-
-namespace elemental {
+#include <cstddef>
 
 /**! \name Aliases for C-types that are unclear.
  **! The C type char* does not immediately scream "STRING", and
  **! socket libraries return `int`, rather than a typedef socket_fd_t. */
 ///! @{
-namespace c {
+namespace elemental::c {
 using string = char*;
 using const_string = const char*;
 using count_t = size_t;
-
-namespace fd {
-using socket = int;
-} // namespace fd
-} // namespace c
-enum error_flag : bool
-{
-	NO_ERROR = false,
-	ERROR = true
-};
 ///! @}
-
-///! \brief Convenience for std::map objects where the key is always a string.
-template<typename value_t>
-using dictionary = std::unordered_map<std::string, value_t>;
-} // namespace elemental
+} // namespace elemental::c
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

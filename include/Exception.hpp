@@ -10,9 +10,10 @@
 #pragma once
 
 #include "private/debuginfo.hpp"
-#include "type-aliases.hpp"
+#include "types.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <exception>
 #include <optional>
 #include <sstream>
@@ -22,6 +23,11 @@
 #define ASSERT(condition)                                                      \
 	if (condition == false) {                                              \
 		elemental::assert_impl(#condition);                            \
+	}
+
+#define ASSERT_MSG(condition, msg)                                             \
+	if (condition == false) {                                              \
+		elemental::assert_impl(#condition, msg);                       \
 	}
 
 namespace elemental {
@@ -43,9 +49,11 @@ class Exception : public std::exception
 
 	constexpr static auto default_error = "An exception has ocurred!";
 
-  private:
-	void build_what_message();
+  protected:
+	void build_what_message(c::const_string class_name = "",
+	                        c::const_string optional_data = "");
 
+  private:
 	std::string error_message;
 	std::string what_message;
 	std::string stack_trace;
@@ -53,10 +61,16 @@ class Exception : public std::exception
 	std::exception_ptr inner_exception_ptr;
 };
 
-void inline assert_impl(c::const_string failed_condition)
+void inline assert_impl(c::const_string failed_condition,
+                        c::const_string data = "")
 {
 	std::stringstream assert_buffer;
-	assert_buffer << failed_condition << " is false!" << std::flush;
+	assert_buffer << failed_condition << " is false!";
+
+	if (std::strlen(data) > 0) {
+		assert_buffer << std::endl << "\tdata: " << data;
+	}
+	assert_buffer << std::flush;
 	throw Exception(assert_buffer.str());
 }
 } // namespace elemental

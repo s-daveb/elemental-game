@@ -9,7 +9,7 @@
 
 #include "Application.hpp"
 #include "Exception.hpp"
-#include "type-aliases.hpp"
+#include "types.hpp"
 
 #include <string>
 #include <string_view>

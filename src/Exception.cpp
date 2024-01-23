@@ -10,7 +10,7 @@
 #include "Exception.hpp"
 
 #include "private/debuginfo.hpp"
-#include "type-aliases.hpp"
+#include "types.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -88,18 +88,28 @@ prepend_tabs_to_lines(const std::string& input)
 	return results_buffer.str();
 }
 void
-Exception::build_what_message()
+Exception::build_what_message(c::const_string class_name,
+                              c::const_string optional_data)
 {
+
+	std::string my_name(class_name);
 	std::stringstream buffer;
 
-	this->what_message = error_message;
+	if (my_name.empty()) {
+		my_name = "elemental::Exception";
+	};
 
 	std::string indented_stacktrace =
 	    prepend_tabs_to_lines(this->stack_trace);
 
-	buffer << "elemental::exception::what(): { " << std::endl
-	       << "\terror: " << error_message.c_str() << std::endl
-	       << "\tstack_trace: " << std::endl
+	buffer << my_name << "::what(): { " << std::endl
+	       << "\terror: " << error_message.c_str() << std::endl;
+
+	if (std::strlen(optional_data) > 0) {
+		buffer << "\tdata: " << optional_data << std::endl;
+	}
+
+	buffer << "\tstack_trace: " << std::endl
 	       << indented_stacktrace << std::endl
 	       << "};" << std::endl;
 
