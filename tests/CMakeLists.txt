@@ -13,6 +13,7 @@ set(test-runner_SOURCES
 	SDL_Memory.test.cpp
 	FileResource.test.cpp
 	JsonConfigFile.test.cpp
+	paths.test.cpp
 )
 
 add_executable(test-runner

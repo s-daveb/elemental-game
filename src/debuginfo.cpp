@@ -61,7 +61,10 @@ extract_mangled_symbol(const std::string& input)
 std::string
 generate_stacktrace(unsigned short framesToRemove)
 {
+	using namespace elemental::platform;
+
 	std::stringstream buffer;
+
 #ifndef BOOST_STACKTRACER
 	void* callstack[128];
 	int i, frames = backtrace(callstack, 128);
@@ -70,9 +73,9 @@ generate_stacktrace(unsigned short framesToRemove)
 	size_t columns_to_print = 0;
 
 	// preconfigure column length for certain platforms
-	if (platform::FREEBSD) {
+	if (platform::current_platform == FREEBSD) {
 		columns_to_print = 2;
-	} else if (platform::MACOS) {
+	} else if (platform::current_platform == MACOSX) {
 		columns_to_print = 4;
 	}
 

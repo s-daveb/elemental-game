@@ -18,14 +18,22 @@ using namespace elemental;
 
 namespace fs = std::filesystem;
 
-FileResource::FileResource(const fs::path& file_path) : file_path(file_path)
+FileResource::FileResource(const fs::path& file_path, create_dirs_mode mode)
+    : file_path(file_path)
 {
 	ASSERT(file_path.empty() == false);
 	try {
 		auto directory_path = file_path.parent_path();
-		if (!directory_path.empty() &&
-		    fs::is_directory(directory_path) == false) {
-			throw UnreachablePathException(directory_path);
+		std::cout << "Dir path: " << directory_path.string()
+			  << std::endl;
+
+		if (!directory_path.empty() && !fs::exists(directory_path)) {
+			if (mode != CREATE_MISSING_DIRS) {
+				throw UnreachablePathException(directory_path);
+			} else {
+				std::cout << "creating config dir" << std::endl;
+				fs::create_directories(directory_path);
+			}
 		}
 
 		if (fs::exists(file_path) == false) {

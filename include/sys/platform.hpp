@@ -11,28 +11,31 @@
 namespace elemental {
 
 namespace platform {
+
+enum platform_t
+{
+	UNKNOWN = 0b0000,
+	WINDOWS = 0b0001,
+	UNIX = 0b0100,
+	LINUX = 0b0101,
+	FREEBSD = 0b0110,
+	MACOSX = 0b0111
+};
+
 #ifdef __linux__
-static constexpr bool LINUX = true;
-#else
-static constexpr bool LINUX = false;
+static platform_t current_platform = LINUX;
 #endif
 
 #ifdef _WIN32
-static constexpr bool WINDOWS = true;
-#else
-static constexpr bool WINDOWS = false;
+static platform_t current_platform = WINDOWS;
 #endif
 
 #ifdef __APPLE__
-static constexpr bool MACOS = true;
-#else
-static constexpr bool MACOS = false;
+static platform_t current_platform = MACOSX;
 #endif
 
 #ifdef __FreeBSD__
-static constexpr bool FREEBSD = true;
-#else
-static constexpr bool FREEBSD = false;
+static platform_t current_platform = FREEBSD;
 #endif
 
 // I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)

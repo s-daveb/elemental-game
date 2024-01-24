@@ -31,14 +31,14 @@ static std::stringstream error_buffer;
 
 namespace elemental {
 
-JsonConfigFile::JsonConfigFile(const fs::path& file_path)
-    : FileResource(file_path)
+JsonConfigFile::JsonConfigFile(const fs::path& file_path, create_dirs_mode mode)
+    : FileResource(file_path, mode)
 {
 }
 
 JsonConfigFile::~JsonConfigFile() {}
 
-void
+configuration::dictionary&
 JsonConfigFile::Read()
 {
 	try {
@@ -74,6 +74,8 @@ JsonConfigFile::Read()
 			     << e.what() << std::flush;
 		throw Exception(error_buffer.str());
 	}
+
+	return this->config_data;
 }
 
 void

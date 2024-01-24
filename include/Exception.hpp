@@ -61,6 +61,12 @@ class Exception : public std::exception
 	std::exception_ptr inner_exception_ptr;
 };
 
+struct NotImplementedException : public Exception
+{
+	NotImplementedException() : Exception("Method not implemented") {}
+	virtual ~NotImplementedException() = default;
+};
+
 void inline assert_impl(c::const_string failed_condition,
                         c::const_string data = "")
 {

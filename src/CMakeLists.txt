@@ -9,6 +9,7 @@ add_library(elementalobj OBJECT
 	SdlEventSource.cpp
 	FileResource.cpp
 	JsonConfigFile.cpp
+	paths.cpp
 )
 
 set_property(TARGET elementalobj PROPERTY POSITION_INDEPENDENT_CODE ON)

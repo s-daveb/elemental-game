@@ -19,7 +19,13 @@ namespace elemental {
 class FileResource
 {
   public:
-	FileResource(const std::filesystem::path& file_path);
+	enum create_dirs_mode
+	{
+		DEFAULT = 0,
+		CREATE_MISSING_DIRS = 1,
+	};
+	FileResource(const std::filesystem::path& file_path,
+	             create_dirs_mode mode = DEFAULT);
 
 	virtual ~FileResource() = default;
 

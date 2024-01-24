@@ -21,10 +21,11 @@ namespace elemental {
 class JsonConfigFile : public FileResource
 {
   public:
-	JsonConfigFile(const std::filesystem::path& file_path);
+	JsonConfigFile(const std::filesystem::path& file_path,
+	               create_dirs_mode mode = DEFAULT);
 	virtual ~JsonConfigFile();
 
-	void Read();
+	configuration::dictionary& Read();
 	void Write();
 
 	inline std::string& operator[](const std::string& key)

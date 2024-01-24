@@ -7,8 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "IRenderer.hpp"
 #include "SdlRenderer.hpp"
+#include "IRenderer.hpp"
 #include "sys/platform.hpp"
 
 #include "SDL_Memory.thpp"
@@ -189,7 +189,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		test_object.Blit(img_texture_unique_ptr.get(), location);
 		// Display the image and pause so the user can see it!
 		test_object.Flip();
-		if (platform::MACOS) {
+		if (platform::MACOSX) {
 			for (unsigned i = 0; i < 500; i++) {
 				SDL_PumpEvents();
 			}
