@@ -15,9 +15,9 @@
 #include "types/configuration.hpp"
 
 #include <filesystem>
-#include <string>
 
-namespace elemental {
+namespace elemental::configuration {
+
 class JsonConfigFile : public FileResource
 {
   public:
@@ -28,7 +28,10 @@ class JsonConfigFile : public FileResource
 	configuration::dictionary& Read();
 	void Write();
 
-	inline std::string& operator[](const std::string& key)
+	/// \name Convenience wrapper interface
+	/// @{
+	///
+	inline std::string& operator[](const std::string& key) noexcept
 	{
 		return this->config_data[key];
 	}
@@ -36,6 +39,7 @@ class JsonConfigFile : public FileResource
 	{
 		return this->config_data.at(key);
 	}
+	/// @}
 
 	inline configuration::dictionary& GetData()
 	{
@@ -45,7 +49,7 @@ class JsonConfigFile : public FileResource
   protected:
 	configuration::dictionary config_data;
 };
-}
+} // namespace elemental::configuration
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

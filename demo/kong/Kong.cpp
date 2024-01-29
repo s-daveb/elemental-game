@@ -13,15 +13,18 @@
 #include "IRenderer.hpp"
 #include "ISceneOrchestrator.hpp"
 
+#include "private/debuginfo.hpp"
+#include "sys/paths.hpp"
+#include "types/configuration.hpp"
+
 #include "Exception.hpp"
+#include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
 #include "Scene.hpp"
 #include "SdlRenderer.hpp"
 
 #include "./MenuScene.hpp"
 // #include "./GameScene.hpp"
-
-#include "private/debuginfo.hpp"
 
 #include "SdlEventSource.hpp"
 
@@ -32,14 +35,37 @@
 
 using namespace elemental;
 
-/**! \name Helper Functions */
-//! @{
+const configuration::dictionary DEFAULT_SETTINGS = {
+	{ "resolution", "1280x720" },
+	{ "window_size", "1280x720" },
+	{ "window_title", "Kong" }
+};
+
+/// \name Helper Functions
+/// @{
 void
 print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
 {
 	debugprint(label << cycle_length.count() << "ms.");
 }
-//! @}
+
+bool
+fix_missing_settings(configuration::dictionary& settings)
+{
+	auto added_settings = settings.empty() ? true : false;
+
+	for (auto& [key, value] : DEFAULT_SETTINGS) {
+		if (settings.find(key) == settings.end()) {
+			if (!added_settings) {
+				added_settings = true;
+			}
+			settings.emplace(configuration::pair{ key, value });
+		}
+	}
+
+	return added_settings;
+}
+/// @}
 
 Kong::~Kong()
 {
@@ -63,7 +89,7 @@ Kong::Run()
 			this->event_emitter.PollEvents();
 
 			auto cycle_delay_ms = frame_regulator.Delay();
-			print_cps(cycle_delay_ms, "frame delay");
+			::print_cps(cycle_delay_ms, "frame delay");
 			video_renderer.Flip();
 		}
 
@@ -138,12 +164,22 @@ Kong::Kong()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(IEventSource::GetInstance<SdlEventSource>())
     , loaded_scenes()
+    , game_settings(paths::GetAppConfigRoot() / "kong" / "settings.json",
+                    FileResource::CREATE_MISSING_DIRS)
 {
-	video_renderer.Init();
+	auto& loaded_settings = this->game_settings.Read();
 
-	event_emitter.InitDevices(DeviceFlags(MOUSE | KEYBOARD | JOYSTICK));
-	event_emitter.RegisterObserver(*this);
-	event_emitter.PollEvents();
+	if (fix_missing_settings(loaded_settings)) {
+		this->game_settings.Write();
+	}
+
+	auto devices = DeviceFlags(MOUSE | KEYBOARD | JOYSTICK);
+	this->event_emitter.InitDevices(devices);
+	this->event_emitter.RegisterObserver(*this);
+	this->event_emitter.PollEvents();
+
+	this->video_renderer.Init();
+	// this->video_renderer.Init(configuration["window_title"]);
 }
 
 void
@@ -158,6 +194,11 @@ Kong::simulation_thread_loop()
 		auto cycle_delay_ms = loop_regulator.Delay();
 		print_cps(cycle_delay_ms);
 	} while (this->is_running);
+}
+
+void
+Kong::load_game_config()
+{
 }
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

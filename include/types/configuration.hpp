@@ -9,17 +9,27 @@
 
 #pragma once
 
-#include "types.hpp"
 #include "types/containers.hpp"
 
 #include <string>
 
-namespace elemental {
-namespace configuration {
+namespace elemental::configuration {
 
 using dictionary = elemental::dictionary<std::string>;
 
-}
+namespace json {
+	enum IndentMode
+	{
+		COMPACT = -1,
+		NEWLINES = 0,
+		INDENT = 1,
+	};
+	enum AsciiMode
+	{
+		DEFAULT = false,
+		FORCE = true,
+	};
+} // namespace json
 } // namespace elemental::configuration
 
 // clang-format off

@@ -10,14 +10,13 @@
 
 #include "JsonConfigFile.hpp"
 
-#include "FileResource.hpp"
 #include "types/configuration.hpp"
-
-#include "private/debuginfo.hpp"
-#include "test-utils/common.hpp"
 #include "types/legible_ctypes.hpp"
 
 #include "Exception.hpp"
+
+#include "private/debuginfo.hpp"
+#include "test-utils/common.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -27,6 +26,8 @@
 #include <nlohmann/json.hpp>
 
 using namespace elemental;
+using namespace elemental::configuration;
+
 namespace fs = std::filesystem;
 
 constexpr c::const_string INPUT_FILE_PATH = "/tmp/test_config.json";
@@ -36,32 +37,32 @@ constexpr c::const_string NON_EXISTENT_PATH = "/hades/tmp/dne/file.json";
 BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 {
 	namespace { // Test fixtures
-	struct SampleFileGenerator
-	{
-		SampleFileGenerator()
+		struct SampleFileGenerator
 		{
-			if (!fs::exists(INPUT_FILE_PATH)) {
-				std::ofstream f(INPUT_FILE_PATH,
-				                std::ios::out |
-				                    std::ios::trunc);
-				f << R"({"key1": "value1", "key2": "value2"})"
-				  << std::endl;
-				f.close();
-			}
-		}
-		~SampleFileGenerator()
-		{
-			try {
-				if (fs::exists(INPUT_FILE_PATH)) {
-					fs::remove(INPUT_FILE_PATH);
+			SampleFileGenerator()
+			{
+				if (!fs::exists(INPUT_FILE_PATH)) {
+					std::ofstream f(INPUT_FILE_PATH,
+					                std::ios::out |
+					                    std::ios::trunc);
+					f << R"({"key1": "value1", "key2": "value2"})"
+					  << std::endl;
+					f.close();
 				}
-			} catch (std::exception& e) {
-				debugprint(e.what());
 			}
-		}
-	};
-	using TestFixture = SampleFileGenerator;
-	}
+			~SampleFileGenerator()
+			{
+				try {
+					if (fs::exists(INPUT_FILE_PATH)) {
+						fs::remove(INPUT_FILE_PATH);
+					}
+				} catch (std::exception& e) {
+					debugprint(e.what());
+				}
+			}
+		};
+		using TestFixture = SampleFileGenerator;
+	} // namespace
 
 	TEST("elemental::configuration::dictionary is serializablable like "
 	     "std::map<std::string,std::string>")

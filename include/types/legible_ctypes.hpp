@@ -11,9 +11,9 @@
 
 #include <cstddef>
 
-/**! \name Aliases for C-types that are unclear.
- **! The C type char* does not immediately scream "STRING", and
- **! socket libraries return `int`, rather than a typedef socket_fd_t. */
+/*! \name Aliases for C-types that are unclear.
+ * The C type char* does not immediately scream "STRING", and
+ * socket libraries return `int`, rather than a typedef socket_fd_t. */
 namespace elemental::c {
 using string = char*;
 using const_string = const char*;

@@ -22,14 +22,13 @@
 
 #include "private/debuginfo.hpp"
 
-#include "types.hpp"
-
-using json = nlohmann::json;
 namespace fs = std::filesystem;
 
+namespace {
 static std::stringstream error_buffer;
+}
 
-namespace elemental {
+namespace elemental::configuration {
 
 JsonConfigFile::JsonConfigFile(const fs::path& file_path, create_dirs_mode mode)
     : FileResource(file_path, mode)
@@ -52,19 +51,24 @@ JsonConfigFile::Read()
 			throw Exception(error_buffer.str());
 		}
 
-		json config_json;
-		file_stream >> config_json;
+		// If the file is empty, do not try to open it and parse JSON
+		if (file_stream.peek() != std::ifstream::traits_type::eof()) {
+			nlohmann::json config_json;
+			file_stream >> config_json;
 
-		if (config_json.is_object()) {
-			auto loaded_data =
-			    config_json.get<configuration::dictionary>();
-			this->config_data.swap(loaded_data);
-		} else {
-			error_buffer.str("");
-			error_buffer << "Error: JsonConfigFile should contain "
-					"a serialized JSON object."
-				     << std::endl;
-			throw Exception(error_buffer.str());
+			if (config_json.is_object()) {
+				auto loaded_data =
+				    config_json
+					.get<configuration::dictionary>();
+				this->config_data.swap(loaded_data);
+			} else {
+				error_buffer.str("");
+				error_buffer
+				    << "Error: JsonConfigFile should contain "
+				       "a serialized JSON object."
+				    << std::endl;
+				throw Exception(error_buffer.str());
+			}
 		}
 	} catch (elemental::Exception& except) {
 		throw;
@@ -82,8 +86,7 @@ void
 JsonConfigFile::Write()
 {
 	try {
-		std::ofstream file_stream(file_path,
-		                          std::ios::out); // | std::ios::trunc);
+		std::ofstream file_stream(file_path);
 		if (!file_stream.is_open()) {
 			error_buffer.str("");
 			error_buffer << "Error opening JsonConfigFile "
@@ -92,13 +95,12 @@ JsonConfigFile::Write()
 			throw Exception(error_buffer.str());
 		}
 
-		json config_json = config_data;
-		file_stream << config_json << std::endl;
-
-		/* Force the file to flush to disk on macOS.
-		 * (The buffering is really aggressive!) */
-		file_stream.flush();
-		file_stream.close();
+		nlohmann::json config_json = config_data;
+		file_stream
+		    << config_json.dump(json::IndentMode::NEWLINES, '\t',
+		                        json::AsciiMode::DEFAULT,
+		                        nlohmann::json::error_handler_t::ignore)
+		    << std::endl;
 
 		return;
 	} catch (elemental::Exception& except) {

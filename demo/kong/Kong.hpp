@@ -13,15 +13,13 @@
 #include "IObserver.hpp"
 #include "ISceneOrchestrator.hpp"
 
-#include "Scene.hpp"
+#include "types/configuration.hpp"
 
 #include "Application.hpp"
+#include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
-
+#include "Scene.hpp"
 #include "Singleton.thpp"
-
-#include "sys/loadcfg.hpp"
-#include "type-aliases.hpp"
 
 #include <functional>
 #include <memory>
@@ -76,6 +74,7 @@ class Kong
 	IEventSource& event_emitter;
 
 	SceneContainer loaded_scenes;
+	configuration::JsonConfigFile game_settings;
 };
 
 } // namespace elemental

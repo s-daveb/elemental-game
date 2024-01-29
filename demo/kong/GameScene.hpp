@@ -23,11 +23,11 @@ class GameScene : public Scene
 		/** \todo Allocate 2DView, responsible for initializing font
 		 *  rendering, and UI toolkits.
 		 *  -- Saul 20.01.24 ☕️  */
-		throw NOT_IMPLEMENTED();
+		throw NotImplementedException();
 	}
 
-	virtual void Step() override{ throw NOT_IMPLEMENTED() : };
-	virtual void Terminate() override { throw NOT_IMPLEMENTED(); };
+	virtual void Step() override { throw NotImplementedException(); };
+	virtual void Terminate() override { throw NotImplementedException(); };
 };
 }
 
