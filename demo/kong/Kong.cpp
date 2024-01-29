@@ -32,6 +32,7 @@
 #include <iostream>
 #include <stack>
 #include <thread>
+#include <utility>
 
 using namespace elemental;
 
@@ -59,7 +60,7 @@ fix_missing_settings(configuration::dictionary& settings)
 			if (!added_settings) {
 				added_settings = true;
 			}
-			settings.emplace(configuration::pair{ key, value });
+			settings.emplace(std::pair{ key, value });
 		}
 	}
 
@@ -196,9 +197,5 @@ Kong::simulation_thread_loop()
 	} while (this->is_running);
 }
 
-void
-Kong::load_game_config()
-{
-}
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :
