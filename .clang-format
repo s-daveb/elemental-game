@@ -18,6 +18,8 @@ DerivePointerAlignment: False
 PointerAlignment: Left
 ReferenceAlignment: Pointer
 AlwaysBreakTemplateDeclarations: Yes
+FixNamespaceComments: Yes
+NamespaceIndentation: Inner
 
 #BreakBeforeBraces: Custom
 #BraceWrapping:
