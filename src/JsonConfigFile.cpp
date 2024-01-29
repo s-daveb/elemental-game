@@ -9,7 +9,6 @@
 
 #include "JsonConfigFile.hpp"
 #include "Exception.hpp"
-#include "types/configuration.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -26,7 +25,19 @@ namespace fs = std::filesystem;
 
 namespace {
 static std::stringstream error_buffer;
-}
+
+enum IndentMode : int
+{
+	COMPACT = -1,
+	NEWLINES = 0,
+	INDENT = 1,
+};
+enum AsciiMode : bool
+{
+	DEFAULT = false,
+	FORCE = true,
+};
+} // namespace
 
 namespace elemental::configuration {
 
@@ -37,7 +48,7 @@ JsonConfigFile::JsonConfigFile(const fs::path& file_path, create_dirs_mode mode)
 
 JsonConfigFile::~JsonConfigFile() {}
 
-configuration::dictionary&
+nlohmann::json&
 JsonConfigFile::Read()
 {
 	try {
@@ -53,22 +64,7 @@ JsonConfigFile::Read()
 
 		// If the file is empty, do not try to open it and parse JSON
 		if (file_stream.peek() != std::ifstream::traits_type::eof()) {
-			nlohmann::json config_json;
 			file_stream >> config_json;
-
-			if (config_json.is_object()) {
-				auto loaded_data =
-				    config_json
-					.get<configuration::dictionary>();
-				this->config_data.swap(loaded_data);
-			} else {
-				error_buffer.str("");
-				error_buffer
-				    << "Error: JsonConfigFile should contain "
-				       "a serialized JSON object."
-				    << std::endl;
-				throw Exception(error_buffer.str());
-			}
 		}
 	} catch (elemental::Exception& except) {
 		throw;
@@ -79,7 +75,7 @@ JsonConfigFile::Read()
 		throw Exception(error_buffer.str());
 	}
 
-	return this->config_data;
+	return this->config_json;
 }
 
 void
@@ -95,11 +91,10 @@ JsonConfigFile::Write()
 			throw Exception(error_buffer.str());
 		}
 
-		nlohmann::json config_json = config_data;
 		file_stream
-		    << config_json.dump(json::IndentMode::NEWLINES, '\t',
-		                        json::AsciiMode::DEFAULT,
-		                        nlohmann::json::error_handler_t::ignore)
+		    << config_json.dump(IndentMode::INDENT, '\t',
+		                        AsciiMode::DEFAULT,
+		                        nlohmann::json::error_handler_t::replace)
 		    << std::endl;
 
 		return;

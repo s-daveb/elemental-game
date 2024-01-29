@@ -24,8 +24,6 @@ FileResource::FileResource(const fs::path& file_path, create_dirs_mode mode)
 	ASSERT(file_path.empty() == false);
 	try {
 		auto directory_path = file_path.parent_path();
-		std::cout << "Dir path: " << directory_path.string()
-			  << std::endl;
 
 		if (!directory_path.empty() && !fs::exists(directory_path)) {
 			if (mode != CREATE_MISSING_DIRS) {

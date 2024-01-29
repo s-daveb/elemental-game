@@ -14,7 +14,7 @@
 
 namespace elemental {
 
-///! \brief Convenience for std::map objects where the key is always a string.
+/// \brief Convenience for std::map objects where the key is always a string.
 template<typename value_t>
 using dictionary = std::unordered_map<std::string, value_t>;
 } // namespace elemental

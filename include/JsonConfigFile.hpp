@@ -12,9 +12,10 @@
 #include "FileResource.hpp"
 
 #include "types.hpp"
-#include "types/configuration.hpp"
 
 #include <filesystem>
+
+#include <nlohmann/json.hpp>
 
 namespace elemental::configuration {
 
@@ -25,29 +26,25 @@ class JsonConfigFile : public FileResource
 	               create_dirs_mode mode = DEFAULT);
 	virtual ~JsonConfigFile();
 
-	configuration::dictionary& Read();
+	nlohmann::json& Read();
 	void Write();
 
-	/// \name Convenience wrapper interface
-	/// @{
-	///
-	inline std::string& operator[](const std::string& key) noexcept
+	template<typename T>
+	T Get() const
 	{
-		return this->config_data[key];
+		return config_json.get<T>();
 	}
-	inline std::string& at(const std::string& key)
-	{
-		return this->config_data.at(key);
-	}
-	/// @}
 
-	inline configuration::dictionary& GetData()
+	template<typename T>
+	void Set(const T& value)
 	{
-		return this->config_data;
-	};
+		config_json = value;
+	}
+
+	inline nlohmann::json& GetJsonData() { return this->config_json; };
 
   protected:
-	configuration::dictionary config_data;
+	nlohmann::json config_json;
 };
 } // namespace elemental::configuration
 

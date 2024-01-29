@@ -10,7 +10,6 @@
 
 #include "JsonConfigFile.hpp"
 
-#include "types/configuration.hpp"
 #include "types/legible_ctypes.hpp"
 
 #include "Exception.hpp"
@@ -64,20 +63,21 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		using TestFixture = SampleFileGenerator;
 	} // namespace
 
-	TEST("elemental::configuration::dictionary is serializablable like "
+	TEST("elemental::nlohmann::json is serializablable like "
 	     "std::map<std::string,std::string>")
 	{
-		configuration::dictionary test_data;
-		nlohmann::json j_object;
+		elemental::dictionary<std::string> test_data;
+		nlohmann::json jsonified;
+
 		test_data["one"] = "1";
 		test_data["resolution"] = "1280x720";
 		test_data["Hello"] = "world";
 
-		REQUIRE_NOTHROW([&]() { j_object = test_data; }());
+		REQUIRE_NOTHROW([&]() { jsonified = test_data; }());
 
-		REQUIRE(test_data["one"] == j_object["one"]);
-		REQUIRE(test_data["resolution"] == j_object["resolution"]);
-		REQUIRE(test_data["Hello"] == j_object["Hello"]);
+		REQUIRE(test_data["one"] == jsonified["one"]);
+		REQUIRE(test_data["resolution"] == jsonified["resolution"]);
+		REQUIRE(test_data["Hello"] == jsonified["Hello"]);
 	}
 
 	FIXTURE_TEST("JsonConfigFile construction")
@@ -85,7 +85,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SECTION("JsonConfigFile w/ valid path")
 		{
 			auto config = JsonConfigFile(INPUT_FILE_PATH);
-			auto& config_data = config.GetData();
+			auto& config_data = config.GetJsonData();
 
 			REQUIRE(config_data.empty());
 		}
@@ -96,58 +96,19 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 			                  elemental::UnreachablePathException);
 		}
 	}
-	FIXTURE_TEST("JsonConfigFile container wrappers and accessors")
-	{
-		auto config = JsonConfigFile(INPUT_FILE_PATH);
-
-		SECTION("GetConfiguration() and the operator[] are working")
-		{
-			auto& internal_data = config.GetData();
-			internal_data["key1"] = "test";
-
-			REQUIRE(config["key1"] == internal_data["key1"]);
-
-			SECTION("The operator[] returns a mutable reference "
-			        "and allows object creation")
-			{
-				internal_data["key1"] = "test";
-
-				// key 2 should not exist yet
-				REQUIRE(internal_data.find("key2") ==
-				        internal_data.end());
-				config["key2"] = "test2";
-
-				// key2 exists now and should have a particular
-				// value
-				REQUIRE(internal_data.find("key2") !=
-				        internal_data.end());
-				REQUIRE(config["key2"] ==
-				        internal_data["key2"]);
-				REQUIRE(config["key2"] == "test2");
-			}
-			SECTION(".at() operator throws exceptions when the key"
-			        " does not exist")
-			{
-				REQUIRE(internal_data.at("key1") ==
-				        internal_data["key1"]);
-
-				REQUIRE_THROWS([&]() { config.at("key3"); }());
-			}
-		}
-	}
-
 	FIXTURE_TEST("JsonConfigFile::Read")
 	{
-		auto config = JsonConfigFile(INPUT_FILE_PATH);
-		auto& internal_data = config.GetData();
+		auto config_file = JsonConfigFile(INPUT_FILE_PATH);
+		auto& json_data = config_file.GetJsonData();
 
 		SECTION("JsonConfigFile::Read w/ valid file")
 		{
-			config.Read();
-			REQUIRE_FALSE(internal_data.empty());
-			REQUIRE(internal_data.size() == 2);
-			REQUIRE(config["key1"] == "value1");
-			REQUIRE(config["key2"] == "value2");
+			config_file.Read();
+			REQUIRE_FALSE(json_data.empty());
+			REQUIRE(json_data.size() == 2);
+
+			REQUIRE(json_data["key1"] == "value1");
+			REQUIRE(json_data["key2"] == "value2");
 		}
 		SECTION("JsonConfigFile::Read w/ bad file throws exception")
 		{
@@ -173,19 +134,21 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 	{
 		SECTION("Create File and Read It back In")
 		{
-			auto test_data = JsonConfigFile(INPUT_FILE_PATH);
+			auto config_file = JsonConfigFile(INPUT_FILE_PATH);
+			auto& test_data = config_file.GetJsonData();
+
 			test_data["one"] = "1";
 			test_data["resolution"] = "1280x720";
 			test_data["Hello"] = "world";
 
-			test_data.Write();
+			config_file.Write();
 
 			std::ifstream resulting_file(INPUT_FILE_PATH);
 			nlohmann::json jobject;
 
 			resulting_file >> jobject;
 			auto written_data =
-			    jobject.get<configuration::dictionary>();
+			    jobject.get<elemental::dictionary<std::string>>();
 
 			REQUIRE(written_data["one"] == test_data["one"]);
 			REQUIRE(written_data["resolution"] ==
@@ -193,6 +156,38 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 			REQUIRE(written_data["Hello"] == test_data["Hello"]);
 		}
 		fs::remove(INPUT_FILE_PATH);
+	}
+
+	FIXTURE_TEST(
+	    "JsonConfigFile::Get<T>() basically wraps nlohmann::json::get<T>()")
+	{
+		auto config_file = JsonConfigFile(INPUT_FILE_PATH);
+		auto& json_data = config_file.GetJsonData();
+
+		config_file.Read();
+		auto obtained_data =
+		    config_file.Get<elemental::dictionary<std::string>>();
+
+		REQUIRE(obtained_data["key1"] == "value1");
+		REQUIRE(obtained_data["key2"] == "value2");
+	}
+	FIXTURE_TEST(
+	    "JsonConfigFile::Set() basically wraps nlohmann::json::operator=()")
+	{
+		auto config_file = JsonConfigFile(INPUT_FILE_PATH);
+		elemental::dictionary<std::string> test_data;
+
+		test_data["one"] = "1";
+		test_data["resolution"] = "1280x720";
+		test_data["Hello"] = "world";
+
+		config_file.Set(test_data);
+
+		auto& json_data = config_file.GetJsonData();
+
+		REQUIRE(json_data["one"] == test_data["one"]);
+		REQUIRE(json_data["resolution"] == test_data["resolution"]);
+		REQUIRE(json_data["Hello"] == test_data["Hello"]);
 	}
 }
 // clang-format off

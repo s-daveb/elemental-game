@@ -7,17 +7,20 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "SdlRenderer.hpp"
 #include "Exception.hpp"
 #include "IRenderer.hpp"
-#include "SdlRenderer.hpp"
 
 #include "any_ptr.thpp"
 #include "private/debuginfo.hpp"
-#include "types.hpp"
+
+#include "types/rendering.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_render.h>
+
+#include <nlohmann/json.hpp>
 
 #include <any>
 #include <memory>
@@ -28,7 +31,7 @@ using namespace elemental;
 
 namespace {
 std::stringstream error_buffer;
-}
+} // namespace
 
 #define HANDLE_SDL_ERROR(what)                                                 \
 	error_buffer.str("");                                                  \
@@ -44,8 +47,9 @@ SdlRenderer::~SdlRenderer()
 }
 
 void
-SdlRenderer::Init()
+SdlRenderer::Init(RendererSettings& settings)
 {
+
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
@@ -57,21 +61,46 @@ SdlRenderer::Init()
 		    << std::flush;
 		throw elemental::Exception(error_buffer.str());
 	}
+	int window_xpos, window_ypos, window_width, window_height, res_width,
+	    res_height;
+	Uint32 sdl_flags = SDL_WINDOW_SHOWN;
+	std::string window_title;
 
-	/*! @todo: Get desired resolution from .config or .xml file or maybe the
-	 *! function arguments. */
+	window_title = settings.window.title;
+	window_width = settings.window.size.width;
+	window_height = settings.window.size.height;
 
-	this->sdl_window_unique_ptr = SDL_CreateWindow(
-	    "SdlRenderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024,
-	    768, SDL_WINDOW_SHOWN);
-	if (nullptr == this->sdl_window_unique_ptr) {
+	res_width = settings.resolution.width;
+	res_height = settings.resolution.height;
+
+	if (settings.window.placement == WindowPlacement::Manual) {
+		window_xpos = settings.window.position.x;
+		window_ypos = settings.window.position.y;
+	} else if (settings.window.placement == WindowPlacement::Centered) {
+		window_xpos = window_ypos = SDL_WINDOWPOS_CENTERED;
+	}
+
+	if (settings.window.mode == WindowMode::Fullscreen) {
+		sdl_flags |= SDL_WINDOW_FULLSCREEN;
+	}
+
+	this->sdl_window_ptr =
+	    SDL_CreateWindow(window_title.c_str(), window_xpos, window_ypos,
+	                     window_width, window_height, sdl_flags);
+	if (nullptr == this->sdl_window_ptr) {
 		HANDLE_SDL_ERROR("Could not create SDL_Window");
 	}
 
-	this->sdl_renderer_unique_ptr = SDL_CreateRenderer(
-	    this->sdl_window_unique_ptr, 0, SDL_RENDERER_ACCELERATED);
-	if (nullptr == this->sdl_renderer_unique_ptr) {
+	this->sdl_renderer_ptr = SDL_CreateRenderer(this->sdl_window_ptr, 0,
+	                                            SDL_RENDERER_ACCELERATED);
+	if (nullptr == this->sdl_renderer_ptr) {
 		HANDLE_SDL_ERROR("Could not initialize SDL_Renderer");
+	}
+
+	if (SDL_RenderSetLogicalSize(this->sdl_renderer_ptr, res_width,
+	                             res_height)) {
+
+		HANDLE_SDL_ERROR("Could not set SDL_Renderer LogicalSize");
 	}
 
 	this->is_initialized = true;
@@ -81,69 +110,86 @@ void
 SdlRenderer::Deactivate()
 {
 	debugprint("SdlRenderer::Deactivate called!");
-	if (this->sdl_window_unique_ptr != nullptr) {
-		this->sdl_window_unique_ptr.reset();
+	if (this->sdl_window_ptr != nullptr) {
+		this->sdl_window_ptr.reset();
 	}
-	if (this->sdl_renderer_unique_ptr != nullptr) {
-		this->sdl_renderer_unique_ptr.reset();
+	if (this->sdl_renderer_ptr != nullptr) {
+		this->sdl_renderer_ptr.reset();
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	this->is_initialized = false;
 }
 
-std::pair<uint32_t, uint32_t>
+Resolution
 SdlRenderer::GetResolution()
 {
 	int w, h;
-	w = h = -1;
 
 	/* SDL does not seem to catch this condition sometimes */
-	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	if (ERROR ==
-	    SDL_GetRendererOutputSize(this->sdl_renderer_unique_ptr, &w, &h)) {
+	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr, &w, &h)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
-	return std::make_pair(w, h);
+	return { static_cast<uint32_t>(w), static_cast<uint32_t>(h) };
+}
+
+Area
+SdlRenderer::GetWindowSize()
+{
+	int width, height;
+
+	/* SDL does not seem to catch this condition sometimes */
+	ASSERT(this->sdl_window_ptr != nullptr);
+	SDL_GetWindowSize(this->sdl_window_ptr, &width, &height);
+
+	// Prevent negative ints being casted to large values.
+	// Throws an exception if ASSERT is false
+	ASSERT(width > 0);
+	ASSERT(height > 0);
+
+	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
 void
 SdlRenderer::ClearScreen()
 {
-	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	// Set bg to black
-	SDL_SetRenderDrawColor(this->sdl_renderer_unique_ptr, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(this->sdl_renderer_ptr, 0, 0, 0, 0);
 
-	if (ERROR == SDL_RenderClear(this->sdl_renderer_unique_ptr)) {
+	if (ERROR == SDL_RenderClear(this->sdl_renderer_ptr)) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
 void
 SdlRenderer::Flip()
 {
-	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	// Set bg to black
-	SDL_RenderPresent(this->sdl_renderer_unique_ptr);
+	SDL_RenderPresent(this->sdl_renderer_ptr);
 }
 
 void
 // SdlRenderer::Blit(void* image_data, Rectangle& placement)
 SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 {
-	ASSERT(this->sdl_renderer_unique_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	try {
-		// auto* to_draw = reinterpret_cast<SDL_Texture*>(image_data);
+		// auto* to_draw =
+		// reinterpret_cast<SDL_Texture*>(image_data);
 		auto to_draw = any_ptr_cast<SDL_Texture*>(image_data);
 		// auto* to_draw = std::any_cast<void*>(image_data);
 		auto position = FromRectangle<SDL_Rect>(placement);
 
-		if (ERROR == SDL_RenderCopy(this->sdl_renderer_unique_ptr,
-		                            to_draw, nullptr, &position)) {
+		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr, to_draw,
+		                            nullptr, &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
 	} catch (std::bad_cast& cast_exc) {
@@ -162,8 +208,8 @@ SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 SdlRenderer::SdlRenderer()
     : IRenderer()
     , is_initialized(false)
-    , sdl_window_unique_ptr(nullptr)
-    , sdl_renderer_unique_ptr(nullptr)
+    , sdl_window_ptr(nullptr)
+    , sdl_renderer_ptr(nullptr)
 {
 }
 

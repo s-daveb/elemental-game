@@ -1,4 +1,4 @@
-/* types/configuration.hpp
+/* GameSettings.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,28 +9,20 @@
 
 #pragma once
 
-#include "types/containers.hpp"
+#include "types/rendering.hpp"
 
-#include <string>
+#include <nlohmann/json.hpp>
 
-namespace elemental::configuration {
+namespace elemental {
 
-using dictionary = elemental::dictionary<std::string>;
+struct GameSettings
+{
+	RendererSettings renderer_settings;
 
-namespace json {
-	enum IndentMode
-	{
-		COMPACT = -1,
-		NEWLINES = 0,
-		INDENT = 1,
-	};
-	enum AsciiMode
-	{
-		DEFAULT = false,
-		FORCE = true,
-	};
-} // namespace json
-} // namespace elemental::configuration
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GameSettings, renderer_settings);
+};
+
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

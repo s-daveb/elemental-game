@@ -15,7 +15,6 @@
 
 #include "private/debuginfo.hpp"
 #include "sys/paths.hpp"
-#include "types/configuration.hpp"
 
 #include "Exception.hpp"
 #include "JsonConfigFile.hpp"
@@ -36,11 +35,12 @@
 
 using namespace elemental;
 
-const configuration::dictionary DEFAULT_SETTINGS = {
-	{ "resolution", "1280x720" },
-	{ "window_size", "1280x720" },
-	{ "window_title", "Kong" }
-};
+const GameSettings DEFAULT_SETTINGS{ { { "kong",
+	                                 WindowMode::Windowed,
+	                                 WindowPlacement::Centered,
+	                                 { 0, 0 },
+	                                 { 1270, 720 } },
+	                               { 1280, 720 } } };
 
 /// \name Helper Functions
 /// @{
@@ -51,20 +51,21 @@ print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
 }
 
 bool
-fix_missing_settings(configuration::dictionary& settings)
+fix_missing_settings(nlohmann::json& settings)
 {
-	auto added_settings = settings.empty() ? true : false;
+	auto result = settings.empty() ? true : false;
+	nlohmann::json serialized_defaults = DEFAULT_SETTINGS;
 
-	for (auto& [key, value] : DEFAULT_SETTINGS) {
+	for (auto& [key, value] : serialized_defaults.items()) {
 		if (settings.find(key) == settings.end()) {
-			if (!added_settings) {
-				added_settings = true;
+			if (!result) {
+				result = true;
 			}
 			settings.emplace(std::pair{ key, value });
 		}
 	}
 
-	return added_settings;
+	return result;
 }
 /// @}
 
@@ -165,21 +166,24 @@ Kong::Kong()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(IEventSource::GetInstance<SdlEventSource>())
     , loaded_scenes()
-    , game_settings(paths::GetAppConfigRoot() / "kong" / "settings.json",
+    , settings_file(paths::GetAppConfigRoot() / "kong" / "settings.json",
                     FileResource::CREATE_MISSING_DIRS)
+    , settings()
 {
-	auto& loaded_settings = this->game_settings.Read();
-
-	if (fix_missing_settings(loaded_settings)) {
-		this->game_settings.Write();
-	}
-
 	auto devices = DeviceFlags(MOUSE | KEYBOARD | JOYSTICK);
 	this->event_emitter.InitDevices(devices);
 	this->event_emitter.RegisterObserver(*this);
 	this->event_emitter.PollEvents();
 
-	this->video_renderer.Init();
+	settings_file.Read();
+	if (fix_missing_settings(settings_file.GetJsonData())) {
+		settings_file.Write();
+		settings_file.Read();
+	}
+
+	settings = settings_file.Get<GameSettings>();
+
+	this->video_renderer.Init(settings.renderer_settings);
 	// this->video_renderer.Init(configuration["window_title"]);
 }
 

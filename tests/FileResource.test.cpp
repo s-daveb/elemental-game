@@ -13,7 +13,6 @@
 #include "test-utils/common.hpp"
 
 #include "Exception.hpp"
-#include "types/configuration.hpp"
 
 #include <filesystem>
 #include <fstream>

@@ -9,11 +9,12 @@
 
 #pragma once
 
+#include "./GameSettings.hpp"
+
 #include "IApplication.hpp"
 #include "IObserver.hpp"
 #include "ISceneOrchestrator.hpp"
 
-#include "types/configuration.hpp"
 
 #include "Application.hpp"
 #include "JsonConfigFile.hpp"
@@ -73,8 +74,10 @@ class Kong
 	IRenderer& video_renderer;
 	IEventSource& event_emitter;
 
+	GameSettings settings;
+	configuration::JsonConfigFile settings_file;
+
 	SceneContainer loaded_scenes;
-	configuration::JsonConfigFile game_settings;
 };
 
 } // namespace elemental

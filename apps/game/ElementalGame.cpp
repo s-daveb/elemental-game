@@ -94,7 +94,16 @@ ElementalGame::ElementalGame()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(IEventSource::GetInstance<SdlEventSource>())
 {
-	video_renderer.Init();
+	RendererSettings renderer_settings = {
+		{ "Test",
+		  WindowMode::Windowed,      // mode
+		  WindowPlacement::Centered, // placement
+		  { 0, 0 },                  // window.pos
+		  { 1024, 768 } },           // window.size
+		{ 1024, 768 }
+	}; // renderer res
+
+	video_renderer.Init(renderer_settings);
 
 	event_emitter.InitDevices(DeviceFlags(MOUSE | KEYBOARD | JOYSTICK));
 	event_emitter.RegisterObserver(*this);

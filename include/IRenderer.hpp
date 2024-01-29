@@ -13,6 +13,8 @@
 #include "any_ptr.thpp"
 #include "types.hpp"
 
+#include "types/rendering.hpp"
+
 #include <any>
 #include <type_traits>
 #include <utility>
@@ -29,25 +31,22 @@ struct IRenderer
 	//
 	SINGLETON_INTERFACE(IRenderer);
 
-	struct Rectangle
-	{
-		uint32_t x, y, width, height;
-	};
-
 	virtual ~IRenderer() {}
 
 	/*! \name Lazy Initialization Methods
 	 * These initialize the current rendering subsystema and de-initialize
 	 * it on-demand */
 	//! @{
-	virtual void Init() = 0;
+	virtual void Init(RendererSettings& settings) = 0;
 	virtual void Deactivate() = 0;
 	virtual bool IsInitialized() = 0;
 	//! @}
 
 	//! \brief Does what it says on the tin.
-	//! \return std::pair of integers, .first = x, .second = y
-	virtual std::pair<uint32_t, uint32_t> GetResolution() = 0;
+	virtual Resolution GetResolution() = 0;
+
+	//! \brief Does what it says on the tin.
+	virtual Area GetWindowSize() = 0;
 
 	/*! \name Screen Management Methods
 	 *  Methods used to clear and update the game display  */
@@ -93,9 +92,7 @@ struct IRenderer
 	R FromRectangle(const Rectangle& rectangle);
 	//! @}
 };
-
-using Rectangle = IRenderer::Rectangle;
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

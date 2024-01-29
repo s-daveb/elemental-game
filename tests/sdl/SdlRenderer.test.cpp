@@ -31,12 +31,19 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	{
 		SdlRendererFixture()
 		    : SdlTestFixture()
-		    , test_object(IRenderer::GetInstance<SdlRenderer>())
+		    , test_renderer(IRenderer::GetInstance<SdlRenderer>())
 		{
+			settings = { { "Test",
+				       WindowMode::Windowed,      // mode
+				       WindowPlacement::Centered, // placement
+				       { 0, 0 },                  // window.pos
+				       { 1024, 768 } },           // window.size
+				     { 1024, 768 } }; // renderer res
 		}
 
-		~SdlRendererFixture() { test_object.Deactivate(); }
-		SdlRenderer& test_object;
+		~SdlRendererFixture() { test_renderer.Deactivate(); }
+		SdlRenderer& test_renderer;
+		RendererSettings settings;
 	};
 
 	TEST("elemental::SdlRenderer - GetInstance works")
@@ -81,114 +88,124 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - Initialize Renderer")
 	{
 		// 1. Default initialization does not throw errors
-		CHECK(false == test_object.is_initialized);
-		test_object.Init();
-		CHECK(true == test_object.is_initialized);
+		CHECK(false == test_renderer.is_initialized);
+		test_renderer.Init(settings);
+		CHECK(true == test_renderer.is_initialized);
 
 		// 2. Verify that an SDL_Window and SDL_Renderer have been
 		// created
-		REQUIRE(test_object.sdl_window_unique_ptr != nullptr);
-		REQUIRE(test_object.sdl_renderer_unique_ptr != nullptr);
+		REQUIRE(test_renderer.sdl_window_ptr != nullptr);
+		REQUIRE(test_renderer.sdl_renderer_ptr != nullptr);
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Deactivate Renderer")
 	{
 		// 1. Deactivate method de-initializes
-		test_object.Init();
-		REQUIRE(true == test_object.is_initialized);
+		test_renderer.Init(settings);
+		REQUIRE(true == test_renderer.is_initialized);
 
-		test_object.Deactivate();
-		REQUIRE(false == test_object.is_initialized);
+		test_renderer.Deactivate();
+		REQUIRE(false == test_renderer.is_initialized);
 
 		// 2. Verify that an SDL_Window and SDL_Renderer ptrs have been
 		// cleared
-		REQUIRE(test_object.sdl_window_unique_ptr == nullptr);
-		REQUIRE(test_object.sdl_renderer_unique_ptr == nullptr);
+		REQUIRE(test_renderer.sdl_window_ptr == nullptr);
+		REQUIRE(test_renderer.sdl_renderer_ptr == nullptr);
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - IsInitialized Accessor")
 	{
 		// 1. Default initialization does not throw errors
-		CHECK(test_object.IsInitialized() ==
-		      test_object.is_initialized);
-		test_object.Init();
-		CHECK(test_object.IsInitialized() ==
-		      test_object.is_initialized);
+		CHECK(test_renderer.IsInitialized() ==
+		      test_renderer.is_initialized);
+		test_renderer.Init(settings);
+		CHECK(test_renderer.IsInitialized() ==
+		      test_renderer.is_initialized);
 	}
 
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - GetResolution works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_object.GetResolution(); }());
+		REQUIRE_THROWS([this]() { test_renderer.GetResolution(); }());
 
 		// 2. After initializtion, the method works
-		test_object.Init();
-		auto resolution_data = test_object.GetResolution();
+		test_renderer.Init(settings);
+		auto resolution_data = test_renderer.GetResolution();
 
-		REQUIRE(resolution_data.first > 0);
-		REQUIRE(resolution_data.second > 0);
+		REQUIRE(resolution_data.width == settings.resolution.width);
+		REQUIRE(resolution_data.height == settings.resolution.height);
 	}
+	TEST_CASE_METHOD(SdlRendererFixture,
+	                 "elemental::SdlRenderer - GetWindowSize works")
+	{
+		// 1. Before initialization, throws error
+		REQUIRE_THROWS([this]() { test_renderer.GetWindowSize(); }());
 
+		// 2. After initializtion, the method works
+		test_renderer.Init(settings);
+		auto window_data = test_renderer.GetWindowSize();
+
+		REQUIRE(window_data.width == settings.window.size.width);
+		REQUIRE(window_data.height == settings.window.size.height);
+	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - ClearScreen works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_object.ClearScreen(); }());
+		REQUIRE_THROWS([this]() { test_renderer.ClearScreen(); }());
 
 		// 2. After initializtion, the method works
-		test_object.Init();
-		test_object.ClearScreen();
+		test_renderer.Init(settings);
+		test_renderer.ClearScreen();
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Flip works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_object.Flip(); }());
+		REQUIRE_THROWS([this]() { test_renderer.Flip(); }());
 
 		// 2. After initializtion, the method works
-		test_object.Init();
-		test_object.Flip();
+		test_renderer.Init(settings);
+		test_renderer.Flip();
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Blit works")
 	{
 		using std::chrono::seconds;
-		unique_sdl_ptr<SDL_Surface> image_surf_unique_ptr;
-		unique_sdl_ptr<SDL_Texture> img_texture_unique_ptr = nullptr;
+		unique_sdl_ptr<SDL_Surface> image_surf_ptr;
+		unique_sdl_ptr<SDL_Texture> img_texture_ptr = nullptr;
 		Rectangle location{ 10, 10, 100, 100 };
 
 		// Prep: Initialize a SdlRenderer and load an image texture
 		// using the SDL_Renderer* ptr inside
-		test_object.Init();
-		test_object.ClearScreen();
-		image_surf_unique_ptr = IMG_Load("data/tests/test-skull.png");
-		REQUIRE(image_surf_unique_ptr != nullptr);
+		test_renderer.Init(settings);
+		test_renderer.ClearScreen();
+		image_surf_ptr = IMG_Load("data/tests/test-skull.png");
+		REQUIRE(image_surf_ptr != nullptr);
 
-		REQUIRE(test_object.sdl_renderer_unique_ptr != nullptr);
-		img_texture_unique_ptr = SDL_CreateTextureFromSurface(
-		    test_object.sdl_renderer_unique_ptr, image_surf_unique_ptr);
-		REQUIRE(img_texture_unique_ptr != nullptr);
+		REQUIRE(test_renderer.sdl_renderer_ptr != nullptr);
+		img_texture_ptr = SDL_CreateTextureFromSurface(
+		    test_renderer.sdl_renderer_ptr, image_surf_ptr);
+		REQUIRE(img_texture_ptr != nullptr);
 
 		// 1. Renderer becomes invalid before blitting!
 
-		auto& temporary_render_storage =
-		    this->test_object.sdl_renderer_unique_ptr;
+		auto temporary_render_storage =
+		    std::move(this->test_renderer.sdl_renderer_ptr);
 		REQUIRE_THROWS([&]() {
 			// set an invalid SDL_Renderer pointer
-			test_object.sdl_renderer_unique_ptr = nullptr;
+			test_renderer.sdl_renderer_ptr = nullptr;
 			// 1. Before initialization, throws error
-			test_object.Blit(img_texture_unique_ptr.get(),
-			                 location);
+			test_renderer.Blit(img_texture_ptr.get(), location);
 		}());
 
 		// 2. With a valid, initialized SdlRenderer, the
 		//   method works
-		test_object.sdl_renderer_unique_ptr.reset(
-		    temporary_render_storage);
-		test_object.Blit(img_texture_unique_ptr.get(), location);
+		test_renderer.sdl_renderer_ptr.swap(temporary_render_storage);
+		test_renderer.Blit(img_texture_ptr.get(), location);
 		// Display the image and pause so the user can see it!
-		test_object.Flip();
+		test_renderer.Flip();
 		if (platform::MACOSX) {
 			for (unsigned i = 0; i < 500; i++) {
 				SDL_PumpEvents();

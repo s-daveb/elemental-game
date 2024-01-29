@@ -23,13 +23,14 @@ struct SdlRenderer : public IRenderer
 
 	virtual ~SdlRenderer();
 
-	virtual void Init() override;
+	virtual void Init(RendererSettings&) override;
 	virtual void Deactivate() override;
 	inline virtual bool IsInitialized() override
 	{
 		return this->is_initialized;
 	};
-	virtual std::pair<uint32_t, uint32_t> GetResolution() override;
+	virtual Resolution GetResolution() override;
+	virtual Area GetWindowSize() override;
 
 	virtual void ClearScreen() override;
 	virtual void Flip() override;
@@ -41,8 +42,8 @@ struct SdlRenderer : public IRenderer
 	bool is_initialized;
 	SdlRenderer();
 
-	unique_sdl_ptr<SDL_Window> sdl_window_unique_ptr;
-	unique_sdl_ptr<SDL_Renderer> sdl_renderer_unique_ptr;
+	unique_sdl_ptr<SDL_Window> sdl_window_ptr;
+	unique_sdl_ptr<SDL_Renderer> sdl_renderer_ptr;
 };
 
 template<>
@@ -61,7 +62,7 @@ IRenderer::FromRectangle<SDL_Rect>(const Rectangle& other)
 		 static_cast<int>(other.width),
 		 static_cast<int>(other.height) };
 }
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :
