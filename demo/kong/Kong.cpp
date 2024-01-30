@@ -50,23 +50,6 @@ print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
 	debugprint(label << cycle_length.count() << "ms.");
 }
 
-bool
-fix_missing_settings(nlohmann::json& settings)
-{
-	auto result = settings.empty() ? true : false;
-	nlohmann::json serialized_defaults = DEFAULT_SETTINGS;
-
-	for (auto& [key, value] : serialized_defaults.items()) {
-		if (settings.find(key) == settings.end()) {
-			if (!result) {
-				result = true;
-			}
-			settings.emplace(std::pair{ key, value });
-		}
-	}
-
-	return result;
-}
 /// @}
 
 Kong::~Kong()
@@ -175,13 +158,14 @@ Kong::Kong()
 	this->event_emitter.RegisterObserver(*this);
 	this->event_emitter.PollEvents();
 
-	settings_file.Read();
-	if (fix_missing_settings(settings_file.GetJsonData())) {
-		settings_file.Write();
+	try {
 		settings_file.Read();
+		settings = settings_file.Get<GameSettings>();
+	} catch (nlohmann::json::exception& except) {
+		settings = DEFAULT_SETTINGS;
+		settings_file.Set(DEFAULT_SETTINGS);
+		settings_file.Write();
 	}
-
-	settings = settings_file.Get<GameSettings>();
 
 	this->video_renderer.Init(settings.renderer_settings);
 	// this->video_renderer.Init(configuration["window_title"]);

@@ -18,7 +18,7 @@ namespace elemental {
 struct Point
 {
 	uint32_t x, y;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Point, x, y);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Point, x, y);
 };
 using Position = Point;
 
@@ -26,7 +26,7 @@ struct Area
 {
 	uint32_t width, height;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Area, width, height);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Area, width, height);
 };
 using Resolution = Area;
 
@@ -48,7 +48,7 @@ struct Rectangle
 			uint32_t width, height;
 		};
 	};
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Rectangle, position, size);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rectangle, position, size);
 };
 
 enum class WindowMode
@@ -79,9 +79,8 @@ struct WindowParameters
 	Position position;
 	Area size;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(WindowParameters, title,
-	                                            mode, placement, position,
-	                                            size);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(WindowParameters, title, mode, placement,
+	                               position, size);
 };
 
 struct RendererSettings
@@ -89,8 +88,7 @@ struct RendererSettings
 	WindowParameters window;
 	Resolution resolution;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(RendererSettings, window,
-	                                            resolution);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(RendererSettings, window, resolution);
 };
 
 } // namespace elemental
