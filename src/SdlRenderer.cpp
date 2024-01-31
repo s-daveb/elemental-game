@@ -182,10 +182,7 @@ SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	try {
-		// auto* to_draw =
-		// reinterpret_cast<SDL_Texture*>(image_data);
 		auto to_draw = any_ptr_cast<SDL_Texture*>(image_data);
-		// auto* to_draw = std::any_cast<void*>(image_data);
 		auto position = FromRectangle<SDL_Rect>(placement);
 
 		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr, to_draw,
