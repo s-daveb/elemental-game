@@ -9,7 +9,6 @@
 
 #include "./Phong.hpp"
 
-#include "IEventSource.hpp"
 #include "IRenderer.hpp"
 #include "ISceneOrchestrator.hpp"
 
@@ -106,56 +105,18 @@ Phong::RecieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-Scene&
-Phong::GetCurrentScene()
-{
-
-	throw Exception("This code is untested");
-	return this->loaded_scenes.top().get();
-}
-void
-Phong::ChangeScene(Scene& new_scene)
-{
-	this->loaded_scenes.top().get().Terminate();
-	this->loaded_scenes.pop();
-	this->loaded_scenes.push(new_scene);
-
-	throw Exception("This code is untested");
-}
-void
-Phong::SetNextScene(Scene& next_scene)
-{
-	auto& scene_ref = this->GetCurrentScene();
-	this->loaded_scenes.pop();
-	this->loaded_scenes.push(next_scene);
-	this->loaded_scenes.push(scene_ref);
-
-	throw Exception("This code is untested");
-}
-
-SceneContainer&
-Phong::GetAllScenes()
-{
-
-	throw Exception("This code is untested");
-	return this->loaded_scenes;
-}
-
 Phong::Phong()
     : Application()
     , IObserver()
-    , ISceneOrchestrator()
     , is_running(false)
     , running_threads()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
-    , event_emitter(IEventSource::GetInstance<SdlEventSource>())
-    , loaded_scenes()
+    , event_emitter(Singleton::GetReference<SdlEventSource>())
     , settings_file(paths::GetAppConfigRoot() / "phong" / "settings.json",
                     FileResource::CREATE_MISSING_DIRS)
     , settings()
 {
-	auto devices = DeviceFlags(MOUSE | KEYBOARD | JOYSTICK);
-	this->event_emitter.InitDevices(devices);
+	this->event_emitter.InitDevices(joystick::Enabled);
 	this->event_emitter.RegisterObserver(*this);
 	this->event_emitter.PollEvents();
 

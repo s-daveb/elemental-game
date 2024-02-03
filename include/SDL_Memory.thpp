@@ -68,6 +68,9 @@ struct SDL_ResourceDeleter
 	{
 		SDL_DestroyTexture(texture_ptr);
 	}
+	inline void operator()(SDL_Joystick* joystick_ptr){
+		SDL_JoystickClose(joystick_ptr);
+	}
 };
 
 template<typename T, typename D = SDL_ResourceDeleter>
@@ -79,7 +82,7 @@ struct unique_sdl_ptr : public std::unique_ptr<T, D>
 	// Assignment operator for raw pointer using std::move
 	unique_sdl_ptr& operator=(T* ptr)
 	{
-		this->reset(std::move(ptr));
+		this->reset(ptr);
 		return *this;
 	}
 };

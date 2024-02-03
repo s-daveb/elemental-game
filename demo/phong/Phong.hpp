@@ -29,7 +29,7 @@ namespace elemental {
 
 // Forward declarations
 class IRenderer;
-class IEventSource;
+class SdlEventSource;
 
 class Phong
     : public Application
@@ -65,7 +65,7 @@ class Phong
 	void simulation_thread_loop();
 
 	IRenderer& video_renderer;
-	IEventSource& event_emitter;
+	SdlEventSource& event_emitter;
 
 	GameSettings settings;
 	configuration::JsonConfigFile settings_file;

@@ -9,6 +9,8 @@
 
 #include "./ElementalGame.hpp"
 
+#include "Singleton.thpp"
+
 #include "Exception.hpp"
 #include "IRenderer.hpp"
 #include "LoopRegulator.hpp"
@@ -16,7 +18,6 @@
 
 #include "private/debuginfo.hpp"
 
-#include "IEventSource.hpp"
 #include "SdlEventSource.hpp"
 
 #include <chrono>
@@ -90,10 +91,9 @@ ElementalGame::RecieveMessage(const Observable& sender, std::any message)
 ElementalGame::ElementalGame()
     : Application()
     , IObserver()
-    , ticks(0)
     , is_running(false)
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
-    , event_emitter(IEventSource::GetInstance<SdlEventSource>())
+    , event_emitter(Singleton::GetReference<SdlEventSource>())
 {
 	RendererSettings renderer_settings = {
 		{ "Test",
@@ -106,7 +106,7 @@ ElementalGame::ElementalGame()
 
 	video_renderer.Init(renderer_settings);
 
-	event_emitter.InitDevices(DeviceFlags(MOUSE | KEYBOARD | JOYSTICK));
+	event_emitter.InitDevices(joystick::Enabled);
 	event_emitter.RegisterObserver(*this);
 	event_emitter.PollEvents();
 }

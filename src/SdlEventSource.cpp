@@ -7,8 +7,9 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "SDL_Memory.thpp"
+
 #include "Exception.hpp"
-#include "IEventSource.hpp"
 #include "IObserver.hpp"
 #include "SdlEventSource.hpp"
 
@@ -18,47 +19,6 @@
 #include <iostream>
 
 using namespace elemental;
-
-void
-init_joystick_impl(SDL_JoystickDevice_ptr& joydev)
-{
-	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
-
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-	SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
-
-	if (SDL_NumJoysticks() > 0) {
-		joydev = SDL_JoystickDevice_ptr(SDL_JoystickOpen(0),
-		                                SDL_JoystickClose);
-		debugprint("Opened Joystick 0" << std::endl);
-		debugprint("Name: " << SDL_JoystickNameForIndex(0)
-		                    << std::endl);
-		debugprint("Number of Axes: "
-		           << SDL_JoystickNumAxes(joydev.get()) << std::endl);
-		debugprint("Number of Buttons: "
-		           << SDL_JoystickNumButtons(joydev.get())
-		           << std::endl);
-		debugprint("Number of Balls: "
-		           << SDL_JoystickNumBalls(joydev.get()) << std::endl);
-
-		SDL_GameControllerEventState(SDL_ENABLE);
-	} else {
-		debugprint("Warning: No Joystick or Core::Input "
-		           "detected"
-		           << std::endl);
-	}
-}
-void
-SdlEventSource::InitDevices(DeviceFlags dflags)
-{
-	if (dflags == 0) {
-		dflags = ALL;
-	}
-
-	if (dflags == 0 || (dflags & JOYSTICK)) {
-		init_joystick_impl(this->joydev);
-	}
-}
 
 void
 SdlEventSource::Notify()
@@ -85,13 +45,41 @@ SdlEventSource::PollEvents()
 		event_queue.push(event);
 	}
 }
-
 SdlEventSource::SdlEventSource()
-    : IEventSource()
-    , event_queue()
-    , joydev(nullptr, nullptr)
+    : event_queue()
+    , joydev(nullptr)
     , event_queue_mutex()
 {
+	InitJoystick();
+}
+
+void
+SdlEventSource::InitJoystick()
+{
+	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+
+	SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
+
+	if (SDL_NumJoysticks() > 0) {
+
+		SDL_Joystick* joydev_ptr = nullptr;
+		this->joydev = joydev_ptr = SDL_JoystickOpen(0);
+		debugprint("Opened Joystick 0" << std::endl);
+		debugprint("Name: " << SDL_JoystickNameForIndex(0)
+		                    << std::endl);
+		debugprint("Number of Axes: " << SDL_JoystickNumAxes(joydev_ptr)
+		                              << std::endl);
+		debugprint("Number of Buttons: "
+		           << SDL_JoystickNumButtons(joydev_ptr) << std::endl);
+		debugprint("Number of Balls: "
+		           << SDL_JoystickNumBalls(joydev_ptr) << std::endl);
+
+		SDL_GameControllerEventState(SDL_ENABLE);
+	} else {
+		auto msg = "Warning: No Joystick or Core::Input "
+			   "detected";
+		debugprint(msg << std::endl);
+	}
 }
 
 // clang-format off

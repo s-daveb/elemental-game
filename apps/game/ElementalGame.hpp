@@ -30,7 +30,7 @@ namespace elemental {
 // Forward declarations
 class IRenderer;
 class IInputDriver;
-class IEventSource;
+class SdlEventSource;
 
 class ElementalGame
     : public Application
@@ -49,15 +49,15 @@ class ElementalGame
 
   protected:
 	ElementalGame();
+
 	dictionary<std::thread> running_threads;
 
 	void simulation_thread_loop();
 
-	uint32_t ticks;
 	bool is_running;
 
 	IRenderer& video_renderer;
-	IEventSource& event_emitter;
+	SdlEventSource& event_emitter;
 
 	SceneContainer loaded_scenes;
 };

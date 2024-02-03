@@ -7,9 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "IEventSource.hpp"
-#include "IObserver.hpp"
 #include "SdlEventSource.hpp"
+#include "IObserver.hpp"
 
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
@@ -50,7 +49,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	{
 		SdlEventSourceFixture()
 		    : SdlTestFixture()
-		    , test_object(IEventSource::GetInstance<SdlEventSource>())
+		    , test_object(Singleton::GetReference<SdlEventSource>())
 		    , recorder()
 		    , event_queue_ref(Inspector::GetEventQueue(test_object))
 		    , dev_rand()
@@ -72,7 +71,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
 	{
-		REQUIRE_NOTHROW([&]() { test_object.InitDevices(JOYSTICK); }());
+		REQUIRE_NOTHROW(test_object.InitJoystick());
 		REQUIRE(event_queue_ref.size() == 0);
 	}
 	FIXTURE_TEST(

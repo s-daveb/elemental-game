@@ -42,6 +42,11 @@ class Application : public IApplication
   protected:
 	Application();
 
+	Application(const Application&) = delete;
+	Application(Application&&) = delete;
+	Application& operator=(const Application&) = delete;
+	Application& operator=(Application&&) = delete;
+
 	void parse_arguments(int argc, c::const_string argv[]);
 	void create_env_dictionary(c::const_string envp[]);
 

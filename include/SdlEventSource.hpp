@@ -9,8 +9,11 @@
 
 #pragma once
 
-#include "IEventSource.hpp"
+#include "SDL_Memory.thpp"
+#include "Singleton.thpp"
 #include "any_ptr.thpp"
+
+#include "Observable.hpp"
 
 #include <SDL.h>
 
@@ -19,31 +22,27 @@
 #include <queue>
 
 namespace elemental {
-
-using SDL_JoystickDevice_ptr =
-    std::unique_ptr<SDL_Joystick, decltype(&SDL_JoystickClose)>;
-
-struct SdlEventSource : public IEventSource
+class SdlEventSource : public Observable
 {
-	friend class IEventSource;
-
+  public:
 	virtual ~SdlEventSource() {}
-	virtual void InitDevices(DeviceFlags flags = ALL);
 
-	virtual void Notify();
+	virtual void Notify() override;
 
-	virtual void PollEvents();
+	void PollEvents();
 
 #ifndef UNIT_TEST
-  protected:
+  private:
 #endif
 	SdlEventSource();
 
+	void InitJoystick();
+
 	std::queue<SDL_Event> event_queue;
-	SDL_JoystickDevice_ptr joydev;
+	unique_sdl_ptr<SDL_Joystick> joydev;
 
 	std::mutex event_queue_mutex;
 };
-}
-// clang-format off
+} // namespace elemental
+  // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :
