@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "./Kong.hpp"
+#include "./Phong.hpp"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@ int
 main(int argc, c::const_string argv[], c::const_string envp[])
 {
 	try {
-		auto& game_instance = Singleton::GetReference<Kong>();
+		auto& game_instance = Singleton::GetReference<Phong>();
 		game_instance.Init(argc, argv, envp);
 
 		return game_instance.Run();

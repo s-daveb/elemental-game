@@ -28,7 +28,8 @@ using namespace elemental;
 /**! \name Helper Functions */
 //! @{
 void
-print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
+print_cycle_rate(milliseconds& cycle_length,
+                 c::const_string label = "cycle_length")
 {
 	debugprint(label << cycle_length.count() << "ms.");
 }
@@ -56,7 +57,7 @@ ElementalGame::Run()
 			this->event_emitter.PollEvents();
 
 			auto cycle_delay_ms = frame_regulator.Delay();
-			print_cps(cycle_delay_ms, "frame delay");
+			print_cycle_rate(cycle_delay_ms, "frame delay");
 			video_renderer.Flip();
 		}
 
@@ -120,7 +121,7 @@ ElementalGame::simulation_thread_loop()
 		// Scene.Update()
 
 		auto cycle_delay_ms = loop_regulator.Delay();
-		print_cps(cycle_delay_ms);
+		print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }
 // clang-format off

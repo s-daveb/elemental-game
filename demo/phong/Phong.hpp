@@ -1,4 +1,4 @@
-/* Kong.hpp
+/* Phong.hpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -13,8 +13,6 @@
 
 #include "IApplication.hpp"
 #include "IObserver.hpp"
-#include "ISceneOrchestrator.hpp"
-
 
 #include "Application.hpp"
 #include "JsonConfigFile.hpp"
@@ -33,15 +31,14 @@ namespace elemental {
 class IRenderer;
 class IEventSource;
 
-class Kong
+class Phong
     : public Application
     , public IObserver
-    , public ISceneOrchestrator
 {
   public:
 	friend class Singleton;
 
-	virtual ~Kong();
+	virtual ~Phong();
 
 	/// \name Application Interface
 	/// @{
@@ -54,18 +51,14 @@ class Kong
 	                            std::any message = std::any()) override;
 	/// @}
 
-	/// \name ISceneOrchestrator interface
-	/// @{
-	virtual Scene& GetCurrentScene() override;
-	virtual void ChangeScene(Scene& new_scene) override;
-	virtual void SetNextScene(Scene& next_scne) override;
-
-	virtual SceneContainer& GetAllScenes() override;
-	///
-	/// @}
-
   protected:
-	Kong();
+	Phong();
+
+	Phong(const Phong&) = delete;
+	Phong(Phong&&) = delete;
+	Phong& operator=(const Phong&) = delete;
+	Phong& operator=(Phong&&) = delete;
+
 	bool is_running;
 
 	dictionary<std::thread> running_threads;
@@ -76,8 +69,6 @@ class Kong
 
 	GameSettings settings;
 	configuration::JsonConfigFile settings_file;
-
-	SceneContainer loaded_scenes;
 };
 
 } // namespace elemental

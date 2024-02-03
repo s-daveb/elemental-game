@@ -1,4 +1,4 @@
-/* Kong.cpp
+/* Phong.cpp
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "./Kong.hpp"
+#include "./Phong.hpp"
 
 #include "IEventSource.hpp"
 #include "IRenderer.hpp"
@@ -35,30 +35,31 @@
 
 using namespace elemental;
 
-const GameSettings DEFAULT_SETTINGS{ { { "kong",
+const GameSettings DEFAULT_SETTINGS{ { { "P",
 	                                 WindowMode::Windowed,
 	                                 WindowPlacement::Centered,
 	                                 { 0, 0 },
 	                                 { 1270, 720 } },
-	                               { 1280, 720 } } };
+	                               { 1024, 768 } } };
 
 /// \name Helper Functions
 /// @{
 void
-print_cps(milliseconds& cycle_length, c::const_string label = "cycle_length")
+print_cycle_rate(milliseconds& cycle_length,
+                 c::const_string label = "cycle_length")
 {
 	debugprint(label << cycle_length.count() << "ms.");
 }
 
 /// @}
 
-Kong::~Kong()
+Phong::~Phong()
 {
 	video_renderer.Deactivate();
 }
 
 int
-Kong::Run()
+Phong::Run()
 {
 	this->is_running = true;
 	try {
@@ -74,7 +75,7 @@ Kong::Run()
 			this->event_emitter.PollEvents();
 
 			auto cycle_delay_ms = frame_regulator.Delay();
-			::print_cps(cycle_delay_ms, "frame delay");
+			print_cycle_rate(cycle_delay_ms, "frame delay");
 			video_renderer.Flip();
 		}
 
@@ -96,7 +97,7 @@ Kong::Run()
 }
 
 void
-Kong::RecieveMessage(const Observable& sender, std::any message)
+Phong::RecieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	SDL_Event event = std::any_cast<SDL_Event>(message);
@@ -106,14 +107,14 @@ Kong::RecieveMessage(const Observable& sender, std::any message)
 }
 
 Scene&
-Kong::GetCurrentScene()
+Phong::GetCurrentScene()
 {
 
 	throw Exception("This code is untested");
 	return this->loaded_scenes.top().get();
 }
 void
-Kong::ChangeScene(Scene& new_scene)
+Phong::ChangeScene(Scene& new_scene)
 {
 	this->loaded_scenes.top().get().Terminate();
 	this->loaded_scenes.pop();
@@ -122,7 +123,7 @@ Kong::ChangeScene(Scene& new_scene)
 	throw Exception("This code is untested");
 }
 void
-Kong::SetNextScene(Scene& next_scene)
+Phong::SetNextScene(Scene& next_scene)
 {
 	auto& scene_ref = this->GetCurrentScene();
 	this->loaded_scenes.pop();
@@ -133,14 +134,14 @@ Kong::SetNextScene(Scene& next_scene)
 }
 
 SceneContainer&
-Kong::GetAllScenes()
+Phong::GetAllScenes()
 {
 
 	throw Exception("This code is untested");
 	return this->loaded_scenes;
 }
 
-Kong::Kong()
+Phong::Phong()
     : Application()
     , IObserver()
     , ISceneOrchestrator()
@@ -149,7 +150,7 @@ Kong::Kong()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(IEventSource::GetInstance<SdlEventSource>())
     , loaded_scenes()
-    , settings_file(paths::GetAppConfigRoot() / "kong" / "settings.json",
+    , settings_file(paths::GetAppConfigRoot() / "phong" / "settings.json",
                     FileResource::CREATE_MISSING_DIRS)
     , settings()
 {
@@ -172,7 +173,7 @@ Kong::Kong()
 }
 
 void
-Kong::simulation_thread_loop()
+Phong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
 	do {
@@ -181,7 +182,7 @@ Kong::simulation_thread_loop()
 		// Scene.Update()
 
 		auto cycle_delay_ms = loop_regulator.Delay();
-		print_cps(cycle_delay_ms);
+		print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }
 
