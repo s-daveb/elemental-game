@@ -16,7 +16,7 @@
 #include "LoopRegulator.hpp"
 #include "SdlRenderer.hpp"
 
-#include "private/debuginfo.hpp"
+#include "util/debugprint.hpp"
 
 #include "SdlEventSource.hpp"
 
@@ -104,11 +104,15 @@ ElementalGame::ElementalGame()
 		{ 1024, 768 }
 	}; // renderer res
 
+	// Set up video renderer
 	video_renderer.Init(renderer_settings);
 
-	event_emitter.InitDevices(joystick::Enabled);
+	// Initialize event_emitter
 	event_emitter.RegisterObserver(*this);
+
+#ifdef __APPLE__
 	event_emitter.PollEvents();
+#endif
 }
 
 void

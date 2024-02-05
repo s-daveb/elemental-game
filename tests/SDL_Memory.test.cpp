@@ -8,8 +8,9 @@
  */
 
 #include "SDL_Memory.thpp"
-#include "fakeit.hpp"
+
 #include "test-utils/common.hpp"
+#include "util/debugprint.hpp"
 
 #include "Exception.hpp"
 

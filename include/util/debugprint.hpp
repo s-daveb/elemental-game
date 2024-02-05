@@ -1,4 +1,4 @@
-/* ISceneOrchestrator.hpp
+/* debugprint.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,22 +9,15 @@
 
 #pragma once
 
-#include "Scene.hpp"
+#include <iostream>
+#include <sstream>
 
-namespace elemental {
-struct Scene;
-
-using SceneContainer = std::stack<std::reference_wrapper<Scene>>;
-
-struct ISceneOrchestrator
-{
-	virtual Scene& GetCurrentScene() = 0;
-	virtual void ChangeScene(Scene& new_scene) = 0;
-	virtual void SetNextScene(Scene& next_scne) = 0;
-
-	virtual SceneContainer& GetAllScenes() = 0;
-};
-}
+#ifdef DEBUG // #region
+#include <iostream>
+#define debugprint(msg) std::cout << "[DBG]  " << msg << std::endl
+#else
+#define debugprint(msg) ;
+#endif // #endregion
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

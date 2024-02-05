@@ -9,8 +9,9 @@
 
 #include "FileResource.hpp"
 
-#include "private/debuginfo.hpp"
+#include "sys/debuginfo.hpp"
 #include "test-utils/common.hpp"
+#include "util/debugprint.hpp"
 
 #include "Exception.hpp"
 
@@ -30,30 +31,30 @@ constexpr c::const_string UNREACHABLE_FILE_PATH =
 BEGIN_TEST_SUITE("elemental::FileResource")
 {
 	namespace { // Test fixtures
-	struct SampleFileGenerator
-	{
-		SampleFileGenerator()
+		struct SampleFileGenerator
 		{
-			if (!fs::exists(TEST_FILE_PATH)) {
-				std::ofstream f(TEST_FILE_PATH);
-				f << "Sample file content" << std::endl;
-				f.close();
-			}
-		}
-
-		~SampleFileGenerator()
-		{
-			try {
-				if (fs::exists(TEST_FILE_PATH)) {
-					fs::remove(TEST_FILE_PATH);
+			SampleFileGenerator()
+			{
+				if (!fs::exists(TEST_FILE_PATH)) {
+					std::ofstream f(TEST_FILE_PATH);
+					f << "Sample file content" << std::endl;
+					f.close();
 				}
-			} catch (std::exception& e) {
-				debugprint(e.what());
 			}
-		}
-	};
-	using TestFixture = SampleFileGenerator;
-	}
+
+			~SampleFileGenerator()
+			{
+				try {
+					if (fs::exists(TEST_FILE_PATH)) {
+						fs::remove(TEST_FILE_PATH);
+					}
+				} catch (std::exception& e) {
+					debugprint(e.what());
+				}
+			}
+		};
+		using TestFixture = SampleFileGenerator;
+	} // namespace
 
 	FIXTURE_TEST("FileResource constructor")
 	{

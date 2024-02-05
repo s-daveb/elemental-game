@@ -10,21 +10,15 @@
 #include "./Phong.hpp"
 
 #include "IRenderer.hpp"
-#include "ISceneOrchestrator.hpp"
 
-#include "private/debuginfo.hpp"
+#include "util/debugprint.hpp"
 #include "sys/paths.hpp"
 
 #include "Exception.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
-#include "Scene.hpp"
-#include "SdlRenderer.hpp"
-
-#include "./MenuScene.hpp"
-// #include "./GameScene.hpp"
-
 #include "SdlEventSource.hpp"
+#include "SdlRenderer.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -34,7 +28,7 @@
 
 using namespace elemental;
 
-const GameSettings DEFAULT_SETTINGS{ { { "P",
+const GameSettings DEFAULT_SETTINGS{ { { "Phong",
 	                                 WindowMode::Windowed,
 	                                 WindowPlacement::Centered,
 	                                 { 0, 0 },
@@ -116,7 +110,6 @@ Phong::Phong()
                     FileResource::CREATE_MISSING_DIRS)
     , settings()
 {
-	this->event_emitter.InitDevices(joystick::Enabled);
 	this->event_emitter.RegisterObserver(*this);
 	this->event_emitter.PollEvents();
 
@@ -140,7 +133,6 @@ Phong::simulation_thread_loop()
 	do {
 		loop_regulator.StartUpdate();
 		this->event_emitter.Notify();
-		// Scene.Update()
 
 		auto cycle_delay_ms = loop_regulator.Delay();
 		print_cycle_rate(cycle_delay_ms);

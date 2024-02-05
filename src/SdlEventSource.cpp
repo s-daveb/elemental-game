@@ -9,6 +9,9 @@
 
 #include "SDL_Memory.thpp"
 
+#include "sys/debuginfo.hpp"
+#include "util/debugprint.hpp"
+
 #include "Exception.hpp"
 #include "IObserver.hpp"
 #include "SdlEventSource.hpp"
@@ -50,11 +53,11 @@ SdlEventSource::SdlEventSource()
     , joydev(nullptr)
     , event_queue_mutex()
 {
-	InitJoystick();
+	InitJoysticks();
 }
 
 void
-SdlEventSource::InitJoystick()
+SdlEventSource::InitJoysticks()
 {
 	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 

@@ -12,7 +12,9 @@
 #include "IRenderer.hpp"
 
 #include "any_ptr.thpp"
-#include "private/debuginfo.hpp"
+
+#include "sys/debuginfo.hpp"
+#include "util/debugprint.hpp"
 
 #include "types/rendering.hpp"
 

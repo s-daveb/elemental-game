@@ -9,7 +9,7 @@
 
 #include "Exception.hpp"
 
-#include "private/debuginfo.hpp"
+#include "sys/debuginfo.hpp"
 #include "types.hpp"
 
 #include <algorithm>

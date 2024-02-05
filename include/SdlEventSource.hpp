@@ -25,7 +25,25 @@ namespace elemental {
 class SdlEventSource : public Observable
 {
   public:
+	friend class Singleton;
+
 	virtual ~SdlEventSource() {}
+
+	/** \todo Possible way to add filters to event handlers.
+	 ** \code{.cpp}
+	 **  // Calling code:
+	 **  auto quit_event_filter = [](SDL_Event& e) -> bool {
+	 **	return e.type == SDL_QUIT;
+	 ** };
+	 ** event_emitter.SetEventFilter(observer, quit_event_filter);
+	 ** // Or perhaps define an override:
+	 ** // SdlEventEmitter.hpp:
+	 ** template<typename T>
+	 ** void RegisterObserver(observer_ref, std::function<bool(T)>
+	 *predicate)
+	 ** \endcode
+	 ** Then modify the Notify() method to check for these filters
+	 */
 
 	virtual void Notify() override;
 
@@ -36,7 +54,7 @@ class SdlEventSource : public Observable
 #endif
 	SdlEventSource();
 
-	void InitJoystick();
+	void InitJoysticks();
 
 	std::queue<SDL_Event> event_queue;
 	unique_sdl_ptr<SDL_Joystick> joydev;

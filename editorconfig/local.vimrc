@@ -131,5 +131,6 @@ set path+=src
 set path+=include
 set path+=app
 
+autocmd! BufWritePre *.c,*.h,*.cpp,*.hpp LspDocumentFormat
 
 " vim: set ts=4 sts=4 noet sw=4 foldmethod=marker foldmarker=@{,@} :

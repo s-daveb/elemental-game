@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "private/debuginfo.hpp"
 #include "types.hpp"
 
 #include <algorithm>
@@ -68,13 +67,14 @@ struct NotImplementedException : public Exception
 };
 
 void inline assert_impl(c::const_string failed_condition,
-                        c::const_string data = "")
+                        c::const_string assert_reason = "")
 {
 	std::stringstream assert_buffer;
 	assert_buffer << failed_condition << " is false!";
 
-	if (std::strlen(data) > 0) {
-		assert_buffer << std::endl << "\tdata: " << data;
+	if (std::strlen(assert_reason) > 0) {
+		assert_buffer << std::endl
+			      << "\tassert_resion: " << assert_reason;
 	}
 	assert_buffer << std::flush;
 	throw Exception(assert_buffer.str());

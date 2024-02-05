@@ -19,7 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
-#include "private/debuginfo.hpp"
+#include "sys/debuginfo.hpp"
 
 namespace fs = std::filesystem;
 
@@ -91,11 +91,10 @@ JsonConfigFile::Write()
 			throw Exception(error_buffer.str());
 		}
 
-		file_stream
-		    << config_json.dump(IndentMode::INDENT, '\t',
-		                        AsciiMode::DEFAULT,
-		                        nlohmann::json::error_handler_t::replace)
-		    << std::endl;
+		file_stream << config_json.dump(
+				   IndentMode::INDENT, '\t', AsciiMode::DEFAULT,
+				   nlohmann::json::error_handler_t::replace)
+			    << std::endl;
 
 		return;
 	} catch (elemental::Exception& except) {

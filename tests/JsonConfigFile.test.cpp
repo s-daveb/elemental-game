@@ -9,12 +9,12 @@
  */
 
 #include "JsonConfigFile.hpp"
-
-#include "types/legible_ctypes.hpp"
-
 #include "Exception.hpp"
 
-#include "private/debuginfo.hpp"
+#include "sys/debuginfo.hpp"
+#include "types/legible_ctypes.hpp"
+#include "util/debugprint.hpp"
+
 #include "test-utils/common.hpp"
 
 #include <filesystem>

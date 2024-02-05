@@ -7,7 +7,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "private/debuginfo.hpp"
+#include "sys/debuginfo.hpp"
 #include "sys/platform.hpp"
 
 #if !defined(BOOST_STACKTRACER)
@@ -27,33 +27,32 @@
 namespace elemental {
 namespace {
 
-// Extracts the mangled symbol from a string like <func_name+0x34>
-std::string
-extract_mangled_symbol(const std::string& input)
-{
-	std::string result;
-	bool insideAngleBrackets = false;
+	// Extracts the mangled symbol from a string like <func_name+0x34>
+	std::string extract_mangled_symbol(const std::string& input)
+	{
+		std::string result;
+		bool insideAngleBrackets = false;
 
-	for (char c : input) {
-		if (c == '<') {
-			insideAngleBrackets = true;
-			continue;
-		}
-		if (c == '>') {
-			insideAngleBrackets = false;
-			continue;
-		}
-		if (c == '+') {
-			break;
+		for (char c : input) {
+			if (c == '<') {
+				insideAngleBrackets = true;
+				continue;
+			}
+			if (c == '>') {
+				insideAngleBrackets = false;
+				continue;
+			}
+			if (c == '+') {
+				break;
+			}
+
+			if (insideAngleBrackets) {
+				result += c;
+			}
 		}
 
-		if (insideAngleBrackets) {
-			result += c;
-		}
+		return result;
 	}
-
-	return result;
-}
 } // namespace
 
 // There are a lot of C and platform-specific hacks contained within
@@ -141,6 +140,7 @@ print_cmdline(int argc, const char* argv[])
 }
 
 } // namespace elemental
-  // clang-format off
+
+// clang-format off
 // vim: set foldmethod=marker foldmarker=@{,@} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
 

@@ -15,7 +15,6 @@
 
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
-#include "Scene.hpp"
 
 #include "Singleton.thpp"
 #include "any_ptr.thpp"
@@ -45,8 +44,6 @@ class ElementalGame
 	virtual void RecieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
 
-	virtual any_ptr GetSceneContainerPtr() { return &loaded_scenes; }
-
   protected:
 	ElementalGame();
 
@@ -58,8 +55,6 @@ class ElementalGame
 
 	IRenderer& video_renderer;
 	SdlEventSource& event_emitter;
-
-	SceneContainer loaded_scenes;
 };
 
 } // namespace elemental

@@ -8,15 +8,7 @@
  */
 #pragma once
 
-#include <iostream>
-#include <sstream>
-
-#ifdef DEBUG // #region
-#include <iostream>
-#define debugprint(msg) std::cout << "[DBG]  " << msg << std::endl
-#else
-#define debugprint(msg) ;
-#endif // #endregion
+#include <string>
 
 namespace elemental {
 

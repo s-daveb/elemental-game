@@ -3,7 +3,7 @@
 trap 'debugprint "Exiting script"; exit' INT
 
 if [ -z "$FSWATCH_ENV_LOADED" ]; then
-	source ./fswatch-build.env
+	source ./scripts/fswatch-build.env
 fi
 if [ -z "$FSWATCH_ENV_LOADED" ]; then
 	debugprint "Please run from project root containing fwatch-build.env" 1>&2

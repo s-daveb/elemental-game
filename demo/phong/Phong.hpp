@@ -17,7 +17,6 @@
 #include "Application.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
-#include "Scene.hpp"
 #include "Singleton.thpp"
 
 #include <functional>

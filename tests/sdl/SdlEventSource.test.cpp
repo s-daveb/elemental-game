@@ -71,7 +71,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
 	{
-		REQUIRE_NOTHROW(test_object.InitJoystick());
+		REQUIRE_NOTHROW(test_object.InitJoysticks());
 		REQUIRE(event_queue_ref.size() == 0);
 	}
 	FIXTURE_TEST(
