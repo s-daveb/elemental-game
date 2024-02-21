@@ -13,7 +13,7 @@
 
 #include "sys/debuginfo.hpp"
 #include "types/legible_ctypes.hpp"
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 
 #include "test-utils/common.hpp"
 
@@ -56,7 +56,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 						fs::remove(INPUT_FILE_PATH);
 					}
 				} catch (std::exception& e) {
-					debugprint(e.what());
+					DBG_PRINT(e.what());
 				}
 			}
 		};

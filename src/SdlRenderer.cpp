@@ -7,24 +7,22 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SdlRenderer.hpp"
+#include <SDL.h>
+#include <SDL_image.h>
+
 #include "Exception.hpp"
 #include "IRenderer.hpp"
+#include "SdlRenderer.hpp"
 
 #include "any_ptr.thpp"
 
 #include "sys/debuginfo.hpp"
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 
 #include "types/rendering.hpp"
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_render.h>
-
 #include <nlohmann/json.hpp>
 
-#include <any>
 #include <memory>
 #include <sstream>
 #include <utility>
@@ -111,7 +109,7 @@ SdlRenderer::Init(RendererSettings& settings)
 void
 SdlRenderer::Deactivate()
 {
-	debugprint("SdlRenderer::Deactivate called!");
+	DBG_PRINT("SdlRenderer::Deactivate called!");
 	if (this->sdl_window_ptr != nullptr) {
 		this->sdl_window_ptr.reset();
 	}
@@ -129,10 +127,10 @@ SdlRenderer::GetResolution()
 	int w, h;
 
 	/* SDL does not seem to catch this condition sometimes */
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
 	if (ERROR ==
-	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr, &w, &h)) {
+	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(), &w, &h)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
@@ -146,7 +144,7 @@ SdlRenderer::GetWindowSize()
 
 	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_window_ptr != nullptr);
-	SDL_GetWindowSize(this->sdl_window_ptr, &width, &height);
+	SDL_GetWindowSize(this->sdl_window_ptr.get(), &width, &height);
 
 	// Prevent negative ints being casted to large values.
 	// Throws an exception if ASSERT is false
@@ -162,9 +160,9 @@ SdlRenderer::ClearScreen()
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	// Set bg to black
-	SDL_SetRenderDrawColor(this->sdl_renderer_ptr, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(this->sdl_renderer_ptr.get(), 0, 0, 0, 0);
 
-	if (ERROR == SDL_RenderClear(this->sdl_renderer_ptr)) {
+	if (ERROR == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
@@ -174,35 +172,37 @@ SdlRenderer::Flip()
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	// Set bg to black
-	SDL_RenderPresent(this->sdl_renderer_ptr);
+	SDL_RenderPresent(this->sdl_renderer_ptr.get());
 }
 
-void
+/*! \todo convert this to a private method, used internally to wrap SDL_Blit */
+/* void
 // SdlRenderer::Blit(void* image_data, Rectangle& placement)
-SdlRenderer::Blit(any_ptr image_data, Rectangle& placement)
+SdlRenderer::Blit(std::any image_data, Rectangle& placement)
 {
-	ASSERT(this->sdl_renderer_ptr != nullptr);
+        ASSERT(this->sdl_renderer_ptr != nullptr);
 
-	try {
-		auto to_draw = any_ptr_cast<SDL_Texture*>(image_data);
-		auto position = FromRectangle<SDL_Rect>(placement);
+        try {
+                auto to_draw = std::any_cast<SDL_Texture*>(image_data);
+                auto position = FromRectangle<SDL_Rect>(placement);
 
-		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr, to_draw,
-		                            nullptr, &position)) {
-			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
-		}
-	} catch (std::bad_cast& cast_exc) {
-		std::stringstream buffer;
-		buffer << "bad_any_cast" << std::endl
-		       << "image_data.type: " << image_data.type().name()
-		       << std::endl;
-		throw Exception(buffer.str());
-	} catch (Exception& thrown_exception) {
-		throw;
-	} catch (std::exception& thrown_exception) {
-		throw Exception(thrown_exception);
-	}
+                if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
+                                            to_draw, nullptr, &position)) {
+                        HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
+                }
+        } catch (std::bad_cast& cast_exc) {
+                std::stringstream buffer;
+                buffer << "bad_any_cast" << std::endl
+                       << "image_data.type: " << image_data.type().name()
+                       << std::endl;
+                throw Exception(buffer.str());
+        } catch (Exception& thrown_exception) {
+                throw;
+        } catch (std::exception& thrown_exception) {
+                throw Exception(thrown_exception);
+        }
 }
+*/
 
 SdlRenderer::SdlRenderer()
     : IRenderer()

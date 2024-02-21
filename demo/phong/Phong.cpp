@@ -11,7 +11,7 @@
 
 #include "IRenderer.hpp"
 
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 #include "sys/paths.hpp"
 
 #include "Exception.hpp"
@@ -41,7 +41,7 @@ void
 print_cycle_rate(milliseconds& cycle_length,
                  c::const_string label = "cycle_length")
 {
-	debugprint(label << cycle_length.count() << "ms.");
+	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
 
 /// @}

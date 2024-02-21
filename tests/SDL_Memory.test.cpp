@@ -10,7 +10,7 @@
 #include "SDL_Memory.thpp"
 
 #include "test-utils/common.hpp"
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 
 #include "Exception.hpp"
 
@@ -37,9 +37,9 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		void operator()(FakeSDL_Object* ptr)
 		{
 
-			// debugprint("FakeDeleter::operator() called!");
+			// DBG_PRINT("FakeDeleter::operator() called!");
 			ptr->initialized = false;
-			// debugprint(((ptr->initialized) ? " initialized"
+			// DBG_PRINT(((ptr->initialized) ? " initialized"
 			//                                : " not
 			//                                initialized"));
 			delete ptr;
@@ -47,8 +47,10 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		}
 	};
 
-	using test_sdl_unique_ptr = unique_sdl_ptr<FakeSDL_Object, FakeDeleter>;
-	using test_sdl_shared_ptr = shared_sdl_ptr<FakeSDL_Object, FakeDeleter>;
+	using test_sdl_unique_ptr =
+	    sdl::unique_ptr<FakeSDL_Object, FakeDeleter>;
+	using test_sdl_shared_ptr =
+	    sdl::shared_ptr<FakeSDL_Object, FakeDeleter>;
 
 	TEST("uniqe_sdl_ptr is convertible to and from raw pointers")
 	{
@@ -67,7 +69,7 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		REQUIRE(is_initialized == false);
 	}
 
-	TEST("shared_sdl_ptr is convertible to and from raw pointers")
+	TEST("sdl::shared_ptr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
 		FakeSDL_Object* fake_object =

@@ -11,7 +11,7 @@
 
 #include "sys/debuginfo.hpp"
 #include "test-utils/common.hpp"
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 
 #include "Exception.hpp"
 
@@ -49,7 +49,7 @@ BEGIN_TEST_SUITE("elemental::FileResource")
 						fs::remove(TEST_FILE_PATH);
 					}
 				} catch (std::exception& e) {
-					debugprint(e.what());
+					DBG_PRINT(e.what());
 				}
 			}
 		};

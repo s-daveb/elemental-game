@@ -11,12 +11,16 @@
 
 #include "Exception.hpp"
 
+#include "util/debug.hpp"
+
 #include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <typeindex>
 #include <memory>
+
+/** @todo this is good code, but is slated for deletion  */
 
 namespace elemental {
 class any_ptr;
@@ -159,7 +163,7 @@ template<typename TP>
 TP
 any_ptr_cast(const any_ptr& ptr)
 {
-	static std::type_index result_type_index(typeid(TP));
+	static std::type_index expected_type_index(typeid(TP));
 
 	// If: the original pointer was a nullptr literal or a void* pointer
 	// Or:  If the user is requesting the internal pointer as void*
@@ -168,7 +172,7 @@ any_ptr_cast(const any_ptr& ptr)
 	// Caveat usor.
 	if (ptr.saved_type_index == nullptr_t_type_index ||
 	    ptr.saved_type_index == void_ptr_type_index ||
-	    result_type_index == void_ptr_type_index) {
+	    expected_type_index == void_ptr_type_index) {
 		return static_cast<TP>(ptr.stored_raw_ptr);
 	} else {
 		// Otherwise, check the requested type against the
@@ -176,9 +180,12 @@ any_ptr_cast(const any_ptr& ptr)
 		// If they don't match, get the stD::type_index.name()s
 		// and hash those. If they match, we are good to go!
 		// This *could* be unsafe or not portable. Here's hoping. 🤞
-		if (result_type_index != ptr.saved_type_index) {
+		if (expected_type_index != ptr.saved_type_index) {
+			DBG_PRINT(expected_type_index.name() << std::endl
+				 << ptr.saved_type_index.name() << std::endl);
+
 			auto result_type_name_hash =
-			    string_hasher(result_type_index.name());
+			    string_hasher(expected_type_index.name());
 
 			if (result_type_name_hash != ptr.type_name_hashed) {
 				throw any_ptr::bad_cast();

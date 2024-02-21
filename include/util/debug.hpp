@@ -1,4 +1,4 @@
-/* debugprint.hpp
+/* debug.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -14,9 +14,9 @@
 
 #ifdef DEBUG // #region
 #include <iostream>
-#define debugprint(msg) std::cout << "[DBG]  " << msg << std::endl
+#define DBG_PRINT(msg) std::cout << "[DBG]  " << msg << std::endl
 #else
-#define debugprint(msg) ;
+#define DBG_PRINT(msg) ;
 #endif // #endregion
 
 // clang-format off

@@ -9,17 +9,26 @@
 
 #pragma once
 
+#include <SDL.h>
+
 #include "IRenderer.hpp"
 #include "SDL_Memory.thpp"
-#include "any_ptr.thpp"
+// #include "std::any.thpp"
+#include <any>
 
 #include <memory>
 
 namespace elemental {
+class SdlRenderer;
+namespace debug {
+	template<typename T>
+	struct Inspector;
+}
 
 struct SdlRenderer : public IRenderer
 {
 	friend class IRenderer;
+	friend class debug::Inspector<SdlRenderer>;
 
 	virtual ~SdlRenderer();
 
@@ -34,7 +43,6 @@ struct SdlRenderer : public IRenderer
 
 	virtual void ClearScreen() override;
 	virtual void Flip() override;
-	virtual void Blit(any_ptr image_data, Rectangle& placement) override;
 
 #ifndef UNIT_TEST
   protected:
@@ -42,8 +50,8 @@ struct SdlRenderer : public IRenderer
 	bool is_initialized;
 	SdlRenderer();
 
-	unique_sdl_ptr<SDL_Window> sdl_window_ptr;
-	unique_sdl_ptr<SDL_Renderer> sdl_renderer_ptr;
+	sdl::shared_ptr<SDL_Window> sdl_window_ptr;
+	sdl::shared_ptr<SDL_Renderer> sdl_renderer_ptr;
 };
 
 template<>

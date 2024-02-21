@@ -9,8 +9,8 @@
 /*! \file SDL_Memory.thpp
  * \brief Custom smart pointers for SDL resources.
  *
- * This file defines two custom smart pointer classes, `unique_sdl_ptr` and
- * `shared_sdl_ptr`, tailored for managing SDL resources. These classes automate
+ * This file defines two custom smart pointer classes, `unique_ptr` and
+ * `shared_ptr`, tailored for managing SDL resources. These classes automate
  * resource destruction by calling the appropriate SDL_Destroy*() functions in
  * their destructors. Additionally, they provide automatic conversion back into
  * a raw pointer for seamless integration with SDL functions.
@@ -29,11 +29,11 @@
  *         return 1;
  *     }
  *
- *     // Using unique_sdl_ptr with custom deleter
- *     elemental::unique_sdl_ptr<SDL_Window> windowPtr(sdlWindow);
+ *     // Using unique_ptr with custom deleter
+ *     elemental::UniquePtr<SDL_Window> windowPtr(sdlWindow);
  *
  *     // Now you can use windowPtr directly as SDL_Window*
- *     // unique_sdl_ptr is automatically converted to SDL_Window* where needed
+ *     // UniquePtr is automatically converted to SDL_Window* where needed
  *     SDL_ShowWindow(windowPtr);
  *
  *     return 0;
@@ -48,7 +48,7 @@
 
 namespace elemental {
 /*! \brief A catch-call deleter functor.  Add a method overload for your
- * favorite SDL_* pointer type, to have the uniqe_sdl_ptr and shared_sdl_ptr
+ * favorite SDL_* pointer type, to have the uniqe_sdl_ptr and shared_ptr
  * automatically manage resource SDL resources. */
 struct SDL_ResourceDeleter
 {
@@ -74,13 +74,13 @@ struct SDL_ResourceDeleter
 };
 
 template<typename T, typename D = SDL_ResourceDeleter>
-struct unique_sdl_ptr : public std::unique_ptr<T, D>
+struct UniquePtr : public std::unique_ptr<T, D>
 {
 	using std::unique_ptr<T, D>::unique_ptr;
 	operator T*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	unique_sdl_ptr& operator=(T* ptr)
+	UniquePtr& operator=(T* ptr)
 	{
 		this->reset(ptr);
 		return *this;
@@ -88,17 +88,17 @@ struct unique_sdl_ptr : public std::unique_ptr<T, D>
 };
 
 template<typename T, typename D = SDL_ResourceDeleter>
-struct shared_sdl_ptr : public std::shared_ptr<T>
+struct Ptr : public std::shared_ptr<T>
 {
 	using std::shared_ptr<T>::shared_ptr;
-	shared_sdl_ptr(T* ptr, D deleter = D{})
+	Ptr(T* ptr, D deleter = D{})
 	    : std::shared_ptr<T>(ptr, deleter)
 	{
 	}
 	operator T*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	shared_sdl_ptr& operator=(T* ptr)
+	Ptr& operator=(T* ptr)
 	{
 		this->reset(ptr, D{});
 		return *this;

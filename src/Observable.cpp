@@ -7,8 +7,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "IObserver.hpp"
 #include "Observable.hpp"
+#include "IObserver.hpp"
 
 #include "IObserver.hpp"
 #include <functional>
@@ -28,7 +28,8 @@ Observable::NotifyAll(std::any message)
 		observer.get().RecieveMessage(*this, message);
 	}
 }
-}
+} // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// clang-format off
+// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

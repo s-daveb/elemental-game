@@ -49,15 +49,12 @@ class SdlEventSource : public Observable
 
 	void PollEvents();
 
-#ifndef UNIT_TEST
-  private:
-#endif
 	SdlEventSource();
 
 	void InitJoysticks();
 
 	std::queue<SDL_Event> event_queue;
-	unique_sdl_ptr<SDL_Joystick> joydev;
+	UniquePtr<SDL_Joystick> joydev_ptr;
 
 	std::mutex event_queue_mutex;
 };

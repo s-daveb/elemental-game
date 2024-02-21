@@ -16,7 +16,7 @@
 #include "LoopRegulator.hpp"
 #include "SdlRenderer.hpp"
 
-#include "util/debugprint.hpp"
+#include "util/debug.hpp"
 
 #include "SdlEventSource.hpp"
 
@@ -32,7 +32,7 @@ void
 print_cycle_rate(milliseconds& cycle_length,
                  c::const_string label = "cycle_length")
 {
-	debugprint(label << cycle_length.count() << "ms.");
+	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
 //! @}
 
