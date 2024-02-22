@@ -13,22 +13,19 @@
 
 #include "IRenderer.hpp"
 #include "SDL_Memory.thpp"
-// #include "std::any.thpp"
-#include <any>
+
+#include "util/testing.hpp"
 
 #include <memory>
 
 namespace elemental {
 class SdlRenderer;
-namespace debug {
-	template<typename T>
-	struct Inspector;
-}
 
 struct SdlRenderer : public IRenderer
 {
+	TEST_INSPECTABLE(SdlRenderer);
+
 	friend class IRenderer;
-	friend class debug::Inspector<SdlRenderer>;
 
 	virtual ~SdlRenderer();
 
@@ -44,14 +41,15 @@ struct SdlRenderer : public IRenderer
 	virtual void ClearScreen() override;
 	virtual void Flip() override;
 
-#ifndef UNIT_TEST
+	virtual void Blit(std::shared_ptr<void> img_data,
+	                  Rectangle& placement) override;
+
   protected:
-#endif
 	bool is_initialized;
 	SdlRenderer();
 
-	sdl::shared_ptr<SDL_Window> sdl_window_ptr;
-	sdl::shared_ptr<SDL_Renderer> sdl_renderer_ptr;
+	SdlPtr<SDL_Window> sdl_window_ptr;
+	SdlPtr<SDL_Renderer> sdl_renderer_ptr;
 };
 
 template<>

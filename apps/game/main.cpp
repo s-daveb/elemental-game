@@ -14,8 +14,6 @@
 #include "IApplication.hpp"
 #include "Singleton.thpp"
 
-#include "any_ptr.thpp"
-
 using namespace elemental;
 
 int

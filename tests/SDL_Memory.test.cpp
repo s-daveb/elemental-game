@@ -48,11 +48,11 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 	};
 
 	using test_sdl_unique_ptr =
-	    sdl::unique_ptr<FakeSDL_Object, FakeDeleter>;
+	    UniqueSdlPtr<FakeSDL_Object, FakeDeleter>;
 	using test_sdl_shared_ptr =
-	    sdl::shared_ptr<FakeSDL_Object, FakeDeleter>;
+	    SdlPtr<FakeSDL_Object, FakeDeleter>;
 
-	TEST("uniqe_sdl_ptr is convertible to and from raw pointers")
+	TEST("UniqueSdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
 		FakeSDL_Object* fake_object =
@@ -69,7 +69,7 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		REQUIRE(is_initialized == false);
 	}
 
-	TEST("sdl::shared_ptr is convertible to and from raw pointers")
+	TEST("SdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
 		FakeSDL_Object* fake_object =

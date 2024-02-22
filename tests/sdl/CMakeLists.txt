@@ -3,19 +3,27 @@ set(SDL_test-runner_SOURCES
 	SdlMain.cpp
 	SdlRenderer.test.cpp
 	SdlEventSource.test.cpp
+$<TARGET_OBJECTS:elemental>
 )
 
 add_executable(SDL_test-runner
 	${SDL_test-runner_SOURCES}
 )
 
+target_include_directories(SDL_test-runner 
+SYSTEM BEFORE
+	PUBLIC ${SDL2_COMBINED_INCLUDE_DIRS}
+	PUBLIC ${NLOHMANN_JSON_INCLUDE_DIRS}
+)
+
 set_target_properties(SDL_test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
 
-target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
+#target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
 
-target_include_directories(SDL_test-runner PRIVATE
+target_include_directories(SDL_test-runner PUBLIC
 	Catch2::Catch2WithMain
 	FakeIt::FakeIt-catch
+	${TEST_LINK_DEPS}
 	..
 )
 

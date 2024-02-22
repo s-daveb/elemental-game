@@ -74,13 +74,13 @@ struct SDL_ResourceDeleter
 };
 
 template<typename T, typename D = SDL_ResourceDeleter>
-struct UniquePtr : public std::unique_ptr<T, D>
+struct UniqueSdlPtr : public std::unique_ptr<T, D>
 {
 	using std::unique_ptr<T, D>::unique_ptr;
 	operator T*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	UniquePtr& operator=(T* ptr)
+	UniqueSdlPtr& operator=(T* ptr)
 	{
 		this->reset(ptr);
 		return *this;
@@ -88,17 +88,17 @@ struct UniquePtr : public std::unique_ptr<T, D>
 };
 
 template<typename T, typename D = SDL_ResourceDeleter>
-struct Ptr : public std::shared_ptr<T>
+struct SdlPtr : public std::shared_ptr<T>
 {
 	using std::shared_ptr<T>::shared_ptr;
-	Ptr(T* ptr, D deleter = D{})
+	SdlPtr(T* ptr, D deleter = D{})
 	    : std::shared_ptr<T>(ptr, deleter)
 	{
 	}
 	operator T*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	Ptr& operator=(T* ptr)
+	SdlPtr& operator=(T* ptr)
 	{
 		this->reset(ptr, D{});
 		return *this;

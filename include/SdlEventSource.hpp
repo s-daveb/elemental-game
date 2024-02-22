@@ -11,7 +11,6 @@
 
 #include "SDL_Memory.thpp"
 #include "Singleton.thpp"
-#include "any_ptr.thpp"
 
 #include "Observable.hpp"
 
@@ -54,7 +53,7 @@ class SdlEventSource : public Observable
 	void InitJoysticks();
 
 	std::queue<SDL_Event> event_queue;
-	UniquePtr<SDL_Joystick> joydev_ptr;
+	UniqueSdlPtr<SDL_Joystick> joydev_ptr;
 
 	std::mutex event_queue_mutex;
 };

@@ -1,7 +1,6 @@
 # Define the executable 'test-runner'
 set(test-runner_SOURCES
 	runtime.test.cpp
-  any_ptr.test.cpp
 	Exception.test.cpp
 	Singleton.template.test.cpp
 	Application.test.cpp
@@ -14,6 +13,8 @@ set(test-runner_SOURCES
 	FileResource.test.cpp
 	JsonConfigFile.test.cpp
 	paths.test.cpp
+
+$<TARGET_OBJECTS:elemental>
 )
 
 add_executable(test-runner
@@ -28,10 +29,11 @@ target_compile_definitions(test-runner PRIVATE
 )
 
 set(TESTS_LINK_DEPS
-	${SDL2_LINK_LIBRARIES}
 	Catch2::Catch2WithMain
 	FakeIt::FakeIt-catch
-	elemental-testing
+	Threads::Threads
+	${SDL2_COMBINED_LINK_DEPS}
+	${STACKTRACE_DEP_LIBS}
 )
 
 target_include_directories(test-runner SYSTEM BEFORE
@@ -43,11 +45,6 @@ target_include_directories(test-runner
 	PRIVATE	${CMAKE_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_SOURCE_DIR}/tests
 )
-
-# Assume your target is named "your_target_name"
-#get_target_property(target_include_dirs test-runner INCLUDE_DIRECTORIES)
-# Print the include directories
-#message("Include Directories for target test-runner: ${target_include_dirs}")
 
 target_link_directories(test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})
 

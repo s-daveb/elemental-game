@@ -14,9 +14,6 @@
 #include "IRenderer.hpp"
 #include "SdlRenderer.hpp"
 
-#include "any_ptr.thpp"
-
-#include "sys/debuginfo.hpp"
 #include "util/debug.hpp"
 
 #include "types/rendering.hpp"
@@ -176,33 +173,28 @@ SdlRenderer::Flip()
 }
 
 /*! \todo convert this to a private method, used internally to wrap SDL_Blit */
-/* void
-// SdlRenderer::Blit(void* image_data, Rectangle& placement)
-SdlRenderer::Blit(std::any image_data, Rectangle& placement)
+void
+SdlRenderer::Blit(std::shared_ptr<void> image_data, Rectangle& placement)
 {
-        ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(this->sdl_renderer_ptr != nullptr);
+	ASSERT(image_data.get() != nullptr);
 
-        try {
-                auto to_draw = std::any_cast<SDL_Texture*>(image_data);
-                auto position = FromRectangle<SDL_Rect>(placement);
+	try {
+		auto to_draw =
+		    std::static_pointer_cast<SDL_Texture>(image_data);
+		auto position = FromRectangle<SDL_Rect>(placement);
 
-                if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
-                                            to_draw, nullptr, &position)) {
-                        HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
-                }
-        } catch (std::bad_cast& cast_exc) {
-                std::stringstream buffer;
-                buffer << "bad_any_cast" << std::endl
-                       << "image_data.type: " << image_data.type().name()
-                       << std::endl;
-                throw Exception(buffer.str());
-        } catch (Exception& thrown_exception) {
-                throw;
-        } catch (std::exception& thrown_exception) {
-                throw Exception(thrown_exception);
-        }
+		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
+		                            to_draw.get(), nullptr,
+		                            &position)) {
+			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
+		}
+	} catch (Exception& thrown_exception) {
+		throw;
+	} catch (std::exception& thrown_exception) {
+		throw Exception(thrown_exception);
+	}
 }
-*/
 
 SdlRenderer::SdlRenderer()
     : IRenderer()

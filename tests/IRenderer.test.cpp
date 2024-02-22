@@ -10,7 +10,6 @@
 #include "IRenderer.hpp"
 #include "types/rendering.hpp"
 
-#include "any_ptr.thpp"
 #include "test-utils/common.hpp"
 
 #include <any>
@@ -32,7 +31,8 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 
 		virtual void ClearScreen() override { return; }
 		virtual void Flip() override { return; }
-		virtual void Blit(any_ptr image_data,
+
+		virtual void Blit(std::shared_ptr<void> image_data,
 		                  Rectangle& placement) override
 		{
 			return;

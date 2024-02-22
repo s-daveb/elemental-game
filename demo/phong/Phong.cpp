@@ -11,8 +11,8 @@
 
 #include "IRenderer.hpp"
 
-#include "util/debug.hpp"
 #include "sys/paths.hpp"
+#include "util/debug.hpp"
 
 #include "Exception.hpp"
 #include "JsonConfigFile.hpp"

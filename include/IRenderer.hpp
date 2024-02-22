@@ -10,12 +10,14 @@
 #pragma once
 
 #include "Singleton.thpp"
-// #include "any_ptr.thpp"
-#include "types.hpp"
 
+#include "types.hpp"
 #include "types/rendering.hpp"
 
+#include "util/testing.hpp"
+
 #include <any>
+#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -29,6 +31,7 @@ struct IRenderer
 	 * the derived classes.
 	 * \see Singleton.thpp  */
 	SINGLETON_INTERFACE(IRenderer);
+	TEST_INSPECTABLE(IRenderer);
 
 	virtual ~IRenderer() {}
 
@@ -57,7 +60,8 @@ struct IRenderer
 	virtual void Flip() = 0;
 	//! @}
 
-	IRenderer() = default;
+	virtual void Blit(std::shared_ptr<void> image_data,
+	                  Rectangle& placement) = 0;
 
 	/*! \name DataType Conversion methods
 	 * \brief Conversion functions to convert Rectangle objects to the types
@@ -73,6 +77,9 @@ struct IRenderer
 	template<typename R>
 	R FromRectangle(const Rectangle& rectangle);
 	/*! @}  */
+
+  protected:
+	IRenderer() = default;
 };
 } // namespace elemental
 

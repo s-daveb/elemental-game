@@ -17,7 +17,6 @@
 #include "LoopRegulator.hpp"
 
 #include "Singleton.thpp"
-#include "any_ptr.thpp"
 #include "types.hpp"
 
 #include <memory>
