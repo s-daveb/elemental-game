@@ -19,4 +19,4 @@ void print_cmdline(int argc, const char* argv[]);
 } // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=syntax foldlevel=99 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

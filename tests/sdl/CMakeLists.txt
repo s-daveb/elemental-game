@@ -42,4 +42,4 @@ set_target_properties(SDL_test-runner PROPERTIES
 add_dependencies(ctest
 	SDL_test-runner
 )
-# vim: ts=2 sw=2 noet foldmethod=indent foldlevel=99 :
+# vim: ts=2 sw=2 noet foldmethod=indent  :

@@ -30,8 +30,8 @@ set foldmethod=expr
 
 
 let s:build_dir = 'vim-debug'
-let s:build_cores = 2
-let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' ctest'
+let s:build_cores = 6
+let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores 
 
 let s:cmake_path = system('which ' . 'cmake')
 let s:ninja_path  = system('which ' . 'ninja')
@@ -48,7 +48,7 @@ if (s:cmake_path != '')
 				\' -G ' . s:cmake_generator
 endif
 
-let s:make_call = 'make ' . s:make_args
+let s:make_call = 'nice -make ' . s:make_args
 let s:ninja_call = 'ninja ' . s:make_args
 
 if ! get(s:, 'defined', 0) " -- prevents the function from being redefined after compiling

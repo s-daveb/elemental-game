@@ -50,7 +50,7 @@ namespace elemental {
 /*! \brief A catch-call deleter functor.  Add a method overload for your
  * favorite SDL_* pointer type, to have the uniqe_sdl_ptr and shared_ptr
  * automatically manage resource SDL resources. */
-struct SDL_ResourceDeleter
+struct SdlResourceDeleter
 {
 	inline void operator()(SDL_Window* window_ptr)
 	{
@@ -73,38 +73,39 @@ struct SDL_ResourceDeleter
 	}
 };
 
-template<typename T, typename D = SDL_ResourceDeleter>
-struct UniqueSdlPtr : public std::unique_ptr<T, D>
+template<typename TSdlData, typename TDeleter = SdlResourceDeleter>
+struct UniqueSdlPtr : public std::unique_ptr<TSdlData, TDeleter>
 {
-	using std::unique_ptr<T, D>::unique_ptr;
-	operator T*() const { return this->get(); }
 
+	using  std::unique_ptr<TSdlData,TDeleter>::unique_ptr;
+
+	operator TSdlData*() const { return this->get(); }
 	// Assignment operator for raw pointer using std::move
-	UniqueSdlPtr& operator=(T* ptr)
+	UniqueSdlPtr& operator=(TSdlData* ptr)
 	{
 		this->reset(ptr);
 		return *this;
 	}
 };
 
-template<typename T, typename D = SDL_ResourceDeleter>
-struct SdlPtr : public std::shared_ptr<T>
+template<typename TSdlData, typename TDeleter = SdlResourceDeleter>
+struct SdlPtr : public std::shared_ptr<TSdlData>
 {
-	using std::shared_ptr<T>::shared_ptr;
-	SdlPtr(T* ptr, D deleter = D{})
-	    : std::shared_ptr<T>(ptr, deleter)
+	using  std::shared_ptr<TSdlData>::shared_ptr;
+	SdlPtr(TSdlData* ptr, TDeleter deleter = TDeleter{})
+	    : std::shared_ptr<TSdlData>(ptr, deleter)
 	{
 	}
-	operator T*() const { return this->get(); }
+	operator TSdlData*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	SdlPtr& operator=(T* ptr)
+	SdlPtr& operator=(TSdlData* ptr)
 	{
-		this->reset(ptr, D{});
+		this->reset(ptr, TDeleter{});
 		return *this;
 	}
 };
 }
 
 // clang-format off
-// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

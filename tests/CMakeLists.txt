@@ -77,4 +77,4 @@ add_dependencies(ctest
 
 add_subdirectory(sdl)
 
-# vim: ts=2 sw=2 noet foldmethod=indent foldlevel=99 :
+# vim: ts=2 sw=2 noet foldmethod=indent  :

@@ -80,4 +80,4 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 }
 
 // clang-format off
-// vim: set foldmethod=syntax foldlevel=99 textwidth=80 ts=4 sts=0 sw=4  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax  textwidth=80 ts=4 sts=0 sw=4  noexpandtab ft=cpp.doxygen :

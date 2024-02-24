@@ -36,4 +36,4 @@ main(int argc, c::const_string argv[], c::const_string envp[])
 }
 
 // clang-format off
-// vim: set foldlevel=99 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set  textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
