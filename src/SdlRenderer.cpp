@@ -39,18 +39,18 @@ std::stringstream error_buffer;
 SdlRenderer::~SdlRenderer()
 {
 	if (this->is_initialized) {
-		this->Deactivate();
+		this->deactivate();
 	}
 }
 
 void
-SdlRenderer::Init(RendererSettings& settings)
+SdlRenderer::init(RendererSettings& settings)
 {
 
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
-	if (ERROR == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
+	if (kERROR == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
 	                      IMG_INIT_WEBP)) {
 		error_buffer.str("");
 		error_buffer
@@ -70,14 +70,14 @@ SdlRenderer::Init(RendererSettings& settings)
 	res_width = settings.resolution.width;
 	res_height = settings.resolution.height;
 
-	if (settings.window.placement == WindowPlacement::Manual) {
+	if (settings.window.placement == WindowPlacement::kMANUAL) {
 		window_xpos = settings.window.position.x;
 		window_ypos = settings.window.position.y;
-	} else if (settings.window.placement == WindowPlacement::Centered) {
+	} else if (settings.window.placement == WindowPlacement::kCENTERED) {
 		window_xpos = window_ypos = SDL_WINDOWPOS_CENTERED;
 	}
 
-	if (settings.window.mode == WindowMode::Fullscreen) {
+	if (settings.window.mode == WindowMode::kFULLSCREEN) {
 		sdl_flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
@@ -104,7 +104,7 @@ SdlRenderer::Init(RendererSettings& settings)
 }
 
 void
-SdlRenderer::Deactivate()
+SdlRenderer::deactivate()
 {
 	DBG_PRINT("SdlRenderer::Deactivate called!");
 	if (this->sdl_window_ptr != nullptr) {
@@ -119,14 +119,14 @@ SdlRenderer::Deactivate()
 }
 
 Resolution
-SdlRenderer::GetResolution()
+SdlRenderer::getResolution()
 {
 	int w, h;
 
 	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
-	if (ERROR ==
+	if (kERROR ==
 	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(), &w, &h)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
@@ -135,7 +135,7 @@ SdlRenderer::GetResolution()
 }
 
 Area
-SdlRenderer::GetWindowSize()
+SdlRenderer::getWindowSize()
 {
 	int width, height;
 
@@ -152,19 +152,19 @@ SdlRenderer::GetWindowSize()
 }
 
 void
-SdlRenderer::ClearScreen()
+SdlRenderer::clearScreen()
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
 	// Set bg to black
 	SDL_SetRenderDrawColor(this->sdl_renderer_ptr.get(), 0, 0, 0, 0);
 
-	if (ERROR == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
+	if (kERROR == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
 void
-SdlRenderer::Flip()
+SdlRenderer::flip()
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
@@ -174,7 +174,7 @@ SdlRenderer::Flip()
 
 /*! \todo convert this to a private method, used internally to wrap SDL_Blit */
 void
-SdlRenderer::Blit(std::shared_ptr<void> image_data, Rectangle& placement)
+SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 	ASSERT(image_data.get() != nullptr);
@@ -182,9 +182,9 @@ SdlRenderer::Blit(std::shared_ptr<void> image_data, Rectangle& placement)
 	try {
 		auto to_draw =
 		    std::static_pointer_cast<SDL_Texture>(image_data);
-		auto position = FromRectangle<SDL_Rect>(placement);
+		auto position = fromRectangle<SDL_Rect>(placement);
 
-		if (ERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
+		if (kERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
 		                            to_draw.get(), nullptr,
 		                            &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");

@@ -11,9 +11,8 @@
 
 namespace elemental::debug {
 
-template<typename T>
+template<typename T_>
 class Inspector;
-
 }
 
 #define TEST_INSPECTABLE(TClassName) \

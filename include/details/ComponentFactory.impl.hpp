@@ -14,7 +14,7 @@
 #include "Component.hpp"
 
 #ifndef  COMP_FACTORY_DECL
-#include "ComponentFactory.thpp"
+#include "ComponentFactory.hpp"
 #endif
 
 #include <unordered_map>

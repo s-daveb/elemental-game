@@ -26,7 +26,7 @@ namespace fs = std::filesystem;
 namespace elemental::paths {
 
 fs::path
-GetHome()
+get_home()
 {
 	c::string result;
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
@@ -38,20 +38,20 @@ GetHome()
 }
 
 fs::path
-GetAppConfigRoot()
+get_app_config_root()
 {
 	fs::path result;
 
 	switch (platform::current_platform) {
-		case platform::MACOSX:
-			result = GetHome() / "Library" / "Application Support";
+		case platform::kMACOSX:
+			result = get_home() / "Library" / "Application Support";
 			break;
-		case platform::UNIX:
-		case platform::LINUX:
-		case platform::FREEBSD:
-			result = GetHome() / ".config";
+		case platform::kUNIX:
+		case platform::kLINUX:
+		case platform::kFREEBSD:
+			result = get_home() / ".config";
 			break;
-		case platform::WINDOWS:
+		case platform::kWINDOWS:
 			result = getenv("APPDATA");
 			break;
 		default:
@@ -62,7 +62,7 @@ GetAppConfigRoot()
 }
 
 fs::path
-ExpandPath(const fs::path& location)
+expand_path(const fs::path& location)
 {
 	try {
 		fs::path result(location.root_path());

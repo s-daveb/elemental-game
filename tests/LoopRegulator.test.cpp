@@ -37,10 +37,10 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	FIXTURE_TEST(
 	    "elemental::LoopRegulator - Time calculations work properly")
 	{
-		test_object.StartUpdate();
+		test_object.startUpdate();
 		this_thread::sleep_for(std::chrono::seconds(1));
 		auto timestamp1 = test_object.start_time;
-		auto elapsed_time = test_object.EndUpdate();
+		auto elapsed_time = test_object.endUpdate();
 		auto timestamp2 = test_object.end_time;
 		CHECK(timestamp1 < timestamp2);
 		REQUIRE(test_object.elapsed_ms.count() > 900);
@@ -56,7 +56,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		return;
 	}
 #else
-		const auto acceptable_margin_error_ms = 5ms;
+		const auto kACCEPTABLE_MARGIN_ERROR_MS = 5ms;
 
 		// Seed the random number generator with the current
 		// time
@@ -73,9 +73,9 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		for (unsigned i = 0; i < 100; ++i) {
 			auto random_delay = milliseconds(delay_generator(gen));
 
-			test_object.StartUpdate();
+			test_object.startUpdate();
 			this_thread::sleep_for(random_delay);
-			auto time_delayed_ms = test_object.Delay();
+			auto time_delayed_ms = test_object.delay();
 			auto& expected_delay = test_object.desired_delay_ms;
 
 			auto margin_error_ms =
@@ -83,11 +83,11 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 
 			if (margin_error_ms.count() < 0) {
 				CHECK(margin_error_ms >
-				      (-1 * acceptable_margin_error_ms));
+				      (-1 * kACCEPTABLE_MARGIN_ERROR_MS));
 
 			} else {
 				CHECK(margin_error_ms <
-				      acceptable_margin_error_ms);
+				      kACCEPTABLE_MARGIN_ERROR_MS);
 			}
 		}
 	}

@@ -18,100 +18,100 @@
 BEGIN_TEST_SUITE("elemental::IRenderer")
 {
 	using namespace elemental;
-	struct dummy_renderer : public IRenderer
+	struct DummyRenderer : public IRenderer
 	{
 		friend class IRenderer;
-		virtual ~dummy_renderer(){};
+		virtual ~DummyRenderer(){};
 
-		virtual void Init(RendererSettings&) override { return; }
-		virtual void Deactivate() override { return; }
-		virtual bool IsInitialized() override { return false; }
-		virtual Resolution GetResolution() override { return { 0, 0 }; }
-		virtual Area GetWindowSize() override { return { 0, 0 }; }
+		virtual void init(RendererSettings&) override { return; }
+		virtual void deactivate() override { return; }
+		virtual bool isInitialized() override { return false; }
+		virtual Resolution getResolution() override { return { 0, 0 }; }
+		virtual Area getWindowSize() override { return { 0, 0 }; }
 
-		virtual void ClearScreen() override { return; }
-		virtual void Flip() override { return; }
+		virtual void clearScreen() override { return; }
+		virtual void flip() override { return; }
 
-		virtual void Blit(std::shared_ptr<void> image_data,
+		virtual void blit(std::shared_ptr<void> image_data,
 		                  Rectangle& placement) override
 		{
 			return;
 		}
 
 	  protected:
-		dummy_renderer() : IRenderer() {}
+		DummyRenderer() : IRenderer() {}
 	};
 
 	TEST("elemental::IRenderer::GetInstance works with "
 	     "properly-derived class")
 	{
 		REQUIRE_NOTHROW(
-		    [&]() { IRenderer::GetInstance<dummy_renderer>(); }());
+		    [&]() { IRenderer::GetInstance<DummyRenderer>(); }());
 		SUCCEED();
 	}
 
 	TEST("elemental::Point serialization and deserialization")
 	{
-		Point originalPoint{ 42, 24 };
-		nlohmann::json jsonPoint = originalPoint;
+		Point original_point{ 42, 24 };
+		nlohmann::json json_point = original_point;
 
 		// Check serialization
-		REQUIRE(jsonPoint["x"] == 42);
-		REQUIRE(jsonPoint["y"] == 24);
+		REQUIRE(json_point["x"] == 42);
+		REQUIRE(json_point["y"] == 24);
 
 		// Check deserialization
-		Point deserializedPoint = jsonPoint;
-		REQUIRE(deserializedPoint.x == 42);
-		REQUIRE(deserializedPoint.y == 24);
+		Point deserialized_point = json_point;
+		REQUIRE(deserialized_point.x == 42);
+		REQUIRE(deserialized_point.y == 24);
 	}
 
 	TEST("elemental::Area serialization and deserialization")
 	{
-		Area originalArea{ 800, 600 };
-		nlohmann::json jsonArea = originalArea;
+		Area original_area{ 800, 600 };
+		nlohmann::json json_area = original_area;
 
 		// Check serialization
-		REQUIRE(jsonArea["width"] == 800);
-		REQUIRE(jsonArea["height"] == 600);
+		REQUIRE(json_area["width"] == 800);
+		REQUIRE(json_area["height"] == 600);
 
 		// Check deserialization
-		Area deserializedArea = jsonArea;
-		REQUIRE(deserializedArea.width == 800);
-		REQUIRE(deserializedArea.height == 600);
+		Area deserialized_area = json_area;
+		REQUIRE(deserialized_area.width == 800);
+		REQUIRE(deserialized_area.height == 600);
 	}
 
 	TEST("elemental::Resolution serialization and deserialization")
 	{
-		Resolution originalResolution{ 1920, 1080 };
-		nlohmann::json jsonResolution = originalResolution;
+		Resolution original_resolution{ 1920, 1080 };
+		nlohmann::json json_resolution = original_resolution;
 
 		// Check serialization
-		REQUIRE(jsonResolution["width"] == 1920);
-		REQUIRE(jsonResolution["height"] == 1080);
+		REQUIRE(json_resolution["width"] == 1920);
+		REQUIRE(json_resolution["height"] == 1080);
 
 		// Check deserialization
-		Resolution deserializedResolution = jsonResolution;
-		REQUIRE(deserializedResolution.width == 1920);
-		REQUIRE(deserializedResolution.height == 1080);
+		Resolution deserialized_resolution = json_resolution;
+		REQUIRE(deserialized_resolution.width == 1920);
+		REQUIRE(deserialized_resolution.height == 1080);
 	}
 
 	TEST("elemental::Rectangle serialization and deserialization")
 	{
-		Rectangle originalRectangle{ { 10, 20 }, { 30, 40 } };
-		nlohmann::json jsonRectangle = originalRectangle;
+		Rectangle original_rectangle{ { 10, 20 }, { 30, 40 } };
+		nlohmann::json json_rectangle = original_rectangle;
 
 		// Check serialization
-		REQUIRE(jsonRectangle["position"]["x"] == 10);
-		REQUIRE(jsonRectangle["position"]["y"] == 20);
-		REQUIRE(jsonRectangle["size"]["width"] == 30);
-		REQUIRE(jsonRectangle["size"]["height"] == 40);
+		REQUIRE(json_rectangle["position"]["x"] == 10);
+		REQUIRE(json_rectangle["position"]["y"] == 20);
+		REQUIRE(json_rectangle["size"]["width"] == 30);
+		REQUIRE(json_rectangle["size"]["height"] == 40);
 
 		// Check deserialization
-		Rectangle deserializedRectangle = jsonRectangle;
-		REQUIRE(deserializedRectangle.position.x == 10);
-		REQUIRE(deserializedRectangle.position.y == 20);
-		REQUIRE(deserializedRectangle.size.width == 30);
-		REQUIRE(deserializedRectangle.size.height == 40);
+		Rectangle deserialized_rectangle = json_rectangle;
+		REQUIRE(deserialized_rectangle.position.x == 10);
+		REQUIRE(deserialized_rectangle.position.y == 20);
+		REQUIRE(deserialized_rectangle.size.width == 30);
+		REQUIRE(deserialized_rectangle.size.height == 40);
 	}
 }
 

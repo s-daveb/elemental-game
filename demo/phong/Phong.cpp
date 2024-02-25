@@ -28,9 +28,9 @@
 
 using namespace elemental;
 
-const GameSettings DEFAULT_SETTINGS{ { { "Phong",
-	                                 WindowMode::Windowed,
-	                                 WindowPlacement::Centered,
+const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
+	                                 WindowMode::kWINDOWED,
+	                                 WindowPlacement::kCENTERED,
 	                                 { 0, 0 },
 	                                 { 1270, 720 } },
 	                               { 1024, 768 } } };
@@ -46,13 +46,13 @@ print_cycle_rate(milliseconds& cycle_length,
 
 /// @}
 
-Phong::~Phong()
+IPhong::~IPhong()
 {
-	video_renderer.Deactivate();
+	video_renderer.deactivate();
 }
 
 int
-Phong::Run()
+IPhong::run()
 {
 	this->is_running = true;
 	try {
@@ -62,14 +62,14 @@ Phong::Run()
 		    std::thread([this]() { this->simulation_thread_loop(); });
 
 		while (this->is_running) {
-			frame_regulator.StartUpdate();
-			this->video_renderer.ClearScreen();
+			frame_regulator.startUpdate();
+			this->video_renderer.clearScreen();
 
-			this->event_emitter.PollEvents();
+			this->event_emitter.pollEvents();
 
-			auto cycle_delay_ms = frame_regulator.Delay();
+			auto cycle_delay_ms = frame_regulator.delay();
 			print_cycle_rate(cycle_delay_ms, "frame delay");
-			video_renderer.Flip();
+			video_renderer.flip();
 		}
 
 		this->is_running = false;
@@ -80,17 +80,17 @@ Phong::Run()
 			values.join();
 		}
 
-		return NO_ERROR;
+		return kNO_ERROR;
 	} catch (Exception& exc) {
 		throw;
 	} catch (std::exception& excp) {
 		throw Exception(excp);
 	}
-	return ERROR;
+	return kERROR;
 }
 
 void
-Phong::RecieveMessage(const Observable& sender, std::any message)
+IPhong::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	SDL_Event event = std::any_cast<SDL_Event>(message);
@@ -99,42 +99,42 @@ Phong::RecieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-Phong::Phong()
-    : Application()
+IPhong::IPhong()
+    : IApplication()
     , IObserver()
     , is_running(false)
     , running_threads()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
-    , event_emitter(Singleton::GetReference<SdlEventSource>())
-    , settings_file(paths::GetAppConfigRoot() / "phong" / "settings.json",
-                    FileResource::CREATE_MISSING_DIRS)
+    , event_emitter(Singleton::getReference<SdlEventSource>())
+    , settings_file(paths::get_app_config_root() / "phong" / "settings.json",
+                    FileResource::kCREATE_MISSING_DIRS)
     , settings()
 {
-	this->event_emitter.RegisterObserver(*this);
-	this->event_emitter.PollEvents();
+	this->event_emitter.registerObserver(*this);
+	this->event_emitter.pollEvents();
 
 	try {
-		settings_file.Read();
-		settings = settings_file.Get<GameSettings>();
+		settings_file.read();
+		settings = settings_file.get<GameSettings>();
 	} catch (nlohmann::json::exception& except) {
-		settings = DEFAULT_SETTINGS;
-		settings_file.Set(DEFAULT_SETTINGS);
-		settings_file.Write();
+		settings = kDEFAULT_SETTINGS;
+		settings_file.set(kDEFAULT_SETTINGS);
+		settings_file.write();
 	}
 
-	this->video_renderer.Init(settings.renderer_settings);
+	this->video_renderer.init(settings.renderer_settings);
 	// this->video_renderer.Init(configuration["window_title"]);
 }
 
 void
-Phong::simulation_thread_loop()
+IPhong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
 	do {
-		loop_regulator.StartUpdate();
-		this->event_emitter.Notify();
+		loop_regulator.startUpdate();
+		this->event_emitter.notify();
 
-		auto cycle_delay_ms = loop_regulator.Delay();
+		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }

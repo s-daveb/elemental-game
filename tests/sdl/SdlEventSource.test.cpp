@@ -25,7 +25,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	  public:
 		EventRecorder() : IObserver() {}
 
-		virtual void RecieveMessage(const Observable& sender,
+		virtual void recieveMessage(const Observable& sender,
 		                            std::any message)
 		{
 			auto event = std::any_cast<SDL_Event&>(message);
@@ -37,7 +37,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	class SdlEventSourceInspector : public SdlEventSource
 	{
 	  public:
-		static std::queue<SDL_Event>& GetEventQueue(
+		static std::queue<SDL_Event>& getEventQueue(
 		    SdlEventSource& other)
 		{
 			return other.event_queue;
@@ -49,9 +49,9 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	{
 		SdlEventSourceFixture()
 		    : SdlTestFixture()
-		    , test_object(Singleton::GetReference<SdlEventSource>())
+		    , test_object(Singleton::getReference<SdlEventSource>())
 		    , recorder()
-		    , event_queue_ref(Inspector::GetEventQueue(test_object))
+		    , event_queue_ref(Inspector::getEventQueue(test_object))
 		    , dev_rand()
 		{
 			/* Clear the event queue in between tests */
@@ -71,17 +71,17 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
 	{
-		REQUIRE_NOTHROW(test_object.InitJoysticks());
+		REQUIRE_NOTHROW(test_object.initJoysticks());
 		REQUIRE(event_queue_ref.size() == 0);
 	}
 	FIXTURE_TEST(
 	    "elemental::SdlEventSource::Enqueue stores events in order")
 	{
-		const int MAX_EVENTS = 10;
-		SDL_Event test_input_list[MAX_EVENTS];
+		const int kMAX_EVENTS = 10;
+		SDL_Event test_input_list[kMAX_EVENTS];
 
 		unsigned int rand_count =
-		    std::uniform_int_distribution(5, MAX_EVENTS)(dev_rand);
+		    std::uniform_int_distribution(5, kMAX_EVENTS)(dev_rand);
 
 		for (unsigned i = 0; i < rand_count; ++i) {
 			auto& input = test_input_list[i];
@@ -103,14 +103,14 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	FIXTURE_TEST(
 	    "elemental::SdlEventSource::Notify sends out events in order")
 	{
-		const int MAX_EVENTS = 5;
-		SDL_Event test_input[MAX_EVENTS];
+		const int kMAX_EVENTS = 5;
+		SDL_Event test_input[kMAX_EVENTS];
 
 		unsigned int rand_count =
-		    std::uniform_int_distribution(5, MAX_EVENTS)(dev_rand);
+		    std::uniform_int_distribution(5, kMAX_EVENTS)(dev_rand);
 
 		REQUIRE_NOTHROW(
-		    [&]() { test_object.RegisterObserver(recorder); }());
+		    [&]() { test_object.registerObserver(recorder); }());
 
 		for (unsigned i = 0; i < rand_count; ++i) {
 			auto& input = test_input[i];
@@ -118,11 +118,11 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			event_queue_ref.push(input);
 		}
 
-		test_object.Notify();
+		test_object.notify();
 
 		REQUIRE(recorder.received.size() > 0);
 
-		for (unsigned i = 0; i < MAX_EVENTS; ++i) {
+		for (unsigned i = 0; i < kMAX_EVENTS; ++i) {
 			auto& event = recorder.received[i];
 
 			CHECK(event.key.keysym.sym ==
@@ -132,7 +132,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	FIXTURE_TEST("elemental::SdlEventSource::PollEvents works")
 	{
-		auto& event_queue = Inspector::GetEventQueue(test_object);
+		auto& event_queue = Inspector::getEventQueue(test_object);
 		while (!event_queue.empty()) {
 			event_queue.pop();
 		}
@@ -143,7 +143,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			SdlEventSimulator::randomArrowKey();
 		}
 
-		test_object.PollEvents();
+		test_object.pollEvents();
 
 		REQUIRE(event_queue.size() > 0);
 	}

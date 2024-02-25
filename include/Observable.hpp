@@ -25,12 +25,12 @@ class Observable
 
 	virtual ~Observable() {}
 
-	void RegisterObserver(observer_ref);
-	virtual void Notify() = 0;
+	void registerObserver(observer_ref);
+	virtual void notify() = 0;
 
   protected:
 	inline Observable(){};
-	void NotifyAll(std::any message = std::any());
+	void notify_all(std::any message = std::any());
 	observer_list observers;
 };
 

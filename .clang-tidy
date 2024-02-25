@@ -1,18 +1,31 @@
+HeaderFilterRegex: '.*hpp'
 Checks: '-*,readability-identifier-naming'
 CheckOptions:
   # Class Names
   - { key: readability-identifier-naming.ClassCase,          value: CamelCase }
   - { key: readability-identifier-naming.StructCase,         value: CamelCase }
   - { key: readability-identifier-naming.EnumCase,           value: CamelCase }
-  - { key: readability-identifier-naming.AbstractClassPrefix,value: 'I' }
 
-  - { key: readability-identifier-naming.TypeTemplateParameterPrefix, value: 'T' }
-  - { key: readability-identifier-naming.TypeTemplateParameterSuffix, value: '' }
-  - { key: readability-identifier-naming.TypeTemplateParameterCase, value: CamelCase }
+  - { key: readability-identifier-naming.EnumIgnoredRegexp,  value: '^.*_t$' }
+  - { key: readability-identifier-naming.AbstractClassPrefix,value: 'I' }
+  - { key: readability-identifier-naming.AbstractClassIgnoredRegexp,
+      value: '^.*able$|^.*Base$|^Abstract.*|^Component$' }
+
+  - { key: readability-identifier-naming.TypeTemplateParameterPrefix,
+      value: 'T' }
+  - { key: readability-identifier-naming.TypeTemplateParameterSuffix,
+	   value: '' }
+  - { key: readability-identifier-naming.TypeTemplateParameterCase,
+	   value: CamelCase }
+
+  - { key: readability-identifier-naming.TypeAliasCase,         value: CamelCase }
+  - { key: readability-identifier-naming.TypeAliasTemplateCase, value: CamelCase }
+  - { key: readability-identifier-naming.TypeAliasIgnoredRegexp,
+      value: '.*_t|string|.*_string' }
 
   # Function Names
   - { key: readability-identifier-naming.FunctionCase,       value: lower_case }
-  - { key: readability-identifier-naming.PublicMethodCase,   value: lowerCamelCase }
+  - { key: readability-identifier-naming.PublicMethodCase,   value: camelBack }
   - { key: readability-identifier-naming.PrivateMethodCase,  value: lower_case }
 
   # Variable Names
@@ -20,9 +33,14 @@ CheckOptions:
   - { key: readability-identifier-naming.PrivateMemberCase,  value: lower_case }
 
   # Constants and Enum Values
-  - { key: readability-identifier-naming.ConstantCase,       value: UPPER_CASE }
+  - { key: readability-identifier-naming.ConstantPrefix,   value: 'k' }
+  - { key: readability-identifier-naming.ConstantCase,   value: UPPER_CASE }
+
+  - { key: readability-identifier-naming.EnumConstantPrefix,   value: 'k' }
   - { key: readability-identifier-naming.EnumConstantCase,   value: UPPER_CASE }
 
   # Constant Expression
-  - { key: readibility-identifier-naming.ConstexprFunctionCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.ConstexprFunctionCase, value: UPPER_CASE }
 
+
+# vim: set ts=4 noet sw=4 sts=4 colorcolumn=100 :

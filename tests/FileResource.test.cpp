@@ -24,8 +24,8 @@ using namespace elemental;
 
 namespace fs = std::filesystem;
 
-constexpr c::const_string TEST_FILE_PATH = "/tmp/test_file.txt";
-constexpr c::const_string UNREACHABLE_FILE_PATH =
+constexpr c::const_string kTEST_FILE_PATH = "/tmp/test_file.txt";
+constexpr c::const_string kUNREACHABLE_FILE_PATH =
     "/tmp/nonexistent_dir/file.txt";
 
 BEGIN_TEST_SUITE("elemental::FileResource")
@@ -35,8 +35,8 @@ BEGIN_TEST_SUITE("elemental::FileResource")
 		{
 			SampleFileGenerator()
 			{
-				if (!fs::exists(TEST_FILE_PATH)) {
-					std::ofstream f(TEST_FILE_PATH);
+				if (!fs::exists(kTEST_FILE_PATH)) {
+					std::ofstream f(kTEST_FILE_PATH);
 					f << "Sample file content" << std::endl;
 					f.close();
 				}
@@ -45,8 +45,8 @@ BEGIN_TEST_SUITE("elemental::FileResource")
 			~SampleFileGenerator()
 			{
 				try {
-					if (fs::exists(TEST_FILE_PATH)) {
-						fs::remove(TEST_FILE_PATH);
+					if (fs::exists(kTEST_FILE_PATH)) {
+						fs::remove(kTEST_FILE_PATH);
 					}
 				} catch (std::exception& e) {
 					DBG_PRINT(e.what());
@@ -60,7 +60,7 @@ BEGIN_TEST_SUITE("elemental::FileResource")
 	{
 		SECTION(" with valid input file path, file exists ")
 		{
-			REQUIRE_NOTHROW(FileResource(TEST_FILE_PATH));
+			REQUIRE_NOTHROW(FileResource(kTEST_FILE_PATH));
 		}
 
 		SECTION("throws exception for unreachable file")
@@ -68,7 +68,7 @@ BEGIN_TEST_SUITE("elemental::FileResource")
 			REQUIRE_THROWS_AS(
 			    [&]() {
 				    auto fileResource =
-					FileResource(UNREACHABLE_FILE_PATH);
+					FileResource(kUNREACHABLE_FILE_PATH);
 			    }(),
 			    UnreachablePathException);
 		}

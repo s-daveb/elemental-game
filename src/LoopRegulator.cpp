@@ -23,13 +23,13 @@ LoopRegulator::LoopRegulator(uint32_t rate_per_second)
     , elapsed_ms(0)
     , desired_delay_ms(0)
 {
-	this->SetRate(rate_per_second);
+	this->setRate(rate_per_second);
 }
 
 LoopRegulator::~LoopRegulator() {}
 
 void
-LoopRegulator::StartUpdate()
+LoopRegulator::startUpdate()
 {
 	end_time = steady_clock::time_point();
 	start_time = steady_clock::now();
@@ -37,7 +37,7 @@ LoopRegulator::StartUpdate()
 
 // End the loop update and calculate elapsed time
 std::chrono::milliseconds
-LoopRegulator::EndUpdate()
+LoopRegulator::endUpdate()
 {
 	this->end_time = steady_clock::now();
 	this->elapsed_ms = duration_cast<milliseconds>(end_time - start_time);
@@ -45,7 +45,7 @@ LoopRegulator::EndUpdate()
 }
 
 void
-LoopRegulator::SetRate(float new_rate)
+LoopRegulator::setRate(float new_rate)
 {
 	this->desired_rate_per_second = new_rate;
 	this->desired_delay_ms =
@@ -54,11 +54,11 @@ LoopRegulator::SetRate(float new_rate)
 
 // Delay the loop to achieve the desired framerate
 milliseconds
-LoopRegulator::Delay()
+LoopRegulator::delay()
 {
 
 	if (end_time == steady_clock::time_point()) {
-		this->EndUpdate();
+		this->endUpdate();
 	}
 
 	// Calculate the remaining time to dela

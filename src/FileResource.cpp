@@ -19,7 +19,7 @@ using namespace elemental;
 
 namespace fs = std::filesystem;
 
-FileResource::FileResource(const fs::path& file_path, create_dirs_mode mode)
+FileResource::FileResource(const fs::path& file_path, CreateDirsMode mode)
     : file_path(file_path)
 {
 	ASSERT(file_path.empty() == false);
@@ -27,7 +27,7 @@ FileResource::FileResource(const fs::path& file_path, create_dirs_mode mode)
 		auto directory_path = file_path.parent_path();
 
 		if (!directory_path.empty() && !fs::exists(directory_path)) {
-			if (mode != CREATE_MISSING_DIRS) {
+			if (mode != kCREATE_MISSING_DIRS) {
 				throw UnreachablePathException(directory_path);
 			} else {
 				std::cout << "creating config dir" << std::endl;

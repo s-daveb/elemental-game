@@ -35,7 +35,7 @@ class Exception : public std::exception
 {
 
   public:
-	Exception(c::const_string message = default_error);
+	Exception(c::const_string message = kDEFAULT_ERROR);
 	Exception(const std::string& message);
 
 	Exception(const elemental::Exception& other) = default;
@@ -46,7 +46,7 @@ class Exception : public std::exception
 	virtual const char* what() const noexcept override;
 	const std::string& stacktrace() const noexcept;
 
-	constexpr static auto default_error = "An exception has ocurred!";
+	constexpr static auto kDEFAULT_ERROR = "An exception has ocurred!";
 
   protected:
 	void build_what_message(c::const_string class_name = "",

@@ -51,14 +51,14 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		    , renderer_info(test_renderer)
 		{
 			settings = { { "Test",
-				       WindowMode::Windowed,      // mode
-				       WindowPlacement::Centered, // placement
-				       { 0, 0 },                  // window.pos
-				       { 1024, 768 } },           // window.size
-				     { 1024, 768 } }; // renderer res
+				       WindowMode::kWINDOWED,      // mode
+				       WindowPlacement::kCENTERED, // placement
+				       { 0, 0 },                   // window.pos
+				       { 1024, 768 } }, // window.size
+				     { 1024, 768 } };   // renderer res
 		}
 
-		~SdlRendererFixture() { test_renderer.Deactivate(); }
+		~SdlRendererFixture() { test_renderer.deactivate(); }
 
 		RendererSettings settings;
 		SdlRenderer& test_renderer;
@@ -79,7 +79,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 			auto& renderer = IRenderer::GetInstance<SdlRenderer>();
 			auto test_input = Rectangle{ 0, 1, 10, 20 };
 			SDL_Rect result =
-			    renderer.FromRectangle<SDL_Rect>(test_input);
+			    renderer.fromRectangle<SDL_Rect>(test_input);
 
 			CHECK(result.x == test_input.x);
 			CHECK(result.y == test_input.y);
@@ -93,7 +93,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 			auto& renderer = IRenderer::GetInstance<SdlRenderer>();
 			auto test_input = SDL_Rect{ 0, 1, 10, 20 };
 			Rectangle result =
-			    renderer.ToRectangle<SDL_Rect>(test_input);
+			    renderer.toRectangle<SDL_Rect>(test_input);
 
 			CHECK(result.x == test_input.x);
 			CHECK(result.y == test_input.y);
@@ -108,7 +108,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	{
 		// 1. Default initialization does not throw errors
 		CHECK(false == renderer_info.state.is_initialized);
-		test_renderer.Init(settings);
+		test_renderer.init(settings);
 		CHECK(true == renderer_info.state.is_initialized);
 
 		// 2. Verify that an SDL_Window and SDL_Renderer have been
@@ -120,10 +120,10 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - Deactivate Renderer")
 	{
 		// 1. Deactivate method de-initializes
-		test_renderer.Init(settings);
+		test_renderer.init(settings);
 		REQUIRE(true == renderer_info.state.is_initialized);
 
-		test_renderer.Deactivate();
+		test_renderer.deactivate();
 		REQUIRE(false == renderer_info.state.is_initialized);
 
 		// 2. Verify that an SDL_Window and SDL_Renderer ptrs have been
@@ -135,10 +135,10 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - IsInitialized Accessor")
 	{
 		// 1. Default initialization does not throw errors
-		CHECK(test_renderer.IsInitialized() ==
+		CHECK(test_renderer.isInitialized() ==
 		      renderer_info.state.is_initialized);
-		test_renderer.Init(settings);
-		CHECK(test_renderer.IsInitialized() ==
+		test_renderer.init(settings);
+		CHECK(test_renderer.isInitialized() ==
 		      renderer_info.state.is_initialized);
 	}
 
@@ -146,11 +146,11 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - GetResolution works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.GetResolution(); }());
+		REQUIRE_THROWS([this]() { test_renderer.getResolution(); }());
 
 		// 2. After initializtion, the method works
-		test_renderer.Init(settings);
-		auto resolution_data = test_renderer.GetResolution();
+		test_renderer.init(settings);
+		auto resolution_data = test_renderer.getResolution();
 
 		REQUIRE(resolution_data.width == settings.resolution.width);
 		REQUIRE(resolution_data.height == settings.resolution.height);
@@ -159,11 +159,11 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - GetWindowSize works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.GetWindowSize(); }());
+		REQUIRE_THROWS([this]() { test_renderer.getWindowSize(); }());
 
 		// 2. After initializtion, the method works
-		test_renderer.Init(settings);
-		auto window_data = test_renderer.GetWindowSize();
+		test_renderer.init(settings);
+		auto window_data = test_renderer.getWindowSize();
 
 		REQUIRE(window_data.width == settings.window.size.width);
 		REQUIRE(window_data.height == settings.window.size.height);
@@ -172,21 +172,21 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	                 "elemental::SdlRenderer - ClearScreen works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.ClearScreen(); }());
+		REQUIRE_THROWS([this]() { test_renderer.clearScreen(); }());
 
 		// 2. After initializtion, the method works
-		test_renderer.Init(settings);
-		test_renderer.ClearScreen();
+		test_renderer.init(settings);
+		test_renderer.clearScreen();
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Flip works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.Flip(); }());
+		REQUIRE_THROWS([this]() { test_renderer.flip(); }());
 
 		// 2. After initializtion, the method works
-		test_renderer.Init(settings);
-		test_renderer.Flip();
+		test_renderer.init(settings);
+		test_renderer.flip();
 	}
 	TEST_CASE_METHOD(SdlRendererFixture,
 	                 "elemental::SdlRenderer - Blit works")
@@ -199,8 +199,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 
 		// Prep: Initialize a SdlRenderer and load an image texture
 		// using the SDL_Renderer* ptr inside
-		test_renderer.Init(settings);
-		test_renderer.ClearScreen();
+		test_renderer.init(settings);
+		test_renderer.clearScreen();
 		image_surf_ptr = IMG_Load("data/tests/test-skull.png");
 		REQUIRE(image_surf_ptr != nullptr);
 
@@ -216,19 +216,19 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 			// set an invalid SDL_Renderer pointer
 			renderer_info.state.sdl_renderer_ptr = nullptr;
 			// 1. Before initialization, throws error
-			test_renderer.Blit(img_texture_ptr, location);
+			test_renderer.blit(img_texture_ptr, location);
 		}());
 
 		// C2. With a valid, initialized SdlRenderer, the method works
 		renderer_info.state.sdl_renderer_ptr.swap(
 		    temporary_render_storage);
-		test_renderer.Blit(img_texture_ptr, location);
+		test_renderer.blit(img_texture_ptr, location);
 
 		// Display the image and pause so the user can see it!
-		test_renderer.Flip();
+		test_renderer.flip();
 
 		//  Pump events on macOS to mmake the window appear
-		if (platform::MACOSX) {
+		if (platform::kMACOSX) {
 			for (unsigned i = 0; i < 500; i++) {
 				SDL_PumpEvents();
 			}

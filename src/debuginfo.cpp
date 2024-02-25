@@ -31,22 +31,22 @@ namespace {
 	std::string extract_mangled_symbol(const std::string& input)
 	{
 		std::string result;
-		bool insideAngleBrackets = false;
+		bool inside_angle_brackets = false;
 
 		for (char c : input) {
 			if (c == '<') {
-				insideAngleBrackets = true;
+				inside_angle_brackets = true;
 				continue;
 			}
 			if (c == '>') {
-				insideAngleBrackets = false;
+				inside_angle_brackets = false;
 				continue;
 			}
 			if (c == '+') {
 				break;
 			}
 
-			if (insideAngleBrackets) {
+			if (inside_angle_brackets) {
 				result += c;
 			}
 		}
@@ -72,9 +72,9 @@ generate_stacktrace(unsigned short framesToRemove)
 	size_t columns_to_print = 0;
 
 	// preconfigure column length for certain platforms
-	if (platform::current_platform == FREEBSD) {
+	if (platform::current_platform == kFREEBSD) {
 		columns_to_print = 2;
-	} else if (platform::current_platform == MACOSX) {
+	} else if (platform::current_platform == kMACOSX) {
 		columns_to_print = 4;
 	}
 
@@ -122,9 +122,9 @@ generate_stacktrace(unsigned short framesToRemove)
 		buffer << std::endl;
 	}
 	std::free(strs);
-#else  /*@{*/
+#else
 	buffer << boost::stacktrace::stacktrace() << std::flush;
-#endif /*@}*/
+#endif
 	return buffer.str();
 }
 
@@ -142,5 +142,5 @@ print_cmdline(int argc, const char* argv[])
 } // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=marker foldmarker=@{,@} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
 

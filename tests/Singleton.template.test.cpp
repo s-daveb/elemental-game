@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 
 #include "test-utils/common.hpp"
 
@@ -20,28 +20,28 @@ using elemental::Singleton;
 
 BEGIN_TEST_SUITE("elemental::Singleton<T>")
 {
-	struct simple_structure
+	struct SimpleStructure
 	{
 		uint32_t id;
 		char name[128];
 		uint32_t flags;
 	};
 
-	struct non_constructible_structure
+	struct NonConstructibleStructure
 	{
 		uint32_t id;
 		char name[128];
 
 	  private:
-		non_constructible_structure(){};
+		NonConstructibleStructure(){};
 		friend class Singleton;
 	};
 
 	TEST("elemental::Singleton<T> - Can wrap a simple class")
 	{
-		simple_structure stack_obj;
+		SimpleStructure stack_obj;
 		auto& first_reference =
-		    Singleton::GetReference<simple_structure>();
+		    Singleton::getReference<SimpleStructure>();
 
 		SECTION("1. No exceptions were thrown")
 		{
@@ -52,7 +52,7 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		        "returned")
 		{
 			auto& second_reference =
-			    Singleton::GetReference<simple_structure>();
+			    Singleton::getReference<SimpleStructure>();
 			CHECK(&stack_obj != &first_reference);
 			CHECK(&first_reference == &second_reference);
 		}
@@ -62,7 +62,7 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 	     "private constructor")
 	{
 		auto& first_reference =
-		    Singleton::GetReference<simple_structure>();
+		    Singleton::getReference<SimpleStructure>();
 
 		SECTION("1. No exceptions were thrown")
 		{
@@ -73,7 +73,7 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		        "returned")
 		{
 			auto& second_reference =
-			    Singleton::GetReference<simple_structure>();
+			    Singleton::getReference<SimpleStructure>();
 			CHECK(&first_reference == &second_reference);
 		}
 	}

@@ -27,7 +27,7 @@ BEGIN_TEST_SUITE("elemental::paths")
 	TEST("elemental::paths::GetHome() returns expected path")
 	{
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
-		fs::path home_path = GetHome();
+		fs::path home_path = get_home();
 		REQUIRE(home_path == getenv("HOME"));
 #else
 		WARN("Test is skipped on non-POSIX systems.");
@@ -38,9 +38,9 @@ BEGIN_TEST_SUITE("elemental::paths")
 	TEST("elemental::paths::GetAppConfigRoot() returns expected path")
 	{
 #if (defined(__APPLE__) && defined(__MACH__))
-		fs::path app_config_root = GetAppConfigRoot();
+		fs::path app_config_root = get_app_config_root();
 		REQUIRE(app_config_root ==
-		        (GetHome() / "Library" / "Application Support"));
+		        (get_home() / "Library" / "Application Support"));
 #elif defined(__unix__)
 
 		fs::path appConfigRoot = GetAppConfigRoot();
@@ -62,9 +62,9 @@ BEGIN_TEST_SUITE("elemental::paths")
 		{
 
 			if (home_var) {
-				REQUIRE(ExpandPath("~") ==
+				REQUIRE(expand_path("~") ==
 				        fs::canonical(home_var));
-				REQUIRE(ExpandPath("$HOME") ==
+				REQUIRE(expand_path("$HOME") ==
 				        fs::canonical(home_var));
 			}
 		}
@@ -72,7 +72,7 @@ BEGIN_TEST_SUITE("elemental::paths")
 		{
 			if ((home_var && user_name) &&
 			    (std::string(home_var) != "/")) {
-				REQUIRE(ExpandPath("~/../$USER") ==
+				REQUIRE(expand_path("~/../$USER") ==
 				        fs::canonical(home_var));
 			}
 		}

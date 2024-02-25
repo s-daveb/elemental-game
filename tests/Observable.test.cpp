@@ -31,8 +31,8 @@ BEGIN_TEST_SUITE("elemental::Observable")
 	  public:
 		ObservableSubject() : Observable() {}
 
-		virtual void Notify() override { this->NotifyAll(); }
-		const size_t GetObserverCount() const
+		virtual void notify() override { this->notify_all(); }
+		const size_t getObserverCount() const
 		{
 			return observers.size();
 		}
@@ -47,10 +47,10 @@ BEGIN_TEST_SUITE("elemental::Observable")
 		IObserver& observer1 = observer_type1.get();
 		IObserver& observer2 = observer_type2.get();
 
-		subject.RegisterObserver(observer1);
-		subject.RegisterObserver(observer2);
+		subject.registerObserver(observer1);
+		subject.registerObserver(observer2);
 
-		REQUIRE(2 == subject.GetObserverCount());
+		REQUIRE(2 == subject.getObserverCount());
 	}
 	TEST("elemental::Observabl::Notify - properly notifies observers")
 	{
@@ -60,13 +60,13 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		static std::vector<std::string> buffer;
 
-		When(Method(observer_type1, RecieveMessage))
+		When(Method(observer_type1, recieveMessage))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
-		When(Method(observer_type2, RecieveMessage))
+		When(Method(observer_type2, recieveMessage))
 		    .Do([](const Observable& o, std::any m) {
 			    buffer.push_back("Second Observer");
 		    })
@@ -75,10 +75,10 @@ BEGIN_TEST_SUITE("elemental::Observable")
 		IObserver& observer1 = observer_type1.get();
 		IObserver& observer2 = observer_type2.get();
 
-		subject.RegisterObserver(observer1);
-		subject.RegisterObserver(observer2);
+		subject.registerObserver(observer1);
+		subject.registerObserver(observer2);
 
-		subject.Notify();
+		subject.notify();
 
 		REQUIRE(2 == buffer.size());
 		CHECK(buffer.at(0) == "First Observer");

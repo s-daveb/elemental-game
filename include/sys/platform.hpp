@@ -12,35 +12,35 @@ namespace elemental {
 
 namespace platform {
 
-enum platform_t
-{
-	UNKNOWN = 0b0000,
-	WINDOWS = 0b0001,
-	UNIX = 0b0100,
-	LINUX = 0b0101,
-	FREEBSD = 0b0110,
-	MACOSX = 0b0111
-};
+	enum platform_t
+	{
+		kUNKNOWN = 0b0000,
+		kWINDOWS = 0b0001,
+		kUNIX = 0b0100,
+		kLINUX = 0b0101,
+		kFREEBSD = 0b0110,
+		kMACOSX = 0b0111
+	};
 
 #ifdef __linux__
-static platform_t current_platform = LINUX;
+	static platform_t current_platform = LINUX;
 #endif
 
 #ifdef _WIN32
-static platform_t current_platform = WINDOWS;
+	static platform_t current_platform = WINDOWS;
 #endif
 
 #ifdef __APPLE__
-static platform_t current_platform = MACOSX;
+	static platform_t current_platform = kMACOSX;
 #endif
 
 #ifdef __FreeBSD__
-static platform_t current_platform = FREEBSD;
+	static platform_t current_platform = FREEBSD;
 #endif
 
-// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)
-// To be added at a later date.
-};
+	// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)
+	// To be added at a later date.
+}; // namespace platform
 } // namespace elemental
 
 // clang-format off

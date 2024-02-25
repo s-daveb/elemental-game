@@ -17,7 +17,7 @@
 #include "Application.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 
 #include <functional>
 #include <memory>
@@ -30,37 +30,37 @@ namespace elemental {
 class IRenderer;
 class SdlEventSource;
 
-class Phong
-    : public Application
+class IPhong
+    : public IApplication
     , public IObserver
 {
   public:
 	friend class Singleton;
 
-	virtual ~Phong();
+	virtual ~IPhong();
 
 	/// \name Application Interface
 	/// @{
-	virtual int Run() override;
+	virtual int run() override;
 	/// @}
 
 	/// \name IObserver interface
 	/// @{
-	virtual void RecieveMessage(const Observable& sender,
+	virtual void recieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
 	/// @}
 
   protected:
-	Phong();
+	IPhong();
 
-	Phong(const Phong&) = delete;
-	Phong(Phong&&) = delete;
-	Phong& operator=(const Phong&) = delete;
-	Phong& operator=(Phong&&) = delete;
+	IPhong(const IPhong&) = delete;
+	IPhong(IPhong&&) = delete;
+	IPhong& operator=(const IPhong&) = delete;
+	IPhong& operator=(IPhong&&) = delete;
 
 	bool is_running;
 
-	dictionary<std::thread> running_threads;
+	Dictionary<std::thread> running_threads;
 	void simulation_thread_loop();
 
 	IRenderer& video_renderer;

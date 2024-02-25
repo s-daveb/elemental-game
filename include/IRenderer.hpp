@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 
 #include "types.hpp"
 #include "types/rendering.hpp"
@@ -29,7 +29,7 @@ struct IRenderer
 {
 	/*! \brief This macro is used in child classes to construct instances of
 	 * the derived classes.
-	 * \see Singleton.thpp  */
+	 * \see Singleton.hpp  */
 	SINGLETON_INTERFACE(IRenderer);
 	TEST_INSPECTABLE(IRenderer);
 
@@ -38,29 +38,29 @@ struct IRenderer
 	/*! \name Lazy Initialization Methods
 	 * These initialize the current rendering subsystema and de-initialize
 	 * it on-demand @{ */
-	virtual void Init(RendererSettings& settings) = 0;
-	virtual void Deactivate() = 0;
-	virtual bool IsInitialized() = 0;
+	virtual void init(RendererSettings& settings) = 0;
+	virtual void deactivate() = 0;
+	virtual bool isInitialized() = 0;
 	/*! @} */
 
 	//! \brief Does what it says on the tin.
-	virtual Resolution GetResolution() = 0;
+	virtual Resolution getResolution() = 0;
 
 	//! \brief Does what it says on the tin.
-	virtual Area GetWindowSize() = 0;
+	virtual Area getWindowSize() = 0;
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display
 	 * @{
 	 * \brief Clears the screen before new drawing cycles. Throws
 	 * exceptions. */
-	virtual void ClearScreen() = 0;
+	virtual void clearScreen() = 0;
 	/** \brief swaps backbuffer with new frame displays new image. Throws
 	 * exceptions. */
-	virtual void Flip() = 0;
+	virtual void flip() = 0;
 	//! @}
 
-	virtual void Blit(std::shared_ptr<void> image_data,
+	virtual void blit(std::shared_ptr<void> image_data,
 	                  Rectangle& placement) = 0;
 
 	/*! \name DataType Conversion methods
@@ -71,11 +71,11 @@ struct IRenderer
 	 * \note These are only exposed on the public interface for test builds
 	 */
 	/*! @{ */
-	template<typename R>
-	Rectangle ToRectangle(const R& data);
+	template<typename TR>
+	Rectangle toRectangle(const TR& data);
 
-	template<typename R>
-	R FromRectangle(const Rectangle& rectangle);
+	template<typename TR>
+	TR fromRectangle(const Rectangle& rectangle);
 	/*! @}  */
 
   protected:

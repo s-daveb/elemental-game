@@ -32,17 +32,17 @@ namespace elemental {
 struct Singleton
 {
   public:
-	template<typename T>
-	static T& GetReference()
+	template<typename T_>
+	static T_& getReference()
 	{
-		static T instance;
+		static T_ instance;
 		return instance;
 	}
 
-	template<typename T>
-	static T* GetPointer()
+	template<typename T_>
+	static T_* getPointer()
 	{
-		return &Singleton::GetReference<T>();
+		return &Singleton::getReference<T_>();
 	}
 };
 

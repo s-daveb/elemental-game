@@ -1,16 +1,26 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)";
+BASE_DIR=$(realpath "$SCRIPT_DIR/..")
+
+die() {
+	if [ -n $1 ]; then
+		echo $1
+		echo
+	fi
+	echo "An error has ocurred. Aborting"
+	return 1
+}
+
+[[ "$(realpath .)" == "$BASE_DIR" ]] || die "Please run from project root."
+
+
+if [ -z "$FSWATCH_ENV_LOADED" ]; then
+	source ${BASE_DIR}/scripts/fswatch-build.env
+	unset FSWATCH_ENV_LOADED
+fi
 trap 'debugprint "Exiting script"; exit' INT
 
-if [ -z "$FSWATCH_ENV_LOADED" ]; then
-	source ./scripts/fswatch-build.env
-fi
-if [ -z "$FSWATCH_ENV_LOADED" ]; then
-	debugprint "Please run from project root containing fwatch-build.env" 1>&2
-	exit 255
-fi
-
-unset FSWATCH_ENV_LOADED
 # Check the current niceness level
 current_niceness=$(ps -o nice= -p $$)
 

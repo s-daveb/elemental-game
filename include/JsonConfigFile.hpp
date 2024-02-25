@@ -23,25 +23,25 @@ class JsonConfigFile : public FileResource
 {
   public:
 	JsonConfigFile(const std::filesystem::path& file_path,
-	               create_dirs_mode mode = DEFAULT);
+	               CreateDirsMode mode = kDEFAULT);
 	virtual ~JsonConfigFile();
 
-	nlohmann::json& Read();
-	void Write();
+	nlohmann::json& read();
+	void write();
 
-	template<typename T>
-	T Get() const
+	template<typename T_>
+	T_ get() const
 	{
-		return config_json.get<T>();
+		return config_json.get<T_>();
 	}
 
-	template<typename T>
-	void Set(const T& value)
+	template<typename T_>
+	void set(const T_& value)
 	{
 		config_json = value;
 	}
 
-	inline nlohmann::json& GetJsonData() { return this->config_json; };
+	inline nlohmann::json& getJsonData() { return this->config_json; };
 
   protected:
 	nlohmann::json config_json;

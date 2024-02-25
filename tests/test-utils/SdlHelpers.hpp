@@ -24,12 +24,12 @@ namespace elemental {
 
 struct SdlEventSimulator // #region
 {
-	enum KEY_DIR
+	enum KeyDir
 	{
-		UP = 0,
-		RIGHT,
-		DOWN,
-		LEFT
+		kUP = 0,
+		kRIGHT,
+		kDOWN,
+		kLEFT
 	};
 
 	static inline SDL_Event eventFromScancode(SDL_Scancode scancode)
@@ -40,12 +40,12 @@ struct SdlEventSimulator // #region
 		return event;
 	}
 
-	static inline SDL_Event specificArrowKey(KEY_DIR dir)
+	static inline SDL_Event specificArrowKey(KeyDir dir)
 	{
 		SDL_Event event = {};
 		event.type = SDL_KEYDOWN;
 
-		int keyboardLen = 0;
+		int keyboard_len = 0;
 
 		/*  Get a pointer to the raw keyboard array and remove the const
 		 *  specified. Not sure if this will make SDL freak out, but
@@ -53,31 +53,31 @@ struct SdlEventSimulator // #region
 		 *  unit tests.
 		 *     -- Saul 30.11.21 ☕️  */
 		Uint8* keyboard =
-		    const_cast<Uint8*>(SDL_GetKeyboardState(&keyboardLen));
+		    const_cast<Uint8*>(SDL_GetKeyboardState(&keyboard_len));
 
 		switch (dir) {
-			case UP:
+			case kUP:
 				event.key.keysym.scancode = SDL_SCANCODE_UP;
 				keyboard[SDL_SCANCODE_UP] = 1;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
 				keyboard[SDL_SCANCODE_LEFT] = 0;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case DOWN:
+			case kDOWN:
 				event.key.keysym.scancode = SDL_SCANCODE_DOWN;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 1;
 				keyboard[SDL_SCANCODE_LEFT] = 0;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case LEFT:
+			case kLEFT:
 				event.key.keysym.scancode = SDL_SCANCODE_LEFT;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
 				keyboard[SDL_SCANCODE_LEFT] = 1;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case RIGHT:
+			case kRIGHT:
 				event.key.keysym.scancode = SDL_SCANCODE_RIGHT;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
@@ -99,7 +99,7 @@ struct SdlEventSimulator // #region
 
 	static inline SDL_Event randomArrowKey()
 	{
-		auto value = static_cast<KEY_DIR>(::rand() % 4);
+		auto value = static_cast<KeyDir>(::rand() % 4);
 		return specificArrowKey(value);
 	}
 }; // #endregion
@@ -113,7 +113,7 @@ struct SdlTestFixture
 	{
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != NO_ERROR) {
+		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kNO_ERROR) {
 			buffer << "SDL Could not initialize; SDL_Error:  "
 			       << SDL_GetError();
 			throw elemental::Exception(buffer.str());

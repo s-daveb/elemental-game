@@ -21,6 +21,9 @@ AlwaysBreakTemplateDeclarations: Yes
 FixNamespaceComments: Yes
 NamespaceIndentation: Inner
 
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: true
+
 #BreakBeforeBraces: Custom
 #BraceWrapping:
 #  AfterCaseLabel:  false

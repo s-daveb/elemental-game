@@ -18,7 +18,7 @@
 using namespace elemental;
 
 void
-Application::Init(int argc, c::const_string argv[], c::const_string envp[])
+Application::init(int argc, c::const_string argv[], c::const_string envp[])
 {
 	if (argv == nullptr || envp == nullptr) {
 		std::string problem = (argv == nullptr) ? "argv " : "envp ";

@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SDL_Memory.thpp"
+#include "SDL_Memory.hpp"
 
 #include "sys/debuginfo.hpp"
 #include "util/debug.hpp"
@@ -24,14 +24,14 @@
 using namespace elemental;
 
 void
-SdlEventSource::Notify()
+SdlEventSource::notify()
 {
 	std::lock_guard<std::mutex> lock(event_queue_mutex);
 	while (!event_queue.empty()) {
 		auto& event = event_queue.front();
 
 		for (auto& observer_ref : observers) {
-			observer_ref.get().RecieveMessage(*this, event);
+			observer_ref.get().recieveMessage(*this, event);
 		}
 
 		event_queue.pop();
@@ -39,7 +39,7 @@ SdlEventSource::Notify()
 }
 
 void
-SdlEventSource::PollEvents()
+SdlEventSource::pollEvents()
 {
 	std::lock_guard<std::mutex> lock(event_queue_mutex);
 	SDL_Event event;
@@ -53,11 +53,11 @@ SdlEventSource::SdlEventSource()
     , joydev_ptr()
     , event_queue_mutex()
 {
-	InitJoysticks();
+	initJoysticks();
 }
 
 void
-SdlEventSource::InitJoysticks()
+SdlEventSource::initJoysticks()
 {
 	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 

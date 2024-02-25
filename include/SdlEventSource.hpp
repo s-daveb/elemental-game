@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "SDL_Memory.thpp"
-#include "Singleton.thpp"
+#include "SDL_Memory.hpp"
+#include "Singleton.hpp"
 
 #include "Observable.hpp"
 
@@ -44,13 +44,13 @@ class SdlEventSource : public Observable
 	 ** Then modify the Notify() method to check for these filters
 	 */
 
-	virtual void Notify() override;
+	virtual void notify() override;
 
-	void PollEvents();
+	void pollEvents();
 
 	SdlEventSource();
 
-	void InitJoysticks();
+	void initJoysticks();
 
 	std::queue<SDL_Event> event_queue;
 	UniqueSdlPtr<SDL_Joystick> joydev_ptr;

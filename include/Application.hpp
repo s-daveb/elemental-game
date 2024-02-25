@@ -17,21 +17,21 @@
 #include <vector>
 
 namespace elemental {
-class Application : public IApplication
+class Application : public IApplication // NOLINT
 {
   public:
 	virtual ~Application() = default;
 
-	virtual void Init(int argc, c::const_string argv[],
+	virtual void init(int argc, c::const_string argv[],
 	                  c::const_string envp[]) override;
-	virtual int Run() override = 0;
+	virtual int run() override = 0;
 
-	virtual inline const std::vector<std::string>& GetArguments()
+	virtual inline const std::vector<std::string>& getArguments()
 	    const override
 	{
 		return this->arguments;
 	}
-	virtual inline const dictionary<const std::string>& GetEnvironment()
+	virtual inline const Dictionary<const std::string>& getEnvironment()
 	    const override
 	{
 		return this->environment_variables;
@@ -39,17 +39,16 @@ class Application : public IApplication
 
   protected:
 	Application();
-
-	Application(const Application&) = delete;
-	Application(Application&&) = delete;
-	Application& operator=(const Application&) = delete;
-	Application& operator=(Application&&) = delete;
+	Application(const IApplication&) = delete;
+	Application(IApplication&&) = delete;
+	Application& operator=(const IApplication&) = delete;
+	Application& operator=(IApplication&&) = delete;
 
 	void parse_arguments(int argc, c::const_string argv[]);
 	void create_env_dictionary(c::const_string envp[]);
 
 	std::vector<std::string> arguments;
-	dictionary<const std::string> environment_variables;
+	Dictionary<const std::string> environment_variables;
 };
 
 } // namespace elemental

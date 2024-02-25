@@ -16,7 +16,7 @@
 #include "Application.hpp"
 #include "LoopRegulator.hpp"
 
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 #include "types.hpp"
 
 #include <memory>
@@ -37,16 +37,18 @@ class ElementalGame
   public:
 	friend class Singleton;
 
+	virtual void init(int argc, c::const_string argv[],
+	                  c::const_string envp[]) override;
 	virtual ~ElementalGame();
-	virtual int Run() override;
+	virtual int run() override;
 
-	virtual void RecieveMessage(const Observable& sender,
+	virtual void recieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
 
   protected:
 	ElementalGame();
 
-	dictionary<std::thread> running_threads;
+	Dictionary<std::thread> running_threads;
 
 	void simulation_thread_loop();
 

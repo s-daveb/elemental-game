@@ -85,14 +85,14 @@ BEGIN_TEST_SUITE("elemental::Exception")
 
 			REQUIRE_THAT(obj.what(),
 			             Match::ContainsSubstring(
-					 elemental::Exception::default_error,
+					 elemental::Exception::kDEFAULT_ERROR,
 					 CaseSensitive::Yes));
 		}
 
 		SECTION("2. custom error or exception")
 		{
-			constexpr auto test_message = "This is a test.";
-			elemental::Exception test_object_one(test_message);
+			constexpr auto kTEST_MESSAGE = "This is a test.";
+			elemental::Exception test_object_one(kTEST_MESSAGE);
 			elemental::Exception test_object_two(
 			    std::logic_error("Makes no sense"));
 			SECTION(" a: what() does not contain default message")
@@ -100,13 +100,13 @@ BEGIN_TEST_SUITE("elemental::Exception")
 				REQUIRE_THAT(
 				    test_object_one.what(),
 				    !Match::ContainsSubstring(
-					elemental::Exception::default_error));
+					elemental::Exception::kDEFAULT_ERROR));
 			}
 			SECTION(" b: what() displays custom message")
 			{
 				REQUIRE_THAT(
 				    test_object_one.what(),
-				    Match::ContainsSubstring(test_message));
+				    Match::ContainsSubstring(kTEST_MESSAGE));
 			}
 			SECTION(" c: what() contains inner exception message")
 			{

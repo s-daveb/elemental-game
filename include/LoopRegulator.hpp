@@ -33,15 +33,15 @@ class LoopRegulator
 	virtual ~LoopRegulator();
 
 	// Start the loop update
-	void StartUpdate();
+	void startUpdate();
 
 	// End the loop update and calculate elapsed time
-	milliseconds EndUpdate();
+	milliseconds endUpdate();
 
-	void SetRate(float new_rate);
+	void setRate(float new_rate);
 
 	// Delay the loop to achieve the desired framerate
-	milliseconds Delay();
+	milliseconds delay();
 #ifndef UNIT_TEST
   protected:
 #endif

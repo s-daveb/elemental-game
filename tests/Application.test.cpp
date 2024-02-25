@@ -14,47 +14,46 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
-struct simulated_launch
+struct SimulatedLaunch
 {
 	static const char* argv[];
 	static const char* env[];
 };
-inline const char* simulated_launch::argv[] = { "param1", "param2", "param3" };
-inline const char* simulated_launch::env[] = {
+inline const char* SimulatedLaunch::argv[] = { "param1", "param2", "param3" };
+inline const char* SimulatedLaunch::env[] = {
 	"PATH=/usr/bin", "VAR2=TWO", "REQUEST_URI=markdown?msg=hello-world",
 	nullptr
 };
-
-}
+} // namespace
 
 BEGIN_TEST_SUITE("elemental::Application")
 {
 	using namespace elemental;
-	struct DerivedApplication : public Application
+	struct IDerivedApplication : public Application
 	{
-		virtual int Run() { return 0; }
+		virtual int run() { return 0; }
 	};
 	struct TestFixture
 	{
 		TestFixture() : derived_app(), app(derived_app) {}
 
-		DerivedApplication derived_app;
-		Application& app;
+		IDerivedApplication derived_app;
+		IApplication& app;
 	};
 
 	FIXTURE_TEST("elemental::Application - Init method populates "
 	             "Arguments list and Environment dictionary")
 	{
-		app.Init(3, simulated_launch::argv, simulated_launch::env);
+		app.init(3, SimulatedLaunch::argv, SimulatedLaunch::env);
 
-		CHECK(app.GetArguments().size() == 3);
-		CHECK(app.GetArguments()[0] == "param1");
-		CHECK(app.GetArguments()[1] == "param2");
-		CHECK(app.GetArguments()[2] == "param3");
+		CHECK(app.getArguments().size() == 3);
+		CHECK(app.getArguments()[0] == "param1");
+		CHECK(app.getArguments()[1] == "param2");
+		CHECK(app.getArguments()[2] == "param3");
 
-		CHECK(app.GetEnvironment().at("PATH") == "/usr/bin");
-		CHECK(app.GetEnvironment().at("VAR2") == "TWO");
-		CHECK(app.GetEnvironment().at("REQUEST_URI") ==
+		CHECK(app.getEnvironment().at("PATH") == "/usr/bin");
+		CHECK(app.getEnvironment().at("VAR2") == "TWO");
+		CHECK(app.getEnvironment().at("REQUEST_URI") ==
 		      "markdown?msg=hello-world");
 	};
 }

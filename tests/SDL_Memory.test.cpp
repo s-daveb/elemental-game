@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SDL_Memory.thpp"
+#include "SDL_Memory.hpp"
 
 #include "test-utils/common.hpp"
 #include "util/debug.hpp"
@@ -19,13 +19,13 @@
 #include <optional>
 #include <stdexcept>
 
-BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
+BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 {
 	using namespace elemental;
 
-	struct FakeSDL_Object
+	struct FakeSdlObject
 	{
-		FakeSDL_Object(bool& external_object)
+		FakeSdlObject(bool& external_object)
 		    : initialized(external_object)
 		{
 		}
@@ -34,7 +34,7 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 
 	struct FakeDeleter
 	{
-		void operator()(FakeSDL_Object* ptr)
+		void operator()(FakeSdlObject* ptr)
 		{
 
 			// DBG_PRINT("FakeDeleter::operator() called!");
@@ -47,23 +47,20 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 		}
 	};
 
-	using test_sdl_unique_ptr =
-	    UniqueSdlPtr<FakeSDL_Object, FakeDeleter>;
-	using test_sdl_shared_ptr =
-	    SdlPtr<FakeSDL_Object, FakeDeleter>;
+	using TestSdlUniquePtr = UniqueSdlPtr<FakeSdlObject, FakeDeleter>;
+	using TestSdlSharedPtr = SdlPtr<FakeSdlObject, FakeDeleter>;
 
 	TEST("UniqueSdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
-		FakeSDL_Object* fake_object =
-		    new FakeSDL_Object(is_initialized);
+		FakeSdlObject* fake_object = new FakeSdlObject(is_initialized);
 		{
-			test_sdl_unique_ptr uniquePtr;
-			uniquePtr = fake_object;
+			TestSdlUniquePtr unique_ptr;
+			unique_ptr = fake_object;
 
-			REQUIRE(uniquePtr.get() == fake_object);
-			REQUIRE(uniquePtr == fake_object);
-			REQUIRE(static_cast<FakeSDL_Object*>(uniquePtr) ==
+			REQUIRE(unique_ptr.get() == fake_object);
+			REQUIRE(unique_ptr == fake_object);
+			REQUIRE(static_cast<FakeSdlObject*>(unique_ptr) ==
 			        fake_object);
 		}
 		REQUIRE(is_initialized == false);
@@ -72,15 +69,14 @@ BEGIN_TEST_SUITE("SDL_Memory.thpp tests")
 	TEST("SdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
-		FakeSDL_Object* fake_object =
-		    new FakeSDL_Object(is_initialized);
+		FakeSdlObject* fake_object = new FakeSdlObject(is_initialized);
 		{
-			test_sdl_shared_ptr sharedPtr;
-			sharedPtr = fake_object;
+			TestSdlSharedPtr shared_ptr;
+			shared_ptr = fake_object;
 
-			REQUIRE(sharedPtr.get() == fake_object);
-			REQUIRE(sharedPtr == fake_object);
-			REQUIRE(static_cast<FakeSDL_Object*>(sharedPtr) ==
+			REQUIRE(shared_ptr.get() == fake_object);
+			REQUIRE(shared_ptr == fake_object);
+			REQUIRE(static_cast<FakeSdlObject*>(shared_ptr) ==
 			        fake_object);
 		}
 		REQUIRE(is_initialized == false);

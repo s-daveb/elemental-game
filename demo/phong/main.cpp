@@ -14,7 +14,7 @@
 #include "IApplication.hpp"
 
 #include "Exception.hpp"
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 
 using namespace elemental;
 
@@ -22,10 +22,10 @@ int
 main(int argc, c::const_string argv[], c::const_string envp[])
 {
 	try {
-		auto& game_instance = Singleton::GetReference<Phong>();
-		game_instance.Init(argc, argv, envp);
+		auto& game_instance = Singleton::getReference<IPhong>();
+		game_instance.init(argc, argv, envp);
 
-		return game_instance.Run();
+		return game_instance.run();
 	} catch (elemental::Exception& custom_exception) {
 		std::cerr << custom_exception.what() << std::endl;
 		return 1;

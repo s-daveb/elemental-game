@@ -28,20 +28,20 @@ static std::stringstream error_buffer;
 
 enum IndentMode : int
 {
-	COMPACT = -1,
-	NEWLINES = 0,
-	INDENT = 1,
+	kCOMPACT = -1,
+	kNEWLINES = 0,
+	kINDENT = 1,
 };
 enum AsciiMode : bool
 {
-	DEFAULT = false,
-	FORCE = true,
+	kDEFAULT = false,
+	kFORCE = true,
 };
 } // namespace
 
 namespace elemental::configuration {
 
-JsonConfigFile::JsonConfigFile(const fs::path& file_path, create_dirs_mode mode)
+JsonConfigFile::JsonConfigFile(const fs::path& file_path, CreateDirsMode mode)
     : FileResource(file_path, mode)
 {
 }
@@ -49,7 +49,7 @@ JsonConfigFile::JsonConfigFile(const fs::path& file_path, create_dirs_mode mode)
 JsonConfigFile::~JsonConfigFile() {}
 
 nlohmann::json&
-JsonConfigFile::Read()
+JsonConfigFile::read()
 {
 	try {
 		std::ifstream file_stream(file_path);
@@ -79,7 +79,7 @@ JsonConfigFile::Read()
 }
 
 void
-JsonConfigFile::Write()
+JsonConfigFile::write()
 {
 	try {
 		std::ofstream file_stream(file_path);
@@ -92,7 +92,7 @@ JsonConfigFile::Write()
 		}
 
 		file_stream << config_json.dump(
-				   IndentMode::INDENT, '\t', AsciiMode::DEFAULT,
+				   IndentMode::kINDENT, '\t', AsciiMode::kDEFAULT,
 				   nlohmann::json::error_handler_t::replace)
 			    << std::endl;
 

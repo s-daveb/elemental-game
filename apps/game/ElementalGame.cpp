@@ -9,7 +9,7 @@
 
 #include "./ElementalGame.hpp"
 
-#include "Singleton.thpp"
+#include "Singleton.hpp"
 
 #include "Exception.hpp"
 #include "IRenderer.hpp"
@@ -36,13 +36,13 @@ print_cycle_rate(milliseconds& cycle_length,
 }
 //! @}
 
-ElementalGame::~ElementalGame()
+ElementalGame:~EElementalGame
 {
-	video_renderer.Deactivate();
+	video_renderer.deactivate();
 }
 
 int
-ElementalGame::Run()
+ElementalGame:run()
 {
 	try {
 		LoopRegulator frame_regulator(60_Hz);
@@ -52,14 +52,14 @@ ElementalGame::Run()
 		    std::thread([this]() { this->simulation_thread_loop(); });
 
 		while (this->is_running) {
-			frame_regulator.StartUpdate();
-			this->video_renderer.ClearScreen();
+			frame_regulator.startUpdate();
+			this->video_renderer.clearScreen();
 
-			this->event_emitter.PollEvents();
+			this->event_emitter.pollEvents();
 
-			auto cycle_delay_ms = frame_regulator.Delay();
+			auto cycle_delay_ms = frame_regulator.delay();
 			print_cycle_rate(cycle_delay_ms, "frame delay");
-			video_renderer.Flip();
+			video_renderer.flip();
 		}
 
 		this->is_running = false;
@@ -69,17 +69,17 @@ ElementalGame::Run()
 		for (auto& [key, values] : this->running_threads) {
 			values.join();
 		}
-		return NO_ERROR;
+		return kNO_ERROR;
 	} catch (Exception& exc) {
 		throw;
 	} catch (std::exception& excp) {
 		throw Exception(excp);
 	}
-	return ERROR;
+	return kERROR;
 }
 
 void
-ElementalGame::RecieveMessage(const Observable& sender, std::any message)
+ElementalGame:recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	SDL_Event event = std::any_cast<SDL_Event>(message);
@@ -88,43 +88,43 @@ ElementalGame::RecieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-ElementalGame::ElementalGame()
-    : Application()
+ElementalGame:EElementalGame
+    : IApplication()
     , IObserver()
     , is_running(false)
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
-    , event_emitter(Singleton::GetReference<SdlEventSource>())
+    , event_emitter(Singleton::getReference<SdlEventSource>())
 {
 	RendererSettings renderer_settings = {
 		{ "Test",
-		  WindowMode::Windowed,      // mode
-		  WindowPlacement::Centered, // placement
+		  WindowMode::kWINDOWED,      // mode
+		  WindowPlacement::kCENTERED, // placement
 		  { 0, 0 },                  // window.pos
 		  { 1024, 768 } },           // window.size
 		{ 1024, 768 }
 	}; // renderer res
 
 	// Set up video renderer
-	video_renderer.Init(renderer_settings);
+	video_renderer.init(renderer_settings);
 
 	// Initialize event_emitter
-	event_emitter.RegisterObserver(*this);
+	event_emitter.registerObserver(*this);
 
 #ifdef __APPLE__
-	event_emitter.PollEvents();
+	event_emitter.pollEvents();
 #endif
 }
 
 void
-ElementalGame::simulation_thread_loop()
+ElementalGame:simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(30_Hz);
 	do {
-		loop_regulator.StartUpdate();
-		this->event_emitter.Notify();
+		loop_regulator.startUpdate();
+		this->event_emitter.notify();
 		// Scene.Update()
 
-		auto cycle_delay_ms = loop_regulator.Delay();
+		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }

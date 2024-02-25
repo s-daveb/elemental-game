@@ -53,23 +53,23 @@ struct Rectangle
 
 enum class WindowMode
 {
-	Windowed = 0x00,
-	Borderless = 0x01,
-	Fullscreen = 0x11,
+	kWINDOWED = 0x00,
+	kBORDERLESS = 0x01,
+	kFULLSCREEN = 0x11,
 };
 NLOHMANN_JSON_SERIALIZE_ENUM(WindowMode,
-                             { { WindowMode::Windowed, "windowed" },
-                               { WindowMode::Borderless, "borderless" },
-                               { WindowMode::Fullscreen, "fullscreen" } });
+                             { { WindowMode::kWINDOWED, "windowed" },
+                               { WindowMode::kBORDERLESS, "borderless" },
+                               { WindowMode::kFULLSCREEN, "fullscreen" } });
 enum class WindowPlacement
 
 {
-	Manual = 0x00,
-	Centered = 0x01
+	kMANUAL = 0x00,
+	kCENTERED = 0x01
 };
 NLOHMANN_JSON_SERIALIZE_ENUM(WindowPlacement,
-                             { { WindowPlacement::Manual, "manual" },
-                               { WindowPlacement::Centered, "centered" } });
+                             { { WindowPlacement::kMANUAL, "manual" },
+                               { WindowPlacement::kCENTERED, "centered" } });
 
 struct WindowParameters
 {

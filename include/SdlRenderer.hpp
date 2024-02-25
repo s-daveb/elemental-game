@@ -12,7 +12,7 @@
 #include <SDL.h>
 
 #include "IRenderer.hpp"
-#include "SDL_Memory.thpp"
+#include "SDL_Memory.hpp"
 
 #include "util/testing.hpp"
 
@@ -29,19 +29,19 @@ struct SdlRenderer : public IRenderer
 
 	virtual ~SdlRenderer();
 
-	virtual void Init(RendererSettings&) override;
-	virtual void Deactivate() override;
-	inline virtual bool IsInitialized() override
+	virtual void init(RendererSettings&) override;
+	virtual void deactivate() override;
+	inline virtual bool isInitialized() override
 	{
 		return this->is_initialized;
 	};
-	virtual Resolution GetResolution() override;
-	virtual Area GetWindowSize() override;
+	virtual Resolution getResolution() override;
+	virtual Area getWindowSize() override;
 
-	virtual void ClearScreen() override;
-	virtual void Flip() override;
+	virtual void clearScreen() override;
+	virtual void flip() override;
 
-	virtual void Blit(std::shared_ptr<void> img_data,
+	virtual void blit(std::shared_ptr<void> img_data,
 	                  Rectangle& placement) override;
 
   protected:
@@ -54,7 +54,7 @@ struct SdlRenderer : public IRenderer
 
 template<>
 inline Rectangle
-IRenderer::ToRectangle<SDL_Rect>(const SDL_Rect& other)
+IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other)
 {
 	return { static_cast<uint32_t>(other.x), static_cast<uint32_t>(other.y),
 		 static_cast<uint32_t>(other.w),
@@ -62,7 +62,7 @@ IRenderer::ToRectangle<SDL_Rect>(const SDL_Rect& other)
 }
 template<>
 inline SDL_Rect
-IRenderer::FromRectangle<SDL_Rect>(const Rectangle& other)
+IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other)
 {
 	return { static_cast<int>(other.x), static_cast<int>(other.y),
 		 static_cast<int>(other.width),

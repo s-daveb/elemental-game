@@ -10,10 +10,10 @@
 #pragma once
 
 namespace elemental {
-enum error_flag : bool
+enum ErrorFlag : bool
 {
-	NO_ERROR = false,
-	ERROR = true
+	kNO_ERROR = false,
+	kERROR = true
 };
 }
 

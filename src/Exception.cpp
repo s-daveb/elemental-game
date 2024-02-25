@@ -22,7 +22,7 @@
 
 using elemental::Exception;
 
-constexpr unsigned DEFAULT_STACKFRAMES_TO_STRIP = 3;
+constexpr unsigned kDEFAULT_STACKFRAMES_TO_STRIP = 3;
 
 // Helper classes and functions. #region
 
@@ -30,7 +30,7 @@ Exception::Exception(c::const_string error_message)
     : std::exception()
     , error_message(error_message)
     , what_message()
-    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+    , stack_trace(elemental::generate_stacktrace(kDEFAULT_STACKFRAMES_TO_STRIP))
     , inner_exception_ptr()
 {
 	build_what_message();
@@ -40,7 +40,7 @@ Exception::Exception(const std::string& error_message)
     : std::exception()
     , error_message(error_message)
     , what_message()
-    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+    , stack_trace(elemental::generate_stacktrace(kDEFAULT_STACKFRAMES_TO_STRIP))
     , inner_exception_ptr()
 {
 	build_what_message();
@@ -51,7 +51,7 @@ Exception::Exception(const std::exception& inner)
     , error_message(inner.what())
     , what_message()
     , inner_exception_ptr(std::make_exception_ptr(&inner))
-    , stack_trace(elemental::generate_stacktrace(DEFAULT_STACKFRAMES_TO_STRIP))
+    , stack_trace(elemental::generate_stacktrace(kDEFAULT_STACKFRAMES_TO_STRIP))
 {
 	build_what_message();
 }
@@ -75,14 +75,14 @@ prepend_tabs_to_lines(const std::string& input)
 	std::istringstream input_buffer(input);
 
 	// Function to add a tab character before each line
-	auto addTabBeforeLine = [&results_buffer](const std::string& line) {
+	auto add_tab_before_line = [&results_buffer](const std::string& line) {
 		results_buffer << '\t' << line << '\n';
 	};
 
 	// Process each line and add a tab character before it
 	std::string line;
 	while (std::getline(input_buffer, line)) {
-		addTabBeforeLine(line);
+		add_tab_before_line(line);
 	}
 
 	return results_buffer.str();
