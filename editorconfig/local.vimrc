@@ -1,4 +1,3 @@
- 
 " editorconfig/local.vimrc
 " Copyright © 2023-2024 Saul D. Beniquez  @{
 "
@@ -31,7 +30,7 @@ set foldmethod=expr
 
 let s:build_dir = 'vim-debug'
 let s:build_cores = 6
-let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores 
+let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores
 
 let s:cmake_path = system('which ' . 'cmake')
 let s:ninja_path  = system('which ' . 'ninja')
