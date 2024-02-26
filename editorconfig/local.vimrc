@@ -32,11 +32,13 @@ let s:build_dir = 'vim-debug'
 let s:build_cores = 6
 let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores
 
-let s:cmake_path = system('which ' . 'cmake')
-let s:ninja_path  = system('which ' . 'ninja')
+let s:cmake_path = substitute(system('which ' . 'cmake'),'\n$', '', '')
+let s:ninja_path = substitute(system('which ' . 'ninja'),'\n$', '', '')
+let s:make_prg = substitute(system('which ' . 'make'),'\n$', '','')
 
 let s:cmake_generator = 'Unix Makefiles'
 if (s:ninja_path != '')
+	let s:make_prg = s:ninja_path
 	let s:cmake_generator = 'Ninja'
 endif
 
@@ -47,8 +49,10 @@ if (s:cmake_path != '')
 				\' -G ' . s:cmake_generator
 endif
 
-let s:make_call = 'nice -make ' . s:make_args
-let s:ninja_call = 'ninja ' . s:make_args
+let s:make_prg = "nice -20 "  . s:make_prg
+let s:make_call =   s:make_prg  . " " .  s:make_args
+
+let &makeprg = s:make_prg
 
 if ! get(s:, 'defined', 0) " -- prevents the function from being redefined after compiling
 function! BuildDebug()
@@ -63,10 +67,9 @@ function! BuildDebug()
 		\ )
 
 
-			exec ':Dispatch ' . s:cmake_call
+			exec ':Dispatch ' . s:cmake_call . ' && ' . s:make_call
 		endif
 
-		set makeprg='ninja'
 		exec ':Make ' . s:make_args
 	else
 		if (
