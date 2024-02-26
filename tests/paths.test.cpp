@@ -43,8 +43,8 @@ BEGIN_TEST_SUITE("elemental::paths")
 		        (get_home() / "Library" / "Application Support"));
 #elif defined(__unix__)
 
-		fs::path appConfigRoot = GetAppConfigRoot();
-		REQUIRE(appConfigRoot == (GetHome() / ".config"));
+		fs::path appConfigRoot = get_app_config_root();
+		REQUIRE(appConfigRoot == (get_home() / ".config"));
 #else
 		WARN("Test is skipped on non-POSIX systems.");
 		REQUIRE(true);
