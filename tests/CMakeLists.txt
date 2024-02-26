@@ -13,8 +13,6 @@ set(test-runner_SOURCES
 	FileResource.test.cpp
 	JsonConfigFile.test.cpp
 	paths.test.cpp
-
-$<TARGET_OBJECTS:elemental>
 )
 
 add_executable(test-runner
@@ -29,6 +27,7 @@ target_compile_definitions(test-runner PRIVATE
 )
 
 set(TESTS_LINK_DEPS
+	elemental
 	Catch2::Catch2WithMain
 	FakeIt::FakeIt-catch
 	Threads::Threads
@@ -46,7 +45,9 @@ target_include_directories(test-runner
 	PRIVATE ${CMAKE_SOURCE_DIR}/tests
 )
 
-target_link_directories(test-runner PRIVATE ${CATCH2_LIBRARY_DIRS})
+target_link_directories(test-runner PRIVATE
+ ${CATCH2_LIBRARY_DIRS}
+)
 
 target_link_libraries(test-runner
 PRIVATE
