@@ -18,8 +18,8 @@
 
 using namespace elemental;
 
-int
-main(int argc, c::const_string argv[], c::const_string envp[])
+auto
+main(int argc, c::const_string argv[], c::const_string envp[]) -> int
 {
 	try {
 		auto& game_instance = Singleton::getReference<IPhong>();

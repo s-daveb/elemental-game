@@ -24,13 +24,13 @@ class JsonConfigFile : public FileResource
   public:
 	JsonConfigFile(const std::filesystem::path& file_path,
 	               CreateDirsMode mode = kDEFAULT);
-	virtual ~JsonConfigFile();
+	~JsonConfigFile() override;
 
-	nlohmann::json& read();
+	auto read() -> nlohmann::json&;
 	void write();
 
 	template<typename T_>
-	T_ get() const
+	[[nodiscard]] auto get() const -> T_
 	{
 		return config_json.get<T_>();
 	}
@@ -41,7 +41,10 @@ class JsonConfigFile : public FileResource
 		config_json = value;
 	}
 
-	inline nlohmann::json& getJsonData() { return this->config_json; };
+	inline auto getJsonData() -> nlohmann::json&
+	{
+		return this->config_json;
+	};
 
   protected:
 	nlohmann::json config_json;

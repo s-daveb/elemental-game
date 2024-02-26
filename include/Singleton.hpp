@@ -33,14 +33,14 @@ struct Singleton
 {
   public:
 	template<typename T_>
-	static T_& getReference()
+	static auto getReference() -> T_&
 	{
 		static T_ instance;
 		return instance;
 	}
 
 	template<typename T_>
-	static T_* getPointer()
+	static auto getPointer() -> T_*
 	{
 		return &Singleton::getReference<T_>();
 	}

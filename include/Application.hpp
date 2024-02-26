@@ -20,20 +20,20 @@ namespace elemental {
 class Application : public IApplication // NOLINT
 {
   public:
-	virtual ~Application() = default;
+	~Application() override = default;
 
-	virtual void init(int argc, c::const_string argv[],
-	                  c::const_string envp[]) override;
+	auto init(int argc, c::const_string argv[], c::const_string envp[])
+	    -> void override;
 
-	virtual int run() override = 0;
+	auto run() -> int override = 0;
 
-	virtual inline const std::vector<std::string>& getArguments()
-	    const override
+	[[nodiscard]] inline auto getArguments() const
+	    -> const std::vector<std::string>& override
 	{
 		return this->arguments;
 	}
-	virtual inline const Dictionary<const std::string>& getEnvironment()
-	    const override
+	[[nodiscard]] inline auto getEnvironment() const
+	    -> const Dictionary<const std::string>& override
 	{
 		return this->environment_variables;
 	}
@@ -42,8 +42,8 @@ class Application : public IApplication // NOLINT
 	Application();
 	Application(const IApplication&) = delete;
 	Application(IApplication&&) = delete;
-	Application& operator=(const IApplication&) = delete;
-	Application& operator=(IApplication&&) = delete;
+	auto operator=(const IApplication&) -> Application& = delete;
+	auto operator=(IApplication&&) -> Application& = delete;
 
 	void parse_arguments(int argc, c::const_string argv[]);
 	void create_env_dictionary(c::const_string envp[]);

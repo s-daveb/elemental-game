@@ -46,10 +46,10 @@ JsonConfigFile::JsonConfigFile(const fs::path& file_path, CreateDirsMode mode)
 {
 }
 
-JsonConfigFile::~JsonConfigFile() {}
+JsonConfigFile::~JsonConfigFile() = default;
 
-nlohmann::json&
-JsonConfigFile::read()
+auto
+JsonConfigFile::read() -> nlohmann::json&
 {
 	try {
 		std::ifstream file_stream(file_path);

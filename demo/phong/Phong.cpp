@@ -51,8 +51,8 @@ IPhong::~IPhong()
 	video_renderer.deactivate();
 }
 
-int
-IPhong::run()
+auto
+IPhong::run() -> int
 {
 	this->is_running = true;
 	try {
@@ -93,7 +93,7 @@ void
 IPhong::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
-	SDL_Event event = std::any_cast<SDL_Event>(message);
+	auto event = std::any_cast<SDL_Event>(message);
 	if (event.type == SDL_QUIT) {
 		this->is_running = false;
 	}
@@ -102,7 +102,6 @@ IPhong::recieveMessage(const Observable& sender, std::any message)
 IPhong::IPhong()
     : Application()
     , IObserver()
-    , is_running(false)
     , running_threads()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())

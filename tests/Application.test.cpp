@@ -31,7 +31,7 @@ BEGIN_TEST_SUITE("elemental::Application")
 	using namespace elemental;
 	struct IDerivedApplication : public Application
 	{
-		virtual int run() { return 0; }
+		auto run() -> int override { return 0; }
 	};
 	struct TestFixture
 	{

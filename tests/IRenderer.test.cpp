@@ -21,19 +21,19 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	struct DummyRenderer : public IRenderer
 	{
 		friend class IRenderer;
-		virtual ~DummyRenderer(){};
+		~DummyRenderer() override = default;
 
-		virtual void init(RendererSettings&) override { return; }
-		virtual void deactivate() override { return; }
-		virtual bool isInitialized() override { return false; }
-		virtual Resolution getResolution() override { return { 0, 0 }; }
-		virtual Area getWindowSize() override { return { 0, 0 }; }
+		void init(RendererSettings&) override { return; }
+		void deactivate() override { return; }
+		auto isInitialized() -> bool override { return false; }
+		auto getResolution() -> Resolution override { return { 0, 0 }; }
+		auto getWindowSize() -> Area override { return { 0, 0 }; }
 
-		virtual void clearScreen() override { return; }
-		virtual void flip() override { return; }
+		void clearScreen() override { return; }
+		void flip() override { return; }
 
-		virtual void blit(std::shared_ptr<void> image_data,
-		                  Rectangle& placement) override
+		void blit(std::shared_ptr<void> image_data,
+		          Rectangle& placement) override
 		{
 			return;
 		}

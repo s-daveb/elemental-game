@@ -37,18 +37,18 @@ class ElementalGame
   public:
 	friend class Singleton;
 
-	virtual ~ElementalGame();
+	~ElementalGame() override;
 
-	virtual int run() override;
-	virtual void recieveMessage(const Observable& sender,
-	                            std::any message = std::any()) override;
+	auto run() -> int override;
+	void recieveMessage(const Observable& sender,
+	                    std::any message = std::any()) override;
 
   protected:
 	ElementalGame();
 	void simulation_thread_loop();
 
 	Dictionary<std::thread> running_threads;
-	bool is_running;
+	bool is_running{ false };
 
 	IRenderer& video_renderer;
 	SdlEventSource& event_emitter;

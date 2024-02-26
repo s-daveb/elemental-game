@@ -17,8 +17,7 @@ using namespace std::chrono;
 
 // Constructor with default desired framerate of 30 frames per second
 LoopRegulator::LoopRegulator(uint32_t rate_per_second)
-    : desired_rate_per_second(0)
-    , start_time()
+    : start_time()
     , end_time()
     , elapsed_ms(0)
     , desired_delay_ms(0)
@@ -26,7 +25,7 @@ LoopRegulator::LoopRegulator(uint32_t rate_per_second)
 	this->setRate(rate_per_second);
 }
 
-LoopRegulator::~LoopRegulator() {}
+LoopRegulator::~LoopRegulator() = default;
 
 void
 LoopRegulator::startUpdate()
@@ -36,8 +35,8 @@ LoopRegulator::startUpdate()
 }
 
 // End the loop update and calculate elapsed time
-std::chrono::milliseconds
-LoopRegulator::endUpdate()
+auto
+LoopRegulator::endUpdate() -> std::chrono::milliseconds
 {
 	this->end_time = steady_clock::now();
 	this->elapsed_ms = duration_cast<milliseconds>(end_time - start_time);
@@ -53,8 +52,8 @@ LoopRegulator::setRate(float new_rate)
 }
 
 // Delay the loop to achieve the desired framerate
-milliseconds
-LoopRegulator::delay()
+auto
+LoopRegulator::delay() -> milliseconds
 {
 
 	if (end_time == steady_clock::time_point()) {

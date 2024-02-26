@@ -19,8 +19,8 @@ using namespace std::chrono;
 namespace elemental {
 
 // Define a user-defined literal for 'fps'
-constexpr unsigned long long
-operator"" _Hz(unsigned long long value)
+constexpr auto
+operator"" _Hz(unsigned long long value) -> unsigned long long
 {
 	return value;
 }
@@ -36,16 +36,16 @@ class LoopRegulator
 	void startUpdate();
 
 	// End the loop update and calculate elapsed time
-	milliseconds endUpdate();
+	auto endUpdate() -> milliseconds;
 
 	void setRate(float new_rate);
 
 	// Delay the loop to achieve the desired framerate
-	milliseconds delay();
+	auto delay() -> milliseconds;
 #ifndef UNIT_TEST
   protected:
 #endif
-	uint32_t desired_rate_per_second;
+	uint32_t desired_rate_per_second{ 0 };
 
 	steady_clock::time_point start_time;
 	steady_clock::time_point end_time;

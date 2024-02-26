@@ -15,10 +15,10 @@
 #include <filesystem>
 
 namespace elemental::paths {
-std::filesystem::path get_home();
-std::filesystem::path get_app_config_root();
+auto get_home() -> std::filesystem::path;
+auto get_app_config_root() -> std::filesystem::path;
 
-std::filesystem::path expand_path(const std::filesystem::path&);
+auto expand_path(const std::filesystem::path&) -> std::filesystem::path;
 } // namespace elemental::paths
 
 // clang-format off

@@ -17,7 +17,7 @@ class INonCopyable
 
 	// Disable copy-constructor and assignment operator
 	INonCopyable(INonCopyable const&) = delete;
-	INonCopyable& operator=(INonCopyable const&) = delete;
+	auto operator=(INonCopyable const&) -> INonCopyable& = delete;
 };
 
 }

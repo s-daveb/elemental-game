@@ -58,7 +58,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 				     { 1024, 768 } };   // renderer res
 		}
 
-		~SdlRendererFixture() { test_renderer.deactivate(); }
+		~SdlRendererFixture() override { test_renderer.deactivate(); }
 
 		RendererSettings settings;
 		SdlRenderer& test_renderer;

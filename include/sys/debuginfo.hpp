@@ -12,7 +12,7 @@
 
 namespace elemental {
 
-std::string generate_stacktrace(unsigned short framesToRemove = 1);
+auto generate_stacktrace(unsigned short framesToRemove = 1) -> std::string;
 
 void print_cmdline(int argc, const char* argv[]);
 

@@ -118,8 +118,8 @@ SdlRenderer::deactivate()
 	this->is_initialized = false;
 }
 
-Resolution
-SdlRenderer::getResolution()
+auto
+SdlRenderer::getResolution() -> Resolution
 {
 	int w, h;
 
@@ -134,8 +134,8 @@ SdlRenderer::getResolution()
 	return { static_cast<uint32_t>(w), static_cast<uint32_t>(h) };
 }
 
-Area
-SdlRenderer::getWindowSize()
+auto
+SdlRenderer::getWindowSize() -> Area
 {
 	int width, height;
 
@@ -198,7 +198,6 @@ SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
 
 SdlRenderer::SdlRenderer()
     : IRenderer()
-    , is_initialized(false)
     , sdl_window_ptr(nullptr)
     , sdl_renderer_ptr(nullptr)
 {

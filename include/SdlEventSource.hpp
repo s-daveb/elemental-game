@@ -26,7 +26,7 @@ class SdlEventSource : public Observable
   public:
 	friend class Singleton;
 
-	virtual ~SdlEventSource() {}
+	~SdlEventSource() override = default;
 
 	/** \todo Possible way to add filters to event handlers.
 	 ** \code{.cpp}
@@ -44,7 +44,7 @@ class SdlEventSource : public Observable
 	 ** Then modify the Notify() method to check for these filters
 	 */
 
-	virtual void notify() override;
+	void notify() override;
 
 	void pollEvents();
 

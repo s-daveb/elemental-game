@@ -45,7 +45,7 @@ void
 Application::parse_arguments(int argc, c::const_string argv[])
 {
 	for (c::count_t index = 0; index < argc; ++index) {
-		this->arguments.push_back(argv[index]);
+		this->arguments.emplace_back(argv[index]);
 	}
 }
 

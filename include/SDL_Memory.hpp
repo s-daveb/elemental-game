@@ -81,7 +81,7 @@ struct UniqueSdlPtr : public std::unique_ptr<TSdlData, TDeleter>
 
 	operator TSdlData*() const { return this->get(); }
 	// Assignment operator for raw pointer using std::move
-	UniqueSdlPtr& operator=(TSdlData* ptr)
+	auto operator=(TSdlData* ptr) -> UniqueSdlPtr&
 	{
 		this->reset(ptr);
 		return *this;
@@ -99,7 +99,7 @@ struct SdlPtr : public std::shared_ptr<TSdlData>
 	operator TSdlData*() const { return this->get(); }
 
 	// Assignment operator for raw pointer using std::move
-	SdlPtr& operator=(TSdlData* ptr)
+	auto operator=(TSdlData* ptr) -> SdlPtr&
 	{
 		this->reset(ptr, TDeleter{});
 		return *this;

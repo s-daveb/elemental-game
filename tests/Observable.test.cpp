@@ -31,8 +31,8 @@ BEGIN_TEST_SUITE("elemental::Observable")
 	  public:
 		ObservableSubject() : Observable() {}
 
-		virtual void notify() override { this->notify_all(); }
-		const size_t getObserverCount() const
+		void notify() override { this->notify_all(); }
+		[[nodiscard]] auto getObserverCount() const -> const size_t
 		{
 			return observers.size();
 		}
@@ -62,13 +62,13 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		When(Method(observer_type1, recieveMessage))
 		    .Do([](const Observable& o, std::any m) {
-			    buffer.push_back("First Observer");
+			    buffer.emplace_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
 		When(Method(observer_type2, recieveMessage))
 		    .Do([](const Observable& o, std::any m) {
-			    buffer.push_back("Second Observer");
+			    buffer.emplace_back("Second Observer");
 		    })
 		    .AlwaysReturn();
 

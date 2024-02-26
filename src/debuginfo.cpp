@@ -28,7 +28,7 @@ namespace elemental {
 namespace {
 
 	// Extracts the mangled symbol from a string like <func_name+0x34>
-	std::string extract_mangled_symbol(const std::string& input)
+	auto extract_mangled_symbol(const std::string& input) -> std::string
 	{
 		std::string result;
 		bool inside_angle_brackets = false;
@@ -57,8 +57,8 @@ namespace {
 
 // There are a lot of C and platform-specific hacks contained within
 // I am sorry. 🤡
-std::string
-generate_stacktrace(unsigned short framesToRemove)
+auto
+generate_stacktrace(unsigned short framesToRemove) -> std::string
 {
 	using namespace elemental::platform;
 

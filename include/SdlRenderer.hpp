@@ -27,25 +27,25 @@ struct SdlRenderer : public IRenderer
 
 	friend class IRenderer;
 
-	virtual ~SdlRenderer();
+	~SdlRenderer() override;
 
-	virtual void init(RendererSettings&) override;
-	virtual void deactivate() override;
-	inline virtual bool isInitialized() override
+	void init(RendererSettings&) override;
+	void deactivate() override;
+	inline auto isInitialized() -> bool override
 	{
 		return this->is_initialized;
 	};
-	virtual Resolution getResolution() override;
-	virtual Area getWindowSize() override;
+	auto getResolution() -> Resolution override;
+	auto getWindowSize() -> Area override;
 
-	virtual void clearScreen() override;
-	virtual void flip() override;
+	void clearScreen() override;
+	void flip() override;
 
-	virtual void blit(std::shared_ptr<void> img_data,
-	                  Rectangle& placement) override;
+	void blit(std::shared_ptr<void> img_data,
+	          Rectangle& placement) override;
 
   protected:
-	bool is_initialized;
+	bool is_initialized{ false };
 	SdlRenderer();
 
 	SdlPtr<SDL_Window> sdl_window_ptr;
@@ -53,16 +53,16 @@ struct SdlRenderer : public IRenderer
 };
 
 template<>
-inline Rectangle
-IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other)
+inline auto
+IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other) -> Rectangle
 {
 	return { static_cast<uint32_t>(other.x), static_cast<uint32_t>(other.y),
 		 static_cast<uint32_t>(other.w),
 		 static_cast<uint32_t>(other.h) };
 }
 template<>
-inline SDL_Rect
-IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other)
+inline auto
+IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other) -> SDL_Rect
 {
 	return { static_cast<int>(other.x), static_cast<int>(other.y),
 		 static_cast<int>(other.width),

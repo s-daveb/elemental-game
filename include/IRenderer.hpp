@@ -33,21 +33,21 @@ struct IRenderer
 	SINGLETON_INTERFACE(IRenderer);
 	TEST_INSPECTABLE(IRenderer);
 
-	virtual ~IRenderer() {}
+	virtual ~IRenderer() = default;
 
 	/*! \name Lazy Initialization Methods
 	 * These initialize the current rendering subsystema and de-initialize
 	 * it on-demand @{ */
 	virtual void init(RendererSettings& settings) = 0;
 	virtual void deactivate() = 0;
-	virtual bool isInitialized() = 0;
+	virtual auto isInitialized() -> bool = 0;
 	/*! @} */
 
 	//! \brief Does what it says on the tin.
-	virtual Resolution getResolution() = 0;
+	virtual auto getResolution() -> Resolution = 0;
 
 	//! \brief Does what it says on the tin.
-	virtual Area getWindowSize() = 0;
+	virtual auto getWindowSize() -> Area = 0;
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display
@@ -72,10 +72,10 @@ struct IRenderer
 	 */
 	/*! @{ */
 	template<typename TR>
-	Rectangle toRectangle(const TR& data);
+	auto toRectangle(const TR& data) -> Rectangle;
 
 	template<typename TR>
-	TR fromRectangle(const Rectangle& rectangle);
+	auto fromRectangle(const Rectangle& rectangle) -> TR;
 	/*! @}  */
 
   protected:

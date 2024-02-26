@@ -37,17 +37,17 @@ class IPhong
   public:
 	friend class Singleton;
 
-	virtual ~IPhong();
+	~IPhong() override;
 
 	/// \name Application Interface
 	/// @{
-	virtual int run() override;
+	auto run() -> int override;
 	/// @}
 
 	/// \name IObserver interface
 	/// @{
-	virtual void recieveMessage(const Observable& sender,
-	                            std::any message = std::any()) override;
+	void recieveMessage(const Observable& sender,
+	                    std::any message = std::any()) override;
 	/// @}
 
   protected:
@@ -55,10 +55,10 @@ class IPhong
 
 	IPhong(const IPhong&) = delete;
 	IPhong(IPhong&&) = delete;
-	IPhong& operator=(const IPhong&) = delete;
-	IPhong& operator=(IPhong&&) = delete;
+	auto operator=(const IPhong&) -> IPhong& = delete;
+	auto operator=(IPhong&&) -> IPhong& = delete;
 
-	bool is_running;
+	bool is_running{ false };
 
 	Dictionary<std::thread> running_threads;
 	void simulation_thread_loop();

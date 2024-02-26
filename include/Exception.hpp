@@ -36,15 +36,15 @@ class Exception : public std::exception
 
   public:
 	Exception(c::const_string message = kDEFAULT_ERROR);
-	Exception(const std::string& message);
+	Exception(std::string message);
 
 	Exception(const elemental::Exception& other) = default;
 	Exception(const std::exception& inner);
 
-	Exception& operator=(const Exception&) = delete;
+	auto operator=(const Exception&) -> Exception& = delete;
 
-	virtual const char* what() const noexcept override;
-	const std::string& stacktrace() const noexcept;
+	[[nodiscard]] auto what() const noexcept -> const char* override;
+	[[nodiscard]] auto stacktrace() const noexcept -> const std::string&;
 
 	constexpr static auto kDEFAULT_ERROR = "An exception has ocurred!";
 
@@ -63,7 +63,7 @@ class Exception : public std::exception
 struct NotImplementedException : public Exception
 {
 	NotImplementedException() : Exception("Method not implemented") {}
-	virtual ~NotImplementedException() = default;
+	~NotImplementedException() override = default;
 };
 
 void inline assert_impl(c::const_string failed_condition,

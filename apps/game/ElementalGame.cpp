@@ -41,8 +41,8 @@ ElementalGame::~ElementalGame()
 	video_renderer.deactivate();
 }
 
-int
-ElementalGame::run()
+auto
+ElementalGame::run() -> int
 {
 	try {
 		LoopRegulator frame_regulator(60_Hz);
@@ -82,7 +82,7 @@ void
 ElementalGame::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
-	SDL_Event event = std::any_cast<SDL_Event>(message);
+	auto event = std::any_cast<SDL_Event>(message);
 	if (event.type == SDL_QUIT) {
 		this->is_running = false;
 	}
@@ -91,7 +91,6 @@ ElementalGame::recieveMessage(const Observable& sender, std::any message)
 ElementalGame::ElementalGame()
     : Application()
     , IObserver()
-    , is_running(false)
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())
 {

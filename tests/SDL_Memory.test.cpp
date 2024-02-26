@@ -53,7 +53,7 @@ BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 	TEST("UniqueSdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
-		FakeSdlObject* fake_object = new FakeSdlObject(is_initialized);
+		auto* fake_object = new FakeSdlObject(is_initialized);
 		{
 			TestSdlUniquePtr unique_ptr;
 			unique_ptr = fake_object;
@@ -69,7 +69,7 @@ BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 	TEST("SdlPtr is convertible to and from raw pointers")
 	{
 		bool is_initialized = true;
-		FakeSdlObject* fake_object = new FakeSdlObject(is_initialized);
+		auto* fake_object = new FakeSdlObject(is_initialized);
 		{
 			TestSdlSharedPtr shared_ptr;
 			shared_ptr = fake_object;

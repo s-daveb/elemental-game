@@ -25,20 +25,20 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	  public:
 		EventRecorder() : IObserver() {}
 
-		virtual void recieveMessage(const Observable& sender,
-		                            std::any message)
+		void recieveMessage(const Observable& sender,
+		                    std::any message) override
 		{
 			auto event = std::any_cast<SDL_Event&>(message);
 			received.push_back(event);
 		}
-		virtual ~EventRecorder() = default;
+		~EventRecorder() override = default;
 		std::vector<SDL_Event> received;
 	};
 	class SdlEventSourceInspector : public SdlEventSource
 	{
 	  public:
-		static std::queue<SDL_Event>& getEventQueue(
-		    SdlEventSource& other)
+		static auto getEventQueue(SdlEventSource& other)
+		    -> std::queue<SDL_Event>&
 		{
 			return other.event_queue;
 		}
@@ -60,7 +60,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			}
 		}
 
-		~SdlEventSourceFixture() {}
+		~SdlEventSourceFixture() override = default;
 		SdlEventSource& test_object;
 		EventRecorder recorder;
 		std::queue<SDL_Event>& event_queue_ref;

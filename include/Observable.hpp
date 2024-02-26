@@ -20,10 +20,10 @@ class IObserver;
 class Observable
 {
   public:
-	typedef std::reference_wrapper<IObserver> observer_ref;
-	typedef std::list<observer_ref> observer_list;
+	using observer_ref = std::reference_wrapper<IObserver>;
+	using observer_list = std::list<observer_ref>;
 
-	virtual ~Observable() {}
+	virtual ~Observable() = default;
 
 	void registerObserver(observer_ref);
 	virtual void notify() = 0;

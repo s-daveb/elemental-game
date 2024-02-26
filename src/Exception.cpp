@@ -19,6 +19,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 using elemental::Exception;
 
@@ -36,9 +37,9 @@ Exception::Exception(c::const_string error_message)
 	build_what_message();
 }
 
-Exception::Exception(const std::string& error_message)
+Exception::Exception(std::string error_message)
     : std::exception()
-    , error_message(error_message)
+    , error_message(std::move(error_message))
     , what_message()
     , stack_trace(elemental::generate_stacktrace(kDEFAULT_STACKFRAMES_TO_STRIP))
     , inner_exception_ptr()
@@ -56,20 +57,20 @@ Exception::Exception(const std::exception& inner)
 	build_what_message();
 }
 
-const char*
-Exception::what() const noexcept
+auto
+Exception::what() const noexcept -> const char*
 {
 	return this->what_message.c_str();
 }
 
-const std::string&
-Exception::stacktrace() const noexcept
+auto
+Exception::stacktrace() const noexcept -> const std::string&
 {
 	return this->stack_trace;
 }
 
-std::string
-prepend_tabs_to_lines(const std::string& input)
+auto
+prepend_tabs_to_lines(const std::string& input) -> std::string
 {
 	std::ostringstream results_buffer;
 	std::istringstream input_buffer(input);

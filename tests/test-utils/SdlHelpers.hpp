@@ -32,7 +32,7 @@ struct SdlEventSimulator // #region
 		kLEFT
 	};
 
-	static inline SDL_Event eventFromScancode(SDL_Scancode scancode)
+	static inline auto eventFromScancode(SDL_Scancode scancode) -> SDL_Event
 	{
 		SDL_Event event{ .key = {
 				     .type = SDL_KEYDOWN,
@@ -40,7 +40,7 @@ struct SdlEventSimulator // #region
 		return event;
 	}
 
-	static inline SDL_Event specificArrowKey(KeyDir dir)
+	static inline auto specificArrowKey(KeyDir dir) -> SDL_Event
 	{
 		SDL_Event event = {};
 		event.type = SDL_KEYDOWN;
@@ -52,7 +52,7 @@ struct SdlEventSimulator // #region
 		 *  modifying the keyboard state is useful to simulate input in
 		 *  unit tests.
 		 *     -- Saul 30.11.21 ☕️  */
-		Uint8* keyboard =
+		auto* keyboard =
 		    const_cast<Uint8*>(SDL_GetKeyboardState(&keyboard_len));
 
 		switch (dir) {
@@ -97,7 +97,7 @@ struct SdlEventSimulator // #region
 		return event;
 	}
 
-	static inline SDL_Event randomArrowKey()
+	static inline auto randomArrowKey() -> SDL_Event
 	{
 		auto value = static_cast<KeyDir>(::rand() % 4);
 		return specificArrowKey(value);

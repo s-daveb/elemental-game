@@ -25,8 +25,8 @@
 namespace fs = std::filesystem;
 namespace elemental::paths {
 
-fs::path
-get_home()
+auto
+get_home() -> fs::path
 {
 	c::string result;
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
@@ -37,8 +37,8 @@ get_home()
 	return result;
 }
 
-fs::path
-get_app_config_root()
+auto
+get_app_config_root() -> fs::path
 {
 	fs::path result;
 
@@ -61,8 +61,8 @@ get_app_config_root()
 	return result;
 }
 
-fs::path
-expand_path(const fs::path& location)
+auto
+expand_path(const fs::path& location) -> fs::path
 {
 	try {
 		fs::path result(location.root_path());

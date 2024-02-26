@@ -24,12 +24,14 @@ class IApplication
   public:
 	virtual ~IApplication() = default;
 
-	virtual void init(int argc, c::const_string argv[],
-	                  c::const_string envp[]) = 0;
-	virtual int run() = 0;
+	virtual auto init(int argc, c::const_string argv[],
+	                  c::const_string envp[]) -> void = 0;
+	virtual auto run() -> int = 0;
 
-	virtual const std::vector<std::string>& getArguments() const = 0;
-	virtual const Dictionary<const std::string>& getEnvironment() const = 0;
+	[[nodiscard]] virtual auto getArguments() const
+	    -> const std::vector<std::string>& = 0;
+	[[nodiscard]] virtual auto getEnvironment() const
+	    -> const Dictionary<const std::string>& = 0;
 
   protected:
 	IApplication() {}
