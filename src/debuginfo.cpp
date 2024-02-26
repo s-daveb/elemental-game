@@ -72,9 +72,9 @@ generate_stacktrace(unsigned short framesToRemove)
 	size_t columns_to_print = 0;
 
 	// preconfigure column length for certain platforms
-	if (platform::current_platform == kFREEBSD) {
+	if (platform::kCURRENT_PLATFORM == kFREEBSD) {
 		columns_to_print = 2;
-	} else if (platform::current_platform == kMACOSX) {
+	} else if (platform::kCURRENT_PLATFORM == kMACOSX) {
 		columns_to_print = 4;
 	}
 

@@ -69,7 +69,7 @@ ElementalGame::run()
 		for (auto& [key, values] : this->running_threads) {
 			values.join();
 		}
-		return kNO_ERROR;
+		return kSUCCESS;
 	} catch (Exception& exc) {
 		throw;
 	} catch (std::exception& excp) {

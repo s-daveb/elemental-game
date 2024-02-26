@@ -23,19 +23,19 @@ namespace platform {
 	};
 
 #ifdef __linux__
-	static platform_t current_platform = LINUX;
+	static const platform_t kCURRENT_PLATFORM = LINUX;
 #endif
 
 #ifdef _WIN32
-	static platform_t current_platform = WINDOWS;
+	static const platform_t kCURRENT_PLATFORM = WINDOWS;
 #endif
 
 #ifdef __APPLE__
-	static platform_t current_platform = kMACOSX;
+	static const platform_t kCURRENT_PLATFORM = kMACOSX;
 #endif
 
 #ifdef __FreeBSD__
-	static platform_t current_platform = FREEBSD;
+	static const platform_t kCURRENT_PLATFORM = FREEBSD;
 #endif
 
 	// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)

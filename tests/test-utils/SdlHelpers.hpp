@@ -113,7 +113,7 @@ struct SdlTestFixture
 	{
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kNO_ERROR) {
+		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kSUCCESS) {
 			buffer << "SDL Could not initialize; SDL_Error:  "
 			       << SDL_GetError();
 			throw elemental::Exception(buffer.str());

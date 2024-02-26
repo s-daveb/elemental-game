@@ -12,8 +12,8 @@
 namespace elemental {
 enum ErrorFlag : bool
 {
-	kNO_ERROR = false,
-	kERROR = true
+	kSUCCESS = 0,
+	kERROR = 1
 };
 }
 

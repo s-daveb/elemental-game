@@ -80,7 +80,7 @@ IPhong::run()
 			values.join();
 		}
 
-		return kNO_ERROR;
+		return kSUCCESS;
 	} catch (Exception& exc) {
 		throw;
 	} catch (std::exception& excp) {

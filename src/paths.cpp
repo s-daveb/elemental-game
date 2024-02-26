@@ -42,7 +42,7 @@ get_app_config_root()
 {
 	fs::path result;
 
-	switch (platform::current_platform) {
+	switch (platform::kCURRENT_PLATFORM) {
 		case platform::kMACOSX:
 			result = get_home() / "Library" / "Application Support";
 			break;
@@ -106,7 +106,7 @@ expand_path(const fs::path& location)
 		throw Exception(e);
 	}
 }
-}
+} // namespace elemental::paths
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
