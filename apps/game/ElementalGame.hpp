@@ -37,21 +37,17 @@ class ElementalGame
   public:
 	friend class Singleton;
 
-	virtual void init(int argc, c::const_string argv[],
-	                  c::const_string envp[]) override;
 	virtual ~ElementalGame();
-	virtual int run() override;
 
+	virtual int run() override;
 	virtual void recieveMessage(const Observable& sender,
 	                            std::any message = std::any()) override;
 
   protected:
 	ElementalGame();
-
-	Dictionary<std::thread> running_threads;
-
 	void simulation_thread_loop();
 
+	Dictionary<std::thread> running_threads;
 	bool is_running;
 
 	IRenderer& video_renderer;

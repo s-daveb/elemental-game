@@ -24,6 +24,7 @@ class Application : public IApplication // NOLINT
 
 	virtual void init(int argc, c::const_string argv[],
 	                  c::const_string envp[]) override;
+
 	virtual int run() override = 0;
 
 	virtual inline const std::vector<std::string>& getArguments()

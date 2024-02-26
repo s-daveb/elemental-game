@@ -31,7 +31,7 @@ class IRenderer;
 class SdlEventSource;
 
 class IPhong
-    : public IApplication
+    : public Application
     , public IObserver
 {
   public:

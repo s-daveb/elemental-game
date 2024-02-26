@@ -20,7 +20,7 @@ int
 main(int argc, c::const_string argv[], c::const_string envp[])
 {
 	try {
-		auto& game_instance = Singleton::getReference < ElementalGame();
+		auto& game_instance = Singleton::getReference<ElementalGame>();
 		game_instance.init(argc, argv, envp);
 
 		return game_instance.run();

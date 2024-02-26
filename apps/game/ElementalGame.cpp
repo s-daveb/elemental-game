@@ -27,22 +27,22 @@
 using namespace elemental;
 
 /**! \name Helper Functions */
-//! @{
+/// @{
 void
 print_cycle_rate(milliseconds& cycle_length,
                  c::const_string label = "cycle_length")
 {
 	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
-//! @}
+/// @}
 
-ElementalGame:~EElementalGame
+ElementalGame::~ElementalGame()
 {
 	video_renderer.deactivate();
 }
 
 int
-ElementalGame:run()
+ElementalGame::run()
 {
 	try {
 		LoopRegulator frame_regulator(60_Hz);
@@ -79,7 +79,7 @@ ElementalGame:run()
 }
 
 void
-ElementalGame:recieveMessage(const Observable& sender, std::any message)
+ElementalGame::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	SDL_Event event = std::any_cast<SDL_Event>(message);
@@ -88,8 +88,8 @@ ElementalGame:recieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-ElementalGame:EElementalGame
-    : IApplication()
+ElementalGame::ElementalGame()
+    : Application()
     , IObserver()
     , is_running(false)
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
@@ -99,8 +99,8 @@ ElementalGame:EElementalGame
 		{ "Test",
 		  WindowMode::kWINDOWED,      // mode
 		  WindowPlacement::kCENTERED, // placement
-		  { 0, 0 },                  // window.pos
-		  { 1024, 768 } },           // window.size
+		  { 0, 0 },                   // window.pos
+		  { 1024, 768 } },            // window.size
 		{ 1024, 768 }
 	}; // renderer res
 
@@ -116,7 +116,7 @@ ElementalGame:EElementalGame
 }
 
 void
-ElementalGame:simulation_thread_loop()
+ElementalGame::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(30_Hz);
 	do {

@@ -29,11 +29,11 @@
 using namespace elemental;
 
 const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
-	                                 WindowMode::kWINDOWED,
-	                                 WindowPlacement::kCENTERED,
-	                                 { 0, 0 },
-	                                 { 1270, 720 } },
-	                               { 1024, 768 } } };
+	                                  WindowMode::kWINDOWED,
+	                                  WindowPlacement::kCENTERED,
+	                                  { 0, 0 },
+	                                  { 1270, 720 } },
+	                                { 1024, 768 } } };
 
 /// \name Helper Functions
 /// @{
@@ -100,7 +100,7 @@ IPhong::recieveMessage(const Observable& sender, std::any message)
 }
 
 IPhong::IPhong()
-    : IApplication()
+    : Application()
     , IObserver()
     , is_running(false)
     , running_threads()
