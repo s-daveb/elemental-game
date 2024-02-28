@@ -20,7 +20,7 @@ struct Point
 	uint32_t x, y;
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Point, x, y);
 };
-using Position = Point;
+using Position2D = Point;
 
 struct Area
 {
@@ -76,7 +76,7 @@ struct WindowParameters
 	std::string title;
 	WindowMode mode;
 	WindowPlacement placement;
-	Position position;
+	Position2D position;
 	Area size;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(WindowParameters, title, mode, placement,

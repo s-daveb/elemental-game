@@ -26,14 +26,16 @@
 #include <thread>
 #include <utility>
 
+#include "types/units.hpp"
+
 using namespace elemental;
 
 const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
 	                                  WindowMode::kWINDOWED,
 	                                  WindowPlacement::kCENTERED,
-	                                  { 0, 0 },
-	                                  { 1270, 720 } },
-	                                { 1024, 768 } } };
+	                                  Position2D({ 0, 0 }),
+	                                  { 1270_px, 720_px } },
+	                                { 1024_px, 768_px } } };
 
 /// \name Helper Functions
 /// @{
@@ -46,13 +48,13 @@ print_cycle_rate(milliseconds& cycle_length,
 
 /// @}
 
-IPhong::~IPhong()
+Phong::~Phong()
 {
 	video_renderer.deactivate();
 }
 
 auto
-IPhong::run() -> int
+Phong::run() -> int
 {
 	this->is_running = true;
 	try {
@@ -90,7 +92,7 @@ IPhong::run() -> int
 }
 
 void
-IPhong::recieveMessage(const Observable& sender, std::any message)
+Phong::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
 	auto event = std::any_cast<SDL_Event>(message);
@@ -99,7 +101,7 @@ IPhong::recieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-IPhong::IPhong()
+Phong::Phong()
     : Application()
     , IObserver()
     , running_threads()
@@ -126,7 +128,7 @@ IPhong::IPhong()
 }
 
 void
-IPhong::simulation_thread_loop()
+Phong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
 	do {

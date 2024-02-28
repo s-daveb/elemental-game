@@ -30,14 +30,14 @@ namespace elemental {
 class IRenderer;
 class SdlEventSource;
 
-class IPhong
+class Phong
     : public Application
     , public IObserver
 {
   public:
 	friend class Singleton;
 
-	~IPhong() override;
+	~Phong() override;
 
 	/// \name Application Interface
 	/// @{
@@ -51,12 +51,12 @@ class IPhong
 	/// @}
 
   protected:
-	IPhong();
+	Phong();
 
-	IPhong(const IPhong&) = delete;
-	IPhong(IPhong&&) = delete;
-	auto operator=(const IPhong&) -> IPhong& = delete;
-	auto operator=(IPhong&&) -> IPhong& = delete;
+	Phong(const Phong&) = delete;
+	Phong(Phong&&) = delete;
+	auto operator=(const Phong&) -> Phong& = delete;
+	auto operator=(Phong&&) -> Phong& = delete;
 
 	bool is_running{ false };
 

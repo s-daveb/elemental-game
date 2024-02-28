@@ -14,16 +14,11 @@
 #include <ratio>
 #include <thread>
 
+#include "types/units.hpp"
+
 using namespace std::chrono;
 
 namespace elemental {
-
-// Define a user-defined literal for 'fps'
-constexpr auto
-operator"" _Hz(unsigned long long value) -> unsigned long long
-{
-	return value;
-}
 
 class LoopRegulator
 {
@@ -53,6 +48,6 @@ class LoopRegulator
 	milliseconds elapsed_ms;
 	milliseconds desired_delay_ms;
 };
-}
-// clang-format off
+} // namespace elemental
+  // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
