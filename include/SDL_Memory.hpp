@@ -52,23 +52,24 @@ namespace elemental {
  * automatically manage resource SDL resources. */
 struct SdlResourceDeleter
 {
-	inline void operator()(SDL_Window* window_ptr)
+	inline auto operator()(SDL_Window* window_ptr) -> void
 	{
 		SDL_DestroyWindow(window_ptr);
 	}
-	inline void operator()(SDL_Renderer* renderer_ptr)
+	inline auto operator()(SDL_Renderer* renderer_ptr) -> void
 	{
 		SDL_DestroyRenderer(renderer_ptr);
 	}
-	inline void operator()(SDL_Surface* surface_ptr)
+	inline auto operator()(SDL_Surface* surface_ptr) -> void
 	{
 		SDL_FreeSurface(surface_ptr);
 	}
-	inline void operator()(SDL_Texture* texture_ptr)
+	inline auto operator()(SDL_Texture* texture_ptr) -> void
 	{
 		SDL_DestroyTexture(texture_ptr);
 	}
-	inline void operator()(SDL_Joystick* joystick_ptr){
+	inline auto operator()(SDL_Joystick* joystick_ptr) -> void
+	{
 		SDL_JoystickClose(joystick_ptr);
 	}
 };
@@ -77,10 +78,10 @@ template<typename TSdlData, typename TDeleter = SdlResourceDeleter>
 struct UniqueSdlPtr : public std::unique_ptr<TSdlData, TDeleter>
 {
 
-	using  std::unique_ptr<TSdlData,TDeleter>::unique_ptr;
+	using std::unique_ptr<TSdlData, TDeleter>::unique_ptr;
 
 	operator TSdlData*() const { return this->get(); }
-	// Assignment operator for raw pointer using std::move
+
 	auto operator=(TSdlData* ptr) -> UniqueSdlPtr&
 	{
 		this->reset(ptr);
@@ -91,7 +92,7 @@ struct UniqueSdlPtr : public std::unique_ptr<TSdlData, TDeleter>
 template<typename TSdlData, typename TDeleter = SdlResourceDeleter>
 struct SdlPtr : public std::shared_ptr<TSdlData>
 {
-	using  std::shared_ptr<TSdlData>::shared_ptr;
+	using std::shared_ptr<TSdlData>::shared_ptr;
 	SdlPtr(TSdlData* ptr, TDeleter deleter = TDeleter{})
 	    : std::shared_ptr<TSdlData>(ptr, deleter)
 	{
@@ -105,7 +106,7 @@ struct SdlPtr : public std::shared_ptr<TSdlData>
 		return *this;
 	}
 };
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
