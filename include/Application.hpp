@@ -45,7 +45,7 @@ class Application : public IApplication // NOLINT
 	auto operator=(const IApplication&) -> Application& = delete;
 	auto operator=(IApplication&&) -> Application& = delete;
 
-	void parse_arguments(int argc, c::const_string argv[]);
+	void read_arguments(int argc, c::const_string argv[]);
 	void create_env_dictionary(c::const_string envp[]);
 
 	std::vector<std::string> arguments;

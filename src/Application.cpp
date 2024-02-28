@@ -30,7 +30,7 @@ Application::init(int argc, c::const_string argv[], c::const_string envp[])
 		throw elemental::Exception(fatal_exception);
 	}
 
-	this->parse_arguments(argc, argv);
+	this->read_arguments(argc, argv);
 	this->create_env_dictionary(envp);
 }
 
@@ -42,7 +42,7 @@ Application::Application()
 }
 
 void
-Application::parse_arguments(int argc, c::const_string argv[])
+Application::read_arguments(int argc, c::const_string argv[])
 {
 	for (c::count_t index = 0; index < argc; ++index) {
 		this->arguments.emplace_back(argv[index]);
