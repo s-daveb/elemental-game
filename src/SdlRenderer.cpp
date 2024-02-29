@@ -51,7 +51,7 @@ SdlRenderer::init(RendererSettings& settings)
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
 	if (kERROR == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
-	                      IMG_INIT_WEBP)) {
+	                       IMG_INIT_WEBP)) {
 		error_buffer.str("");
 		error_buffer
 		    << "Could not initialize SDL_Image: IMG_INIT() == 0"
@@ -70,14 +70,14 @@ SdlRenderer::init(RendererSettings& settings)
 	res_width = settings.resolution.width;
 	res_height = settings.resolution.height;
 
-	if (settings.window.placement == WindowPlacement::kMANUAL) {
+	if (settings.window.placement == WindowPlacement::Manual) {
 		window_xpos = settings.window.position.x;
 		window_ypos = settings.window.position.y;
-	} else if (settings.window.placement == WindowPlacement::kCENTERED) {
+	} else if (settings.window.placement == WindowPlacement::Centered) {
 		window_xpos = window_ypos = SDL_WINDOWPOS_CENTERED;
 	}
 
-	if (settings.window.mode == WindowMode::kFULLSCREEN) {
+	if (settings.window.mode == WindowMode::Fullscreen) {
 		sdl_flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
@@ -185,8 +185,8 @@ SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
 		auto position = fromRectangle<SDL_Rect>(placement);
 
 		if (kERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
-		                            to_draw.get(), nullptr,
-		                            &position)) {
+		                             to_draw.get(), nullptr,
+		                             &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
 	} catch (Exception& thrown_exception) {

@@ -96,12 +96,12 @@ ElementalGame::ElementalGame()
 {
 	RendererSettings renderer_settings = {
 		{ "Test",
-		  WindowMode::kWINDOWED,      // mode
-		  WindowPlacement::kCENTERED, // placement
-		  { 0, 0 },                   // window.pos
-		  { 1024, 768 } },            // window.size
-		{ 1024, 768 }
-	}; // renderer res
+		  WindowMode::Windowed,      // mode
+		  WindowPlacement::Centered, // placement
+		  { 0, 0 },                  // window.pos
+		  { 1024_px, 768_px } },     // window.size
+		{ 1024_px, 768_px }          // internal resolution
+	};
 
 	// Set up video renderer
 	video_renderer.init(renderer_settings);

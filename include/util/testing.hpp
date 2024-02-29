@@ -15,8 +15,10 @@ template<typename T_>
 class Inspector;
 }
 
-#define TEST_INSPECTABLE(TClassName) \
-friend class elemental::debug::Inspector<TClassName>;
+/** \brief this macro adds a friend class to this class definition that
+ * can be used in unit tests to view private variables */
+#define TEST_INSPECTABLE(TClassName)                                           \
+	friend class elemental::debug::Inspector<TClassName>;
 
 /*
 #define TEST_INSPECTABLE(TClassName) \

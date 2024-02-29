@@ -21,11 +21,12 @@ class FileResource
   public:
 	enum CreateDirsMode
 	{
-		kDEFAULT = 0,
-		kCREATE_MISSING_DIRS = 1,
+		Default = 0,
+		NoCreate = 0,
+		CreateMissingDirs = 1,
 	};
 	FileResource(const std::filesystem::path& file_path,
-	             CreateDirsMode mode = kDEFAULT);
+	             CreateDirsMode mode = CreateDirsMode::NoCreate);
 
 	virtual ~FileResource() = default;
 
@@ -50,7 +51,7 @@ struct UnreachablePathException : public Exception
 
 	std::filesystem::path unreachable_path;
 };
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

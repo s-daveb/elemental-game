@@ -30,7 +30,7 @@ set foldmethod=expr
 
 let s:build_dir = 'vim-debug'
 let s:build_cores = 6
-let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores
+let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' all'
 
 let s:cmake_path = substitute(system('which ' . 'cmake'),'\n$', '', '')
 let s:ninja_path = substitute(system('which ' . 'ninja'),'\n$', '', '')

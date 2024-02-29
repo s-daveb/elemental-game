@@ -10,11 +10,11 @@
 #pragma once
 
 namespace elemental {
-enum ErrorFlag : bool
+enum ErrorFlag : bool // NOLINTBEGIN
 {
 	kSUCCESS = false,
 	kERROR = true
-};
+}; // NOLINTEND
 }
 
 // clang-format off

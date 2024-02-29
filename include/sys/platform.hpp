@@ -12,15 +12,15 @@ namespace elemental {
 
 namespace platform {
 
-	enum platform_t
+	enum platform_t // NOLINTBEGIN
 	{
 		kUNKNOWN = 0b0000,
 		kWINDOWS = 0b0001,
 		kUNIX = 0b0100,
 		kLINUX = 0b0101,
 		kFREEBSD = 0b0110,
-		kMACOSX = 0b0111
-	};
+		kMACOS = 0b0111
+	}; // NOLINTEND
 
 #ifdef __linux__
 	static const platform_t kCURRENT_PLATFORM = kLINUX;
@@ -31,7 +31,7 @@ namespace platform {
 #endif
 
 #ifdef __APPLE__
-	static const platform_t kCURRENT_PLATFORM = kMACOSX;
+	static const platform_t kCURRENT_PLATFORM = kMACOS;
 #endif
 
 #ifdef __FreeBSD__
@@ -40,6 +40,7 @@ namespace platform {
 
 	// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)
 	// To be added at a later date.
+
 }; // namespace platform
 } // namespace elemental
 

@@ -23,7 +23,7 @@ class JsonConfigFile : public FileResource
 {
   public:
 	JsonConfigFile(const std::filesystem::path& file_path,
-	               CreateDirsMode mode = kDEFAULT);
+	               CreateDirsMode mode = CreateDirsMode::NoCreate);
 	~JsonConfigFile() override;
 
 	auto read() -> nlohmann::json&;

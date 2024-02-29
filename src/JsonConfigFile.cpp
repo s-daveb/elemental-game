@@ -28,14 +28,15 @@ static std::stringstream error_buffer;
 
 enum IndentMode : int
 {
-	kCOMPACT = -1,
-	kNEWLINES = 0,
-	kINDENT = 1,
+	Compact = -1,
+	NewlinesOnly = 0,
+	Indent = 1,
 };
 enum AsciiMode : bool
 {
-	kDEFAULT = false,
-	kFORCE = true,
+	Default = false,
+	Off = false,
+	On = true,
 };
 } // namespace
 
@@ -92,7 +93,7 @@ JsonConfigFile::write()
 		}
 
 		file_stream << config_json.dump(
-				   IndentMode::kINDENT, '\t', AsciiMode::kDEFAULT,
+				   IndentMode::Indent, '\t', AsciiMode::Default,
 				   nlohmann::json::error_handler_t::replace)
 			    << std::endl;
 

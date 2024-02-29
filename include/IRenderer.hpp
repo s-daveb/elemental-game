@@ -31,6 +31,9 @@ struct IRenderer
 	 * the derived classes.
 	 * \see Singleton.hpp  */
 	SINGLETON_INTERFACE(IRenderer);
+
+	/* This macro adds a friend class to this class definition that
+	 * can be used in unit tests to view private variables */
 	TEST_INSPECTABLE(IRenderer);
 
 	virtual ~IRenderer() = default;

@@ -27,7 +27,7 @@ FileResource::FileResource(const fs::path& file_path, CreateDirsMode mode)
 		auto directory_path = file_path.parent_path();
 
 		if (!directory_path.empty() && !fs::exists(directory_path)) {
-			if (mode != kCREATE_MISSING_DIRS) {
+			if (mode != CreateMissingDirs) {
 				throw UnreachablePathException(directory_path);
 			} else {
 				std::cout << "creating config dir" << std::endl;

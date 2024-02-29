@@ -25,7 +25,6 @@ using Position2D = Point;
 struct Area
 {
 	uint32_t width, height;
-
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Area, width, height);
 };
 using Resolution = Area;
@@ -53,23 +52,23 @@ struct Rectangle
 
 enum class WindowMode
 {
-	kWINDOWED = 0x00,
-	kBORDERLESS = 0x01,
-	kFULLSCREEN = 0x11,
+	Windowed = 0x00,
+	Borderless = 0x01,
+	Fullscreen = 0x11,
 };
 NLOHMANN_JSON_SERIALIZE_ENUM(WindowMode,
-                             { { WindowMode::kWINDOWED, "windowed" },
-                               { WindowMode::kBORDERLESS, "borderless" },
-                               { WindowMode::kFULLSCREEN, "fullscreen" } });
+                             { { WindowMode::Windowed, "windowed" },
+                               { WindowMode::Borderless, "borderless" },
+                               { WindowMode::Fullscreen, "fullscreen" } });
 enum class WindowPlacement
 
 {
-	kMANUAL = 0x00,
-	kCENTERED = 0x01
+	Manual = 0x00,
+	Centered = 0x01
 };
 NLOHMANN_JSON_SERIALIZE_ENUM(WindowPlacement,
-                             { { WindowPlacement::kMANUAL, "manual" },
-                               { WindowPlacement::kCENTERED, "centered" } });
+                             { { WindowPlacement::Manual, "manual" },
+                               { WindowPlacement::Centered, "centered" } });
 
 struct WindowParameters
 {

@@ -51,11 +51,11 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		    , renderer_info(test_renderer)
 		{
 			settings = { { "Test",
-				       WindowMode::kWINDOWED,      // mode
-				       WindowPlacement::kCENTERED, // placement
-				       { 0, 0 },                   // window.pos
-				       { 1024, 768 } }, // window.size
-				     { 1024, 768 } };   // renderer res
+				       WindowMode::Windowed,      // mode
+				       WindowPlacement::Centered, // placement
+				       { 0, 0 },                  // window.pos
+				       { 1024, 768 } },           // window.size
+				     { 1024, 768 } }; // renderer res
 		}
 
 		~SdlRendererFixture() override { test_renderer.deactivate(); }
@@ -64,6 +64,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		SdlRenderer& test_renderer;
 		Inspector<SdlRenderer> renderer_info;
 	};
+	using TestFixture = SdlRendererFixture;
 
 	TEST("elemental::SdlRenderer - GetInstance works")
 	{
@@ -102,9 +103,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		}());
 	}
 
-#if !defined(NO_GUI)
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - Initialize Renderer")
+#if defined(NO_GUI)
+	FIXTURE_TEST("elemental::SdlRenderer - Initialize Renderer")
 	{
 		// 1. Default initialization does not throw errors
 		CHECK(false == renderer_info.state.is_initialized);
@@ -116,8 +116,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		REQUIRE(renderer_info.state.sdl_window_ptr != nullptr);
 		REQUIRE(renderer_info.state.sdl_renderer_ptr != nullptr);
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - Deactivate Renderer")
+	FIXTURE_TEST("elemental::SdlRenderer - Deactivate Renderer")
 	{
 		// 1. Deactivate method de-initializes
 		test_renderer.init(settings);
@@ -131,8 +130,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		REQUIRE(renderer_info.state.sdl_window_ptr == nullptr);
 		REQUIRE(renderer_info.state.sdl_renderer_ptr == nullptr);
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - IsInitialized Accessor")
+	FIXTURE_TEST("elemental::SdlRenderer - IsInitialized Accessor")
 	{
 		// 1. Default initialization does not throw errors
 		CHECK(test_renderer.isInitialized() ==
@@ -142,8 +140,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		      renderer_info.state.is_initialized);
 	}
 
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - GetResolution works")
+	FIXTURE_TEST("elemental::SdlRenderer - GetResolution works")
 	{
 		// 1. Before initialization, throws error
 		REQUIRE_THROWS([this]() { test_renderer.getResolution(); }());
@@ -155,21 +152,19 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		REQUIRE(resolution_data.width == settings.resolution.width);
 		REQUIRE(resolution_data.height == settings.resolution.height);
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - GetWindowSize works")
+	FIXTURE_TEST("elemental::SdlRenderer - GetWindowSize works")
 	{
 		// 1. Before initialization, throws error
 		REQUIRE_THROWS([this]() { test_renderer.getWindowSize(); }());
 
 		// 2. After initializtion, the method works
 		test_renderer.init(settings);
-		auto window_data = test_renderer.getWindowSize();
+		auto window_size = test_renderer.getWindowSize();
 
-		REQUIRE(window_data.width == settings.window.size.width);
-		REQUIRE(window_data.height == settings.window.size.height);
+		REQUIRE(window_size.width == settings.window.size.width);
+		REQUIRE(window_size.height == settings.window.size.height);
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - ClearScreen works")
+	FIXTURE_TEST("elemental::SdlRenderer - ClearScreen works")
 	{
 		// 1. Before initialization, throws error
 		REQUIRE_THROWS([this]() { test_renderer.clearScreen(); }());
@@ -178,8 +173,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		test_renderer.init(settings);
 		test_renderer.clearScreen();
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - Flip works")
+	FIXTURE_TEST("elemental::SdlRenderer - Flip works")
 	{
 		// 1. Before initialization, throws error
 		REQUIRE_THROWS([this]() { test_renderer.flip(); }());
@@ -188,8 +182,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		test_renderer.init(settings);
 		test_renderer.flip();
 	}
-	TEST_CASE_METHOD(SdlRendererFixture,
-	                 "elemental::SdlRenderer - Blit works")
+	FIXTURE_TEST("elemental::SdlRenderer - Blit works")
 	{
 		using std::chrono::seconds;
 
@@ -227,8 +220,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		// Display the image and pause so the user can see it!
 		test_renderer.flip();
 
-		//  Pump events on macOS to mmake the window appear
-		if (platform::kMACOSX) {
+		//  Pump events on macOS to mmake the window appe:OSar
+		if (platform::kCURRENT_PLATFORM == platform::kMACOS) {
 			for (unsigned i = 0; i < 500; i++) {
 				SDL_PumpEvents();
 			}

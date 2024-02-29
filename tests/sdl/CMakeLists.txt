@@ -16,7 +16,7 @@ SYSTEM BEFORE
 	PUBLIC ${NLOHMANN_JSON_INCLUDE_DIRS}
 )
 
-set_target_properties(SDL_test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
+set_target_properties(SDL_test-runner PROPERTIES EXCLUDE_FROM_ALL 0)
 
 #target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
 

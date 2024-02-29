@@ -31,8 +31,8 @@
 using namespace elemental;
 
 const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
-	                                  WindowMode::kWINDOWED,
-	                                  WindowPlacement::kCENTERED,
+	                                  WindowMode::Windowed,
+	                                  WindowPlacement::Centered,
 	                                  Position2D({ 0, 0 }),
 	                                  { 1270_px, 720_px } },
 	                                { 1024_px, 768_px } } };
@@ -108,7 +108,7 @@ Phong::Phong()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())
     , settings_file(paths::get_app_config_root() / "phong" / "settings.json",
-                    FileResource::kCREATE_MISSING_DIRS)
+                    FileResource::CreateMissingDirs)
     , settings()
 {
 	this->event_emitter.registerObserver(*this);
