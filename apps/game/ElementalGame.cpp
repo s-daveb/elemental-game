@@ -27,14 +27,14 @@
 using namespace elemental;
 
 /**! \name Helper Functions */
-/// @{
+/// \{
 void
 print_cycle_rate(milliseconds& cycle_length,
                  c::const_string label = "cycle_length")
 {
 	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
-/// @}
+/// \}
 
 ElementalGame::~ElementalGame()
 {

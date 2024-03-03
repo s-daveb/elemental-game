@@ -40,11 +40,11 @@ struct IRenderer
 
 	/*! \name Lazy Initialization Methods
 	 * These initialize the current rendering subsystema and de-initialize
-	 * it on-demand @{ */
+	 * it on-demand \{ */
 	virtual void init(RendererSettings& settings) = 0;
 	virtual void deactivate() = 0;
 	virtual auto isInitialized() -> bool = 0;
-	/*! @} */
+	/*! \} */
 
 	//! \brief Does what it says on the tin.
 	virtual auto getResolution() -> Resolution = 0;
@@ -54,14 +54,14 @@ struct IRenderer
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display
-	 * @{
+	 * \{
 	 * \brief Clears the screen before new drawing cycles. Throws
 	 * exceptions. */
 	virtual void clearScreen() = 0;
 	/** \brief swaps backbuffer with new frame displays new image. Throws
 	 * exceptions. */
 	virtual void flip() = 0;
-	//! @}
+	//! \}
 
 	virtual void blit(std::shared_ptr<void> image_data,
 	                  Rectangle& placement) = 0;
@@ -73,13 +73,13 @@ struct IRenderer
 	 * Template method bodies shall be  defined by child classes.
 	 * \note These are only exposed on the public interface for test builds
 	 */
-	/*! @{ */
+	/*! \{ */
 	template<typename TR>
 	auto toRectangle(const TR& data) -> Rectangle;
 
 	template<typename TR>
 	auto fromRectangle(const Rectangle& rectangle) -> TR;
-	/*! @}  */
+	/*! \}  */
 
   protected:
 	IRenderer() = default;

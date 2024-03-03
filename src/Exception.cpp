@@ -118,4 +118,4 @@ Exception::build_what_message(c::const_string class_name,
 }
 
 // clang-format off
-// vim: set foldmethod=marker foldmarker=@{,@} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=marker foldmarker=\{,\} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

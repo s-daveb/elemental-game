@@ -81,4 +81,4 @@ void inline assert_impl(c::const_string failed_condition,
 }
 } // namespace elemental
   // clang-format off
-// vim: set foldmethod=marker foldmarker=@{,@} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=marker foldmarker=\{,\} textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
