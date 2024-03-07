@@ -1,0 +1,4 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/vim-debug",
+    "cmake.setBuildTypeOnMultiConfig": true
+}
