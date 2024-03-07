@@ -143,3 +143,6 @@ compile_commands.json
 *.bak
 docs/
 *.old
+
+# clangd cache
+.cache/
