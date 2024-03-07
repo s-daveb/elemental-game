@@ -15,12 +15,13 @@ class INonCopyable
   protected:
 	INonCopyable() = default;
 
-	// Disable copy-constructor and assignment operator
-	INonCopyable(INonCopyable const&) = delete;
-	auto operator=(INonCopyable const&) -> INonCopyable& = delete;
+  private:
+	INonCopyable(const INonCopyable&) = default;
+	INonCopyable(INonCopyable&&) = default;
+	INonCopyable& operator=(const INonCopyable&) = default;
+	INonCopyable& operator=(INonCopyable&&) = default;
 };
-
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

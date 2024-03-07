@@ -14,7 +14,9 @@
 
 #include "Exception.hpp"
 #include "IObserver.hpp"
+
 #include "SdlEventSource.hpp"
+#include "types/input.hpp"
 
 #include <SDL.h>
 
@@ -22,69 +24,66 @@
 #include <iostream>
 
 using namespace elemental;
-
-void
-SdlEventSource::notify()
+SdlEventSource::SdlEventSource(InputDevices device_flags)
+    : IEventSource(device_flags)
 {
-	std::lock_guard<std::mutex> lock(event_queue_mutex);
-	while (!event_queue.empty()) {
-		auto& event = event_queue.front();
 
-		for (auto& observer_ref : observers) {
-			observer_ref.get().recieveMessage(*this, event);
+	SDL_InitSubSystem(SDL_INIT_EVENTS);
+
+	if (Enum::ContainsFlag(device_flags, InputDevices::Joystick)) {
+
+		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+		SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
+
+		if (SDL_NumJoysticks() > 0) {
+			this->joydev_ptr = SDL_JoystickOpen(0);
+
+			DBG_PRINT("Opened Joystick 0" << std::endl);
+			DBG_PRINT("Name: " << SDL_JoystickNameForIndex(0)
+			                   << std::endl);
+			DBG_PRINT("Number of Axes: "
+			          << SDL_JoystickNumAxes(this->joydev_ptr.get())
+			          << std::endl);
+			DBG_PRINT(
+			    "Number of Buttons: "
+			    << SDL_JoystickNumButtons(this->joydev_ptr.get())
+			    << std::endl);
+			DBG_PRINT(
+			    "Number of Balls: "
+			    << SDL_JoystickNumBalls(this->joydev_ptr.get())
+			    << std::endl);
+
+			SDL_GameControllerEventState(SDL_ENABLE);
+		} else {
+			DBG_PRINT("Warning: No Joystick or Core::Input "
+			          "detected");
 		}
-
-		event_queue.pop();
 	}
 }
 
 void
 SdlEventSource::pollEvents()
 {
-	std::lock_guard<std::mutex> lock(event_queue_mutex);
+	auto thread_lock = MutexLock(this->mutex);
+
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
 		event_queue.push(event);
 	}
 }
-SdlEventSource::SdlEventSource()
-    : event_queue()
-    , joydev_ptr()
-    , event_queue_mutex()
-{
-	initJoysticks();
-}
 
 void
-SdlEventSource::initJoysticks()
+SdlEventSource::transmitEvents()
 {
-	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+	auto thread_lock = MutexLock(this->mutex);
 
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
+	while (!event_queue.empty()) {
+		auto& sdl_event = event_queue.front();
 
-	if (SDL_NumJoysticks() > 0) {
+		Observable::notify_all(sdl_event);
 
-		this->joydev_ptr = SDL_JoystickOpen(0);
-
-		DBG_PRINT("Opened Joystick 0" << std::endl);
-		DBG_PRINT("Name: " << SDL_JoystickNameForIndex(0)
-		                    << std::endl);
-		DBG_PRINT("Number of Axes: "
-		           << SDL_JoystickNumAxes(this->joydev_ptr.get())
-		           << std::endl);
-		DBG_PRINT("Number of Buttons: "
-		           << SDL_JoystickNumButtons(this->joydev_ptr.get())
-		           << std::endl);
-		DBG_PRINT("Number of Balls: "
-		           << SDL_JoystickNumBalls(this->joydev_ptr.get())
-		           << std::endl);
-
-		SDL_GameControllerEventState(SDL_ENABLE);
-	} else {
-		auto msg = "Warning: No Joystick or Core::Input "
-			   "detected";
-		DBG_PRINT(msg << std::endl);
+		event_queue.pop();
 	}
 }
 
