@@ -120,7 +120,7 @@ ElementalGame::simulation_thread_loop()
 	LoopRegulator loop_regulator(30_Hz);
 	do {
 		loop_regulator.startUpdate();
-		this->event_emitter.notify();
+		this->event_emitter.transmitEvents();
 		// Scene.Update()
 
 		auto cycle_delay_ms = loop_regulator.delay();

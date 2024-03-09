@@ -19,14 +19,14 @@
 #include <stdexcept>
 #include <string>
 
-#define ASSERT(condition)                                                      \
-	if (condition == false) {                                              \
-		elemental::assert_impl(#condition);                            \
+#define ASSERT(condition)                      \
+	if (condition == false) {                   \
+		elemental::assert_impl(#condition);       \
 	}
 
-#define ASSERT_MSG(condition, msg)                                             \
-	if (condition == false) {                                              \
-		elemental::assert_impl(#condition, msg);                       \
+#define ASSERT_MSG(condition, msg)             \
+	if (condition == false) {                   \
+		elemental::assert_impl(#condition, msg);  \
 	}
 
 namespace elemental {
@@ -43,8 +43,8 @@ class Exception : public std::exception
 
 	auto operator=(const Exception&) -> Exception& = delete;
 
-	[[nodiscard]] auto what() const noexcept -> const char* override;
-	[[nodiscard]] auto stacktrace() const noexcept -> const std::string&;
+	auto what() const noexcept -> const char* override;
+	auto stacktrace() const noexcept -> const std::string&;
 
 	constexpr static auto kDEFAULT_ERROR = "An exception has ocurred!";
 

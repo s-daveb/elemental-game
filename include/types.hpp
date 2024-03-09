@@ -12,6 +12,7 @@
 #include "types/containers.hpp"
 #include "types/errors.hpp"
 #include "types/legible_ctypes.hpp"
+#include "types/pointers.hpp"
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

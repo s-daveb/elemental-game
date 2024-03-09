@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "Exception.hpp"
 #include "Component.hpp"
+#include "Exception.hpp"
 
 #include <typeindex>
 #include <unordered_map>
@@ -23,15 +23,16 @@ class ComponentFactory
 	using ComponentPtr = std::shared_ptr<Component>;
 	using ComponentVector = std::vector<std::shared_ptr<Component>>;
 	using ComponentPool = std::unordered_map<TypeInfo, ComponentVector>;
+
   public:
-	template<typename T, typename... Args>
-	std::shared_ptr<T> CreateComponent(const Component::InstanceID&,
-	                                   Args&&...);
+	template<typename TComponent, typename... Args>
+	std::shared_ptr<TComponent> createComponent(
+	    const Component::InstanceID&, Args&&...);
 
-	template<typename T>
-	std::shared_ptr<T> GetComponent(const Component::InstanceID&);
+	template<typename TComponent>
+	std::shared_ptr<TComponent> getComponent(const Component::InstanceID&);
 
-	template<typename T>
+	template<typename TComponent>
 	ComponentVector& GetComponentVector(const TypeInfo&);
 
   private:

@@ -16,16 +16,17 @@
 namespace elemental {
 
 void
-Observable::registerObserver(Observable::observer_ref observer)
+Observable::registerObserver(Observable::ObserverRef observer)
 {
 	this->observers.push_back(observer);
+	
 }
 
 void
 Observable::notify_all(std::any message)
 {
-	for (auto& observer : this->observers) {
-		observer.get().recieveMessage(*this, message);
+	for (auto& observer_ref : this->observers) {
+		observer_ref.get().recieveMessage(*this, message);
 	}
 }
 } // namespace elemental

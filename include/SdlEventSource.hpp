@@ -12,7 +12,10 @@
 #include "SDL_Memory.hpp"
 #include "Singleton.hpp"
 
-#include "Observable.hpp"
+#include "IEventSource.hpp"
+#include "types/input.hpp"
+
+#include "util/testing.hpp"
 
 #include <SDL.h>
 
@@ -21,41 +24,29 @@
 #include <queue>
 
 namespace elemental {
-class SdlEventSource : public Observable
+
+class SdlEventSource : public IEventSource
 {
+	TEST_INSPECTABLE(SdlEventSource);
   public:
+	using Mutex = std::mutex;
+	using MutexLock = std::lock_guard<Mutex>;
+
 	friend class Singleton;
+
+	explicit SdlEventSource(
+	    InputDevices device_flags = InputDevices::Keyboard);
 
 	~SdlEventSource() override = default;
 
-	/** \todo Possible way to add filters to event handlers.
-	 ** \code{.cpp}
-	 **  // Calling code:
-	 **  auto quit_event_filter = [](SDL_Event& e) -> bool {
-	 **	return e.type == SDL_QUIT;
-	 ** };
-	 ** event_emitter.SetEventFilter(observer, quit_event_filter);
-	 ** // Or perhaps define an override:
-	 ** // SdlEventEmitter.hpp:
-	 ** template<typename T>
-	 ** void RegisterObserver(observer_ref, std::function<bool(T)>
-	 *predicate)
-	 ** \endcode
-	 ** Then modify the Notify() method to check for these filters
-	 */
+	auto pollEvents() -> void override;
+	auto transmitEvents() -> void override;
 
-	void notify() override;
-
-	void pollEvents();
-
-	SdlEventSource();
-
-	void initJoysticks();
-
+  protected:
 	std::queue<SDL_Event> event_queue;
 	UniqueSdlPtr<SDL_Joystick> joydev_ptr;
 
-	std::mutex event_queue_mutex;
+	Mutex mutex;
 };
 } // namespace elemental
   // clang-format off

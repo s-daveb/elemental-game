@@ -117,21 +117,26 @@ SdlRenderer::deactivate()
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	this->is_initialized = false;
 }
+auto
+SdlRenderer::isInitialized() -> bool
+{
+	return this->is_initialized;
+};
 
 auto
 SdlRenderer::getResolution() -> Resolution
 {
-	int w, h;
+	int width, height;
 
 	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
 	if (kERROR ==
-	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(), &w, &h)) {
+	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(), &width, &height)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
-	return { static_cast<uint32_t>(w), static_cast<uint32_t>(h) };
+	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
 auto

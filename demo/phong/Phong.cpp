@@ -20,6 +20,7 @@
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"
 
+#include <SDL_events.h>
 #include <chrono>
 #include <iostream>
 #include <stack>
@@ -38,7 +39,7 @@ const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
 	                                { 1024_px, 768_px } } };
 
 /// \name Helper Functions
-/// @{
+/// \{
 void
 print_cycle_rate(milliseconds& cycle_length,
                  c::const_string label = "cycle_length")
@@ -46,7 +47,7 @@ print_cycle_rate(milliseconds& cycle_length,
 	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
 
-/// @}
+/// \}
 
 Phong::~Phong()
 {
@@ -62,7 +63,7 @@ Phong::run() -> int
 
 		this->running_threads["simulation_thread"] =
 		    std::thread([this]() { this->simulation_thread_loop(); });
-
+			
 		while (this->is_running) {
 			frame_regulator.startUpdate();
 			this->video_renderer.clearScreen();
@@ -111,8 +112,6 @@ Phong::Phong()
                     FileResource::CreateMissingDirs)
     , settings()
 {
-	this->event_emitter.registerObserver(*this);
-	this->event_emitter.pollEvents();
 
 	try {
 		settings_file.read();
@@ -124,16 +123,37 @@ Phong::Phong()
 	}
 
 	this->video_renderer.init(settings.renderer_settings);
-	// this->video_renderer.Init(configuration["window_title"]);
+
+	//** EventDispatcher ** /
+	auto quit_event_filter = [](SDL_Event& e) -> bool {
+		return e.type == SDL_QUIT;
+	};
+	auto quit_event_handler = [&](std::any event_data) -> void {
+		auto sdl_event_data = std::any_cast<SDL_Event>(event_data);
+
+		if (sdl_event_data.type == SDL_EventType::SDL_QUIT) {
+			this->is_running = false;
+		}
+	};
+	/**/
+
+	//this->event_emitter.registerObserver(this->event_dispatcher);
+	this->event_emitter.registerObserver(quit_event_filter,
+	                                     quit_event_handler);
+
+	this->event_emitter.pollEvents();
 }
 
 void
 Phong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
+
 	do {
 		loop_regulator.startUpdate();
-		this->event_emitter.notify();
+
+		this->event_emitter.pollEvents();
+		this->event_emitter.notify_all();
 
 		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);

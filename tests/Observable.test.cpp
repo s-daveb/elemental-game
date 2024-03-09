@@ -19,20 +19,19 @@
 #include "test-utils/common.hpp"
 #include <fakeit.hpp>
 
-using namespace elemental;
-
+using elemental::Observable;
 using fakeit::Mock;
 using fakeit::When;
 
 BEGIN_TEST_SUITE("elemental::Observable")
 {
-	class ObservableSubject : public elemental::Observable
+	class ObservableSubject : public Observable
 	{
 	  public:
 		ObservableSubject() : Observable() {}
 
-		void notify() override { this->notify_all(); }
-		[[nodiscard]] auto getObserverCount() const -> const size_t
+		auto notify()  { this->notify_all(); }
+		auto getObserverCount() const -> const size_t
 		{
 			return observers.size();
 		}
@@ -40,12 +39,12 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 	TEST("elemental::Observable::RegisterObserver works")
 	{
-		Mock<IObserver> observer_type1;
-		Mock<IObserver> observer_type2;
+		Mock<elemental::IObserver> observer_type1;
+		Mock<elemental::IObserver> observer_type2;
 		ObservableSubject subject;
 
-		IObserver& observer1 = observer_type1.get();
-		IObserver& observer2 = observer_type2.get();
+		elemental::IObserver& observer1 = observer_type1.get();
+		elemental::IObserver& observer2 = observer_type2.get();
 
 		subject.registerObserver(observer1);
 		subject.registerObserver(observer2);
@@ -54,8 +53,8 @@ BEGIN_TEST_SUITE("elemental::Observable")
 	}
 	TEST("elemental::Observabl::Notify - properly notifies observers")
 	{
-		Mock<IObserver> observer_type1;
-		Mock<IObserver> observer_type2;
+		Mock<elemental::IObserver> observer_type1;
+		Mock<elemental::IObserver> observer_type2;
 		ObservableSubject subject;
 
 		static std::vector<std::string> buffer;
@@ -72,8 +71,8 @@ BEGIN_TEST_SUITE("elemental::Observable")
 		    })
 		    .AlwaysReturn();
 
-		IObserver& observer1 = observer_type1.get();
-		IObserver& observer2 = observer_type2.get();
+		elemental::IObserver& observer1 = observer_type1.get();
+		elemental::IObserver& observer2 = observer_type2.get();
 
 		subject.registerObserver(observer1);
 		subject.registerObserver(observer2);

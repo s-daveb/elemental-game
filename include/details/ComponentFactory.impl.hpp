@@ -1,4 +1,4 @@
-/* ComponentFactory.hpp
+/* ComponentFactory.impl.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License:  Mozilla Public License v. 2.0
  *
@@ -9,49 +9,53 @@
 
 #pragma once
 
-
-#include "Exception.hpp"
 #include "Component.hpp"
+#include "Exception.hpp"
 
-#ifndef  COMP_FACTORY_DECL
+#ifndef COMP_FACTORY_DECL
 #include "ComponentFactory.hpp"
 #endif
 
 #include <unordered_map>
 #include <vector>
 
-
-
 namespace elemental {
 
-	template<typename T, typename... Args>
-	std::shared_ptr<T> ComponentFactory::CreateComponent(const Component::InstanceID& id,
-	                                   Args&&... args)
-	{
+using ComponentVector = ComponentFactory::ComponentVector;
 
-		auto new_object =
-		    std::make_shared<T>(std::forward<Args>(args)...);
+template<typename TComponent, typename... TArgs>
+std::shared_ptr<TComponent>
+ComponentFactory::createComponent(const Component::InstanceID& id,
+                                  TArgs&&... args)
+{
 
-		auto component_type = std::type_index(typeid(T));
-		auto& component_vector = component_pool[component_type];
+	auto new_object =
+	    std::make_shared<TComponent>(std::forward<TArgs>(args)...);
 
-		component_vector.push_back(new_object);
+	auto component_type = std::type_index(typeid(TComponent));
+	auto& component_vector = component_pool[component_type];
 
-		return new_object;
-	}
+	component_vector.push_back(new_object);
 
-	template<typename T>
-	std::shared_ptr<T> ComponentFactory::GetComponent(const Component::InstanceID& id) {  return nullptr; }
+	return new_object;
+}
 
+template<typename TComponent>
+std::shared_ptr<TComponent>
+ComponentFactory::getComponent(const Component::InstanceID& id)
+{
+	return nullptr;
+}
 
-	ComponentVector& ComoponentFactory::GetComponentVector(const TypeInfo& type) {
-		auto& pool = this->component_pool;
+ComponentVector&
+ComponentFactory::getComponentVector(const TypeInfo& type)
+{
+	auto& pool = this->component_pool;
 
-		return pool.at(type);
-	}
-
+	return pool.at(type);
+}
 
 } // namespace elemental
-// clang-format off
+  // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
 //

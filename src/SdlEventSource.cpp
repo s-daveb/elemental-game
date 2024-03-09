@@ -61,8 +61,8 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 	}
 }
 
-void
-SdlEventSource::pollEvents()
+auto
+SdlEventSource::pollEvents() -> void
 {
 	auto thread_lock = MutexLock(this->mutex);
 
@@ -73,8 +73,8 @@ SdlEventSource::pollEvents()
 	}
 }
 
-void
-SdlEventSource::transmitEvents()
+auto
+SdlEventSource::transmitEvents() -> void
 {
 	auto thread_lock = MutexLock(this->mutex);
 

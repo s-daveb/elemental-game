@@ -17,6 +17,7 @@
 #include "Application.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
+#include "Observable.hpp"
 #include "Singleton.hpp"
 
 #include <functional>
@@ -40,23 +41,26 @@ class Phong
 	~Phong() override;
 
 	/// \name Application Interface
-	/// @{
+	/// \{
 	auto run() -> int override;
-	/// @}
+	/// \}
 
 	/// \name IObserver interface
-	/// @{
+	/// \{
 	void recieveMessage(const Observable& sender,
 	                    std::any message = std::any()) override;
-	/// @}
+	/// \}
 
   protected:
 	Phong();
 
+	/// \name Deleted constructors & operators
+	/// \{
 	Phong(const Phong&) = delete;
 	Phong(Phong&&) = delete;
 	auto operator=(const Phong&) -> Phong& = delete;
 	auto operator=(Phong&&) -> Phong& = delete;
+	/// \}
 
 	bool is_running{ false };
 

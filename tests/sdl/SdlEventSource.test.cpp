@@ -12,14 +12,31 @@
 
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
+#include "types/rendering.hpp"
+
+#include "util/testing.hpp"
 
 #include <SDL.h>
 #include <random>
 
+namespace NS = elemental;
+using NS::SdlEventSource;
+
+template<>
+class NS::debug::Inspector<SdlEventSource>
+{
+  public:
+	static auto getEventQueue(SdlEventSource& other)
+	    -> std::queue<SDL_Event>&
+	{
+		return other.event_queue;
+	}
+};
+typedef NS::debug::Inspector<NS::SdlEventSource> Inspector;
+
 BEGIN_TEST_SUITE("elemental::SdlEventSource")
 {
-	using namespace elemental;
-
+	using namespace NS;
 	class EventRecorder : public IObserver
 	{
 	  public:
@@ -34,19 +51,10 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		~EventRecorder() override = default;
 		std::vector<SDL_Event> received;
 	};
-	class SdlEventSourceInspector : public SdlEventSource
-	{
-	  public:
-		static auto getEventQueue(SdlEventSource& other)
-		    -> std::queue<SDL_Event>&
-		{
-			return other.event_queue;
-		}
-	}; // #endregion
-	using Inspector = SdlEventSourceInspector;
 
 	struct SdlEventSourceFixture : public SdlTestFixture
 	{
+
 		SdlEventSourceFixture()
 		    : SdlTestFixture()
 		    , test_object(Singleton::getReference<SdlEventSource>())
@@ -69,11 +77,6 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	};
 	using TestFixture = SdlEventSourceFixture;
 
-	FIXTURE_TEST("elemental::SdlEventSource::Initialization validation")
-	{
-		REQUIRE_NOTHROW(test_object.initJoysticks());
-		REQUIRE(event_queue_ref.size() == 0);
-	}
 	FIXTURE_TEST(
 	    "elemental::SdlEventSource::Enqueue stores events in order")
 	{
@@ -118,7 +121,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			event_queue_ref.push(input);
 		}
 
-		test_object.notify();
+		test_object.transmitEvents();
 
 		REQUIRE(recorder.received.size() > 0);
 
@@ -136,8 +139,10 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		while (!event_queue.empty()) {
 			event_queue.pop();
 		}
-		SDL_Event e;
-		while (SDL_PollEvent(&e)) {
+		
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+			;
 		}
 		for (unsigned n = 0; n < 5; ++n) {
 			SdlEventSimulator::randomArrowKey();
@@ -147,10 +152,6 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 		REQUIRE(event_queue.size() > 0);
 	}
-
-	// Add more tests as needed
-
-} // End of test suite
-
+}
 // clang-format off
  // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

@@ -20,18 +20,25 @@ class IObserver;
 class Observable
 {
   public:
-	using observer_ref = std::reference_wrapper<IObserver>;
-	using observer_list = std::list<observer_ref>;
+	using ObserverRef = std::reference_wrapper<IObserver>;
+	using ObserverList = std::list<ObserverRef>;
+
+	/** \name Deleteed Constructors & Operators
+	 * \{ */
+	Observable(const Observable&) = default;
+	Observable(Observable&&) = delete;
+	Observable& operator=(const Observable&) = default;
+	Observable& operator=(Observable&&) = delete;
+	/**  \} */
 
 	virtual ~Observable() = default;
 
-	void registerObserver(observer_ref);
-	virtual void notify() = 0;
+	void registerObserver(ObserverRef);
 
   protected:
-	inline Observable(){};
+	Observable() = default;
 	void notify_all(std::any message = std::any());
-	observer_list observers;
+	ObserverList observers;
 };
 
 } // namespace elemental

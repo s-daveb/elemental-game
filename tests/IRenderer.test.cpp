@@ -25,9 +25,10 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 
 		void init(RendererSettings&) override { return; }
 		void deactivate() override { return; }
-		auto isInitialized() -> bool override { return false; }
-		auto getResolution() -> Resolution override { return { 0, 0 }; }
-		auto getWindowSize() -> Area override { return { 0, 0 }; }
+		bool isInitialized() override { return false; }
+
+		Area       getWindowSize() override { return { 0, 0 }; }
+		Resolution getResolution() override { return { 0, 0 }; }
 
 		void clearScreen() override { return; }
 		void flip() override { return; }

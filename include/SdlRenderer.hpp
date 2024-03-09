@@ -29,12 +29,10 @@ struct SdlRenderer : public IRenderer
 
 	~SdlRenderer() override;
 
-	void init(RendererSettings&) override;
-	void deactivate() override;
-	inline auto isInitialized() -> bool override
-	{
-		return this->is_initialized;
-	};
+	auto init(RendererSettings&) -> void override;
+	auto deactivate() -> void override;
+
+	auto isInitialized() -> bool override;
 	auto getResolution() -> Resolution override;
 	auto getWindowSize() -> Area override;
 

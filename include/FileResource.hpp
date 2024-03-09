@@ -44,7 +44,7 @@ struct UnreachablePathException : public Exception
 		                         path.c_str());
 	}
 
-	[[nodiscard]] auto what() const noexcept -> const char* override
+	auto inline what() const noexcept -> const char* override
 	{
 		return Exception::what();
 	}
@@ -54,4 +54,4 @@ struct UnreachablePathException : public Exception
 } // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldlevel=1 foldminlines=10 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
