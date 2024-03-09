@@ -59,6 +59,7 @@ __pycache__/
 
 # Visual Studio Code
 .vscode/
+.vscodium/
 
 # Node.js
 node_modules/
