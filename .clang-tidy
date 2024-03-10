@@ -13,15 +13,15 @@ CheckOptions:
 
 	# Minimum Variable Length
 	- { key: readability-identifier-length.MinimumVariableLength, value: 3 }
-	- { key: readability-identifier-length.IgnoredVariableNames, value: "^[xyz]$" }
+	- { key: readability-identifier-length.IgnoredVariableNames, value: "^(i|j|n|x|y|z|it)$" }
 
 	# Minimum Parameter Length
 	- { key: readability-identifier-length.MinimumParameterNameLength, value: 3 }
-	- { key: readability-identifier-length.IgnoredParameterNames, value: "^[nxyz]$" }
+	- { key: readability-identifier-length.IgnoredParameterNames, value: "^(i|j|n|x|y|z|it)$" }
 
 	# Minimum Loop Counter Length
 	- { key: readability-identifier-length.MinimumLoopCounterNameLength, value: 3 }
-	- { key: readability-identifier-length.IgnoredLoopCounterNames, value: "^[nit]$" }
+	- { key: readability-identifier-length.IgnoredLoopCounterNames, value: "^(i|j|n|it)$" }
 
 	# Minimum ExceptionName Length:
 	- { key: readability-identifier-length.MinimumExceptionNameLength, value: 3 }

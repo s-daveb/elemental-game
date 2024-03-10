@@ -23,7 +23,7 @@ class JsonConfigFile : public FileResource
 {
   public:
 	JsonConfigFile(const std::filesystem::path& file_path,
-	               CreateDirsMode mode = CreateDirsMode::NoCreate);
+	               CreateDirs mode = CreateDirs::Disable);
 	~JsonConfigFile() override;
 
 	auto read() -> nlohmann::json&;
@@ -52,4 +52,4 @@ class JsonConfigFile : public FileResource
 } // namespace elemental::configuration
 
 // clang-format off
-// vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldlevel=1 foldminlines=12 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

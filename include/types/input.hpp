@@ -23,15 +23,15 @@ enum class InputDevices : unsigned int
 	All = 0x0111 // Keyboard & Mouse & Joystick
 };
 // Enable bitwise operations on InputDevice
-constexpr InputDevices
-operator|(InputDevices lhs, InputDevices rhs)
+constexpr auto
+operator|(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) |
 	    static_cast<std::underlying_type_t<InputDevices>>(rhs));
 }
-constexpr InputDevices
-operator&(InputDevices lhs, InputDevices rhs)
+constexpr auto
+operator&(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) &

@@ -26,13 +26,13 @@ struct Component
 
 	virtual ~Component() = default;
 
-	inline InstanceID GetInstanceID() const { return instance_id; }
-	virtual TypeInfo GetTypeIndex() = 0;
+	inline auto getInstanceId() const -> InstanceID { return instance_id; }
+	virtual auto getTypeIndex() -> TypeInfo = 0;
 
-	template<typename T>
-	inline static bool is_child_class()
+	template<typename T_>
+	inline static auto isChildClass() -> bool
 	{
-		static_assert(std::is_base_of<Component, T>::value,
+		static_assert(std::is_base_of_v<Component, T_>,
 		              "T must be a derived class of Component");
 	}
 

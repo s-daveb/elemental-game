@@ -18,8 +18,8 @@ class INonCopyable
   private:
 	INonCopyable(const INonCopyable&) = default;
 	INonCopyable(INonCopyable&&) = default;
-	INonCopyable& operator=(const INonCopyable&) = default;
-	INonCopyable& operator=(INonCopyable&&) = default;
+	auto operator=(const INonCopyable&) -> INonCopyable& = default;
+	auto operator=(INonCopyable&&) -> INonCopyable& = default;
 };
 } // namespace elemental
 

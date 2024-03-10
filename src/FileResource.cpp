@@ -9,7 +9,9 @@
 
 #include "FileResource.hpp"
 #include "Exception.hpp"
+
 #include "types.hpp"
+#include "util/debug.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -19,7 +21,7 @@ using namespace elemental;
 
 namespace fs = std::filesystem;
 
-FileResource::FileResource(const fs::path& file_path, CreateDirsMode mode)
+FileResource::FileResource(const fs::path& file_path, CreateDirs mode)
     : file_path(file_path)
 {
 	ASSERT(file_path.empty() == false);
@@ -27,10 +29,10 @@ FileResource::FileResource(const fs::path& file_path, CreateDirsMode mode)
 		auto directory_path = file_path.parent_path();
 
 		if (!directory_path.empty() && !fs::exists(directory_path)) {
-			if (mode != CreateMissingDirs) {
+			if (mode == CreateDirs::Disabled) {
 				throw UnreachablePathException(directory_path);
 			} else {
-				std::cout << "creating config dir" << std::endl;
+				DBG_PRINT("creating config dir");
 				fs::create_directories(directory_path);
 			}
 		}

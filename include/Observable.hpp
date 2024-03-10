@@ -27,8 +27,8 @@ class Observable
 	 * \{ */
 	Observable(const Observable&) = default;
 	Observable(Observable&&) = delete;
-	Observable& operator=(const Observable&) = default;
-	Observable& operator=(Observable&&) = delete;
+	auto operator=(const Observable&) -> Observable& = default;
+	auto operator=(Observable&&) -> Observable& = delete;
 	/**  \} */
 
 	virtual ~Observable() = default;

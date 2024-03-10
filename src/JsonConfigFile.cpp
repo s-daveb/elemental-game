@@ -30,19 +30,20 @@ enum IndentMode : int
 {
 	Compact = -1,
 	NewlinesOnly = 0,
-	Indent = 1,
+	Ident = 1,
 };
 enum AsciiMode : bool
 {
 	Default = false,
-	Off = false,
-	On = true,
+	Raw = false,
+	IgnoreUnicode = false,
+	EscapeUnicode = true
 };
 } // namespace
 
 namespace elemental::configuration {
 
-JsonConfigFile::JsonConfigFile(const fs::path& file_path, CreateDirsMode mode)
+JsonConfigFile::JsonConfigFile(const fs::path& file_path, CreateDirs mode)
     : FileResource(file_path, mode)
 {
 }
@@ -92,10 +93,11 @@ JsonConfigFile::write()
 			throw Exception(error_buffer.str());
 		}
 
-		file_stream << config_json.dump(
-				   IndentMode::Indent, '\t', AsciiMode::Default,
-				   nlohmann::json::error_handler_t::replace)
-			    << std::endl;
+		file_stream
+		    << config_json.dump(
+			   IndentMode::Ident, '\t', AsciiMode::IgnoreUnicode,
+			   nlohmann::json::error_handler_t::replace)
+		    << std::endl;
 
 		return;
 	} catch (elemental::Exception& except) {

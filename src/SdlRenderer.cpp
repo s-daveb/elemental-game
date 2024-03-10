@@ -50,7 +50,7 @@ SdlRenderer::init(RendererSettings& settings)
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
-	if (kERROR == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
+	if (kError == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
 	                       IMG_INIT_WEBP)) {
 		error_buffer.str("");
 		error_buffer
@@ -131,8 +131,8 @@ SdlRenderer::getResolution() -> Resolution
 	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
-	if (kERROR ==
-	    SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(), &width, &height)) {
+	if (kError == SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(),
+	                                        &width, &height)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
@@ -164,7 +164,7 @@ SdlRenderer::clearScreen()
 	// Set bg to black
 	SDL_SetRenderDrawColor(this->sdl_renderer_ptr.get(), 0, 0, 0, 0);
 
-	if (kERROR == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
+	if (kError == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
@@ -189,7 +189,7 @@ SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
 		    std::static_pointer_cast<SDL_Texture>(image_data);
 		auto position = fromRectangle<SDL_Rect>(placement);
 
-		if (kERROR == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
+		if (kError == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
 		                             to_draw.get(), nullptr,
 		                             &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");

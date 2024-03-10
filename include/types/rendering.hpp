@@ -9,8 +9,9 @@
 
 #pragma once
 
+#include "util/serialization.hpp"
+
 #include <cstdint>
-#include <nlohmann/json.hpp>
 #include <string>
 
 namespace elemental {
@@ -18,14 +19,14 @@ namespace elemental {
 struct Point
 {
 	uint32_t x, y;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Point, x, y);
+	SERIALIZABLE(Point, x, y);
 };
 using Position2D = Point;
 
 struct Area
 {
 	uint32_t width, height;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Area, width, height);
+	SERIALIZABLE(Area, width, height);
 };
 using Resolution = Area;
 
@@ -47,7 +48,7 @@ struct Rectangle
 			uint32_t width, height;
 		};
 	};
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rectangle, position, size);
+	SERIALIZABLE(Rectangle, position, size);
 };
 
 enum class WindowMode
@@ -56,19 +57,20 @@ enum class WindowMode
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
-NLOHMANN_JSON_SERIALIZE_ENUM(WindowMode,
-                             { { WindowMode::Windowed, "windowed" },
-                               { WindowMode::Borderless, "borderless" },
-                               { WindowMode::Fullscreen, "fullscreen" } });
-enum class WindowPlacement
+// NOLINTNEXTLINE(readability-identifier-length)
+SERIALIZABLE_ENUM(WindowMode, { { WindowMode::Windowed, "windowed" },
+                                { WindowMode::Borderless, "borderless" },
+                                { WindowMode::Fullscreen, "fullscreen" } });
+enum class WindowPlacement : int
 
 {
 	Manual = 0x00,
 	Centered = 0x01
 };
-NLOHMANN_JSON_SERIALIZE_ENUM(WindowPlacement,
-                             { { WindowPlacement::Manual, "manual" },
-                               { WindowPlacement::Centered, "centered" } });
+// NOLINTNEXTLINE(readability-identifier-length)
+SERIALIZABLE_ENUM(WindowPlacement,
+                  { { WindowPlacement::Manual, "manual" },
+                    { WindowPlacement::Centered, "centered" } });
 
 struct WindowParameters
 {
@@ -78,8 +80,7 @@ struct WindowParameters
 	Position2D position;
 	Area size;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(WindowParameters, title, mode, placement,
-	                               position, size);
+	SERIALIZABLE(WindowParameters, title, mode, placement, position, size);
 };
 
 struct RendererSettings
@@ -87,7 +88,7 @@ struct RendererSettings
 	WindowParameters window;
 	Resolution resolution;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(RendererSettings, window, resolution);
+	SERIALIZABLE(RendererSettings, window, resolution);
 };
 
 } // namespace elemental

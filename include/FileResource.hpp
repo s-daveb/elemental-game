@@ -19,14 +19,16 @@ namespace elemental {
 class FileResource
 {
   public:
-	enum CreateDirsMode
+	enum class CreateDirs : bool
 	{
-		Default = 0,
-		NoCreate = 0,
-		CreateMissingDirs = 1,
+		Default = false,
+		Disable = false,
+		Disabled = false,
+		Enable = true,
+		Enabled = true
 	};
 	FileResource(const std::filesystem::path& file_path,
-	             CreateDirsMode mode = CreateDirsMode::NoCreate);
+	             CreateDirs mode = CreateDirs::Default);
 
 	virtual ~FileResource() = default;
 
@@ -54,4 +56,4 @@ struct UnreachablePathException : public Exception
 } // namespace elemental
 
 // clang-format off
-// vim: set foldmethod=syntax foldlevel=1 foldminlines=10 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldlevel=2 foldminlines=10 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

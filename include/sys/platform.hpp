@@ -12,8 +12,8 @@ namespace elemental {
 
 namespace platform {
 
-	enum platform_t // NOLINTBEGIN
-	{
+	enum platform_t
+	{ // NOLINTBEGIN
 		kUNKNOWN = 0b0000,
 		kWINDOWS = 0b0001,
 		kUNIX = 0b0100,
@@ -23,19 +23,19 @@ namespace platform {
 	}; // NOLINTEND
 
 #ifdef __linux__
-	static const platform_t kCURRENT_PLATFORM = kLINUX;
+	static const platform_t kCurrentPlatform = kLINUX;
 #endif
 
 #ifdef _WIN32
-	static const platform_t kCURRENT_PLATFORM = kWINDOWS;
+	static const platform_t kCurrentPlatform = kWINDOWS;
 #endif
 
 #ifdef __APPLE__
-	static const platform_t kCURRENT_PLATFORM = kMACOS;
+	static const platform_t kCurrentPlatform = kMACOS;
 #endif
 
 #ifdef __FreeBSD__
-	static const platform_t kCURRENT_PLATFORM = kFREEBSD;
+	static const platform_t kCurrentPlatform = kFREEBSD;
 #endif
 
 	// I don't own any AIX, Solaris, HP-UX, or pure Darwin systems, sorry :)

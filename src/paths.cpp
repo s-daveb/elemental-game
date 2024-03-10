@@ -42,7 +42,7 @@ get_app_config_root() -> fs::path
 {
 	fs::path result;
 
-	switch (platform::kCURRENT_PLATFORM) {
+	switch (platform::kCurrentPlatform) {
 		case platform::kMACOS:
 			result = get_home() / "Library" / "Application Support";
 			break;

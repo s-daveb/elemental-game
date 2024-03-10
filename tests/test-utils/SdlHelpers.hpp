@@ -22,14 +22,14 @@
 
 namespace elemental {
 
-struct SdlEventSimulator // #region
+struct SdlEventSimulator
 {
 	enum KeyDir
 	{
-		kUP = 0,
-		kRIGHT,
-		kDOWN,
-		kLEFT
+		Up = 0,
+		Right,
+		Down,
+		Left
 	};
 
 	static inline auto eventFromScancode(SDL_Scancode scancode) -> SDL_Event
@@ -56,28 +56,28 @@ struct SdlEventSimulator // #region
 		    const_cast<Uint8*>(SDL_GetKeyboardState(&keyboard_len));
 
 		switch (dir) {
-			case kUP:
+			case Up:
 				event.key.keysym.scancode = SDL_SCANCODE_UP;
 				keyboard[SDL_SCANCODE_UP] = 1;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
 				keyboard[SDL_SCANCODE_LEFT] = 0;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case kDOWN:
+			case Down:
 				event.key.keysym.scancode = SDL_SCANCODE_DOWN;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 1;
 				keyboard[SDL_SCANCODE_LEFT] = 0;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case kLEFT:
+			case Left:
 				event.key.keysym.scancode = SDL_SCANCODE_LEFT;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
 				keyboard[SDL_SCANCODE_LEFT] = 1;
 				keyboard[SDL_SCANCODE_RIGHT] = 0;
 				break;
-			case kRIGHT:
+			case Right:
 				event.key.keysym.scancode = SDL_SCANCODE_RIGHT;
 				keyboard[SDL_SCANCODE_UP] = 0;
 				keyboard[SDL_SCANCODE_DOWN] = 0;
@@ -106,14 +106,13 @@ struct SdlEventSimulator // #region
 
 struct SdlTestFixture
 {
-
 	std::stringstream buffer;
 
 	SdlTestFixture() : buffer()
 	{
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kSUCCESS) {
+		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kSuccess) {
 			buffer << "SDL Could not initialize; SDL_Error:  "
 			       << SDL_GetError();
 			throw elemental::Exception(buffer.str());

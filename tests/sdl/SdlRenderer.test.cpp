@@ -221,7 +221,7 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		test_renderer.flip();
 
 		//  Pump events on macOS to mmake the window appe:OSar
-		if (platform::kCURRENT_PLATFORM == platform::kMACOS) {
+		if (platform::kCurrentPlatform == platform::kMACOS) {
 			for (unsigned i = 0; i < 500; i++) {
 				SDL_PumpEvents();
 			}
