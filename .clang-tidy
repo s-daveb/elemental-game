@@ -28,15 +28,18 @@ CheckOptions:
 	- { key: readability-identifier-length.IgnoredExceptionVariableNames, value: "^[e]$" }
 
 	# Class Names
-	- { key: readability-identifier-naming.ClassCase,          value: CamelCase }
-	- { key: readability-identifier-naming.StructCase,         value: CamelCase }
-	- { key: readability-identifier-naming.EnumCase,           value: CamelCase }
+	- { key: readability-identifier-naming.ClassCase,  value: CamelCase }
+	- { key: readability-identifier-naming.StructCase, value: CamelCase }
+	- { key: readability-identifier-naming.EnumCase,   value: CamelCase }
 
 	- { key: readability-identifier-naming.EnumIgnoredRegexp,  value: '^.*_t$' }
-	- { key: readability-identifier-naming.AbstractClassPrefix,value: 'I' }
-	- { key: readability-identifier-naming.AbstractClassIgnoredRegexp,
-		value: '^.*able$|^.*Base$|^Abstract.*|^Component$' }
 
+	# Abstract Class Name
+	# - { key: readability-identifier-naming.AbstractClassPrefix,value: 'I' }
+	# - { key: readability-identifier-naming.AbstractClassIgnoredRegexp,
+	#	value: '^.*able$|^.*Base$|^Abstract.*|^Component$' }
+
+	# Template Parameters
 	- { key: readability-identifier-naming.TypeTemplateParameterPrefix,
 		value: 'T' }
 	- { key: readability-identifier-naming.TypeTemplateParameterSuffix,
@@ -44,6 +47,7 @@ CheckOptions:
 	- { key: readability-identifier-naming.TypeTemplateParameterCase,
 	value: CamelCase }
 
+	#  TypeAlias Rules
 	- { key: readability-identifier-naming.TypeAliasCase,         value: CamelCase }
 	- { key: readability-identifier-naming.TypeAliasTemplateCase, value: CamelCase }
 	- { key: readability-identifier-naming.TypeAliasIgnoredRegexp,
@@ -60,14 +64,16 @@ CheckOptions:
 
 	# Constants and Enum Values
 	- { key: readability-identifier-naming.ConstantPrefix,   value: 'k' }
-	- { key: readability-identifier-naming.ConstantCase,   value: UPPER_CASE }
+	- { key: readability-identifier-naming.ConstantCase,     value: CamelCase }
 
-	- { key: readability-identifier-naming.EnumConstantPrefix,   value: '' }
+	- { key: readability-identifier-naming.EnumConstantPrefix, value: '' }
 	- { key: readability-identifier-naming.EnumConstantCase,   value: CamelCase }
 
 	# Constant Expression
-	- { key: readability-identifier-naming.ConstexprVariableCase, value: UPPER_CASE }
-	- { key: readability-identifier-naming.ConstexprFunctionCase,   value: Camel_Snake_Case }
-	- { key: readability-identifier-naming.ConstexprMethodCase,   value: CamelCase }
+	- { key: readability-identifier-naming.ConstexprVariablePrefix, value: 'k' }
+	- { key: readability-identifier-naming.ConstexprVariableCase,   value: Camelcase }
+
+	- { key: readability-identifier-naming.ConstexprFunctionCase, value: Camel_Snake_Case }
+	- { key: readability-identifier-naming.ConstexprMethodCase,   value: Camel_Snake_Case }
 
 # vim: set ts=4 noet sw=4 sts=0 colorcolumn=100 :
