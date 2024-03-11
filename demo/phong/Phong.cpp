@@ -61,10 +61,9 @@ Phong::run() -> int
 	try {
 		LoopRegulator frame_regulator(60_Hz);
 
-		auto simulation_thread =
+		this->running_threads["simulation_thread"] =
 		    std::thread([this]() { this->simulation_thread_loop(); });
-		this->running_threads.emplace("simulation_thread",
-		                              simulation_thread);
+
 		while (this->is_running) {
 			frame_regulator.startUpdate();
 			this->video_renderer.clearScreen();
