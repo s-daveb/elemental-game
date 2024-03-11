@@ -16,17 +16,18 @@
 #include <fstream>
 
 namespace elemental {
+enum class CreateDirs : bool
+{
+	Default = false,
+	Disable = false,
+	Disabled = false,
+	Enable = true,
+	Enabled = true
+};
+
 class FileResource
 {
   public:
-	enum class CreateDirs : bool
-	{
-		Default = false,
-		Disable = false,
-		Disabled = false,
-		Enable = true,
-		Enabled = true
-	};
 	FileResource(const std::filesystem::path& file_path,
 	             CreateDirs mode = CreateDirs::Default);
 

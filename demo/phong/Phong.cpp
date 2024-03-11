@@ -31,12 +31,12 @@
 
 using namespace elemental;
 
-const GameSettings kDEFAULT_SETTINGS{ { { "Phong",
-	                                  WindowMode::Windowed,
-	                                  WindowPlacement::Centered,
-	                                  Position2D({ 0, 0 }),
-	                                  { 1270_px, 720_px } },
-	                                { 1024_px, 768_px } } };
+const GameSettings kDefaultSettings{ { { "Phong",
+	                                 WindowMode::Windowed,
+	                                 WindowPlacement::Centered,
+	                                 Position2D({ 0, 0 }),
+	                                 { 1270_px, 720_px } },
+	                               { 1024_px, 768_px } } };
 
 /// \name Helper Functions
 /// \{
@@ -61,9 +61,10 @@ Phong::run() -> int
 	try {
 		LoopRegulator frame_regulator(60_Hz);
 
-		this->running_threads["simulation_thread"] =
+		auto simulation_thread =
 		    std::thread([this]() { this->simulation_thread_loop(); });
-			
+		this->running_threads.emplace("simulation_thread",
+		                              simulation_thread);
 		while (this->is_running) {
 			frame_regulator.startUpdate();
 			this->video_renderer.clearScreen();
@@ -83,19 +84,20 @@ Phong::run() -> int
 			values.join();
 		}
 
-		return kSUCCESS;
+		return kSuccess;
 	} catch (Exception& exc) {
 		throw;
 	} catch (std::exception& excp) {
 		throw Exception(excp);
 	}
-	return kERROR;
+	return kError;
 }
 
 void
 Phong::recieveMessage(const Observable& sender, std::any message)
 {
 	ASSERT(message.has_value());
+
 	auto event = std::any_cast<SDL_Event>(message);
 	if (event.type == SDL_QUIT) {
 		this->is_running = false;
@@ -109,7 +111,7 @@ Phong::Phong()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())
     , settings_file(paths::get_app_config_root() / "phong" / "settings.json",
-                    FileResource::CreateMissingDirs)
+                    CreateDirs::Enabled)
     , settings()
 {
 
@@ -117,16 +119,16 @@ Phong::Phong()
 		settings_file.read();
 		settings = settings_file.get<GameSettings>();
 	} catch (nlohmann::json::exception& except) {
-		settings = kDEFAULT_SETTINGS;
-		settings_file.set(kDEFAULT_SETTINGS);
+		settings_file.set(kDefaultSettings);
 		settings_file.write();
+		settings = settings_file.get<GameSettings>();
 	}
 
 	this->video_renderer.init(settings.renderer_settings);
 
 	//** EventDispatcher ** /
-	auto quit_event_filter = [](SDL_Event& e) -> bool {
-		return e.type == SDL_QUIT;
+	auto quit_event_filter = [](SDL_Event& event) -> bool {
+		return event.type == SDL_QUIT;
 	};
 	auto quit_event_handler = [&](std::any event_data) -> void {
 		auto sdl_event_data = std::any_cast<SDL_Event>(event_data);
@@ -137,10 +139,7 @@ Phong::Phong()
 	};
 	/**/
 
-	//this->event_emitter.registerObserver(this->event_dispatcher);
-	this->event_emitter.registerObserver(quit_event_filter,
-	                                     quit_event_handler);
-
+	this->event_emitter.registerObserver(*this);
 	this->event_emitter.pollEvents();
 }
 
@@ -152,8 +151,7 @@ Phong::simulation_thread_loop()
 	do {
 		loop_regulator.startUpdate();
 
-		this->event_emitter.pollEvents();
-		this->event_emitter.notify_all();
+		this->event_emitter.transmitEvents();
 
 		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);
