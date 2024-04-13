@@ -17,7 +17,7 @@ disable_deprecated_features()
 disable_tests_if_subproject()
 
 project(Elemental
-	VERSION 0.0.2
+	VERSION 0.0.3
 	LANGUAGES C CXX
 	# Save this for later:
 	# HOMEPAGE_URL <URL>
@@ -108,7 +108,7 @@ CPMAddPackage(NAME IOCore
 	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
 	#GIT_TAG HEAD
 	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	GIT_TAG v0.2.11
+	GIT_TAG v0.2.12
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
