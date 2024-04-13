@@ -59,23 +59,11 @@ Phong::run() -> int
 {
 	this->is_running = true;
 	try {
-		LoopRegulator frame_regulator(60_Hz);
 
 		this->running_threads["simulation_thread"] =
 		    std::thread([this]() { this->simulation_thread_loop(); });
 
-		while (this->is_running) {
-			frame_regulator.startUpdate();
-			this->video_renderer.clearScreen();
-
-			this->event_emitter.pollEvents();
-
-			auto cycle_delay_ms = frame_regulator.delay();
-			print_cycle_rate(cycle_delay_ms, "frame delay");
-			video_renderer.flip();
-		}
-
-		this->is_running = false;
+		this->event_and_rendering_loop();
 
 		/* threading clean-up:
 		 * wait for all child threads to finish */
@@ -143,6 +131,25 @@ Phong::Phong()
 }
 
 void
+Phong::event_and_rendering_loop()
+{
+	LoopRegulator frame_regulator(60_Hz);
+
+	do {
+		frame_regulator.startUpdate();
+		this->video_renderer.clearScreen();
+
+		this->event_emitter.pollEvents();
+
+		auto cycle_delay_ms = frame_regulator.delay();
+		print_cycle_rate(cycle_delay_ms, "frame delay");
+		video_renderer.flip();
+	} while (this->is_running);
+
+	this->is_running = false;
+}
+
+void
 Phong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
@@ -150,7 +157,7 @@ Phong::simulation_thread_loop()
 	do {
 		loop_regulator.startUpdate();
 
-		this->event_emitter.transmitEvents();
+		this->event_emitter.sendEvents();
 
 		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);

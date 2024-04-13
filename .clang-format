@@ -4,31 +4,23 @@ Language: Cpp
 
 IndentWidth: 8
 UseTab: AlignWithSpaces
-ColumnLimit: 80
-AccessModifierOffset: -6
-AlwaysBreakAfterReturnType: None
-BinPackArguments: true
+ColumnLimit: 81
+AccessModifierOffset: -4
 BinPackParameters: true
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+PenaltyReturnTypeOnItsOwnLine: 50
 ContinuationIndentWidth: 4
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 4
-PackConstructorInitializers: CurrentLine
 AllowAllArgumentsOnNextLine: true
-AlignAfterOpenBracket: Align
-DerivePointerAlignment: False
-PointerAlignment: Left
-ReferenceAlignment: Pointer
-AlwaysBreakTemplateDeclarations: Yes
-FixNamespaceComments: Yes
-NamespaceIndentation: Inner
+AlignAfterOpenBracket: BlockIndent
 
-MaxEmptyLinesToKeep: 1
-KeepEmptyLinesAtTheStartOfBlocks: true
-
-#BreakBeforeBraces: Custom
+BreakBeforeBraces:  WebKit
 #BraceWrapping:
 #  AfterCaseLabel:  false
 #  AfterClass:      true
-#  AfterControlStatement: Always
+#  AfterControlStatement:  MultiLine
 #  AfterEnum:       false
 #  AfterFunction:   true
 #  AfterNamespace:  false
@@ -45,4 +37,5 @@ KeepEmptyLinesAtTheStartOfBlocks: true
 #  SplitEmptyFunction: true
 #  SplitEmptyRecord: false
 #  SplitEmptyNamespace: true
+#
 ---

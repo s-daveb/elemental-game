@@ -26,14 +26,12 @@ namespace fs = std::filesystem;
 namespace {
 static std::stringstream error_buffer;
 
-enum IndentMode : int
-{
+enum IndentMode : int {
 	Compact = -1,
 	NewlinesOnly = 0,
 	Ident = 1,
 };
-enum AsciiMode : bool
-{
+enum AsciiMode : bool {
 	Default = false,
 	Raw = false,
 	IgnoreUnicode = false,
@@ -50,8 +48,7 @@ JsonConfigFile::JsonConfigFile(const fs::path& file_path, CreateDirs mode)
 
 JsonConfigFile::~JsonConfigFile() = default;
 
-auto
-JsonConfigFile::read() -> nlohmann::json&
+auto JsonConfigFile::read() -> nlohmann::json&
 {
 	try {
 		std::ifstream file_stream(file_path);
@@ -61,27 +58,26 @@ JsonConfigFile::read() -> nlohmann::json&
 			error_buffer
 			    << "Error opening JsonConfigFile for reading: "
 			    << file_path << std::endl;
-			throw Exception(error_buffer.str());
+			throw IOCore::Exception(error_buffer.str());
 		}
 
 		// If the file is empty, do not try to open it and parse JSON
 		if (file_stream.peek() != std::ifstream::traits_type::eof()) {
 			file_stream >> config_json;
 		}
-	} catch (elemental::Exception& except) {
+	} catch (IOCore::Exception& except) {
 		throw;
 	} catch (const std::exception& e) {
 		error_buffer.str("");
 		error_buffer << "JsonConfigFile::Read() error" << std::endl
 			     << e.what() << std::flush;
-		throw Exception(error_buffer.str());
+		throw IOCore::Exception(error_buffer.str());
 	}
 
 	return this->config_json;
 }
 
-void
-JsonConfigFile::write()
+void JsonConfigFile::write()
 {
 	try {
 		std::ofstream file_stream(file_path);
@@ -90,24 +86,26 @@ JsonConfigFile::write()
 			error_buffer << "Error opening JsonConfigFile "
 					"for writing: "
 				     << file_path << std::endl;
-			throw Exception(error_buffer.str());
+			throw IOCore::Exception(error_buffer.str());
 		}
 
-		file_stream
-		    << config_json.dump(
-			   IndentMode::Ident, '\t', AsciiMode::IgnoreUnicode,
-			   nlohmann::json::error_handler_t::replace)
-		    << std::endl;
+		file_stream << config_json.dump(
+				   IndentMode::Ident,
+				   '\t',
+				   AsciiMode::IgnoreUnicode,
+				   nlohmann::json::error_handler_t::replace
+			       )
+			    << std::endl;
 
 		return;
-	} catch (elemental::Exception& except) {
+	} catch (IOCore::Exception& except) {
 		throw;
 	} catch (const std::exception& e) {
 
 		error_buffer.str("");
 		error_buffer << "JSonConfigFile::Save() error: " << std::endl
 			     << e.what() << std::flush;
-		throw Exception(error_buffer.str());
+		throw IOCore::Exception(error_buffer.str());
 	}
 }
 } // namespace elemental::configuration

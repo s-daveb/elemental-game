@@ -36,7 +36,7 @@ PRIVATE
 
 # Set output directories for build targetsk
 set_target_properties(SDL_test-runner PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/tests"
+  RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}/tests"
 )
 
 add_dependencies(ctest

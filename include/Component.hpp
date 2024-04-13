@@ -19,6 +19,7 @@ struct Component
 {
   public:
 	using TypeInfo = std::type_index;
+
 	// using EntityId = unsigned int;
 	using InstanceID = unsigned int;
 
@@ -26,11 +27,11 @@ struct Component
 
 	virtual ~Component() = default;
 
-	inline auto getInstanceId() const -> InstanceID { return instance_id; }
+	auto getInstanceId() const -> InstanceID { return instance_id; }
 	virtual auto getTypeIndex() -> TypeInfo = 0;
 
 	template<typename T_>
-	inline static auto isChildClass() -> bool
+	static auto isChildClass() -> bool
 	{
 		static_assert(std::is_base_of_v<Component, T_>,
 		              "T must be a derived class of Component");
@@ -52,7 +53,7 @@ struct Component
 	static unsigned int next_instance_id;
 };
 
-inline unsigned int Component::next_instance_id = 0;
+unsigned int Component::next_instance_id = 0;
 
 } // namespace elemental
   // clang-format off

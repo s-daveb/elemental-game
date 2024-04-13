@@ -1,3 +1,9 @@
 #.clangd
 CompileFlags:
 	Add: [-DCLANGD, -DVIM_LSP=1]
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+  Includes:
+    IgnoreHeader: types\.hpp

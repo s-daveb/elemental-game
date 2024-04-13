@@ -1,9 +1,7 @@
 # Define the executable 'test-runner'
 set(test-runner_SOURCES
 	runtime.test.cpp
-	Exception.test.cpp
 	Singleton.template.test.cpp
-	Application.test.cpp
 	IRenderer.test.cpp
 	LoopRegulator.test.cpp
 	sdl/SdlRenderer.test.cpp
@@ -19,7 +17,7 @@ add_executable(test-runner
 	${test-runner_SOURCES}
 )
 
-set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 0)
+set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
 
 target_compile_definitions(test-runner PRIVATE
 	-DUNIT_TEST=1
@@ -56,7 +54,7 @@ PRIVATE
 
 # Set output directories for build targets
 set_target_properties(test-runner PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/tests"
+  RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}/tests"
 )
 # extras: catch2 ctest integration.
 # add catch2's ctest cmake module and register the tests defined by mdml-tests

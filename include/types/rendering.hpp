@@ -32,22 +32,15 @@ using Resolution = Area;
 
 struct Rectangle
 {
-	union
-	{
-		Point position;
-		struct
-		{
-			uint32_t x, y;
-		};
-	};
-	union
-	{
-		Area size;
-		struct
-		{
-			uint32_t width, height;
-		};
-	};
+	Point position;
+	Area size;
+
+	uint32_t& x = position.x;
+	uint32_t& y = position.y;
+
+	uint32_t& width = size.width;
+	uint32_t& height = size.height;
+
 	SERIALIZABLE(Rectangle, position, size);
 };
 

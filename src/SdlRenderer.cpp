@@ -16,6 +16,7 @@
 
 #include "util/debug.hpp"
 
+#include "types/input.hpp"
 #include "types/rendering.hpp"
 
 #include <nlohmann/json.hpp>
@@ -30,11 +31,10 @@ namespace {
 std::stringstream error_buffer;
 } // namespace
 
-#define HANDLE_SDL_ERROR(what)                                                 \
-	error_buffer.str("");                                                  \
-	error_buffer << what << ", SDL Error:" << SDL_GetError()               \
-		     << std::flush;                                            \
-	throw elemental::Exception(error_buffer.str());
+#define HANDLE_SDL_ERROR(what)                                                  \
+	error_buffer.str("");                                                   \
+	error_buffer << what << ", SDL Error:" << SDL_GetError() << std::flush; \
+	throw IOCore::Exception(error_buffer.str());
 
 SdlRenderer::~SdlRenderer()
 {
@@ -43,20 +43,20 @@ SdlRenderer::~SdlRenderer()
 	}
 }
 
-void
-SdlRenderer::init(RendererSettings& settings)
+void SdlRenderer::init(RendererSettings& settings)
 {
 
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
-	if (kError == IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF |
-	                       IMG_INIT_WEBP)) {
+	if (kError ==
+	    IMG_Init(
+		IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP
+	    )) {
 		error_buffer.str("");
-		error_buffer
-		    << "Could not initialize SDL_Image: IMG_INIT() == 0"
-		    << std::flush;
-		throw elemental::Exception(error_buffer.str());
+		error_buffer << "Could not initialize SDL_Image: IMG_INIT() == 0"
+			     << std::flush;
+		throw IOCore::Exception(error_buffer.str());
 	}
 	int window_xpos, window_ypos, window_width, window_height, res_width,
 	    res_height;
@@ -81,21 +81,28 @@ SdlRenderer::init(RendererSettings& settings)
 		sdl_flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	this->sdl_window_ptr =
-	    SDL_CreateWindow(window_title.c_str(), window_xpos, window_ypos,
-	                     window_width, window_height, sdl_flags);
+	this->sdl_window_ptr = SDL_CreateWindow(
+	    window_title.c_str(),
+	    window_xpos,
+	    window_ypos,
+	    window_width,
+	    window_height,
+	    sdl_flags
+	);
 	if (nullptr == this->sdl_window_ptr) {
 		HANDLE_SDL_ERROR("Could not create SDL_Window");
 	}
 
-	this->sdl_renderer_ptr = SDL_CreateRenderer(this->sdl_window_ptr, 0,
-	                                            SDL_RENDERER_ACCELERATED);
+	this->sdl_renderer_ptr = SDL_CreateRenderer(
+	    this->sdl_window_ptr, 0, SDL_RENDERER_ACCELERATED
+	);
 	if (nullptr == this->sdl_renderer_ptr) {
 		HANDLE_SDL_ERROR("Could not initialize SDL_Renderer");
 	}
 
-	if (SDL_RenderSetLogicalSize(this->sdl_renderer_ptr, res_width,
-	                             res_height)) {
+	if (SDL_RenderSetLogicalSize(
+		this->sdl_renderer_ptr, res_width, res_height
+	    )) {
 
 		HANDLE_SDL_ERROR("Could not set SDL_Renderer LogicalSize");
 	}
@@ -103,8 +110,7 @@ SdlRenderer::init(RendererSettings& settings)
 	this->is_initialized = true;
 }
 
-void
-SdlRenderer::deactivate()
+void SdlRenderer::deactivate()
 {
 	DBG_PRINT("SdlRenderer::Deactivate called!");
 	if (this->sdl_window_ptr != nullptr) {
@@ -117,30 +123,28 @@ SdlRenderer::deactivate()
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	this->is_initialized = false;
 }
-auto
-SdlRenderer::isInitialized() -> bool
+auto SdlRenderer::isInitialized() -> bool
 {
 	return this->is_initialized;
 };
 
-auto
-SdlRenderer::getResolution() -> Resolution
+auto SdlRenderer::getResolution() -> Resolution
 {
 	int width, height;
 
 	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
-	if (kError == SDL_GetRendererOutputSize(this->sdl_renderer_ptr.get(),
-	                                        &width, &height)) {
+	if (kError == SDL_GetRendererOutputSize(
+			  this->sdl_renderer_ptr.get(), &width, &height
+		      )) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
 	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
-auto
-SdlRenderer::getWindowSize() -> Area
+auto SdlRenderer::getWindowSize() -> Area
 {
 	int width, height;
 
@@ -156,8 +160,7 @@ SdlRenderer::getWindowSize() -> Area
 	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
-void
-SdlRenderer::clearScreen()
+void SdlRenderer::clearScreen()
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
@@ -168,8 +171,7 @@ SdlRenderer::clearScreen()
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");
 	}
 }
-void
-SdlRenderer::flip()
+void SdlRenderer::flip()
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
@@ -178,33 +180,32 @@ SdlRenderer::flip()
 }
 
 /*! \todo convert this to a private method, used internally to wrap SDL_Blit */
-void
-SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
+void SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 	ASSERT(image_data.get() != nullptr);
 
 	try {
-		auto to_draw =
-		    std::static_pointer_cast<SDL_Texture>(image_data);
+		auto to_draw = std::static_pointer_cast<SDL_Texture>(image_data);
 		auto position = fromRectangle<SDL_Rect>(placement);
 
-		if (kError == SDL_RenderCopy(this->sdl_renderer_ptr.get(),
-		                             to_draw.get(), nullptr,
-		                             &position)) {
+		if (kError == SDL_RenderCopy(
+				  this->sdl_renderer_ptr.get(),
+				  to_draw.get(),
+				  nullptr,
+				  &position
+			      )) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
-	} catch (Exception& thrown_exception) {
+	} catch (IOCore::Exception& thrown_exception) {
 		throw;
 	} catch (std::exception& thrown_exception) {
-		throw Exception(thrown_exception);
+		throw IOCore::Exception(thrown_exception);
 	}
 }
 
 SdlRenderer::SdlRenderer()
-    : IRenderer()
-    , sdl_window_ptr(nullptr)
-    , sdl_renderer_ptr(nullptr)
+    : IRenderer(), sdl_window_ptr(nullptr), sdl_renderer_ptr(nullptr)
 {
 }
 

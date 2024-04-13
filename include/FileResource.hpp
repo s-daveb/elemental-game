@@ -16,8 +16,7 @@
 #include <fstream>
 
 namespace elemental {
-enum class CreateDirs : bool
-{
+enum class CreateDirs : bool {
 	Default = false,
 	Disable = false,
 	Disabled = false,
@@ -25,29 +24,29 @@ enum class CreateDirs : bool
 	Enabled = true
 };
 
-class FileResource
-{
-  public:
-	FileResource(const std::filesystem::path& file_path,
-	             CreateDirs mode = CreateDirs::Default);
+class FileResource {
+    public:
+	FileResource(
+	    const std::filesystem::path& file_path,
+	    CreateDirs mode = CreateDirs::Default
+	);
 
 	virtual ~FileResource() = default;
 
-  protected:
+    protected:
 	std::filesystem::path file_path;
 };
 
-struct UnreachablePathException : public Exception
-{
-	inline UnreachablePathException(const std::filesystem::path& path)
-	    : Exception("Unreachable path or directory")
-	    , unreachable_path(path)
+struct UnreachablePathException : public IOCore::Exception {
+	UnreachablePathException(const std::filesystem::path& path)
+	    : Exception("Unreachable path or directory"), unreachable_path(path)
 	{
-		this->build_what_message("elemental::UnreachablePathException",
-		                         path.c_str());
+		this->build_what_message(
+		    "elemental::UnreachablePathException", path.c_str()
+		);
 	}
 
-	auto inline what() const noexcept -> const char* override
+	auto what() const noexcept -> const char* override
 	{
 		return Exception::what();
 	}

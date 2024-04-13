@@ -12,7 +12,6 @@
 #include "Exception.hpp"
 
 #include "sys/debuginfo.hpp"
-#include "types/legible_ctypes.hpp"
 #include "util/debug.hpp"
 
 #include "test-utils/common.hpp"
@@ -36,37 +35,37 @@ constexpr c::const_string kNON_EXISTENT_PATH = "/hades/tmp/dne/file.json";
 BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 {
 	namespace { // Test fixtures
-		struct SampleFileGenerator
+	struct SampleFileGenerator {
+		SampleFileGenerator()
 		{
-			SampleFileGenerator()
-			{
-				if (!fs::exists(kINPUT_FILE_PATH)) {
-					std::ofstream f(kINPUT_FILE_PATH,
-					                std::ios::out |
-					                    std::ios::trunc);
-					f << R"({"key1": "value1", "key2": "value2"})"
-					  << std::endl;
-					f.close();
-				}
+			if (!fs::exists(kINPUT_FILE_PATH)) {
+				std::ofstream f(
+				    kINPUT_FILE_PATH,
+				    std::ios::out | std::ios::trunc
+				);
+				f << R"({"key1": "value1", "key2": "value2"})"
+				  << std::endl;
+				f.close();
 			}
-			~SampleFileGenerator()
-			{
-				try {
-					if (fs::exists(kINPUT_FILE_PATH)) {
-						fs::remove(kINPUT_FILE_PATH);
-					}
-				} catch (std::exception& e) {
-					DBG_PRINT(e.what());
+		}
+		~SampleFileGenerator()
+		{
+			try {
+				if (fs::exists(kINPUT_FILE_PATH)) {
+					fs::remove(kINPUT_FILE_PATH);
 				}
+			} catch (std::exception& e) {
+				DBG_PRINT(e.what());
 			}
-		};
-		using TestFixture = SampleFileGenerator;
+		}
+	};
+	using TestFixture = SampleFileGenerator;
 	} // namespace
 
 	TEST("elemental::nlohmann::json is serializablable like "
 	     "std::map<std::string,std::string>")
 	{
-		elemental::Dictionary<std::string> test_data;
+		IOCore::Dictionary<std::string> test_data;
 		nlohmann::json jsonified;
 
 		test_data["one"] = "1";
@@ -92,8 +91,10 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SECTION("JsonConfigFile w/ invalid path throws exception")
 		{
 
-			REQUIRE_THROWS_AS(JsonConfigFile(kNON_EXISTENT_PATH),
-			                  elemental::UnreachablePathException);
+			REQUIRE_THROWS_AS(
+			    JsonConfigFile(kNON_EXISTENT_PATH),
+			    elemental::UnreachablePathException
+			);
 		}
 	}
 	FIXTURE_TEST("JsonConfigFile::Read")
@@ -113,9 +114,9 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SECTION("JsonConfigFile::Read w/ bad file throws exception")
 		{
 			if (!fs::exists(kBADFILE_PATH)) {
-				std::ofstream f(kBADFILE_PATH);
-				f << R"({"Hello World"})" << std::endl;
-				f.close();
+				std::ofstream fileout(kBADFILE_PATH);
+				fileout << R"({"Hello World"})" << std::endl;
+				fileout.close();
 			}
 			REQUIRE_THROWS_AS(
 			    [&]() {
@@ -124,7 +125,8 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 
 				    bad_config.read();
 			    }(),
-			    Exception);
+			    IOCore::Exception
+			);
 		}
 		if (fs::exists(kBADFILE_PATH)) {
 			fs::remove(kBADFILE_PATH);
@@ -148,34 +150,37 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 
 			resulting_file >> jobject;
 			auto written_data =
-			    jobject.get<elemental::Dictionary<std::string>>();
+			    jobject.get<IOCore::Dictionary<std::string>>();
 
 			REQUIRE(written_data["one"] == test_data["one"]);
-			REQUIRE(written_data["resolution"] ==
-			        test_data["resolution"]);
+			REQUIRE(
+			    written_data["resolution"] == test_data["resolution"]
+			);
 			REQUIRE(written_data["Hello"] == test_data["Hello"]);
 		}
 		fs::remove(kINPUT_FILE_PATH);
 	}
 
 	FIXTURE_TEST(
-	    "JsonConfigFile::Get<T>() basically wraps nlohmann::json::get<T>()")
+	    "JsonConfigFile::Get<T>() basically wraps nlohmann::json::get<T>()"
+	)
 	{
 		auto config_file = JsonConfigFile(kINPUT_FILE_PATH);
 		auto& json_data = config_file.getJsonData();
 
 		config_file.read();
 		auto obtained_data =
-		    config_file.get<elemental::Dictionary<std::string>>();
+		    config_file.get<IOCore::Dictionary<std::string>>();
 
 		REQUIRE(obtained_data["key1"] == "value1");
 		REQUIRE(obtained_data["key2"] == "value2");
 	}
 	FIXTURE_TEST(
-	    "JsonConfigFile::Set() basically wraps nlohmann::json::operator=()")
+	    "JsonConfigFile::Set() basically wraps nlohmann::json::operator=()"
+	)
 	{
 		auto config_file = JsonConfigFile(kINPUT_FILE_PATH);
-		elemental::Dictionary<std::string> test_data;
+		IOCore::Dictionary<std::string> test_data;
 
 		test_data["one"] = "1";
 		test_data["resolution"] = "1280x720";

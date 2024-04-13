@@ -39,14 +39,15 @@ FileResource::FileResource(const fs::path& file_path, CreateDirs mode)
 
 		if (fs::exists(file_path) == false) {
 			std::ofstream file_stream(
-			    file_path, std::ios::out | std::ios::trunc);
+			    file_path, std::ios::out | std::ios::trunc
+			);
 			file_stream.flush();
 			file_stream.close();
 		}
-	} catch (elemental::Exception&) {
+	} catch (IOCore::Exception&) {
 		throw;
 	} catch (std::exception& exception) {
-		throw Exception(exception);
+		throw IOCore::Exception(exception);
 	}
 };
 // clang-format off

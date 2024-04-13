@@ -74,7 +74,7 @@ SdlEventSource::pollEvents() -> void
 }
 
 auto
-SdlEventSource::transmitEvents() -> void
+SdlEventSource::sendEvents() -> void
 {
 	auto thread_lock = MutexLock(this->mutex);
 

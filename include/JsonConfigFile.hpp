@@ -41,10 +41,7 @@ class JsonConfigFile : public FileResource
 		config_json = value;
 	}
 
-	inline auto getJsonData() -> nlohmann::json&
-	{
-		return this->config_json;
-	};
+	auto getJsonData() -> nlohmann::json& { return this->config_json; };
 
   protected:
 	nlohmann::json config_json;

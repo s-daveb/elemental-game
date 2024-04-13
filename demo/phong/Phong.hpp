@@ -65,6 +65,8 @@ class Phong
 	bool is_running{ false };
 
 	Dictionary<std::thread> running_threads;
+
+	void event_and_rendering_loop();
 	void simulation_thread_loop();
 
 	IRenderer& video_renderer;

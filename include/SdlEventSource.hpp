@@ -28,6 +28,7 @@ namespace elemental {
 class SdlEventSource : public IEventSource
 {
 	TEST_INSPECTABLE(SdlEventSource);
+
   public:
 	using Mutex = std::mutex;
 	using MutexLock = std::lock_guard<Mutex>;
@@ -39,8 +40,8 @@ class SdlEventSource : public IEventSource
 
 	~SdlEventSource() override = default;
 
-	auto pollEvents() -> void override;
-	auto transmitEvents() -> void override;
+	void pollEvents() override;
+	void sendEvents() override;
 
   protected:
 	std::queue<SDL_Event> event_queue;

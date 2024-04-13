@@ -24,8 +24,8 @@ struct IEventSource
     , private INonCopyable
 {
 	~IEventSource() override = default;
-	virtual auto pollEvents() -> void = 0;
-	virtual auto transmitEvents() -> void = 0;
+	virtual void pollEvents() = 0;
+	virtual void sendEvents() = 0;
 
   protected:
 	explicit IEventSource(InputDevices device_flags) {}

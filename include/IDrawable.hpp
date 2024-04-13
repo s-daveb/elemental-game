@@ -18,14 +18,12 @@ struct IDrawable
 {
 	virtual ~IDrawable(){};
 
-	inline void Draw(Position& pos)
-	{
-		this->Draw(Area{ pos.x, pos.y, 0, 0 });
-	}
-	virtual void Draw(const Area& rect) = 0;
+	virtual void draw(const Rectangle& rect) = 0;
+
+	void draw(Position2D& pos) { this->draw(Rectangle{ pos.x, pos.y }); }
 };
 
-}
+} // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

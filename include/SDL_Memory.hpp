@@ -52,23 +52,23 @@ namespace elemental {
  * automatically manage resource SDL resources. */
 struct SdlResourceDeleter
 {
-	inline auto operator()(SDL_Window* window_ptr) -> void
+	auto operator()(SDL_Window* window_ptr) -> void
 	{
 		SDL_DestroyWindow(window_ptr);
 	}
-	inline auto operator()(SDL_Renderer* renderer_ptr) -> void
+	auto operator()(SDL_Renderer* renderer_ptr) -> void
 	{
 		SDL_DestroyRenderer(renderer_ptr);
 	}
-	inline auto operator()(SDL_Surface* surface_ptr) -> void
+	auto operator()(SDL_Surface* surface_ptr) -> void
 	{
 		SDL_FreeSurface(surface_ptr);
 	}
-	inline auto operator()(SDL_Texture* texture_ptr) -> void
+	auto operator()(SDL_Texture* texture_ptr) -> void
 	{
 		SDL_DestroyTexture(texture_ptr);
 	}
-	inline auto operator()(SDL_Joystick* joystick_ptr) -> void
+	auto operator()(SDL_Joystick* joystick_ptr) -> void
 	{
 		SDL_JoystickClose(joystick_ptr);
 	}

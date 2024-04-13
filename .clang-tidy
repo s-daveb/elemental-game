@@ -12,7 +12,7 @@ CheckOptions:
 	- { key: readability-function-cognitive-complexity.IgnoreMacros, value: true }
 
 	# Minimum Variable Length
-	- { key: readability-identifier-length.MinimumVariableLength, value: 3 }
+	- { key: readability-identifier-length.MinimumVariableNameLength, value: 3 }
 	- { key: readability-identifier-length.IgnoredVariableNames, value: "^(i|j|n|x|y|z|it)$" }
 
 	# Minimum Parameter Length
@@ -46,10 +46,10 @@ CheckOptions:
 	value: '' }
 	- { key: readability-identifier-naming.TypeTemplateParameterCase,
 	value: CamelCase }
+	- { key: readability-identifier-naming.TypeTemplateParameterIgnoredRegexp, value: "^T$" }
 
 	#  TypeAlias Rules
 	- { key: readability-identifier-naming.TypeAliasCase,         value: CamelCase }
-	- { key: readability-identifier-naming.TypeAliasTemplateCase, value: CamelCase }
 	- { key: readability-identifier-naming.TypeAliasIgnoredRegexp,
 		value: '.*_t|string|.*_string' }
 
@@ -71,7 +71,7 @@ CheckOptions:
 
 	# Constant Expression
 	- { key: readability-identifier-naming.ConstexprVariablePrefix, value: 'k' }
-	- { key: readability-identifier-naming.ConstexprVariableCase,   value: Camelcase }
+	- { key: readability-identifier-naming.ConstexprVariableCase,   value: Camel_Snake_Case }
 
 	- { key: readability-identifier-naming.ConstexprFunctionCase, value: Camel_Snake_Case }
 	- { key: readability-identifier-naming.ConstexprMethodCase,   value: Camel_Snake_Case }

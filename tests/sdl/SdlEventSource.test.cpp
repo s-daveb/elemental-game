@@ -121,7 +121,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 			event_queue_ref.push(input);
 		}
 
-		test_object.transmitEvents();
+		test_object.sendEvents();
 
 		REQUIRE(recorder.received.size() > 0);
 

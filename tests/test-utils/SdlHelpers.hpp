@@ -22,21 +22,13 @@
 
 namespace elemental {
 
-struct SdlEventSimulator
-{
-	enum KeyDir
-	{
-		Up = 0,
-		Right,
-		Down,
-		Left
-	};
+struct SdlEventSimulator {
+	enum KeyDir { Up = 0, Right, Down, Left };
 
 	static inline auto eventFromScancode(SDL_Scancode scancode) -> SDL_Event
 	{
-		SDL_Event event{ .key = {
-				     .type = SDL_KEYDOWN,
-				     .keysym = { .scancode = scancode } } };
+		SDL_Event event{ .key = { .type = SDL_KEYDOWN,
+			                  .keysym = { .scancode = scancode } } };
 		return event;
 	}
 
@@ -104,18 +96,17 @@ struct SdlEventSimulator
 	}
 }; // #endregion
 
-struct SdlTestFixture
-{
+struct SdlTestFixture {
 	std::stringstream buffer;
 
 	SdlTestFixture() : buffer()
 	{
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != kSuccess) {
+		if (SDL_InitSubSystem(SDL_INIT_EVENTS) != IOCore::kSuccess) {
 			buffer << "SDL Could not initialize; SDL_Error:  "
 			       << SDL_GetError();
-			throw elemental::Exception(buffer.str());
+			throw IOCore::Exception(buffer.str());
 		}
 		SDL_PumpEvents();
 	}
