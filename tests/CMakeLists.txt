@@ -56,6 +56,14 @@ PRIVATE
 set_target_properties(test-runner PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}/tests"
 )
+
+add_custom_target(test_bin)
+add_dependencies(test_bin
+	test-runner
+	SDL_test-runner
+)
+
+
 # extras: catch2 ctest integration.
 # add catch2's ctest cmake module and register the tests defined by mdml-tests
 # using catch_discover_tests
@@ -70,7 +78,7 @@ add_custom_target(ctest
 )
 set_target_properties(ctest PROPERTIES EXCLUDE_FROM_ALL 1)
 add_dependencies(ctest
-	test-runner
+	test_bin
 	copy_assets
 )
 
