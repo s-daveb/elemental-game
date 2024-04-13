@@ -60,7 +60,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		}
 	};
 	using TestFixture = SampleFileGenerator;
-	} // namespace
+	} // anonymous namespace
 
 	TEST("elemental::nlohmann::json is serializablable like "
 	     "std::map<std::string,std::string>")
@@ -72,11 +72,12 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		test_data["resolution"] = "1280x720";
 		test_data["Hello"] = "world";
 
-		REQUIRE_NOTHROW([&]() { jsonified = test_data; }());
+		jsonified = test_data; 
 
-		REQUIRE(test_data["one"] == jsonified["one"]);
-		REQUIRE(test_data["resolution"] == jsonified["resolution"]);
-		REQUIRE(test_data["Hello"] == jsonified["Hello"]);
+		REQUIRE(test_data["one"] == jsonified["one"].get<std::string>());
+		REQUIRE(test_data["resolution"] == jsonified["resolution"].get<std::string>());
+		REQUIRE(test_data["Hello"] == jsonified["Hello"].get<std::string>());
+
 	}
 
 	FIXTURE_TEST("JsonConfigFile construction")
@@ -152,11 +153,11 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 			auto written_data =
 			    jobject.get<IOCore::Dictionary<std::string>>();
 
-			REQUIRE(written_data["one"] == test_data["one"]);
+			REQUIRE(written_data["one"] == test_data["one"].get<std::string>());
 			REQUIRE(
-			    written_data["resolution"] == test_data["resolution"]
+			    written_data["resolution"] == test_data["resolution"].get<std::string>()
 			);
-			REQUIRE(written_data["Hello"] == test_data["Hello"]);
+			REQUIRE(written_data["Hello"] == test_data["Hello"].get<std::string>());
 		}
 		fs::remove(kINPUT_FILE_PATH);
 	}
