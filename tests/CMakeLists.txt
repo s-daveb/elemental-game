@@ -60,7 +60,6 @@ set_target_properties(test-runner PROPERTIES
 add_custom_target(test_bin)
 add_dependencies(test_bin
 	test-runner
-	SDL_test-runner
 )
 
 

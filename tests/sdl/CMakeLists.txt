@@ -39,7 +39,7 @@ set_target_properties(SDL_test-runner PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}/tests"
 )
 
-add_dependencies(ctest
+add_dependencies(test_bin
 	SDL_test-runner
 )
 # vim: ts=2 sw=2 noet foldmethod=indent  :
