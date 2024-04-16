@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
 
-
-
 # Additional paths to search for custom and third-party CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -106,9 +104,9 @@ endif()
 
 CPMAddPackage(NAME IOCore
 	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	#GIT_TAG HEAD
+	#GIT_TAG devel
 	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	GIT_TAG v0.2.12
+	GIT_TAG v0.2.14
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
@@ -161,7 +159,7 @@ add_custom_target(copy_assets
 
 # Add subdirectories
 add_subdirectory(src)
-#add_subdirectory(demo)
+add_subdirectory(demo)
 #add_subdirectory(apps)
 
 if(BUILD_TESTING)

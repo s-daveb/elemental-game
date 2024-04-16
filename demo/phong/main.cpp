@@ -11,27 +11,25 @@
 
 #include <iostream>
 
-#include "IApplication.hpp"
-
 #include "Exception.hpp"
 #include "Singleton.hpp"
 
 using namespace elemental;
 
-auto
-main(int argc, c::const_string argv[], c::const_string envp[]) -> int
+auto main(int argc, c::const_string args[], c::const_string env[]) -> int
 {
 	try {
-		auto& game_instance = Singleton::getReference<Phong>();
-		game_instance.init(argc, argv, envp);
-
+		auto game_instance = Phong(argc, args, env);
 		return game_instance.run();
-	} catch (elemental::Exception& custom_exception) {
+	} catch (IOCore::Exception& custom_exception) {
 		std::cerr << custom_exception.what() << std::endl;
 		return 1;
 	} catch (std::exception& stl_exception) {
 		std::cerr << stl_exception.what() << std::endl;
 		return -1;
+	} catch (...) {
+		std::cerr << "Unknown exception" << std::endl;
+		return -2;
 	}
 }
 

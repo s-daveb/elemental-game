@@ -1,6 +1,5 @@
 # Define the library 'engine'
 set(ELEMENTAL_SOURCES
-	FileResource.cpp
 	JsonConfigFile.cpp
 	LoopRegulator.cpp
 	Observable.cpp

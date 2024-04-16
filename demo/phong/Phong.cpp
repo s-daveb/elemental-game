@@ -30,6 +30,7 @@
 #include "types/units.hpp"
 
 using namespace elemental;
+using namespace IOCore;
 
 const GameSettings kDefaultSettings{ { { "Phong",
 	                                 WindowMode::Windowed,
@@ -40,65 +41,23 @@ const GameSettings kDefaultSettings{ { { "Phong",
 
 /// \name Helper Functions
 /// \{
-void
-print_cycle_rate(milliseconds& cycle_length,
-                 c::const_string label = "cycle_length")
+void print_cycle_rate(
+    milliseconds& cycle_length, c::const_string label = "cycle_length"
+)
 {
 	DBG_PRINT(label << cycle_length.count() << "ms.");
 }
-
 /// \}
-
-Phong::~Phong()
-{
-	video_renderer.deactivate();
-}
-
-auto
-Phong::run() -> int
-{
-	this->is_running = true;
-	try {
-
-		this->running_threads["simulation_thread"] =
-		    std::thread([this]() { this->simulation_thread_loop(); });
-
-		this->event_and_rendering_loop();
-
-		/* threading clean-up:
-		 * wait for all child threads to finish */
-		for (auto& [key, values] : this->running_threads) {
-			values.join();
-		}
-
-		return kSuccess;
-	} catch (Exception& exc) {
-		throw;
-	} catch (std::exception& excp) {
-		throw Exception(excp);
-	}
-	return kError;
-}
-
-void
-Phong::recieveMessage(const Observable& sender, std::any message)
-{
-	ASSERT(message.has_value());
-
-	auto event = std::any_cast<SDL_Event>(message);
-	if (event.type == SDL_QUIT) {
-		this->is_running = false;
-	}
-}
-
-Phong::Phong()
-    : Application()
+Phong::Phong(int argc, c::const_string args[], c::const_string env[])
+    : Application(argc, args, env)
     , IObserver()
     , running_threads()
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())
-    , settings_file(paths::get_app_config_root() / "phong" / "settings.json",
-                    CreateDirs::Enabled)
+    , settings_file(
+	  paths::get_app_config_root() / "phong" / "settings.json",
+	  CreateDirs::Enabled
+      )
     , settings()
 {
 
@@ -129,9 +88,47 @@ Phong::Phong()
 	this->event_emitter.registerObserver(*this);
 	this->event_emitter.pollEvents();
 }
+Phong::~Phong()
+{
+	video_renderer.deactivate();
+}
 
-void
-Phong::event_and_rendering_loop()
+auto Phong::run() -> int
+{
+	this->is_running = true;
+	try {
+
+		this->running_threads["simulation_thread"] =
+		    std::thread([this]() { this->simulation_thread_loop(); });
+
+		this->event_and_rendering_loop();
+
+		/* threading clean-up:
+		 * wait for all child threads to finish */
+		for (auto& [key, values] : this->running_threads) {
+			values.join();
+		}
+
+		return kSuccess;
+	} catch (IOCore::Exception& exc) {
+		throw;
+	} catch (std::exception& excp) {
+		throw IOCore::Exception(excp);
+	}
+	return kError;
+}
+
+void Phong::recieveMessage(const Observable& sender, std::any message)
+{
+	ASSERT(message.has_value());
+
+	auto event = std::any_cast<SDL_Event>(message);
+	if (event.type == SDL_QUIT) {
+		this->is_running = false;
+	}
+}
+
+void Phong::event_and_rendering_loop()
 {
 	LoopRegulator frame_regulator(60_Hz);
 
@@ -149,8 +146,7 @@ Phong::event_and_rendering_loop()
 	this->is_running = false;
 }
 
-void
-Phong::simulation_thread_loop()
+void Phong::simulation_thread_loop()
 {
 	LoopRegulator loop_regulator(60_Hz);
 

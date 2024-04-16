@@ -9,21 +9,24 @@
 
 #pragma once
 
-#include "FileResource.hpp"
-
 #include "types.hpp"
 
+#include <FileResource.hpp>
 #include <filesystem>
 
 #include <nlohmann/json.hpp>
 
 namespace elemental::configuration {
 
-class JsonConfigFile : public FileResource
-{
-  public:
-	JsonConfigFile(const std::filesystem::path& file_path,
-	               CreateDirs mode = CreateDirs::Disable);
+using IOCore::CreateDirs;
+using IOCore::FileResource;
+
+class JsonConfigFile : public FileResource {
+    public:
+	JsonConfigFile(
+	    const std::filesystem::path& file_path,
+	    CreateDirs mode = CreateDirs::Disable
+	);
 	~JsonConfigFile() override;
 
 	auto read() -> nlohmann::json&;
@@ -43,7 +46,7 @@ class JsonConfigFile : public FileResource
 
 	auto getJsonData() -> nlohmann::json& { return this->config_json; };
 
-  protected:
+    protected:
 	nlohmann::json config_json;
 };
 } // namespace elemental::configuration

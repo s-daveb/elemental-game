@@ -91,7 +91,7 @@ function! BuildDebug()
 
 endfunction
 
-function RunTests()
+function! RunTests()
 	let s:defined = 1
 	if (s:ninja_path != '')
 		if (

@@ -11,7 +11,6 @@
 
 #include "./GameSettings.hpp"
 
-#include "IApplication.hpp"
 #include "IObserver.hpp"
 
 #include "Application.hpp"
@@ -31,29 +30,22 @@ namespace elemental {
 class IRenderer;
 class SdlEventSource;
 
+using IOCore::Application;
+using IOCore::Dictionary;
+
 class Phong
     : public Application
-    , public IObserver
-{
-  public:
-	friend class Singleton;
-
+    , public IObserver {
+    public:
+	Phong(int argc, c::const_string args[], c::const_string env[]);
 	~Phong() override;
 
-	/// \name Application Interface
-	/// \{
 	auto run() -> int override;
-	/// \}
+	void recieveMessage(
+	    const Observable& sender, std::any message = std::any()
+	) override;
 
-	/// \name IObserver interface
-	/// \{
-	void recieveMessage(const Observable& sender,
-	                    std::any message = std::any()) override;
-	/// \}
-
-  protected:
-	Phong();
-
+    protected:
 	/// \name Deleted constructors & operators
 	/// \{
 	Phong(const Phong&) = delete;
