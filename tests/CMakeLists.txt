@@ -8,7 +8,6 @@ set(test-runner_SOURCES
 	Observable.test.cpp
 	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
-	FileResource.test.cpp
 	JsonConfigFile.test.cpp
 	paths.test.cpp
 )
