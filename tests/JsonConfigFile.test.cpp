@@ -72,12 +72,16 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		test_data["resolution"] = "1280x720";
 		test_data["Hello"] = "world";
 
-		jsonified = test_data; 
+		jsonified = test_data;
 
 		REQUIRE(test_data["one"] == jsonified["one"].get<std::string>());
-		REQUIRE(test_data["resolution"] == jsonified["resolution"].get<std::string>());
-		REQUIRE(test_data["Hello"] == jsonified["Hello"].get<std::string>());
-
+		REQUIRE(
+		    test_data["resolution"] ==
+		    jsonified["resolution"].get<std::string>()
+		);
+		REQUIRE(
+		    test_data["Hello"] == jsonified["Hello"].get<std::string>()
+		);
 	}
 
 	FIXTURE_TEST("JsonConfigFile construction")
@@ -94,7 +98,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 
 			REQUIRE_THROWS_AS(
 			    JsonConfigFile(kNON_EXISTENT_PATH),
-			    elemental::UnreachablePathException
+			    IOCore::UnreachablePathException
 			);
 		}
 	}
@@ -153,11 +157,18 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 			auto written_data =
 			    jobject.get<IOCore::Dictionary<std::string>>();
 
-			REQUIRE(written_data["one"] == test_data["one"].get<std::string>());
 			REQUIRE(
-			    written_data["resolution"] == test_data["resolution"].get<std::string>()
+			    written_data["one"] ==
+			    test_data["one"].get<std::string>()
 			);
-			REQUIRE(written_data["Hello"] == test_data["Hello"].get<std::string>());
+			REQUIRE(
+			    written_data["resolution"] ==
+			    test_data["resolution"].get<std::string>()
+			);
+			REQUIRE(
+			    written_data["Hello"] ==
+			    test_data["Hello"].get<std::string>()
+			);
 		}
 		fs::remove(kINPUT_FILE_PATH);
 	}
