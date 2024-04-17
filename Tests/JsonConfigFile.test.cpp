@@ -39,13 +39,13 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SampleFileGenerator()
 		{
 			if (!fs::exists(kINPUT_FILE_PATH)) {
-				std::ofstream f(
+				std::ofstream new_file(
 				    kINPUT_FILE_PATH,
 				    std::ios::out | std::ios::trunc
 				);
-				f << R"({"key1": "value1", "key2": "value2"})"
+				new_file << R"({"key1": "value1", "key2": "value2"})"
 				  << std::endl;
-				f.close();
+				new_file.close();
 			}
 		}
 		~SampleFileGenerator()

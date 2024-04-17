@@ -147,3 +147,4 @@ docs/
 
 # clangd cache
 .cache/
+.vim/
