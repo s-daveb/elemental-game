@@ -26,6 +26,7 @@ include(CPM)
 SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(${PROJECT_NAME}_INCLUDE_DIRS ${IOCore_CMAKE_SOURCE_DIR}/include)
 
+option(CI_BUILD "Mark this as a CI/CD system build. Defines a C++ preprocessor macro CI_BUILD=1.")
 if (CI_BUILD)
 	add_compile_definitions(-DCI_BUILD=1)
 endif()
