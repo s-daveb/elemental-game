@@ -15,9 +15,13 @@ target_include_directories(elemental SYSTEM BEFORE
 	PUBLIC ${NLOHMANN_JSON_INCLUDE_DIRS}
 )
 
+target_include_directories(elemental BEFORE
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 # Add a target to copy this project's header files to the build dir
 add_custom_target(include_files
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${Elemental_CMAKE_SOURCE_DIR}/include ${Elemental_ARTIFACT_DIR}/include
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/include ${Elemental_ARTIFACT_DIR}/include
 )
 add_dependencies(elemental include_files)
 
@@ -30,9 +34,9 @@ set(ELEMENTAL_LINK_DEPS
 )
 
 # Add additional link options for boost::stacktrace
-if (USE_BOOST_STACKTRACE)
-	target_link_options(elemental PUBLIC -rdynamic)
-endif()
+#if (USE_BOOST_STACKTRACE)
+#	target_link_options(elemental PUBLIC -rdynamic)
+#endif()
 
 # Link the library dependencies publicly so that that users of this library
 # Also get the same dependencies.

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Additional paths to search for custom and third-party CMake modules
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
 include(BuildProperties)
 
@@ -24,7 +24,6 @@ project(Elemental
 include(CPM)
 
 SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-SET(${PROJECT_NAME}_INCLUDE_DIRS ${IOCore_CMAKE_SOURCE_DIR}/include)
 
 option(CI_BUILD "Mark this as a CI/CD system build. Defines a C++ preprocessor macro CI_BUILD=1.")
 if (CI_BUILD)
@@ -40,7 +39,7 @@ ON
 # enable compile_commands.json generation for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 
-IF( NOT CMAKE_BUILD_TYPE )
+IF(NOT CMAKE_BUILD_TYPE)
   SET( CMAKE_BUILD_TYPE Debug )
 ENDIF()
 
@@ -149,22 +148,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(-DDEBUG=1)
 endif()
 
-# Include directories
-include_directories(${Elemental_CMAKE_SOURCE_DIR}/include)
-
-# Add a target to copy application resource files to the build dir
-add_custom_target(copy_assets
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${Elemental_ARTIFACT_DIR}/share/data
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
-)
-
 # Add subdirectories
-add_subdirectory(src)
-add_subdirectory(demo)
-#add_subdirectory(apps)
+add_subdirectory(Modules)
 
 if(BUILD_TESTING)
-	add_subdirectory(tests)
+	add_subdirectory(Tests)
 endif()
+
+add_subdirectory(Apps)
 
 # vim: ts=2 sw=2 noet foldmethod=indent :

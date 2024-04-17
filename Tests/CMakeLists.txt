@@ -1,6 +1,6 @@
 # Define the executable 'test-runner'
-set(test-runner_SOURCES
-	runtime.test.cpp
+add_executable(test-runner
+runtime.test.cpp
 	Singleton.template.test.cpp
 	IRenderer.test.cpp
 	LoopRegulator.test.cpp
@@ -10,10 +10,7 @@ set(test-runner_SOURCES
 	SDL_Memory.test.cpp
 	JsonConfigFile.test.cpp
 	paths.test.cpp
-)
 
-add_executable(test-runner
-	${test-runner_SOURCES}
 )
 
 set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
@@ -38,8 +35,8 @@ target_include_directories(test-runner SYSTEM BEFORE
 )
 
 target_include_directories(test-runner
-	PRIVATE	${CMAKE_SOURCE_DIR}/include
-	PRIVATE ${CMAKE_SOURCE_DIR}/tests
+	#PRIVATE	${CMAKE_CURRENTSOURCE_DIR}/include
+	PRIVATE ${CMAKE_SOURCE_DIR}/Tests
 )
 
 target_link_directories(test-runner PRIVATE
@@ -53,14 +50,13 @@ PRIVATE
 
 # Set output directories for build targets
 set_target_properties(test-runner PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}/tests"
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Tests"
 )
 
 add_custom_target(test_bin)
 add_dependencies(test_bin
 	test-runner
 )
-
 
 # extras: catch2 ctest integration.
 # add catch2's ctest cmake module and register the tests defined by mdml-tests
@@ -72,12 +68,15 @@ catch_discover_tests(test-runner)
 # bonus: add a custom ctest target to the build system, to run tests in the
 #        correct directory
 add_custom_target(ctest
-	COMMAND ctest -c $configuration --test-dir . --allow-running-no-tests --output-on-failure
+	COMMAND ctest -c $configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --allow-running-no-tests --output-on-failure
+)
+add_custom_target(copy_test_assets
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
 )
 set_target_properties(ctest PROPERTIES EXCLUDE_FROM_ALL 1)
 add_dependencies(ctest
 	test_bin
-	copy_assets
+	copy_test_assets
 )
 
 add_subdirectory(sdl)
