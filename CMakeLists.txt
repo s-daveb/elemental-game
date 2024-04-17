@@ -104,7 +104,7 @@ endif()
 
 CPMAddPackage(NAME IOCore
 	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	#GIT_TAG2devel
+	#GIT_TAG devel
 	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
 	GIT_TAG v0.2.14
 	OPTIONS
@@ -113,16 +113,16 @@ CPMAddPackage(NAME IOCore
 )
 
 set(Qt_SUBMODULES
-	#qtbase
-	#qttools
-	#qtdeclarative
-	#qtsystems
+	qtbase
+	qttools
+	qtdeclarative
+	qtsystems
 )
 
 CPMFindPackage(NAME Qt6
 	GIT_REPOSITORY "https://code.qt.io/qt/qt5.git"
 	GIT_TAG v6.6.2
-	#GIT_SUBMODULES "${Qt_SUBMODULES}"
+	GIT_SUBMODULES "${Qt_SUBMODULES}"
 	GIT_SUBMODULES_RECURSE ON
 	GIT_SHALLOW ON
 	GIT_PROGRESS ON
