@@ -1,6 +1,11 @@
 # Elemental Game and Custom-built Game Engine
+A game and custom-built game engine designed for creating simple, top-down strategy games. This README provides an overview of the project, its design principles, goals, and instructions for building and testing.
 
-Welcome to Elemental Game, a game and custom-built game engine designed for creating simple, top-down strategy games. This README provides an overview of the project, its design principles, goals, and instructions for building and testing.
+### CI/CD Build Status
+| Arch Linux | FreeBSD 14.0 | macOS | Windows| 
+-------------|--------------|-------|--------|
+|![Build Status](https://buildbot.beniquez.me/badges/elemental-game-linux-builder.svg) |![Build Status](https://buildbot.beniquez.me/badges/elemental-game-macos-builder.svg) | ![Build Status](https://buildbot.beniquez.me/badges/elemental-game-freebsd-builder.svg) | TBD |
+
 
 ## Getting Started
 ### Build Tools 
