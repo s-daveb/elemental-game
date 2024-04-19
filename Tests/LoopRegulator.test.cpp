@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "LoopRegulator.hpp"
 #include "sys/platform.hpp"
 

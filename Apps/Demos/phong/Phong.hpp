@@ -13,7 +13,7 @@
 
 #include "IObserver.hpp"
 
-#include "Application.hpp"
+#include "IOCore/Application.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
 #include "Observable.hpp"

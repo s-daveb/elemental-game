@@ -12,7 +12,7 @@
 #include "sys/debuginfo.hpp"
 #include "util/debug.hpp"
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "IObserver.hpp"
 
 #include "SdlEventSource.hpp"
@@ -39,19 +39,24 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 			this->joydev_ptr = SDL_JoystickOpen(0);
 
 			DBG_PRINT("Opened Joystick 0" << std::endl);
-			DBG_PRINT("Name: " << SDL_JoystickNameForIndex(0)
-			                   << std::endl);
-			DBG_PRINT("Number of Axes: "
-			          << SDL_JoystickNumAxes(this->joydev_ptr.get())
-			          << std::endl);
+			DBG_PRINT(
+			    "Name: " << SDL_JoystickNameForIndex(0) << std::endl
+			);
+			DBG_PRINT(
+			    "Number of Axes: "
+			    << SDL_JoystickNumAxes(this->joydev_ptr.get())
+			    << std::endl
+			);
 			DBG_PRINT(
 			    "Number of Buttons: "
 			    << SDL_JoystickNumButtons(this->joydev_ptr.get())
-			    << std::endl);
+			    << std::endl
+			);
 			DBG_PRINT(
 			    "Number of Balls: "
 			    << SDL_JoystickNumBalls(this->joydev_ptr.get())
-			    << std::endl);
+			    << std::endl
+			);
 
 			SDL_GameControllerEventState(SDL_ENABLE);
 		} else {
@@ -61,8 +66,7 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 	}
 }
 
-auto
-SdlEventSource::pollEvents() -> void
+auto SdlEventSource::pollEvents() -> void
 {
 	auto thread_lock = MutexLock(this->mutex);
 
@@ -73,8 +77,7 @@ SdlEventSource::pollEvents() -> void
 	}
 }
 
-auto
-SdlEventSource::sendEvents() -> void
+auto SdlEventSource::sendEvents() -> void
 {
 	auto thread_lock = MutexLock(this->mutex);
 

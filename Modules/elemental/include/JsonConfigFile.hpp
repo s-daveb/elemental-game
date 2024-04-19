@@ -11,7 +11,7 @@
 
 #include "types.hpp"
 
-#include <FileResource.hpp>
+#include "IOCore/FileResource.hpp"
 #include <filesystem>
 
 #include <nlohmann/json.hpp>

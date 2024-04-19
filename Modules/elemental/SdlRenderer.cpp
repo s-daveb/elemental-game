@@ -10,7 +10,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "IRenderer.hpp"
 #include "SdlRenderer.hpp"
 

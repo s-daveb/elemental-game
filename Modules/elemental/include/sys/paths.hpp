@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "sys/platform.hpp"
 
 #include <filesystem>

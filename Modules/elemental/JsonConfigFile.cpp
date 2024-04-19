@@ -8,7 +8,7 @@
  */
 
 #include "JsonConfigFile.hpp"
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 
 #include <filesystem>
 #include <fstream>

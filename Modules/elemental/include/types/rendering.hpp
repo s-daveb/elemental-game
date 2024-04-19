@@ -16,22 +16,19 @@
 
 namespace elemental {
 
-struct Point
-{
+struct Point {
 	uint32_t x, y;
 	SERIALIZABLE(Point, x, y);
 };
 using Position2D = Point;
 
-struct Area
-{
+struct Area {
 	uint32_t width, height;
 	SERIALIZABLE(Area, width, height);
 };
 using Resolution = Area;
 
-struct Rectangle
-{
+struct Rectangle {
 	Point position;
 	Area size;
 
@@ -44,16 +41,17 @@ struct Rectangle
 	SERIALIZABLE(Rectangle, position, size);
 };
 
-enum class WindowMode
-{
+enum class WindowMode {
 	Windowed = 0x00,
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
 // NOLINTNEXTLINE(readability-identifier-length)
-SERIALIZABLE_ENUM(WindowMode, { { WindowMode::Windowed, "windowed" },
-                                { WindowMode::Borderless, "borderless" },
-                                { WindowMode::Fullscreen, "fullscreen" } });
+SERIALIZABLE_ENUM(
+    WindowMode, { { WindowMode::Windowed, "windowed" },
+                  { WindowMode::Borderless, "borderless" },
+                  { WindowMode::Fullscreen, "fullscreen" } }
+);
 enum class WindowPlacement : int
 
 {
@@ -61,12 +59,12 @@ enum class WindowPlacement : int
 	Centered = 0x01
 };
 // NOLINTNEXTLINE(readability-identifier-length)
-SERIALIZABLE_ENUM(WindowPlacement,
-                  { { WindowPlacement::Manual, "manual" },
-                    { WindowPlacement::Centered, "centered" } });
+SERIALIZABLE_ENUM(
+    WindowPlacement, { { WindowPlacement::Manual, "manual" },
+                       { WindowPlacement::Centered, "centered" } }
+);
 
-struct WindowParameters
-{
+struct WindowParameters {
 	std::string title;
 	WindowMode mode;
 	WindowPlacement placement;
@@ -76,8 +74,7 @@ struct WindowParameters
 	SERIALIZABLE(WindowParameters, title, mode, placement, position, size);
 };
 
-struct RendererSettings
-{
+struct RendererSettings {
 	WindowParameters window;
 	Resolution resolution;
 

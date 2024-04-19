@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "Singleton.hpp"
 
 using namespace elemental;

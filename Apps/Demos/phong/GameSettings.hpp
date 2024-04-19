@@ -15,8 +15,7 @@
 
 namespace elemental {
 
-struct GameSettings
-{
+struct GameSettings {
 	RendererSettings renderer_settings;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GameSettings, renderer_settings);

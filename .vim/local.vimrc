@@ -28,7 +28,7 @@ set foldmethod=expr
   \ foldtext=lsp#ui#vim#folding#foldtext()
 
 
-let s:build_dir = '.vim/build-debug'
+let s:build_dir = 'debug'
 let s:build_cores = 6
 let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' all'
 
@@ -88,7 +88,12 @@ function! BuildDebug()
 			vert resize +100
 		endif
 	endif
-
+	"
+	" Check if .compile_commands.json exists in the current working directory
+	if !filereadable('.compile_commands.json')
+  	  " File does not exist, create a symbolic link
+  	  execute 'silent !ln -s ' . $PWD . '/.vim/lspbuild/compile_commands.json' . $PWD
+	endif
 endfunction
 
 function! RunTests()

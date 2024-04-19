@@ -14,7 +14,7 @@
 #include "sys/paths.hpp"
 #include "util/debug.hpp"
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
 #include "SdlEventSource.hpp"

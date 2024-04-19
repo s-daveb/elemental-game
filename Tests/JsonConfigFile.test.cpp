@@ -9,7 +9,7 @@
  */
 
 #include "JsonConfigFile.hpp"
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 
 #include "sys/debuginfo.hpp"
 #include "util/debug.hpp"
@@ -43,8 +43,9 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 				    kINPUT_FILE_PATH,
 				    std::ios::out | std::ios::trunc
 				);
-				new_file << R"({"key1": "value1", "key2": "value2"})"
-				  << std::endl;
+				new_file
+				    << R"({"key1": "value1", "key2": "value2"})"
+				    << std::endl;
 				new_file.close();
 			}
 		}

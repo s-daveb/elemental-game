@@ -8,7 +8,7 @@
  */
 
 #include "sys/paths.hpp"
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 #include "sys/platform.hpp"
 
 #include "test-utils/common.hpp"

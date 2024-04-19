@@ -12,7 +12,7 @@
 #include "test-utils/common.hpp"
 #include "util/debug.hpp"
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 
 #include <exception>
 #include <iostream>

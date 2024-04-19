@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 
 #include <SDL.h>
 

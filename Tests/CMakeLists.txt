@@ -29,13 +29,8 @@ set(TESTS_LINK_DEPS
 	${STACKTRACE_DEP_LIBS}
 )
 
-target_include_directories(test-runner SYSTEM BEFORE
-	PRIVATE ${Catch2_INCLUDE_DIRS}
-	PRIVATE ${FakeIt_INCLUDE_DIRS}
-)
-
 target_include_directories(test-runner
-	#PRIVATE	${CMAKE_CURRENTSOURCE_DIR}/include
+	PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
 	PRIVATE ${CMAKE_SOURCE_DIR}/Tests
 )
 

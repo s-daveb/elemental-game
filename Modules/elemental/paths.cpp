@@ -7,8 +7,8 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "sys/paths.hpp"
-#include "Exception.hpp"
+#include "IOCore/sys/paths.hpp"
+#include "IOCore/Exception.hpp"
 #include "sys/platform.hpp"
 
 #include <cstdlib>
