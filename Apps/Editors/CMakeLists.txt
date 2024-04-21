@@ -3,6 +3,8 @@ qt_add_executable(ResourceEditor
 	main.cpp
 	MainWindow.ui
 	MainWindow.cpp
+	EntityEditor.ui
+	EntityEditor.cpp
 )
 
 target_link_libraries(ResourceEditor

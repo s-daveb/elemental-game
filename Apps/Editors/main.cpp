@@ -10,10 +10,13 @@
 #include "IOCore/Exception.hpp"
 #include "MainWindow.hpp"
 
+#include <stdexcept>
+
 #include <QApplication>
+#include <QDir>
 #include <QMessageBox>
 
-void handle_error(const std::exception& exception)
+void handle_error(QApplication& app, const std::exception& exception)
 {
 	QMessageBox::critical(
 	    nullptr, "Error", exception.what(), QMessageBox::Ok
@@ -22,16 +25,28 @@ void handle_error(const std::exception& exception)
 
 auto main(int argc, char* argv[]) -> int
 {
+	auto app = QApplication(argc, argv);
 	try {
-		auto app = QApplication(argc, argv);
+		QDir app_bundle_dir(app.applicationDirPath());
+		app_bundle_dir.cdUp();
+		app_bundle_dir.cdUp();
+		QDir::setCurrent(app_bundle_dir.path());
+
 		auto window = ResourceEditor::MainWindow();
 
 		window.show();     // Show the main window
 		return app.exec(); // Enter the application's event loop
-	} catch (IOCore::Exception& except) {
-
+	} catch (IOCore::Exception& exception) {
+		handle_error(app, exception);
+	} catch (std::exception& exception) {
+		handle_error(app, exception);
 	} catch (...) {
+		handle_error(
+		    app, std::runtime_error("Caught unknown exception")
+		);
 	}
+
+	return -1;
 }
 
 // clang-format off

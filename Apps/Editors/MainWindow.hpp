@@ -1,5 +1,5 @@
-/* EditorWindow.hpp
- * Copyright © 2024 Saul D. Beniquez
+/* MainWindow.hpp
+ * Copyright © 2022 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -9,24 +9,44 @@
 
 #pragma once
 
-#include "IOCore/Exception.hpp"
-
-#include <QMainWindow>
+#include <QObject>
 #include <QWidget>
 
+#include <QMainWindow>
+#include <QStringListModel>
+
+#include "ui_MainWindow.h"
+
+class QMdiSubWindow;
+
 namespace ResourceEditor {
-class MainWindow final : public QMainWindow {
-	Q_OBJECT; // NOLINT
+
+class MainWindow : public QMainWindow {
+	Q_OBJECT
+
     public:
 	MainWindow(QWidget* parent = nullptr);
-	~MainWindow() final = default;
+	virtual ~MainWindow();
 
-	void openFile(bool checked) { throw IOCore::NotImplementedException(); }
+    protected:
+	virtual void showEvent(QShowEvent*) override;
+
+    private slots:
+	void open();
 
     private:
-};
+	void moveToCenter();
 
+	void loadFile(const QString&);
+	QMdiSubWindow* findDocumentWindow(const QString&);
+	QMdiSubWindow* createDocumentWindow(const QString&);
+
+	Ui::MainWindow& ui;
+
+	QStringListModel component_list;
+	// GameEngine::ComponentStore& component_store;
+};
 }
 
 // clang-format off
-// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen ::w
+// vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
