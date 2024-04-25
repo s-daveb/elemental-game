@@ -40,7 +40,7 @@ ON
 set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 
 IF(NOT CMAKE_BUILD_TYPE)
-  SET( CMAKE_BUILD_TYPE Debug )
+	SET( CMAKE_BUILD_TYPE Debug )
 ENDIF()
 
 set(CMAKE_C_STANDARD 17)
@@ -57,13 +57,13 @@ if (USE_CCACHE)
 
 	find_program(CCACHE_PATH ccache)
 	if(CCACHE_PATH)
-  	  message(CHECK_PASS("found"))
-  	  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PATH})
-  	  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PATH})
+			message(CHECK_PASS("found"))
+			set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PATH})
+			set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PATH})
 	endif()
 
 	list(APPEND CMAKE_MESSAGE_INDENT " ")
-  	message(STATUS "(set -DUSE_CCACHE=Off to disable)")
+		message(STATUS "(set -DUSE_CCACHE=Off to disable)")
 	list(POP_BACK CMAKE_MESSAGE_INDENT)
 endif()
 
@@ -79,7 +79,7 @@ if (BUILD_TESTING)
 		GITHUB_REPOSITORY eranpeer/FakeIt
 		GIT_TAG 2.4.0
 		OPTIONS
- 	   		"BUILD_TESTINGING OFF"
+ 		 		"BUILD_TESTINGING OFF"
 	)
 
 	if (TARGET Catch2)
@@ -89,7 +89,7 @@ if (BUILD_TESTING)
 	endif()
 	if (TARGET Catch2WithMain)
 		set_target_properties(Catch2WithMain PROPERTIES
- 		    	CXX_STANDARD 20
+ 			CXX_STANDARD 20
 		)
 	endif()
 
@@ -112,7 +112,7 @@ CPMAddPackage(NAME IOCore
 		"BUILD_TESTING OFF"
 )
 
-find_package(Qt6 COMPONENTS 
+find_package(Qt6 COMPONENTS
 	Core REQUIRED
 	Widgets REQUIRED
 	Gui REQUIRED
