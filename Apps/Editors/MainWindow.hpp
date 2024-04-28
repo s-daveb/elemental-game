@@ -15,36 +15,37 @@
 #include <QMainWindow>
 #include <QStringListModel>
 
+#include <map>
+#include <memory>
+
 #include "ui_MainWindow.h"
 
+class QMdiSubWindow;
+class QFileSystemModel;
+class QModelIndex;
 class QMdiSubWindow;
 
 namespace ResourceEditor {
 
 class MainWindow : public QMainWindow {
+	// NOLINTNEXTLINE
 	Q_OBJECT
-
     public:
 	MainWindow(QWidget* parent = nullptr);
-	virtual ~MainWindow();
+	~MainWindow() override;
+
+    protected slots:
+	void onclick_open_directory();
 
     protected:
-	virtual void showEvent(QShowEvent*) override;
+	void showEvent(QShowEvent*) override;
+	void read_directory(const QString& directory);
+	void on_file_click(const QModelIndex& index);
 
-    private slots:
-	void open();
+	std::unique_ptr<Ui::MainWindow> ui;
+	std::unique_ptr<QFileSystemModel> filesystem_model;
 
-    private:
-	void moveToCenter();
-
-	void loadFile(const QString&);
-	QMdiSubWindow* findDocumentWindow(const QString&);
-	QMdiSubWindow* createDocumentWindow(const QString&);
-
-	Ui::MainWindow& ui;
-
-	QStringListModel component_list;
-	// GameEngine::ComponentStore& component_store;
+	std::map<QString, QMdiSubWindow*> open_documents;
 };
 }
 

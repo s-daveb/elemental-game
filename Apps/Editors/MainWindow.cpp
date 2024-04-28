@@ -7,133 +7,191 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include <QObject>
-#include <QWidget>
-
+#include <QApplication>
+#include <QFile>
+#include <QFileDialog>
+#include <QFileINfo>
+#include <QFileSystemModel>
 #include <QList>
 #include <QListView>
-#include <QStringListModel>
-
-#include <QRect>
-
-#include <QResizeEvent>
-
-#include <QScreen>
-
-#include <QApplication>
 #include <QMainWindow>
-
 #include <QMdiArea>
 #include <QMdiSubWindow>
-
-#include <QFileDialog>
-#include <QStandardPaths>
+#include <QMessageBox>
+#include <QObject>
+#include <QPlainTextEdit>
+#include <QProcess>
+#include <QRect>
+#include <QResizeEvent>
+#include <QScreen>
+#include <QStringListModel>
+#include <QTextStream>
+#include <QWidget>
 
 #include <functional>
 #include <iostream>
+#include <memory>
 
 #include "IOCore/Exception.hpp"
 
 #include "EntityEditor.hpp"
 #include "MainWindow.hpp"
+#include "fmt/format.h"
 #include "ui_MainWindow.h"
 
 namespace ResourceEditor {
 
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), ui(*(new Ui::MainWindow()))
+    : QMainWindow(parent)
+    , ui(std::make_unique<Ui::MainWindow>())
+    , filesystem_model(std::make_unique<QFileSystemModel>())
 {
-	ui.setupUi(this);
+	this->ui->setupUi(this);
 
-	connect(ui.actionOpen, SIGNAL(triggered(void)), this, SLOT(open(void)));
-
-	//this->open();
+	connect(
+	    this->ui->actionOpen,
+	    &QAction::triggered,
+	    this,
+	    &MainWindow::onclick_open_directory
+	);
+	this->read_directory("/Users/sdavid");
 }
 
-MainWindow::~MainWindow()
-{
-	Ui::MainWindow* ui_def = &(this->ui);
-	delete ui_def;
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::showEvent(QShowEvent* event)
 {
-	this->moveToCenter();
-}
-
-void MainWindow::moveToCenter()
-{
-	auto screenRect = QApplication::primaryScreen()->availableGeometry();
-	auto centerPoint = QPoint(
-	    screenRect.x() + (screenRect.width() / 2),
-	    screenRect.y() + (screenRect.height() / 2)
+	auto screen_rect = QApplication::primaryScreen()->availableGeometry();
+	auto center_point = QPoint(
+	    screen_rect.x() + (screen_rect.width() / 2),
+	    screen_rect.y() + (screen_rect.height() / 2)
 	);
 
-	centerPoint.setX(centerPoint.x() - (this->width() / 2));
-	centerPoint.setY(centerPoint.y() - (this->height() / 2));
+	center_point.setX(center_point.x() - (this->width() / 2));
+	center_point.setY(center_point.y() - (this->height() / 2));
 
-	// this->move(centerPoint);
+	this->move(center_point);
 }
-
-void MainWindow::open()
+void MainWindow::onclick_open_directory()
 {
-	QString filter = "JSON File (*.json)";
-	QString file_name = QFileDialog::getOpenFileName(
-	    (QWidget*)this, "open a file", QDir::current().dirName()
+	auto current_directory = QDir::current().dirName();
+	auto user_selection = QFileDialog::getExistingDirectory(
+	    this,
+	    QWidget::tr("Open Directory"),
+	    current_directory,
+	    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
 	);
+	this->read_directory(user_selection);
+};
 
-	this->loadFile(file_name);
-	/*	std::cout << "current selected_file:"
-	                  << this->selected_file.toStdString() << std::endl;*/
-}
-void MainWindow::loadFile(const QString& file_path)
+void MainWindow::read_directory(const QString& directory)
 {
-	QMdiSubWindow* document_to_open = findDocumentWindow(file_path);
+	auto model_index = this->filesystem_model->setRootPath(directory);
 
-	if (document_to_open) {
-		statusBar()->showMessage(
+	this->ui->fsTreeView->setModel(this->filesystem_model.get());
+	this->ui->fsTreeView->setRootIndex(model_index);
+
+	this->ui->fsTreeView->hideColumn(1);
+	this->ui->fsTreeView->hideColumn(2);
+	this->ui->fsTreeView->hideColumn(3);
+	this->ui->fsTreeView->hideColumn(4);
+	this->ui->fsTreeView->hideColumn(5);
+
+	connect(
+	    this->ui->fsTreeView,
+	    &QTreeView::doubleClicked,
+	    this,
+	    &MainWindow::on_file_click
+	);
+}
+
+void MainWindow::on_file_click(const QModelIndex& index)
+{
+	auto path = filesystem_model->filePath(index);
+	auto found_document_iter = open_documents.find(path);
+	QMdiSubWindow* subwindow = nullptr;
+
+	QFileInfo path_info(path);
+	if (path_info.isDir()) {
+		this->read_directory(path);
+		return;
+	}
+
+	if (found_document_iter != open_documents.end()) {
+		this->statusBar()->showMessage(
 		    tr("Document was already loaded"), 1000
 		);
+
+		subwindow = found_document_iter->second;
 	} else {
-		document_to_open = createDocumentWindow(file_path);
+		this->statusBar()->showMessage(tr("Opened New Document"), 1000);
+		auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
+		subwindow = this->ui->mdiArea->addSubWindow(text_widget);
 
-		if (document_to_open) {
-			statusBar()->showMessage(tr("File loaded"), 1000);
-		} else {
-			throw IOCore::Exception("The file could not be loaded!");
+		QFile file(path);
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			QTextStream file_text(&file);
+			text_widget->setPlainText(file_text.readAll());
+			file.close();
 		}
+		this->open_documents[path] = subwindow;
 	}
 
-	ui.mdiArea->setActiveSubWindow(document_to_open);
-	document_to_open->show();
+	////this->ui->mdiArea->setActiveSubWindow(subwindow);
+	subwindow->show();
 }
 
-QMdiSubWindow* MainWindow::findDocumentWindow(const QString& file_path)
+/*
+void MainWindow::load_file(const QString& file_path)
 {
-	QString absolute_path = QFileInfo(file_path).canonicalFilePath();
+        QMdiSubWindow* document_to_open =
+find_document_window(file_path);
 
-	const QList<QMdiSubWindow*> sub_windows = ui.mdiArea->subWindowList();
-	for (auto* window : sub_windows) {
-		auto* editor_widget =
-		    qobject_cast<EntityEditor*>(window->widget());
+        if (document_to_open) {
+                statusBar()->showMessage(
+                    tr("Document was already loaded"), 1000
+                );
+        } else {
+                document_to_open = create_document_window(file_path);
 
-		if (editor_widget) {
-			if (editor_widget->GetFileName() == absolute_path) {
-				return window;
-			}
-		}
-	}
-	return nullptr;
+                if (document_to_open) {
+                        statusBar()->showMessage(tr("File loaded"),
+1000); } else { throw IOCore::Exception("The file could not be loaded!");
+                }
+        }
+
+        ui->mdiArea->setActiveSubWindow(document_to_open);
+        document_to_open->show();
 }
 
-QMdiSubWindow* MainWindow::createDocumentWindow(const QString& file_path)
+auto MainWindow::find_document_window(const QString& file_path) ->
+QMdiSubWindow*
 {
-	EntityEditor* editor = new EntityEditor(ui.mdiArea, file_path);
-	QMdiSubWindow* subWindow = ui.mdiArea->addSubWindow(editor);
+        QString absolute_path = QFileInfo(file_path).canonicalFilePath();
 
-	subWindow->setWindowTitle(file_path);
-	return subWindow;
+        const QList<QMdiSubWindow*> kSubWindows =
+ui->mdiArea->subWindowList(); for (auto* window : kSubWindows) { auto*
+editor_widget = qobject_cast<EntityEditor*>(window->widget());
+
+                if (editor_widget) {
+                        if (editor_widget->GetFileName() ==
+absolute_path) { return window;
+                        }
+                }
+        }
+        return nullptr;
 }
+
+auto MainWindow::create_document_window(const QString& file_path)
+    -> QMdiSubWindow*
+{
+        auto editor = new EntityEditor(ui->mdiArea, file_path);
+        auto sub_window = ui->mdiArea->addSubWindow(editor);
+
+        sub_window->setWindowTitle(file_path);
+        return sub_window;
+}
+*/
 }
 
 // clang-format off
