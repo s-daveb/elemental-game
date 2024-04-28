@@ -9,16 +9,15 @@
 
 #pragma once
 
-#include <QObject>
-#include <QWidget>
+#include "ui_MainWindow.h"
 
 #include <QMainWindow>
-#include <QStringListModel>
+#include <QObject>
+#include <QString>
+#include <QWidget>
 
 #include <map>
 #include <memory>
-
-#include "ui_MainWindow.h"
 
 class QMdiSubWindow;
 class QFileSystemModel;
@@ -26,26 +25,31 @@ class QModelIndex;
 class QMdiSubWindow;
 
 namespace ResourceEditor {
-
 class MainWindow : public QMainWindow {
 	// NOLINTNEXTLINE
 	Q_OBJECT
+
+	template<typename TData>
+	using Ptr = std::unique_ptr<TData>;
+
     public:
 	MainWindow(QWidget* parent = nullptr);
 	~MainWindow() override;
 
     protected slots:
-	void onclick_open_directory();
+	void onclick_menuaction_open_directory();
+	void onclick_menuaction_new_file();
+
+	void onclick_fstree_file(const QModelIndex& index);
 
     protected:
 	void showEvent(QShowEvent*) override;
-	void read_directory(const QString& directory);
-	void on_file_click(const QModelIndex& index);
 
-	std::unique_ptr<Ui::MainWindow> ui;
-	std::unique_ptr<QFileSystemModel> filesystem_model;
+	void read_directory(const QString& directory = "");
 
-	std::map<QString, QMdiSubWindow*> open_documents;
+	QString current_directory;
+	Ptr<Ui::MainWindow> ui;
+	Ptr<QFileSystemModel> filesystem_model;
 };
 }
 

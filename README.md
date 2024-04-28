@@ -55,6 +55,13 @@ A game and custom-built game engine designed for creating simple, top-down strat
     ```
 This will execute the Catch2 test suite.
 
+## Contributing 
+I am not against recieving contributions and help, but I retain the right to determine the general direction of this project.
+That being said, feel free to fork this project and use it as a base for your own - just make sure to comply with the Mozilla Public License.
+([See here](https://www.tldrlegal.com/license/mozilla-public-license-2-0-mpl-2))
+
+Official rules for contribution might be outlined in a CONTRIBUTING.md at some point in the future, as needed.
+
 ## License
 This project is licensed under the MPL 2.0 License.
 
