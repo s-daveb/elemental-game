@@ -10,7 +10,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileDialog>
-#include <QFileINfo>
+#include <QFileInfo>
 #include <QFileSystemModel>
 #include <QList>
 #include <QListView>
