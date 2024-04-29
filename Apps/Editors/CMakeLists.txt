@@ -1,3 +1,4 @@
+add_subdirectory(third-party)
 
 qt_add_executable(ResourceEditor
 	main.cpp
@@ -13,6 +14,7 @@ PRIVATE
 	Qt6::Core
 	Qt6::Widgets
 	Qt6::Gui
+	QJsonModel
 )
 
 set_target_properties(ResourceEditor

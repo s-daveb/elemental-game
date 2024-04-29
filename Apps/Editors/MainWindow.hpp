@@ -23,6 +23,7 @@ class QMdiSubWindow;
 class QFileSystemModel;
 class QModelIndex;
 class QMdiSubWindow;
+class QJsonModel;
 
 namespace ResourceEditor {
 class MainWindow : public QMainWindow {
@@ -50,6 +51,8 @@ class MainWindow : public QMainWindow {
 	QString current_directory;
 	Ptr<Ui::MainWindow> ui;
 	Ptr<QFileSystemModel> filesystem_model;
+
+	std::map<QString, Ptr<QJsonModel>> json_models;
 };
 }
 

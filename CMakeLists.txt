@@ -22,6 +22,7 @@ project(Elemental
 	DESCRIPTION "A simple top-down strategy game"
 )
 include(CPM)
+git_setup_submodules()
 
 SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 

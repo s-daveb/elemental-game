@@ -28,6 +28,8 @@
 #include <QTextStream>
 #include <QWidget>
 
+#include "qjsonmodel.h"
+
 #include <algorithm>
 #include <functional>
 #include <iostream>
@@ -146,19 +148,48 @@ void MainWindow::onclick_fstree_file(const QModelIndex& index)
 		    tr("Document was already loaded"), 1000
 		);
 	} else {
-		this->statusBar()->showMessage(tr("Opened New Document"), 1000);
-		auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
+		auto filename = path_info.baseName();
+		auto suffix = path_info.suffix();
+		if (suffix == "json") {
+			auto tree_widget = new QTreeView(this->ui->mdiArea);
+			auto found = this->json_models.find(filename);
 
-		QFile file(path);
-		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QTextStream file_text(&file);
-			text_widget->setPlainText(file_text.readAll());
-			file.close();
+			if (found != this->json_models.end()) {
+				this->json_models[filename] =
+				    std::make_unique<QJsonModel>(this);
+			}
+			auto& model = this->json_models[filename];
+			tree_widget->setModel(model.get());
+			QFile file(path);
+			if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+				QTextStream file_text(&file);
+
+				model->loadJson(file_text.readAll().toUtf8());
+				file.close();
+			}
+
+
+			subwindow = this->ui->mdiArea->addSubWindow(tree_widget);
+			subwindow->setObjectName(path);
+			subwindow->setWindowTitle(path_info.fileName());
+
+		} else {
+			this->statusBar()->showMessage(
+			    tr("Opened New Document"), 1000
+			);
+			auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
+
+			QFile file(path);
+			if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+				QTextStream file_text(&file);
+				text_widget->setPlainText(file_text.readAll());
+				file.close();
+			}
+
+			subwindow = this->ui->mdiArea->addSubWindow(text_widget);
+			subwindow->setObjectName(path);
+			subwindow->setWindowTitle(path_info.fileName());
 		}
-
-		subwindow = this->ui->mdiArea->addSubWindow(text_widget);
-		subwindow->setObjectName(path);
-		subwindow->setWindowTitle(path_info.fileName());
 	}
 
 	subwindow->show();
