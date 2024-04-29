@@ -1,0 +1,3 @@
+[submodule "third-party/QJsonModel"]
+	path = Apps/Editors/third-party/QJsonModel
+	url = https://github.com/dridk/QJsonModel.git
