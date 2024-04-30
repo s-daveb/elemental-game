@@ -10,10 +10,8 @@ disable_deprecated_features()
 
 # When this package is included as a subproject, there's no need to
 # build and run the unit-tests.
-# Sets -DBUILD_TESTING to false by default if this is a third-party lib build
-# This check must appear before project()
 disable_tests_if_subproject()
-
+git_setup_submodules()
 project(Elemental
 	VERSION 0.0.3
 	LANGUAGES C CXX
@@ -21,8 +19,10 @@ project(Elemental
 	# HOMEPAGE_URL <URL>
 	DESCRIPTION "A simple top-down strategy game"
 )
+
+check_and_set_linker()
+
 include(CPM)
-git_setup_submodules()
 
 SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -30,12 +30,6 @@ option(CI_BUILD "Mark this as a CI/CD system build. Defines a C++ preprocessor m
 if (CI_BUILD)
 	add_compile_definitions(-DCI_BUILD=1)
 endif()
-
-option(USE_CCACHE
-	[=[Use ccache compiler cache to speed up builds.
-Enabled by default if ccache is found]=]
-ON
-)
 
 # enable compile_commands.json generation for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS On)
@@ -50,23 +44,6 @@ set(CMAKE_CXX_STANDARD 20)
 # Disable GNU compiler extensions
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Search for the code caching compiler wrapper, ccache and enable it
-# if found. This will speed up repeated builds.
-if (USE_CCACHE)
-	message(CHECK_START "Detecting cacche")
-
-	find_program(CCACHE_PATH ccache)
-	if(CCACHE_PATH)
-			message(CHECK_PASS("found"))
-			set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PATH})
-			set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PATH})
-	endif()
-
-	list(APPEND CMAKE_MESSAGE_INDENT " ")
-		message(STATUS "(set -DUSE_CCACHE=Off to disable)")
-	list(POP_BACK CMAKE_MESSAGE_INDENT)
-endif()
 
 if (BUILD_TESTING)
 	CPMFindPackage(NAME Catch2
@@ -120,6 +97,7 @@ find_package(Qt6 COMPONENTS
 )
 qt_standard_project_setup()
 
+
 # Set output directories for build targets
 set_artifact_dir(${CMAKE_BINARY_DIR}/out)
 
@@ -128,7 +106,7 @@ include(FetchContent)
 include(CheckIncludeFile)
 
 # Initialize pkgconf
-find_package(Threads)
+find_package(Threads)  # POSIX thread support
 find_package(PkgConfig REQUIRED)
 
 # Example: Find SDL2, SDL2_image, and SDL2_gfx using PkgConfig
@@ -136,21 +114,25 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
+
+
 
 SET(SDL2_COMBINED_INCLUDE_DIRS "")
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
-
 list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
+
+include_directories(SYSTEM ${SDL_COMBINED_INCLUDE_DIRS})
 
 set(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2
 	PkgConfig::SDL2_IMAGE
 	PkgConfig::SDL2_GFX
 )
+
+pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
+include_directories(SYSTEM ${NLOHMANN_JSON_INCLUDE_DIRS})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(-DDEBUG=1)

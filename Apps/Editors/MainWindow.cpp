@@ -153,13 +153,15 @@ void MainWindow::onclick_fstree_file(const QModelIndex& index)
 		if (suffix == "json") {
 			auto tree_widget = new QTreeView(this->ui->mdiArea);
 			auto found = this->json_models.find(filename);
+			QJsonModel* model = nullptr;
 
-			if (found != this->json_models.end()) {
+			if (found == this->json_models.end()) {
 				this->json_models[filename] =
 				    std::make_unique<QJsonModel>(this);
 			}
-			auto& model = this->json_models[filename];
-			tree_widget->setModel(model.get());
+			model = this->json_models.at(filename).get();
+			tree_widget->setModel(model);
+
 			QFile file(path);
 			if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 				QTextStream file_text(&file);
@@ -167,7 +169,6 @@ void MainWindow::onclick_fstree_file(const QModelIndex& index)
 				model->loadJson(file_text.readAll().toUtf8());
 				file.close();
 			}
-
 
 			subwindow = this->ui->mdiArea->addSubWindow(tree_widget);
 			subwindow->setObjectName(path);

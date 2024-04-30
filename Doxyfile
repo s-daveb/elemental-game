@@ -50,7 +50,7 @@ PROJECT_BRIEF          =
 # the logo to the output directory.
 
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = "docs"
+OUTPUT_DIRECTORY       = "Docs"
 CREATE_SUBDIRS         = YES
 
 # Controls the number of sub-directories that will be created when
@@ -213,9 +213,9 @@ QT_AUTOBRIEF           = NO
 
 MULTILINE_CPP_IS_BRIEF = NO
 
-# By default Python docstrings are displayed as preformatted text and doxygen's
+# By default Python Docstrings are displayed as preformatted text and doxygen's
 # special commands cannot be used. By setting PYTHON_DOCSTRING to NO the
-# doxygen's special commands can be used and the contents of the docstring
+# doxygen's special commands can be used and the contents of the Docstring
 # documentation blocks is shown as doxygen documentation.
 # The default value is: YES.
 
@@ -1254,7 +1254,7 @@ IGNORE_PREFIX          =
 
 GENERATE_HTML          = YES
 
-# The HTML_OUTPUT tag is used to specify where the HTML docs will be put. If a
+# The HTML_OUTPUT tag is used to specify where the HTML Docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
 # it.
 # The default directory is: html.
@@ -1327,7 +1327,7 @@ HTML_STYLESHEET        =
 # documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = docs/extra/dark-mode.css
+HTML_EXTRA_STYLESHEET  = Docs/extra/dark-mode.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1337,7 +1337,7 @@ HTML_EXTRA_STYLESHEET  = docs/extra/dark-mode.css
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = docs/extra/dark-mode.css
+HTML_EXTRA_FILES       = Docs/extra/dark-mode.css
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.
@@ -1446,8 +1446,8 @@ HTML_INDEX_NUM_ENTRIES = 100
 # environment (see:
 # https://developer.apple.com/xcode/), introduced with OSX 10.5 (Leopard). To
 # create a documentation set, doxygen will generate a Makefile in the HTML
-# output directory. Running make will produce the docset in that directory and
-# running make install will install the docset in
+# output directory. Running make will produce the Docset in that directory and
+# running make install will install the Docset in
 # ~/Library/Developer/Shared/Documentation/DocSets so that Xcode will find it at
 # startup. See https://developer.apple.com/library/archive/featuredarticles/Doxy
 # genXcode/_index.html for more information.
@@ -1456,15 +1456,15 @@ HTML_INDEX_NUM_ENTRIES = 100
 
 GENERATE_DOCSET        = NO
 
-# This tag determines the name of the docset feed. A documentation feed provides
+# This tag determines the name of the Docset feed. A documentation feed provides
 # an umbrella under which multiple documentation sets from a single provider
 # (such as a company or product suite) can be grouped.
-# The default value is: Doxygen generated docs.
+# The default value is: Doxygen generated Docs.
 # This tag requires that the tag GENERATE_DOCSET is set to YES.
 
-DOCSET_FEEDNAME        = "Doxygen generated docs"
+DOCSET_FEEDNAME        = "Doxygen generated Docs"
 
-# This tag determines the URL of the docset feed. A documentation feed provides
+# This tag determines the URL of the Docset feed. A documentation feed provides
 # an umbrella under which multiple documentation sets from a single provider
 # (such as a company or product suite) can be grouped.
 # This tag requires that the tag GENERATE_DOCSET is set to YES.
@@ -1473,7 +1473,7 @@ DOCSET_FEEDURL         =
 
 # This tag specifies a string that should uniquely identify the documentation
 # set bundle. This should be a reverse domain-name style string, e.g.
-# com.mycompany.MyDocSet. Doxygen will append .docset to the name.
+# com.mycompany.MyDocSet. Doxygen will append .Docset to the name.
 # The default value is: org.doxygen.Project.
 # This tag requires that the tag GENERATE_DOCSET is set to YES.
 
@@ -1684,7 +1684,7 @@ GENERATE_TREEVIEW      = NO
 # FULL_SIDEBAR option determines if the side bar is limited to only the treeview
 # area (value NO) or if it should extend to the full height of the window (value
 # YES). Setting this to YES gives a layout similar to
-# https://docs.readthedocs.io with more room for contents, but less room for the
+# https://Docs.readtheDocs.io with more room for contents, but less room for the
 # project logo, title, and description. If either GENERATE_TREEVIEW or
 # DISABLE_INDEX is set to NO, this option has no effect.
 # The default value is: NO.
@@ -1774,9 +1774,9 @@ MATHJAX_VERSION        = MathJax_2
 # When MathJax is enabled you can set the default output format to be used for
 # the MathJax output. For more details about the output format see MathJax
 # version 2 (see:
-# http://docs.mathjax.org/en/v2.7-latest/output.html) and MathJax version 3
+# http://Docs.mathjax.org/en/v2.7-latest/output.html) and MathJax version 3
 # (see:
-# http://docs.mathjax.org/en/latest/web/components/output.html).
+# http://Docs.mathjax.org/en/latest/web/components/output.html).
 # Possible values are: HTML-CSS (which is slower, but has the best
 # compatibility. This is the name for Mathjax version 2, for MathJax version 3
 # this will be translated into chtml), NativeMML (i.e. MathML. Only supported
@@ -1805,10 +1805,10 @@ MATHJAX_RELPATH        =
 # The MATHJAX_EXTENSIONS tag can be used to specify one or more MathJax
 # extension names that should be enabled during MathJax rendering. For example
 # for MathJax version 2 (see
-# https://docs.mathjax.org/en/v2.7-latest/tex.html#tex-and-latex-extensions):
+# https://Docs.mathjax.org/en/v2.7-latest/tex.html#tex-and-latex-extensions):
 # MATHJAX_EXTENSIONS = TeX/AMSmath TeX/AMSsymbols
 # For example for MathJax version 3 (see
-# http://docs.mathjax.org/en/latest/input/tex/extensions/index.html):
+# http://Docs.mathjax.org/en/latest/input/tex/extensions/index.html):
 # MATHJAX_EXTENSIONS = ams
 # This tag requires that the tag USE_MATHJAX is set to YES.
 
@@ -1817,7 +1817,7 @@ MATHJAX_EXTENSIONS     =
 # The MATHJAX_CODEFILE tag can be used to specify a file with javascript pieces
 # of code that will be used on startup of the MathJax code. See the MathJax site
 # (see:
-# http://docs.mathjax.org/en/v2.7-latest/output.html) for more details. For an
+# http://Docs.mathjax.org/en/v2.7-latest/output.html) for more details. For an
 # example see the documentation.
 # This tag requires that the tag USE_MATHJAX is set to YES.
 
@@ -1826,7 +1826,7 @@ MATHJAX_CODEFILE       =
 # When the SEARCHENGINE tag is enabled doxygen will generate a search box for
 # the HTML output. The underlying search engine uses javascript and DHTML and
 # should work on any modern browser. Note that when using HTML help
-# (GENERATE_HTMLHELP), Qt help (GENERATE_QHP), or docsets (GENERATE_DOCSET)
+# (GENERATE_HTMLHELP), Qt help (GENERATE_QHP), or Docsets (GENERATE_DOCSET)
 # there is already a search function so this one should typically be disabled.
 # For large projects the javascript based search engine can be slow, then
 # enabling SERVER_BASED_SEARCH may provide a better solution. It is possible to
@@ -1920,7 +1920,7 @@ EXTRA_SEARCH_MAPPINGS  =
 
 GENERATE_LATEX         = YES
 
-# The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put. If a
+# The LATEX_OUTPUT tag is used to specify where the LaTeX Docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
 # it.
 # The default directory is: latex.
@@ -2105,7 +2105,7 @@ LATEX_EMOJI_DIRECTORY  =
 
 GENERATE_RTF           = NO
 
-# The RTF_OUTPUT tag is used to specify where the RTF docs will be put. If a
+# The RTF_OUTPUT tag is used to specify where the RTF Docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
 # it.
 # The default directory is: rtf.

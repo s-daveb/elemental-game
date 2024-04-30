@@ -10,11 +10,6 @@ set(ELEMENTAL_SOURCES
 
 add_library(elemental OBJECT ${ELEMENTAL_SOURCES})
 
-target_include_directories(elemental SYSTEM BEFORE
-	PUBLIC ${SDL2_COMBINED_INCLUDE_DIRS}
-	PUBLIC ${NLOHMANN_JSON_INCLUDE_DIRS}
-)
-
 #file(MAKE_DIRECTORY ${Elemental_ARTIFACT_DIR}/include/)
 #add_custom_target(elemental_include_files
 #	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/include ${Elemental_ARTIFACT_DIR}/include/elemental

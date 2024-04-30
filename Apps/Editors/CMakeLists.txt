@@ -10,11 +10,12 @@ qt_add_executable(ResourceEditor
 
 target_link_libraries(ResourceEditor
 PRIVATE
-	IOCore::IOCoreStatic
+	${NLOHMANN_JSON_LIBS}
 	Qt6::Core
-	Qt6::Widgets
 	Qt6::Gui
+	Qt6::Widgets
 	QJsonModel
+	IOCore::IOCoreStatic
 )
 
 set_target_properties(ResourceEditor
