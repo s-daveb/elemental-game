@@ -1,9 +1,8 @@
 # Editors 
 This folder contains the source code for various editors used in the development of elemental. Each program here is designed to facilitate the creation and modification of different resources used by elemental-based games.
 
-## Current Status
-
-**Important**: Please note that all the editors within this folder are a work in progress. The functionality and interfaces of these editors may change as development progresses.
+## Secreenshots
+<a href="https://gitea.beniquez.me/sdaveb/elemental-game/raw/branch/qt/Docs/Images/Screenshots/ResourceEditor_alpha.png"><img alt="Screenshot of the ResourceEditor" src="https://gitea.beniquez.me/sdaveb/elemental-game/raw/branch/qt/Docs/Images/Screenshots/ResourceEditor_alpha.png" width="640" height="480"/></a>
 
 ## ResourceEditor
 
@@ -15,10 +14,3 @@ The goal is to create smaller sub-editor that share a common framework such that
 - Open and edit various types of game resources.
 - User-friendly interface.
 - Extensible framework for future types of files.
-
-### Screenshot
-
-Coming soon.
-
-*Screenshot of the ResourceEditor in action.*
-
