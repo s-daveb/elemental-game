@@ -1,20 +1,11 @@
-# Define the library 'engine'
-set(ELEMENTAL_SOURCES
+add_library(elemental
+OBJECT
 	JsonConfigFile.cpp
 	LoopRegulator.cpp
 	Observable.cpp
 	SdlRenderer.cpp
 	SdlEventSource.cpp
-	paths.cpp
-)
-
-add_library(elemental OBJECT ${ELEMENTAL_SOURCES})
-
-#file(MAKE_DIRECTORY ${Elemental_ARTIFACT_DIR}/include/)
-#add_custom_target(elemental_include_files
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/include ${Elemental_ARTIFACT_DIR}/include/elemental
-#)
-#add_dependencies(elemental elemental_include_files)
+	paths.cpp)
 
 target_include_directories(elemental BEFORE
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
