@@ -1,4 +1,3 @@
-add_subdirectory(third-party)
 
 qt_add_executable(ResourceEditor
 	main.cpp
@@ -7,15 +6,14 @@ qt_add_executable(ResourceEditor
 	EntityEditor.ui
 	EntityEditor.cpp
 )
-
 target_link_libraries(ResourceEditor
 PRIVATE
 	${NLOHMANN_JSON_LIBS}
 	Qt6::Core
 	Qt6::Gui
 	Qt6::Widgets
-	QJsonModel
 	IOCore::IOCoreStatic
+	QJsonModel
 )
 
 set_target_properties(ResourceEditor

@@ -1,3 +1,2 @@
 add_subdirectory(elemental)
-
-include(QJsonModel.cmake)
+add_subdirectory(QJsonModel)

@@ -7,6 +7,19 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "MainWindow.hpp"
+#include "ui_MainWindow.h"
+
+#include "QJsonModel.hpp"
+
+#include "IOCore/Exception.hpp"
+#include "fmt/format.h"
+
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <memory>
+
 #include <QApplication>
 #include <QFile>
 #include <QFileDialog>
@@ -27,20 +40,6 @@
 #include <QStringListModel>
 #include <QTextStream>
 #include <QWidget>
-
-#include "qjsonmodel.h"
-
-#include <algorithm>
-#include <functional>
-#include <iostream>
-#include <memory>
-
-#include "IOCore/Exception.hpp"
-
-#include "EntityEditor.hpp"
-#include "MainWindow.hpp"
-#include "fmt/format.h"
-#include "ui_MainWindow.h"
 
 namespace ResourceEditor {
 
