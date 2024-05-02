@@ -1,22 +1,27 @@
 qt_add_library(QJsonModel
-STATIC
+OBJECT
 	QJsonModel.cpp
+)
+
+# Since headers are in the include/ directory, going to handle MOC invocation
+# manually.
+set_target_properties(QJsonModel PROPERTIES
+	AUTOMOC OFF
 )
 
 target_include_directories(QJsonModel
 SYSTEM BEFORE
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-set_target_properties(QJsonModel PROPERTIES
-	AUTOMOC OFF
-)
 
-# Assume these MOC sources are generated later in the CMakeLists.txt
+
+# Manually call moc on all header files
 file(GLOB QJsonModel_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp)
 qt_wrap_cpp(QJsonModel_MOC_SOURCES  ${QJsonModel_HEADER_FILES}
 	TARGET QJsonModel
 )
 
+# Append the MOC files to the source list
 target_sources(QJsonModel PRIVATE ${QJsonModel_MOC_SOURCES})
 
 # Create an Object library from the generated moc sources
