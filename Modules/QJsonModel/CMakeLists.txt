@@ -10,10 +10,14 @@ set_target_properties(QJsonModel PROPERTIES
 )
 
 target_include_directories(QJsonModel
-SYSTEM BEFORE
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+BEFORE
+	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_include_directories(QJsonModel
+SYSTEM BEFORE
+	INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 # Manually call moc on all header files
 file(GLOB QJsonModel_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp)

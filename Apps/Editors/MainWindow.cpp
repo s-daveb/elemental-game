@@ -10,8 +10,6 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
-#include "QJsonModel.hpp"
-
 #include "IOCore/Exception.hpp"
 #include "fmt/format.h"
 
@@ -19,6 +17,8 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+
+#include <QJsonModel.hpp>
 
 #include <QApplication>
 #include <QFile>
