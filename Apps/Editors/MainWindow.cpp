@@ -18,7 +18,7 @@
 #include <iostream>
 #include <memory>
 
-#include <QJsonModel.hpp>
+#include "QJsonModel.hpp"
 
 #include <QApplication>
 #include <QFile>

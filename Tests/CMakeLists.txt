@@ -1,6 +1,6 @@
 # Define the executable 'test-runner'
 add_executable(test-runner
-runtime.test.cpp
+	runtime.test.cpp
 	Singleton.template.test.cpp
 	IRenderer.test.cpp
 	LoopRegulator.test.cpp
@@ -13,34 +13,33 @@ runtime.test.cpp
 
 )
 
-set_target_properties(test-runner PROPERTIES EXCLUDE_FROM_ALL 1)
+set_target_properties(test-runner
+PROPERTIES
+	EXCLUDE_FROM_ALL 1
+)
 
 target_compile_definitions(test-runner PRIVATE
 	-DUNIT_TEST=1
 	-DNO_GUI=1
 )
 
-set(TESTS_LINK_DEPS
+target_include_directories(test-runner
+	PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
+	PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
+)
+
+set(Elemental_TEST_SUITE_LIBS
 	elemental
+	IOCore
 	Catch2::Catch2WithMain
 	FakeIt::FakeIt-catch
 	Threads::Threads
 	${SDL2_COMBINED_LINK_DEPS}
 	${STACKTRACE_DEP_LIBS}
 )
-
-target_include_directories(test-runner
-	PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
-	PRIVATE ${CMAKE_SOURCE_DIR}/Tests
-)
-
-target_link_directories(test-runner PRIVATE
- ${CATCH2_LIBRARY_DIRS}
-)
-
 target_link_libraries(test-runner
 PRIVATE
-	${TESTS_LINK_DEPS}
+	${Elemental_TEST_SUITE_LIBS}
 )
 
 # Set output directories for build targets

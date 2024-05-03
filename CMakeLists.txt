@@ -81,14 +81,25 @@ if (BUILD_TESTING)
 endif()
 
 CPMAddPackage(NAME IOCore
-	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	#GIT_TAG devel
-	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	GIT_TAG v0.2.16
+	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
+	GIT_TAG devel
+	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
+	#GIT_TAG v0.2.19
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
 )
+
+CPMAddPackage(NAME QJsonModel
+	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../QJsonModel"
+	#GIT_TAG master
+	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
+	GIT_TAG v0.0.4
+	OPTIONS
+ 		"USE_CCACHE ON"
+		"USE_MOLD ON"
+)
+
 
 find_package(Qt6 COMPONENTS
 	Core REQUIRED
@@ -96,6 +107,8 @@ find_package(Qt6 COMPONENTS
 	Gui REQUIRED
 )
 qt_standard_project_setup()
+
+
 
 
 # Set output directories for build targets
@@ -123,7 +136,7 @@ list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
 list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
 
-include_directories(SYSTEM ${SDL_COMBINED_INCLUDE_DIRS})
+include_directories(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
 
 set(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2
@@ -147,4 +160,4 @@ endif()
 
 add_subdirectory(Apps)
 
-# vim: ts=2 sw=2 noet foldmethod=indent :
+# vim: ts=4 sw=4 noet foldmethod=indent :
