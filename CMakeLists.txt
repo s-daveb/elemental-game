@@ -81,10 +81,10 @@ if (BUILD_TESTING)
 endif()
 
 CPMAddPackage(NAME IOCore
-	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	GIT_TAG devel
-	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	#GIT_TAG v0.2.19
+	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
+	#GIT_TAG devel
+	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
+	GIT_TAG v0.2.20
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
