@@ -23,11 +23,14 @@
 " ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 " POSSIBILITY OF SUCH DAMAGE. @}
 
-set foldmethod=expr
-  \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  \ foldtext=lsp#ui#vim#folding#foldtext()
+augroup lsp_folding
+autocmd!
+autocmd FileType cpp,cpp.doxygen setlocal
+	\ foldmethod=expr
+	\ foldexpr=lsp#ui#vim#folding#foldexpr()
+	\ foldtext=lsp#ui#vim#folding#foldtext()o
 
-
+augroup end
 let s:build_dir = 'debug'
 let s:build_cores = 6
 let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' all'
@@ -138,6 +141,10 @@ set path+=src
 set path+=include
 set path+=app
 
-autocmd! BufWritePre *.c,*.h,*.cpp,*.hpp LspDocumentFormat
+if !has('nvim')
+	autocmd! BufWritePre *.c,*.h,*.cpp,*.hpp LspDocumentFormat
+else
+	autocmd! BufWritePre *.c,*.h,*.cpp,*.hpp lua vim.lsp.buf.format({ async = false })
+endif
 
 " vim: set ts=4 sts=4 noet sw=4 foldmethod=marker foldmarker=@{,@} :
