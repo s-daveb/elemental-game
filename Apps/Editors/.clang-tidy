@@ -1,5 +1,5 @@
 HeaderFilterRegex: '.*hpp'
-Checks: '-*,readability-identifier-naming,readability-identifier-length,readability-function-cognitive-complexity,google-readability-casting,modernize-use-trailing-return-type,modernize-use-default-member-init,modernize-use-uncaught-exceptions,modernize-type-traits,modernize-use-override,misc-non-copyable-objects'
+Checks: '-*,readability-identifier-naming,readability-identifier-length,readability-function-cognitive-complexity,google-readability-casting,-modernize-use-trailing-return-type,modernize-use-default-member-init,modernize-use-uncaught-exceptions,modernize-type-traits,modernize-use-override,misc-non-copyable-objects'
 
 CheckOptions:
 	# Modernize constructors
@@ -13,11 +13,11 @@ CheckOptions:
 
 	# Minimum Variable Length
 	- { key: readability-identifier-length.MinimumVariableNameLength, value: 3 }
-	- { key: readability-identifier-length.IgnoredVariableNames, value: "^(i|j|n|x|y|z|it)$" }
+	- { key: readability-identifier-length.IgnoredVariableNames, value: "^(i|j|n|it)$" }
 
 	# Minimum Parameter Length
 	- { key: readability-identifier-length.MinimumParameterNameLength, value: 3 }
-	- { key: readability-identifier-length.IgnoredParameterNames, value: "^(i|j|n|x|y|z|it)$" }
+	- { key: readability-identifier-length.IgnoredParameterNames, value: "^(i|j|n|it)$" }
 
 	# Minimum Loop Counter Length
 	- { key: readability-identifier-length.MinimumLoopCounterNameLength, value: 3 }
@@ -41,7 +41,7 @@ CheckOptions:
 
 	# Template Parameters
 	- { key: readability-identifier-naming.TypeTemplateParameterPrefix,
-		value: 'T' }
+		value: '' }
 	- { key: readability-identifier-naming.TypeTemplateParameterSuffix,
 	value: '' }
 	- { key: readability-identifier-naming.TypeTemplateParameterCase,
@@ -56,19 +56,20 @@ CheckOptions:
 	# Function Names
 	- { key: readability-identifier-naming.FunctionCase,       value: camelBack }
 	- { key: readability-identifier-naming.PublicMethodCase,   value: camelBack }
-	- { key: readability-identifier-naming.PrivateMethodCase,  value: lower_case }
+	- { key: readability-identifier-naming.PrivateMethodCase,  value: camelBack }
 
-	- { key: readability-identifier-naming.ParameterCase,       value: lower_case }
+	- { key: readability-identifier-naming.ParameterCase,       value: camelBack }
+	  #- { key: readability-identifier-naming.ParameterHungarianPrefix,   value: On }
 
 	# Variable Names
 	- { key: readability-identifier-naming.VariableCase,       value: lower_case }
 	- { key: readability-identifier-naming.PrivateMemberCase,  value: lower_case }
 
 	# Constants and Enum Values
-	- { key: readability-identifier-naming.ConstantPrefix,   value: 'k' }
-	- { key: readability-identifier-naming.ConstantCase,     value: CamelCase }
+	- { key: readability-identifier-naming.ConstantPrefix,   value: 'k_' }
+	- { key: readability-identifier-naming.ConstantCase,     value: CamelBack }
 
-	- { key: readability-identifier-naming.EnumConstantPrefix, value: '' }
+	- { key: readability-identifier-naming.EnumConstantPrefix, value: 'k' }
 	- { key: readability-identifier-naming.EnumConstantCase,   value: CamelCase }
 
 	# Constant Expression

@@ -10,15 +10,13 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
+#include "ExceptionDialog.hpp"
+#include "JsonEditor.hpp"
+
 #include "IOCore/Exception.hpp"
-#include "fmt/format.h"
 
-#include <algorithm>
-#include <functional>
-#include <iostream>
-#include <memory>
-
-#include "QJsonModel.hpp"
+#include <QJsonModel.hpp>
+#include <fmt/format.h>
 
 #include <QApplication>
 #include <QFile>
@@ -41,6 +39,11 @@
 #include <QTextStream>
 #include <QWidget>
 
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <memory>
+
 namespace ResourceEditor {
 
 MainWindow::MainWindow(QWidget* parent)
@@ -58,7 +61,7 @@ MainWindow::MainWindow(QWidget* parent)
 	    this,
 	    &MainWindow::onclick_menuaction_open_directory
 	);
-	this->read_directory(current_directory);
+	this->readDirectory(current_directory);
 }
 
 MainWindow::~MainWindow() {}
@@ -70,7 +73,6 @@ void MainWindow::showEvent(QShowEvent* event)
 	    screen_rect.x() + (screen_rect.width() / 2),
 	    screen_rect.y() + (screen_rect.height() / 2)
 	);
-
 	center_point.setX(center_point.x() - (this->width() / 2));
 	center_point.setY(center_point.y() - (this->height() / 2));
 
@@ -78,14 +80,13 @@ void MainWindow::showEvent(QShowEvent* event)
 }
 void MainWindow::onclick_menuaction_open_directory()
 {
-	auto current_directory = QDir::current().dirName();
 	auto user_selection = QFileDialog::getExistingDirectory(
 	    this,
 	    QWidget::tr("Open Directory"),
-	    current_directory,
+	    this->current_directory,
 	    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
 	);
-	this->read_directory(user_selection);
+	this->readDirectory(user_selection);
 };
 void MainWindow::onclick_menuaction_new_file()
 {
@@ -96,10 +97,10 @@ void MainWindow::onclick_menuaction_new_file()
 	    current_directory,
 	    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
 	);
-	this->read_directory(user_selection);
+	this->readDirectory(user_selection);
 };
 
-void MainWindow::read_directory(const QString& directory)
+void MainWindow::readDirectory(const QString& directory)
 {
 	auto model_index = this->filesystem_model->setRootPath(directory);
 
@@ -120,63 +121,25 @@ void MainWindow::read_directory(const QString& directory)
 	);
 	current_directory = directory;
 }
-
-void MainWindow::onclick_fstree_file(const QModelIndex& index)
+auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 {
-	auto path = filesystem_model->filePath(index);
-	QFileInfo path_info(path);
-	if (path_info.isDir()) {
-		this->read_directory(path);
-		return;
-	}
-
-	auto subwindow_list = this->ui->mdiArea->subWindowList();
-	QMdiSubWindow* subwindow = nullptr;
-
-	auto result = std::find_if(
-	    subwindow_list.begin(),
-	    subwindow_list.end(),
-	    [&path](QWidget* widget_ptr) {
-		    return (widget_ptr->objectName() == path);
-	    }
-	);
-
-	if (result != subwindow_list.end()) {
-		subwindow = *result;
-		this->statusBar()->showMessage(
-		    tr("Document was already loaded"), 1000
-		);
-	} else {
-		auto filename = path_info.baseName();
-		auto suffix = path_info.suffix();
+	QMdiSubWindow* subwindow_ptr = nullptr;
+	try {
+		auto path = fileInfo.filePath();
+		auto filename = fileInfo.baseName();
+		auto suffix = fileInfo.suffix();
 		if (suffix == "json") {
-			auto tree_widget = new QTreeView(this->ui->mdiArea);
-			auto found = this->json_models.find(filename);
-			QJsonModel* model = nullptr;
+			auto json_editor =
+			    new JsonEditor(this->ui->mdiArea, path);
 
-			if (found == this->json_models.end()) {
-				this->json_models[filename] =
-				    std::make_unique<QJsonModel>(this);
-			}
-			model = this->json_models.at(filename).get();
-			tree_widget->setModel(model);
-
-			QFile file(path);
-			if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-				QTextStream file_text(&file);
-
-				model->loadJson(file_text.readAll().toUtf8());
-				file.close();
-			}
-
-			subwindow = this->ui->mdiArea->addSubWindow(tree_widget);
-			subwindow->setObjectName(path);
-			subwindow->setWindowTitle(path_info.fileName());
+			subwindow_ptr =
+			    this->ui->mdiArea->addSubWindow(json_editor);
+			subwindow_ptr->setObjectName(filename);
+			subwindow_ptr->setWindowFilePath(path);
+			// subwindow_ptr->setWindowTitle(path_info.fileName());
 
 		} else {
-			this->statusBar()->showMessage(
-			    tr("Opened New Document"), 1000
-			);
+
 			auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
 
 			QFile file(path);
@@ -186,15 +149,56 @@ void MainWindow::onclick_fstree_file(const QModelIndex& index)
 				file.close();
 			}
 
-			subwindow = this->ui->mdiArea->addSubWindow(text_widget);
-			subwindow->setObjectName(path);
-			subwindow->setWindowTitle(path_info.fileName());
+			subwindow_ptr =
+			    this->ui->mdiArea->addSubWindow(text_widget);
+			subwindow_ptr->setWindowFilePath(path);
+			subwindow_ptr->setObjectName(path);
+			// subwindow_ptr->setWindowTitle(path_info.fileName());
 		}
+	} catch (IOCore::Exception& e) {
+		auto dialog = ExceptionDialog::display(this, e);
+		subwindow_ptr = nullptr;
+	}
+	return subwindow_ptr;
+}
+
+void MainWindow::onclick_fstree_file(const QModelIndex& index)
+{
+	auto path = filesystem_model->filePath(index);
+	auto path_info = QFileInfo(path);
+
+	auto statusbar = this->statusBar();
+	QMdiSubWindow* subwindow_ptr = nullptr;
+
+	// Case 1:  User selected a directory. CD into it.
+	if (path_info.isDir()) {
+		this->readDirectory(path);
+		return;
 	}
 
-	subwindow->show();
-}
+	// Case 2: User selected a file we've already opened. Show it.
+	auto subwindows = this->ui->mdiArea->subWindowList();
+	auto result = std::find_if(
+	    subwindows.begin(),
+	    subwindows.end(),
+	    [&path](QWidget* widgetPtr) {
+		    return (widgetPtr->windowFilePath() == path);
+	    }
+	);
+	if (result != subwindows.end()) {
+		subwindow_ptr = *result;
+		statusbar->showMessage(tr("Document was already loaded"), 2000);
+	} else {
+		// Case 3: User selected a new file. Open it.
+		statusbar->showMessage(tr("Opening New Document"), 2000);
+
+		subwindow_ptr = this->loadFile(path_info);
+
+		ASSERT(subwindow_ptr != nullptr);
+		subwindow_ptr->show();
+	}
 }
 
+}
 // clang-format off
-// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldminlines=5 foldlevel=2 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

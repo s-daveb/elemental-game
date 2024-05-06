@@ -3,21 +3,23 @@ qt_add_executable(ResourceEditor
 	main.cpp
 	MainWindow.ui
 	MainWindow.cpp
-	EntityEditor.ui
-	EntityEditor.cpp
+	ExceptionDialog.hpp
+	ExceptionDialog.ui
+	JsonEditor.ui
+	JsonEditor.cpp
 )
 set_target_properties(ResourceEditor PROPERTIES
-	AUTOMOC OFF
+	AUTOMOC ON
 )
 
 # Manually call moc on all header files
-file(GLOB_RECURSE ResourceEditor_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/**.hpp)
+#file(GLOB_RECURSE ResourceEditor_HEADER_FILES
+#	${CMAKE_CURRENT_SOURCE_DIR}/**.hpp)
 
 qt_wrap_cpp(ResourceEditor_MOC_SOURCES	${ResourceEditor_HEADER_FILES}
 	TARGET ResourceEditor
 )
-target_sources(ResourceEditor PUBLIC ${ResourceEditor_MOC_SOURCES})
+#target_sources(ResourceEditor PUBLIC ${ResourceEditor_MOC_SOURCES})
 
 target_link_libraries(ResourceEditor
 PRIVATE

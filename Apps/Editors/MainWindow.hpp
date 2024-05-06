@@ -24,6 +24,7 @@ class QFileSystemModel;
 class QModelIndex;
 class QMdiSubWindow;
 class QJsonModel;
+class QFileInfo;
 
 namespace ResourceEditor {
 class MainWindow : public QMainWindow {
@@ -32,6 +33,8 @@ class MainWindow : public QMainWindow {
 
 	template<typename TData>
 	using Ptr = std::unique_ptr<TData>;
+
+	using FilePath = QString;
 
     public:
 	MainWindow(QWidget* parent = nullptr);
@@ -46,13 +49,13 @@ class MainWindow : public QMainWindow {
     protected:
 	void showEvent(QShowEvent*) override;
 
-	void read_directory(const QString& directory = "");
+	void readDirectory(const QString& directory = "");
+	QMdiSubWindow* loadFile(QFileInfo& fileInfo);
 
 	QString current_directory;
+
 	Ptr<Ui::MainWindow> ui;
 	Ptr<QFileSystemModel> filesystem_model;
-
-	std::map<QString, Ptr<QJsonModel>> json_models;
 };
 }
 

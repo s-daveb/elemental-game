@@ -11,7 +11,7 @@ disable_deprecated_features()
 # When this package is included as a subproject, there's no need to
 # build and run the unit-tests.
 disable_tests_if_subproject()
-git_setup_submodules()
+#git_setup_submodules()
 project(Elemental
 	VERSION 0.0.3
 	LANGUAGES C CXX
@@ -80,26 +80,26 @@ if (BUILD_TESTING)
 	endif()
 endif()
 
+
 CPMAddPackage(NAME IOCore
-	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	#GIT_TAG devel
-	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	GIT_TAG v0.2.20
+	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
+	GIT_TAG devel
+	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
+	#GIT_TAG v0.2.20
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
 )
 
 CPMAddPackage(NAME QJsonModel
-	#GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../QJsonModel"
-	#GIT_TAG master
-	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
-	GIT_TAG v0.0.4
+	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../QJsonModel"
+	GIT_TAG master
+	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
+	#GIT_TAG v0.0.4
 	OPTIONS
  		"USE_CCACHE ON"
 		"USE_MOLD ON"
 )
-
 
 find_package(Qt6 COMPONENTS
 	Core REQUIRED
@@ -107,9 +107,6 @@ find_package(Qt6 COMPONENTS
 	Gui REQUIRED
 )
 qt_standard_project_setup()
-
-
-
 
 # Set output directories for build targets
 set_artifact_dir(${CMAKE_BINARY_DIR}/out)
@@ -127,8 +124,6 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
-
-
 
 SET(SDL2_COMBINED_INCLUDE_DIRS "")
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})

@@ -25,12 +25,15 @@
 
 augroup lsp_folding
 autocmd!
-autocmd FileType cpp,cpp.doxygen setlocal
-	\ foldmethod=expr
-	\ foldexpr=lsp#ui#vim#folding#foldexpr()
-	\ foldtext=lsp#ui#vim#folding#foldtext()o
 
-augroup end
+if !has('nvim')
+	autocmd FileType cpp,cpp.doxygen setlocal
+		\ foldmethod=expr
+		\ foldexpr=lsp#ui#vim#folding#foldexpr()
+		\ foldtext=lsp#ui#vim#folding#foldtext()o
+	augroup end
+endif
+
 let s:build_dir = 'debug'
 let s:build_cores = 6
 let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' all'
