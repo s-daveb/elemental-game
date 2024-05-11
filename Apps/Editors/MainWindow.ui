@@ -144,6 +144,9 @@
    <property name="text">
     <string>New file...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionOpen">
    <property name="text">

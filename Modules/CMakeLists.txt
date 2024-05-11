@@ -1,1 +1,2 @@
 add_subdirectory(elemental)
+add_subdirectory(EditorWidgets)

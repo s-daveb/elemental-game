@@ -10,12 +10,12 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
+#include "DocumentEditor.hpp"
 #include "ExceptionDialog.hpp"
 #include "JsonEditor.hpp"
 
 #include "IOCore/Exception.hpp"
 
-#include <QJsonModel.hpp>
 #include <fmt/format.h>
 
 #include <QApplication>
@@ -62,6 +62,11 @@ MainWindow::MainWindow(QWidget* parent)
 	    &MainWindow::onclick_menuaction_open_directory
 	);
 	this->readDirectory(current_directory);
+	this->ui->fsTreeView->hideColumn(1);
+	this->ui->fsTreeView->hideColumn(2);
+	this->ui->fsTreeView->hideColumn(3);
+	this->ui->fsTreeView->hideColumn(4);
+	this->ui->fsTreeView->hideColumn(5);
 }
 
 MainWindow::~MainWindow() {}
@@ -107,11 +112,12 @@ void MainWindow::readDirectory(const QString& directory)
 	this->ui->fsTreeView->setModel(this->filesystem_model.get());
 	this->ui->fsTreeView->setRootIndex(model_index);
 
+	/*
 	this->ui->fsTreeView->hideColumn(1);
 	this->ui->fsTreeView->hideColumn(2);
 	this->ui->fsTreeView->hideColumn(3);
 	this->ui->fsTreeView->hideColumn(4);
-	this->ui->fsTreeView->hideColumn(5);
+	this->ui->fsTreeView->hideColumn(5); */
 
 	connect(
 	    this->ui->fsTreeView,
@@ -128,16 +134,17 @@ auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 		auto path = fileInfo.filePath();
 		auto filename = fileInfo.baseName();
 		auto suffix = fileInfo.suffix();
+
 		if (suffix == "json") {
 			auto json_editor =
-			    new JsonEditor(this->ui->mdiArea, path);
+			    new DocumentEditor(this->ui->mdiArea, path);
+			// new JsonEditor(this->ui->mdiArea, path);
 
 			subwindow_ptr =
 			    this->ui->mdiArea->addSubWindow(json_editor);
 			subwindow_ptr->setObjectName(filename);
 			subwindow_ptr->setWindowFilePath(path);
-			// subwindow_ptr->setWindowTitle(path_info.fileName());
-
+			subwindow_ptr->setWindowTitle(filename);
 		} else {
 
 			auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
@@ -153,7 +160,7 @@ auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 			    this->ui->mdiArea->addSubWindow(text_widget);
 			subwindow_ptr->setWindowFilePath(path);
 			subwindow_ptr->setObjectName(path);
-			// subwindow_ptr->setWindowTitle(path_info.fileName());
+			subwindow_ptr->setWindowTitle(filename);
 		}
 	} catch (IOCore::Exception& e) {
 		auto dialog = ExceptionDialog::display(this, e);

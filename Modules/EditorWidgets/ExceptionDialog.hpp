@@ -26,6 +26,7 @@
 
 #include <QDialog>
 #include <QLabel>
+#include <QObject>
 #include <QWidget>
 
 #include <memory>

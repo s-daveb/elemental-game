@@ -9,14 +9,10 @@
 
 #pragma once
 
-#include "ui_JsonEditor.h"
-
 #include <QFileInfo>
 #include <QFrame>
 #include <QObject>
 #include <QWidget>
-
-#include <QJsonModel.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -25,29 +21,36 @@ namespace Ui {
 class JsonEditor;
 }
 
+class QMainWindow;
+class QJsonModel;
+
 class JsonEditor : public QWidget {
 	// NOLINTNEXTLINE
 	Q_OBJECT
-
-	template<typename TData>
-	using Ptr = std::unique_ptr<TData>;
 
     public:
 	JsonEditor(QWidget* parent = nullptr, const QString& filepath = "");
 	~JsonEditor() override;
 
 	auto getFileInfo() -> const QFileInfo& { return this->file_info; }
-	auto getJsonModel() -> QJsonModel& { return this->json_model; }
+	auto getJsonModel() -> std::unique_ptr<QJsonModel>&
+	{
+		return this->json_model;
+	}
 
     protected:
-	void save_file(const QString& file_name);
-	void load_file(const QString& file_path);
+	void saveFile(bool compact = true);
+	void loadFile(const QString& filePath);
+
+	QAction* action_save;
+	QAction* action_save_as;
 
 	QFileInfo file_info;
-	QJsonModel json_model;
+	std::unique_ptr<QJsonModel> json_model;
 
     private:
-	Ptr<Ui::JsonEditor> ui;
+	QMainWindow* main_window = nullptr;
+	std::unique_ptr<Ui::JsonEditor> ui;
 };
 
 // clang-format off

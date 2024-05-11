@@ -17,6 +17,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QListWidgetItem>
+#include <QMainWindow>
 #include <QResizeEvent>
 #include <QWidget>
 
@@ -30,20 +31,39 @@
 
 using nlohmann::json;
 
+constexpr QJsonModel::ErrorFlag kError = true;
+constexpr QJsonModel::ErrorFlag kSuccess = false;
+
 const auto k_default_perms = static_cast<QJsonModel::FieldPermissions>(
     QJsonModel::WritableKey | QJsonModel::WritableValue
 );
 
-JsonEditor::JsonEditor(QWidget* parent, const QString& file_path)
+JsonEditor::JsonEditor(QWidget* parent, const QString& filePath)
     : QWidget(parent)
-    , file_info(file_path)
-    , json_model(file_path, this, k_default_perms)
+    , file_info(filePath)
+    , json_model(std::make_unique<QJsonModel>(filePath, this, k_default_perms))
     , ui(std::make_unique<Ui::JsonEditor>())
 {
 	this->ui->setupUi(this);
+	this->main_window = qobject_cast<QMainWindow*>(parent->parent());
 
-	// this->setWindowFilePath(file_path);
-	this->load_file(file_path);
+	this->loadFile(filePath);
+
+	this->action_save = new QAction(tr("Save"), this);
+	this->action_save_as = new QAction(tr("Save As..."), this);
+
+	connect(this->action_save, &QAction::triggered, this, [this]() {
+		this->saveFile(false);
+	});
+	connect(this->action_save_as, &QAction::triggered, this, [this]() {
+		auto selected_filepath = QFileDialog::getSaveFileName(
+		    this->main_window,
+		    tr("Save File As"),
+		    this->file_info.filePath()
+		);
+		this->file_info.setFile(selected_filepath);
+		this->saveFile(false);
+	});
 
 	this->show();
 }
@@ -53,38 +73,28 @@ JsonEditor::~JsonEditor()
 	this->ui.reset(nullptr);
 }
 
-void JsonEditor::save_file(const QString& file_name)
+void JsonEditor::saveFile(bool compact)
 {
-	std::ofstream output_file(file_name.toStdString());
-	json jsbuffer;
+	ASSERT(this->json_model);
+	std::ofstream output_file(file_info.filePath().toStdString());
 
-	/*
-	auto& listWidget = *(ui.selectedComponentsListWidget);
-	for (auto index = 0; index < listWidget.count(); index++) {
-	        auto& cmponent = *(listWidget.item(index));
-	        std::string component_name = component.text().toStdString();
+	auto jsonified = QString(this->json_model->json(compact));
 
-	        json component_json = {};
-	        jsbuffer["components"][index] = {
-	                { component_name, component_json },
-	        };
-	} */
-
-	output_file << jsbuffer;
+	output_file << jsonified.toStdString();
 	output_file.flush();
 	output_file.close();
 }
 
-void JsonEditor::load_file(const QString& path)
+void JsonEditor::loadFile(const QString& path)
 {
 	QFile file(path);
 
-	if (this->json_model.load(path)) {
+	if (this->json_model->load(path) == kError) {
 		throw IOCore::Exception(
 		    fmt::format("Failed to load file: {}", path.toStdString())
 		);
 	}
-	this->ui->treeView->setModel(&this->json_model);
+	this->ui->treeView->setModel(this->json_model.get());
 }
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
