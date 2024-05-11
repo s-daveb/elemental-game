@@ -10,10 +10,8 @@ disable_deprecated_features()
 
 git_setup_submodules()
 
-# When this package is included as a subproject, there's no need to
-# build and run the unit-tests.
 disable_tests_if_subproject()
-#git_setup_submodules()
+
 project(Elemental
 	VERSION 0.0.3
 	LANGUAGES C CXX

@@ -49,10 +49,10 @@ function(set_artifact_dir path)
 endfunction()
 
 function(disable_tests_if_subproject)
-	if (NOT DEFINED PROJECT_NAME)
-		option(BUILD_TESTING "Build and run unit tests" ON)
-	else()
-		option(BUILD_TESTING "Build and run unit tests" OFF)
+	option(BUILD_TESTING "Build unit tests" ON)
+
+	if (DEFINED PROJECT_NAME)
+		set(BUILD_TESTING OFF PARENT_SCOPE)
 	endif()
 endfunction()
 
