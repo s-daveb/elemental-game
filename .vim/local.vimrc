@@ -115,7 +115,7 @@ function! RunTests()
 		endif
 
 		set makeprg='ninja'
-		exec ':Make ' . s:make_args. ' ctest'
+		exec ':Make ' . s:make_args. 'ctest all'
 	else
 		if (
 		\ (!filereadable(s:build_dir . '/CMakeCache.txt')) ||
@@ -125,10 +125,10 @@ function! RunTests()
 		endif
 
 		if exists(':Make')
-			exec ':Make ' . s:make_args . ' ctest'
+			exec ':Make ' . s:make_args . ' ctest all'`
 			cd ..
 		else
-			exec 'make ' . s:make_args . ' ctest'
+			exec 'make ' . s:make_args . ' ctest all'
 			vert botright copen
 			vert resize +100
 		endif
