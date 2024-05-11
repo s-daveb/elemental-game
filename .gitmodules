@@ -1,0 +1,6 @@
+[submodule "third_party/QJsonModel"]
+	path = Modules/QJsonModel
+	url = https://gitea.beniquez.me/sdaveb/QJsonModel.git
+[submodule "third_party/IOCore"]
+	path = Modules/IOCore
+	url = https://gitea.beniquez.me/sdaveb/IOCore.git

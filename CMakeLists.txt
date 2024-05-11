@@ -8,6 +8,8 @@ include(BuildProperties)
 prevent_in_source_build()
 disable_deprecated_features()
 
+git_setup_submodules()
+
 # When this package is included as a subproject, there's no need to
 # build and run the unit-tests.
 disable_tests_if_subproject()
@@ -81,21 +83,21 @@ if (BUILD_TESTING)
 endif()
 
 
-CPMAddPackage(NAME IOCore
-	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	GIT_TAG v0.2.20
-	OPTIONS
- 	 	"BUILD_SHARED_LIBS OFF"
-		"BUILD_TESTING OFF"
-)
-
-CPMAddPackage(NAME QJsonModel
-	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
-	GIT_TAG v0.0.4
-	OPTIONS
- 		"USE_CCACHE ON"
-		"USE_MOLD ON"
-)
+#CPMAddPackage(NAME IOCore
+#	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
+#	GIT_TAG v0.2.21
+#	OPTIONS
+# 	 	"BUILD_SHARED_LIBS OFF"
+#		"BUILD_TESTING OFF"
+#)
+#
+#CPMAddPackage(NAME QJsonModel
+#	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
+#	GIT_TAG v0.0.6
+#	OPTIONS
+# 		"USE_CCACHE ON"
+#		"USE_MOLD ON"
+#)
 
 find_package(Qt6 COMPONENTS
 	Core REQUIRED
