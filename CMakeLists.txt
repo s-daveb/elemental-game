@@ -82,20 +82,16 @@ endif()
 
 
 CPMAddPackage(NAME IOCore
-	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../IOCore"
-	GIT_TAG devel
-	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
-	#GIT_TAG v0.2.20
+	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/IOCore.git"
+	GIT_TAG v0.2.20
 	OPTIONS
  	 	"BUILD_SHARED_LIBS OFF"
 		"BUILD_TESTING OFF"
 )
 
 CPMAddPackage(NAME QJsonModel
-	GIT_REPOSITORY "file://${CMAKE_CURRENT_SOURCE_DIR}/../QJsonModel"
-	GIT_TAG master
-	#GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
-	#GIT_TAG v0.0.4
+	GIT_REPOSITORY "https://gitea.beniquez.me/sdaveb/QJsonModel.git"
+	GIT_TAG v0.0.4
 	OPTIONS
  		"USE_CCACHE ON"
 		"USE_MOLD ON"
