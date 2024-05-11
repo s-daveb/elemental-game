@@ -9,10 +9,10 @@
  */
 
 #include "JsonEditor.hpp"
-#include "QJsonModel.hpp"
 #include "ui_JsonEditor.h"
 
 #include "IOCore/Exception.hpp"
+#include "QJsonModel.hpp"
 
 #include <QFile>
 #include <QFileDialog>
@@ -31,11 +31,8 @@
 
 using nlohmann::json;
 
-constexpr QJsonModel::ErrorFlag kError = true;
-constexpr QJsonModel::ErrorFlag kSuccess = false;
-
 const auto k_default_perms = static_cast<QJsonModel::FieldPermissions>(
-    QJsonModel::WritableKey | QJsonModel::WritableValue
+    QJsonModel::kWritableKey | QJsonModel::kWritableValue
 );
 
 JsonEditor::JsonEditor(QWidget* parent, const QString& filePath)
