@@ -33,17 +33,96 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 #include <QWidget>
 
 #include <memory>
 
-DocumentEditor::DocumentEditor(QWidget* parent, const QString& filepath)
+DocumentEditor::DocumentEditor(
+    QWidget* parent, QMainWindow* mainWindow, const QString& filepath
+)
     : QWidget(parent)
+    , main_window(mainWindow)
     , file_info(filepath)
     , ui(std::make_unique<Ui::DocumentEditor>())
 {
 	this->ui->setupUi(this);
-	this->main_window = qobject_cast<QMainWindow*>(parent->parent());
+	ASSERT(this->main_window);
+
+	this->setupActions();
+
+	this->loadFile(filepath);
+}
+DocumentEditor::~DocumentEditor() = default;
+
+void DocumentEditor::saveFile(bool compact)
+{
+	if (file_info.suffix() == "json") {
+		auto json_editor =
+		    qobject_cast<JsonEditor*>(this->editor_widget);
+		if (json_editor) {
+			json_editor->saveFile(compact);
+		}
+	} else {
+		throw IOCore::NotImplementedException();
+	}
+}
+
+void DocumentEditor::loadFile(const QString& path)
+{
+	QFileInfo file_info(path);
+	if (!file_info.exists()) {
+		throw IOCore::Exception(
+		    fmt::format("File not found: {}", path.toStdString())
+		);
+	}
+
+	QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
+	if (!layout) {
+		layout = new QVBoxLayout(this);
+	}
+
+	auto filename = file_info.baseName();
+	auto suffix = file_info.suffix();
+
+	if (suffix == "json") {
+		this->editor_widget = new JsonEditor(this, path);
+		layout->insertWidget(0, this->editor_widget);
+
+		this->main_window->addAction(this->action_save);
+		this->main_window->addAction(this->action_save_as);
+
+	} else {
+		try {
+			throw IOCore::Exception(fmt::format(
+			    "Unsupported file type: {}", suffix.toStdString()
+			));
+		} catch (IOCore::Exception& e) {
+			auto dialog = ExceptionDialog::display(this, e);
+		}
+	}
+}
+
+void DocumentEditor::setupActions()
+{
+	this->action_save = new QAction("Save", this);
+	this->action_save_as = new QAction("Save As", this);
+
+	this->action_save->setShortcut(QKeySequence::Save);
+	this->action_save->setStatusTip("Save currently delected file");
+
+	this->action_save_as->setShortcut(QKeySequence::SaveAs);
+	this->action_save_as->setStatusTip(
+	    "Save currently delected file with a new name"
+	);
+
+	auto file_menu =
+	    this->main_window->menuBar()->findChild<QMenu*>("menuFile");
+
+	this->separator = file_menu->addSeparator();
+	file_menu->addAction(this->action_save);
+	file_menu->addAction(this->action_save_as);
 
 	connect(this->action_save, &QAction::triggered, this, [this]() {
 		this->saveFile(false);
@@ -60,48 +139,6 @@ DocumentEditor::DocumentEditor(QWidget* parent, const QString& filepath)
 			this->saveFile(true);
 		}
 	});
-
-	this->main_window->addAction(this->action_save);
-	this->main_window->addAction(this->action_save_as);
-
-	this->loadFile(filepath);
-}
-DocumentEditor::~DocumentEditor() = default;
-
-void DocumentEditor::saveFile(bool compact)
-{
-	throw IOCore::NotImplementedException();
-}
-
-void DocumentEditor::loadFile(const QString& path)
-{
-	QFileInfo file_info(path);
-	if (!file_info.exists()) {
-		throw IOCore::Exception(
-		    fmt::format("File not found: {}", path.toStdString())
-		);
-	}
-	// Check if mainWidget already has a layout, otherwise create one
-	QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
-	if (!layout) {
-		layout = new QVBoxLayout(this);
-	}
-
-	auto filename = file_info.baseName();
-	auto suffix = file_info.suffix();
-
-	if (suffix == "json") {
-		this->editor_widget = new JsonEditor(this, path);
-		layout->insertWidget(0, this->editor_widget);
-	} else {
-		try {
-			throw IOCore::Exception(fmt::format(
-			    "Unsupported file type: {}", suffix.toStdString()
-			));
-		} catch (IOCore::Exception& e) {
-			auto dialog = ExceptionDialog::display(this, e);
-		}
-	}
 }
 // clang-format off
 // vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

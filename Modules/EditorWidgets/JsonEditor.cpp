@@ -86,7 +86,7 @@ void JsonEditor::loadFile(const QString& path)
 {
 	QFile file(path);
 
-	if (this->json_model->load(path) == kError) {
+	if (this->json_model->load(path) == QJsonModel::kError) {
 		throw IOCore::Exception(
 		    fmt::format("Failed to load file: {}", path.toStdString())
 		);

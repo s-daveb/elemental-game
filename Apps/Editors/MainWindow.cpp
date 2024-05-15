@@ -137,7 +137,7 @@ auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 
 		if (suffix == "json") {
 			auto json_editor =
-			    new DocumentEditor(this->ui->mdiArea, path);
+			    new DocumentEditor(this->ui->mdiArea, this, path);
 			// new JsonEditor(this->ui->mdiArea, path);
 
 			subwindow_ptr =
@@ -146,7 +146,6 @@ auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 			subwindow_ptr->setWindowFilePath(path);
 			subwindow_ptr->setWindowTitle(filename);
 		} else {
-
 			auto text_widget = new QPlainTextEdit(this->ui->mdiArea);
 
 			QFile file(path);

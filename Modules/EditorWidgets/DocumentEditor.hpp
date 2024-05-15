@@ -28,10 +28,16 @@ class DocumentEditor : public QWidget {
 	using Ptr = std::unique_ptr<TData>;
 
     public:
-	DocumentEditor(QWidget* parent = nullptr, const QString& filepath = "");
+	DocumentEditor(
+	    QWidget* parent = nullptr, QMainWindow* mainWindow = nullptr,
+	    const QString& filepath = ""
+	);
 	~DocumentEditor() override;
 
 	auto getFileInfo() -> const QFileInfo& { return this->file_info; }
+
+	template<typename TChild>
+	void connectActions(const TChild* child);
 
     protected slots:
 	void saveFile(bool compact = true);
@@ -40,6 +46,9 @@ class DocumentEditor : public QWidget {
     protected:
 	QFileInfo file_info;
 
+	void setupActions();
+
+	QAction* separator = nullptr;
 	QAction* action_save = nullptr;
 	QAction* action_save_as = nullptr;
 
@@ -48,6 +57,23 @@ class DocumentEditor : public QWidget {
 
 	Ptr<Ui::DocumentEditor> ui;
 };
+
+#include <QFileDialog>
+
+template<typename TChild>
+void DocumentEditor::connectActions(const TChild* child)
+{
+	connect(child->getSaveAction, &QAction::triggered, child, [child]() {
+		child->saveFile(false);
+	});
+	connect(child->action_save_as, &QAction::triggered, child, [&]() {
+		auto selected_filepath = QFileDialog::getSaveFileName(
+		    this->main_window,
+		    tr("Save File As"),
+		    child->file_info.filePath()
+		);
+	});
+}
 
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

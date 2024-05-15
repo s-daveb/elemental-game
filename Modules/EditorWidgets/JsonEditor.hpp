@@ -27,6 +27,7 @@ class QJsonModel;
 class JsonEditor : public QWidget {
 	// NOLINTNEXTLINE
 	Q_OBJECT
+	friend class DocumentEditor;
 
     public:
 	JsonEditor(QWidget* parent = nullptr, const QString& filepath = "");
@@ -37,6 +38,9 @@ class JsonEditor : public QWidget {
 	{
 		return this->json_model;
 	}
+
+	QAction* getSaveAction() const { return this->action_save; }
+	QAction* getSaveAsAction() const { return this->action_save_as; }
 
     protected:
 	void saveFile(bool compact = true);
