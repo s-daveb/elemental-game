@@ -8,9 +8,7 @@ set_target_properties(ResourceEditor
 PROPERTIES
 	AUTOMOC ON
 	AUTOUIC ON
-
 )
-
 target_link_libraries(ResourceEditor
 PRIVATE
 	fmt::fmt-header-only

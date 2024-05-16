@@ -21,6 +21,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#pragma once
+
 #include "IOCore/Exception.hpp"
 #include "ui_ExceptionDialog.h"
 

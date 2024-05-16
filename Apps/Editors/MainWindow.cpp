@@ -10,9 +10,9 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
-#include "DocumentEditor.hpp"
-#include "ExceptionDialog.hpp"
-#include "JsonEditor.hpp"
+#include "EditorWidgets/DocumentEditor.hpp"
+#include "EditorWidgets/ExceptionDialog.hpp"
+#include "EditorWidgets/JsonEditor.hpp"
 
 #include "IOCore/Exception.hpp"
 
@@ -136,12 +136,12 @@ auto MainWindow::loadFile(QFileInfo& fileInfo) -> QMdiSubWindow*
 		auto suffix = fileInfo.suffix();
 
 		if (suffix == "json") {
-			auto json_editor =
+			auto document_widget =
 			    new DocumentEditor(this->ui->mdiArea, this, path);
-			// new JsonEditor(this->ui->mdiArea, path);
 
+			document_widget->loadFile<JsonEditor>(path);
 			subwindow_ptr =
-			    this->ui->mdiArea->addSubWindow(json_editor);
+			    this->ui->mdiArea->addSubWindow(document_widget);
 			subwindow_ptr->setObjectName(filename);
 			subwindow_ptr->setWindowFilePath(path);
 			subwindow_ptr->setWindowTitle(filename);

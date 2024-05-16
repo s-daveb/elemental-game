@@ -1,4 +1,3 @@
-
 /* JsonEditor.cpp
  * Copyright © 2022 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0

@@ -35,6 +35,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>
+#include <QStatusBar>
 #include <QWidget>
 
 #include <memory>
@@ -51,8 +52,6 @@ DocumentEditor::DocumentEditor(
 	ASSERT(this->main_window);
 
 	this->setupActions();
-
-	this->loadFile(filepath);
 }
 DocumentEditor::~DocumentEditor() = default;
 
@@ -64,43 +63,9 @@ void DocumentEditor::saveFile(bool compact)
 		if (json_editor) {
 			json_editor->saveFile(compact);
 		}
+		this->main_window->statusBar()->showMessage("File saved", 2000);
 	} else {
 		throw IOCore::NotImplementedException();
-	}
-}
-
-void DocumentEditor::loadFile(const QString& path)
-{
-	QFileInfo file_info(path);
-	if (!file_info.exists()) {
-		throw IOCore::Exception(
-		    fmt::format("File not found: {}", path.toStdString())
-		);
-	}
-
-	QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
-	if (!layout) {
-		layout = new QVBoxLayout(this);
-	}
-
-	auto filename = file_info.baseName();
-	auto suffix = file_info.suffix();
-
-	if (suffix == "json") {
-		this->editor_widget = new JsonEditor(this, path);
-		layout->insertWidget(0, this->editor_widget);
-
-		this->main_window->addAction(this->action_save);
-		this->main_window->addAction(this->action_save_as);
-
-	} else {
-		try {
-			throw IOCore::Exception(fmt::format(
-			    "Unsupported file type: {}", suffix.toStdString()
-			));
-		} catch (IOCore::Exception& e) {
-			auto dialog = ExceptionDialog::display(this, e);
-		}
 	}
 }
 
@@ -125,6 +90,9 @@ void DocumentEditor::setupActions()
 	file_menu->addAction(this->action_save_as);
 
 	connect(this->action_save, &QAction::triggered, this, [this]() {
+		this->saveFile(false);
+	});
+	connect(this->ui->saveButton, &QPushButton::clicked, this, [this]() {
 		this->saveFile(false);
 	});
 	connect(this->action_save_as, &QAction::triggered, this, [this]() {

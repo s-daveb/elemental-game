@@ -7,11 +7,11 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "IOCore/Exception.hpp"
 #include "MainWindow.hpp"
 
-#include "ExceptionDialog.hpp"
+#include "EditorWidgets/ExceptionDialog.hpp"
 
+#include "IOCore/Exception.hpp"
 #include <stdexcept>
 
 #include <QApplication>

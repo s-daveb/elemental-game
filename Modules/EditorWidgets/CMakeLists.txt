@@ -21,8 +21,12 @@ PROPERTIES
 	AUTOGEN_BUILD_DIR "${EditorWidgets_AUTOGEN_BUILD_DIR}"
 )
 
-target_include_directories(EditorWidgets PUBLIC
+target_include_directories(EditorWidgets PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${EditorWidgets_AUTOGEN_BUILD_DIR}/include
+)
+
+target_include_directories(EditorWidgets INTERFACE
 	${EditorWidgets_AUTOGEN_BUILD_DIR}/include
 )
 
@@ -39,7 +43,3 @@ PUBLIC
 	QJsonModel
 	fmt::fmt-header-only
 )
-target_include_directories(EditorWidgets INTERFACE
-	${AUTOGEN_BUILD_DIR}/include
-)
-

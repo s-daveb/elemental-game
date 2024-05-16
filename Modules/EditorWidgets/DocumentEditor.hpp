@@ -39,8 +39,9 @@ class DocumentEditor : public QWidget {
 	template<typename TChild>
 	void connectActions(const TChild* child);
 
-    protected slots:
 	void saveFile(bool compact = true);
+
+	template<typename TWidget>
 	void loadFile(const QString& filePath);
 
     protected:
@@ -58,22 +59,8 @@ class DocumentEditor : public QWidget {
 	Ptr<Ui::DocumentEditor> ui;
 };
 
-#include <QFileDialog>
-
-template<typename TChild>
-void DocumentEditor::connectActions(const TChild* child)
-{
-	connect(child->getSaveAction, &QAction::triggered, child, [child]() {
-		child->saveFile(false);
-	});
-	connect(child->action_save_as, &QAction::triggered, child, [&]() {
-		auto selected_filepath = QFileDialog::getSaveFileName(
-		    this->main_window,
-		    tr("Save File As"),
-		    child->file_info.filePath()
-		);
-	});
-}
-
+#ifndef DOCUMENT_EDITOR_IMPL_HPP
+#include "DocumentEditor.impl.hpp"
+#endif
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
