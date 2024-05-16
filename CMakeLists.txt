@@ -144,6 +144,7 @@ endif()
 
 # Add subdirectories
 add_subdirectory(Modules)
+include_directories(PREPEND ${Elemental_CMAKE_SOURCE_DIR}/Modules)
 
 if(BUILD_TESTING)
 	add_subdirectory(Tests)
