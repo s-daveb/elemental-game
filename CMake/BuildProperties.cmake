@@ -48,6 +48,54 @@ function(set_artifact_dir path)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${path}/bin" PARENT_SCOPE)
 endfunction()
 
+function(package_library_headers LibraryTarget)
+    # Create the custom target name
+    set(target_name "${LibraryTarget}_copy_include_directory")
+
+    # Create a list to hold custom commands
+    set(custom_commands)
+
+    set(is_glob false)
+    # Iterate over each argument to copy them
+    foreach(item IN LISTS ARGN)
+        if (IS_DIRECTORY ${item})
+            get_filename_component(item_name ${item} NAME)
+            list(APPEND custom_commands
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${item} ${CMAKE_BINARY_DIR}/include/${LibraryTarget}/${item_name}
+            )
+        else()
+ 	 	 	if (${is_glob})
+            	file(GLOB glob_files ${item})
+            	list(APPEND expanded_items ${glob_files})
+            	message(STATUS "glob_files" ${glob_files})
+            	set(is_glob false)
+        		foreach(expanded IN LISTS expanded_items)
+					get_filename_component(item_name ${expanded} NAME)
+					list(APPEND custom_commands
+						COMMAND ${CMAKE_COMMAND} -E copy ${expanded} ${CMAKE_BINARY_DIR}/include/${LibraryTarget}/${item_name}
+					)
+				endforeach()
+			elseif (item STREQUAL "GLOB")
+            	set(is_glob true)
+            else()
+            	get_filename_component(item_name ${item} NAME)
+            	list(APPEND custom_commands
+                	COMMAND ${CMAKE_COMMAND} -E copy ${item} ${CMAKE_BINARY_DIR}/include/${LibraryTarget}/${item_name}
+            	)
+    		endif()
+    	endif()
+    endforeach()
+
+    # Create the target to copy directories and files
+    add_custom_target(${target_name} ALL
+        ${custom_commands}
+        COMMENT "Copying files and directories to ${CMAKE_BINARY_DIR}/include/${LibraryTarget}/"
+    )
+
+    # Add the custom target as a dependency of the library target
+    add_dependencies(${LibraryTarget} ${target_name})
+endfunction()
+
 function(disable_tests_if_subproject)
 	option(BUILD_TESTING "Build unit tests" ON)
 

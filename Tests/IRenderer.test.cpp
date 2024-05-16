@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "IRenderer.hpp"
+#include "elemental/IRenderer.hpp"
 #include "types/rendering.hpp"
 
 #include "test-utils/common.hpp"
@@ -18,8 +18,7 @@
 BEGIN_TEST_SUITE("elemental::IRenderer")
 {
 	using namespace elemental;
-	struct DummyRenderer : public IRenderer
-	{
+	struct DummyRenderer : public IRenderer {
 		friend class IRenderer;
 		~DummyRenderer() override = default;
 
@@ -33,21 +32,22 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		void clearScreen() override { return; }
 		void flip() override { return; }
 
-		void blit(std::shared_ptr<void> image_data,
-		          Rectangle& placement) override
+		void blit(std::shared_ptr<void> image_data, Rectangle& placement)
+		    override
 		{
 			return;
 		}
 
-	  protected:
+	    protected:
 		DummyRenderer() : IRenderer() {}
 	};
 
 	TEST("elemental::IRenderer::GetInstance works with "
 	     "properly-derived class")
 	{
-		REQUIRE_NOTHROW(
-		    [&]() { IRenderer::GetInstance<DummyRenderer>(); }());
+		REQUIRE_NOTHROW([&]() {
+			IRenderer::GetInstance<DummyRenderer>();
+		}());
 		SUCCEED();
 	}
 

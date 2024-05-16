@@ -36,7 +36,7 @@ endif
 
 let s:build_dir = 'debug'
 let s:build_cores = 6
-let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' all'
+let s:make_args =  '-C '. s:build_dir . ' -j ' . s:build_cores . ' ctest all'
 
 let s:cmake_path = substitute(system('which ' . 'cmake'),'\n$', '', '')
 let s:ninja_path = substitute(system('which ' . 'ninja'),'\n$', '', '')

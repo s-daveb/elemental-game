@@ -24,22 +24,22 @@ target_compile_definitions(test-runner PRIVATE
 )
 
 target_include_directories(test-runner
-	PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
+	#PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
 	PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
 )
 
-set(Elemental_TEST_SUITE_LIBS
+#set(Elemental_TEST_SUITE_LIBS
+#IOCore
+#${SDL2_COMBINED_LINK_DEPS}
+#${STACKTRACE_DEP_LIBS}
+#)
+target_link_libraries(test-runner
+PRIVATE
 	elemental
 	IOCore
 	Catch2::Catch2WithMain
 	FakeIt::FakeIt-catch
 	Threads::Threads
-	${SDL2_COMBINED_LINK_DEPS}
-	${STACKTRACE_DEP_LIBS}
-)
-target_link_libraries(test-runner
-PRIVATE
-	${Elemental_TEST_SUITE_LIBS}
 )
 
 # Set output directories for build targets
@@ -73,6 +73,6 @@ add_dependencies(ctest
 	copy_test_assets
 )
 
-add_subdirectory(sdl)
+#add_subdirectory(sdl)
 
 # vim: ts=2 sw=2 noet foldmethod=indent  :

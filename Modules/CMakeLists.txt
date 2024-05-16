@@ -1,7 +1,10 @@
 
-add_subdirectory(IOCore)
-add_subdirectory(elemental)
+add_subdirectory(third_party/IOCore)
+add_subdirectory(third_party/QJsonModel)
 
-add_subdirectory(QJsonModel)
+# Add third_party modules to the C++ include search path
+include_directories(third_party)
+
+add_subdirectory(elemental)
 add_subdirectory(EditorWidgets)
 

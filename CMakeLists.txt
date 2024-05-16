@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Additional paths to search for custom and third-party CMake modules
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
 include(BuildProperties)
 
@@ -144,7 +144,7 @@ endif()
 
 # Add subdirectories
 add_subdirectory(Modules)
-include_directories(PREPEND ${Elemental_CMAKE_SOURCE_DIR}/Modules)
+include_directories(BEFORE ${Elemental_CMAKE_SOURCE_DIR}/Modules)
 
 if(BUILD_TESTING)
 	add_subdirectory(Tests)

@@ -7,7 +7,7 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "Singleton.hpp"
+#include "elemental/Singleton.hpp"
 
 #include "test-utils/common.hpp"
 
@@ -20,19 +20,17 @@ using elemental::Singleton;
 
 BEGIN_TEST_SUITE("elemental::Singleton<T>")
 {
-	struct SimpleStructure
-	{
+	struct SimpleStructure {
 		uint32_t id;
 		char name[128];
 		uint32_t flags;
 	};
 
-	struct NonConstructibleStructure
-	{
+	struct NonConstructibleStructure {
 		uint32_t id;
 		char name[128];
 
-	  private:
+	    private:
 		NonConstructibleStructure(){};
 		friend class Singleton;
 	};
