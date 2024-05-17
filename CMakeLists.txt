@@ -3,17 +3,13 @@ cmake_minimum_required(VERSION 3.26)
 # Additional paths to search for custom and third-party CMake modules
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
+include(DefaultConfig)
+
+include(BuildOptions)
 include(BuildProperties)
 
-prevent_in_source_build()
-disable_deprecated_features()
-
-git_setup_submodules()
-
-disable_tests_if_subproject()
-
 project(Elemental
-	VERSION 0.0.3
+	VERSION 0.0.4
 	LANGUAGES C CXX
 	# Save this for later:
 	# HOMEPAGE_URL <URL>

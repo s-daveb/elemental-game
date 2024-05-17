@@ -4,3 +4,6 @@
 [submodule "third_party/IOCore"]
 	path = Modules/third_party/IOCore
 	url = https://gitea.beniquez.me/sdaveb/IOCore.git
+[submodule "CMake"]
+	path = CMake
+	url = https://gitea.beniquez.me/sdaveb/CmakeTools.git
