@@ -53,6 +53,7 @@ void DocumentEditor::loadFile(const QString& path)
 	QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
 	if (!layout) {
 		layout = new QVBoxLayout(this);
+		this->setLayout(layout);
 	}
 
 	auto filename = file_info.baseName();
