@@ -20,13 +20,13 @@ target_link_libraries(elemental PUBLIC
 	${NLOHMANN_JSON_LIBS}
 )
 
-#package_library_headers(elemental
-#	GLOB ${Elemental_ARTIFACT_DIR}/*.hpp
-#	${Elemental_ARTIFACT_DIR}/sys
-#	${Elemental_ARTIFACT_DIR}/types
-#	${Elemental_ARTIFACT_DIR}/details
-#	${Elemental_ARTIFACT_DIR}/util
-#)
+package_library_headers(elemental
+	GLOB ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sys
+	${CMAKE_CURRENT_SOURCE_DIR}/types
+	${CMAKE_CURRENT_SOURCE_DIR}/details
+	${CMAKE_CURRENT_SOURCE_DIR}/util
+)
 
 target_include_directories(elemental
 INTERFACE
