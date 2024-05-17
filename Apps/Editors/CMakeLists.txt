@@ -21,6 +21,13 @@ PRIVATE
 	QJsonModel
 )
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+	set_target_properties(ResourceEditor
+	PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY "${Elemental_ARTIFACT_DIR}"
+)
+endif()
+
 set_target_properties(ResourceEditor
 PROPERTIES
 	WIN32_EXECUTABLE ON
