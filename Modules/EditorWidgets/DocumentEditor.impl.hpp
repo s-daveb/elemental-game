@@ -22,8 +22,8 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>
+#include <QVBoxLayout>
 #include <QWidget>
-#include <QvboxLayout>
 
 template<typename TChild>
 void DocumentEditor::connectActions(const TChild* child)
