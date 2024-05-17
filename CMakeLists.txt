@@ -9,7 +9,7 @@ include(BuildOptions)
 include(BuildProperties)
 
 project(Elemental
-	VERSION 0.0.5
+	VERSION 0.0.6
 	LANGUAGES C CXX
 	# Save this for later:
 	# HOMEPAGE_URL <URL>
