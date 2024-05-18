@@ -11,15 +11,18 @@ PROPERTIES
 EXCLUDE_FROM_ALL 1)
 
 target_include_directories(SDL_test-runner
-	PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
-	PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
-	..
+	PRIVATE
+	${Elemental_CMAKE_SOURCE_DIR}/Tests
 )
 #target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
 
 target_link_libraries(SDL_test-runner
 PRIVATE
-	${Elemental_TEST_SUITE_LIBS}
+	elemental
+	IOCore
+	Catch2::Catch2WithMain
+	FakeIt::FakeIt-catch
+	Threads::Threads
 )
 
 # Set output directories for build targetsk

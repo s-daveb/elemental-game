@@ -63,12 +63,13 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 
 	try {
 		settings_file.read();
-		settings = settings_file.get<GameSettings>();
-	} catch (nlohmann::json::exception& except) {
+	} catch (std::exception& except) {
 		settings_file.set(kDefaultSettings);
 		settings_file.write();
 		settings = settings_file.get<GameSettings>();
 	}
+
+	settings = settings_file.get<GameSettings>();
 
 	this->video_renderer.init(settings.renderer_settings);
 

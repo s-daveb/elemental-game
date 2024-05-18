@@ -21,11 +21,7 @@ target_link_libraries(elemental PUBLIC
 )
 
 package_library_headers(elemental
-	GLOB ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/sys
-	${CMAKE_CURRENT_SOURCE_DIR}/types
-	${CMAKE_CURRENT_SOURCE_DIR}/details
-	${CMAKE_CURRENT_SOURCE_DIR}/util
+	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_include_directories(elemental

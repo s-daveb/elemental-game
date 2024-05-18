@@ -11,7 +11,7 @@
 #include "ui_JsonEditor.h"
 
 #include "IOCore/Exception.hpp"
-#include "QJsonModel.hpp"
+#include "QJsonModel/QJsonModel.hpp"
 
 #include <QFile>
 #include <QFileDialog>

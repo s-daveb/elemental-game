@@ -47,7 +47,10 @@ set_target_properties(test-runner PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Tests"
 )
 
-add_custom_target(test_bin)
+if(NOT TARGET test_bin)
+	add_custom_target(test_bin)
+endif()
+
 add_dependencies(test_bin
 	test-runner
 )
@@ -73,6 +76,6 @@ add_dependencies(ctest
 	copy_test_assets
 )
 
-#add_subdirectory(sdl)
+add_subdirectory(sdl)
 
 # vim: ts=2 sw=2 noet foldmethod=indent  :
