@@ -1,0 +1,44 @@
+{
+  "main" : {
+    "type": "GameScene",
+    "kind": "StaticViewPort",
+    "dimensions": [ 1280, 720 ],
+    "layers": [ "background", "foreground" ],
+    "entities": {
+      "backdrop" : {
+        "type": "Image",
+        "position": [ 0, 0 ],
+        "size": [ 1280, 720 ],
+        "layer": "background",
+        "image": "background.png"
+      },
+      "Player" : {
+        "type": "Player",
+        "position": [ 0, 296 ],
+        "size": [ 64, 128 ],
+        "layer": "foreground"
+      },
+      "Enemy" : {
+        "position": [ 656, 296 ],
+        "size": [ 64, 128 ],
+        "layer": "foreground",
+        "scripts": "Enemy.js"
+      },
+      "Ball" : {
+        "position": [ 640, 360 ],
+        "size": [ 32, 32 ],
+        "layer": "foreground",
+        "scripts": "Ball.js"
+      }
+    },
+    "scripts": {
+      "Score.js" : {
+        "layer": "foreground"
+      },
+      "Match.js" : {
+        "layer": "foreground"
+      }
+    }
+  }
+}
+

@@ -32,10 +32,10 @@ class JsonConfigFile : public FileResource {
 	auto read() -> nlohmann::json&;
 	void write();
 
-	template<typename T_>
-	[[nodiscard]] auto get() const -> T_
+	template<typename TData>
+	[[nodiscard]] auto get() const -> const TData&
 	{
-		return config_json.get<T_>();
+		return config_json.get<TData>();
 	}
 
 	template<typename T_>
@@ -44,7 +44,7 @@ class JsonConfigFile : public FileResource {
 		config_json = value;
 	}
 
-	auto getJsonData() -> nlohmann::json& { return this->config_json; };
+	auto jsonDataRef() -> nlohmann::json& { return this->config_json; };
 
     protected:
 	nlohmann::json config_json;

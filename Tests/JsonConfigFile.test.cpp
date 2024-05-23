@@ -90,7 +90,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SECTION("JsonConfigFile w/ valid path")
 		{
 			auto config = JsonConfigFile(kINPUT_FILE_PATH);
-			auto& config_data = config.getJsonData();
+			auto& config_data = config.jsonDataRef();
 
 			REQUIRE(config_data.empty());
 		}
@@ -106,7 +106,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 	FIXTURE_TEST("JsonConfigFile::Read")
 	{
 		auto config_file = JsonConfigFile(kINPUT_FILE_PATH);
-		auto& json_data = config_file.getJsonData();
+		auto& json_data = config_file.jsonDataRef();
 
 		SECTION("JsonConfigFile::Read w/ valid file")
 		{
@@ -143,7 +143,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 		SECTION("Create File and Read It back In")
 		{
 			auto config_file = JsonConfigFile(kINPUT_FILE_PATH);
-			auto& test_data = config_file.getJsonData();
+			auto& test_data = config_file.jsonDataRef();
 
 			test_data["one"] = "1";
 			test_data["resolution"] = "1280x720";
@@ -179,7 +179,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 	)
 	{
 		auto config_file = JsonConfigFile(kINPUT_FILE_PATH);
-		auto& json_data = config_file.getJsonData();
+		auto& json_data = config_file.jsonDataRef();
 
 		config_file.read();
 		auto obtained_data =
@@ -201,7 +201,7 @@ BEGIN_TEST_SUITE("elemental::JsonConfigFile")
 
 		config_file.set(test_data);
 
-		auto& json_data = config_file.getJsonData();
+		auto& json_data = config_file.jsonDataRef();
 
 		REQUIRE(json_data["one"] == test_data["one"]);
 		REQUIRE(json_data["resolution"] == test_data["resolution"]);
