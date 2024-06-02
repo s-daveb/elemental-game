@@ -92,6 +92,16 @@ endif()
 # 		"USE_CCACHE ON"
 #		"USE_MOLD ON"
 #)
+CPMFindPackage(
+	NAME fmt
+	URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
+	URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
+)
+CPMAddPackage(NAME tomlplusplus
+	URL https://github.com/marzer/tomlplusplus/archive/refs/tags/v3.4.0.zip
+	URL_HASH SHA256=ad2a4cd786e25305d802e7490ea65a2531195e5834bf6b4fa5a323421fd81f9b
+)
+
 
 find_package(Qt6 COMPONENTS
 	Core REQUIRED

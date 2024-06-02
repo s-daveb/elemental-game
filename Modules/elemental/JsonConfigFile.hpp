@@ -33,7 +33,7 @@ class JsonConfigFile : public FileResource {
 	void write();
 
 	template<typename TData>
-	[[nodiscard]] auto get() const -> const TData&
+	[[nodiscard]] auto get() const -> TData
 	{
 		return config_json.get<TData>();
 	}
