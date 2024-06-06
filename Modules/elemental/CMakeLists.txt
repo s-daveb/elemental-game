@@ -15,9 +15,9 @@ PUBLIC
 target_link_libraries(elemental PUBLIC
 	IOCore
 	Threads::Threads
+	nlohmann_json::nlohmann_json
 	${SDL2_COMBINED_LINK_DEPS}
 	${STACKTRACE_DEP_LIBS}
-	${NLOHMANN_JSON_LIBS}
 )
 
 package_library_headers(elemental

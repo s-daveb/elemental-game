@@ -50,7 +50,5 @@ auto main(int argc, char* argv[]) -> int
 
 	return -1;
 }
-
 // clang-format off
 // vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
-

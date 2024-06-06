@@ -1,5 +1,3 @@
-
-
 add_executable(phong
 	main.cpp
 	Phong.cpp
@@ -13,6 +11,7 @@ PRIVATE
 target_link_libraries(phong PRIVATE
 	elemental
 	IOCore
+	nlohmann_json
 )
 
 

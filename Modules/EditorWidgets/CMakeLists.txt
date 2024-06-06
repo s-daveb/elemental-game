@@ -42,4 +42,5 @@ PUBLIC
 	Qt6::Widgets
 	QJsonModel
 	fmt::fmt-header-only
+	nlohmann_json::nlohmann_json
 )
