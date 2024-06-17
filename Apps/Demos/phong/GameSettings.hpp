@@ -11,6 +11,8 @@
 
 #include "types/rendering.hpp"
 
+#include "IOCore/util/toml.hpp"
+
 #include <nlohmann/json.hpp>
 
 namespace elemental {
@@ -18,6 +20,7 @@ namespace elemental {
 struct GameSettings {
 	RendererSettings renderer_settings;
 
+	// DEFINE_TOML_FIELDS(renderer_settings);
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GameSettings, renderer_settings);
 };
 

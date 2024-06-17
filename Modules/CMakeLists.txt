@@ -1,9 +1,11 @@
 
-add_subdirectory(third_party/IOCore)
-add_subdirectory(third_party/QJsonModel)
+SET(MODULES_EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/External)
 
-# Add third_party modules to the C++ include search path
-include_directories(third_party)
+add_subdirectory(${MODULES_EXTERNAL_DIR}/IOCore)
+add_subdirectory(${MODULES_EXTERNAL_DIR}/QJsonModel)
+
+# Add ${MODULES_EXTERNAL_DIR} modules to the C++ include search path
+include_directories(${MODULES_EXTERNAL_DIR})
 
 add_subdirectory(elemental)
 add_subdirectory(EditorWidgets)

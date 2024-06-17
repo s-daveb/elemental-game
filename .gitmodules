@@ -1,8 +1,8 @@
 [submodule "third_party/QJsonModel"]
-	path = Modules/third_party/QJsonModel
+	path = Modules/External/QJsonModel
 	url = https://gitea.beniquez.me/sdaveb/QJsonModel.git
 [submodule "third_party/IOCore"]
-	path = Modules/third_party/IOCore
+	path = Modules/External/IOCore
 	url = https://gitea.beniquez.me/sdaveb/IOCore.git
 [submodule "CMake"]
 	path = CMake
