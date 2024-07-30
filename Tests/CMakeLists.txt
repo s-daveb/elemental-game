@@ -65,7 +65,7 @@ catch_discover_tests(test-runner)
 # bonus: add a custom ctest target to the build system, to run tests in the
 #        correct directory
 add_custom_target(ctest
-	COMMAND ctest -c $configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --allow-running-no-tests --output-on-failure
+	COMMAND ctest -C $configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --output-on-failure
 )
 add_custom_target(copy_test_assets
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
