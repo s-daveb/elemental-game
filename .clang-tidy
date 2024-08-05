@@ -54,7 +54,7 @@ CheckOptions:
 		value: '.*_t|string|.*_string' }
 
 	# Function Names
-	- { key: readability-identifier-naming.FunctionCase,       value: camelBack }
+	- { key: readability-identifier-naming.GlobalFunctionCase, value: camelBack }
 	- { key: readability-identifier-naming.PublicMethodCase,   value: camelBack }
 	- { key: readability-identifier-naming.PrivateMethodCase,  value: lower_case }
 

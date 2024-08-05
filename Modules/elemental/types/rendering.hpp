@@ -41,7 +41,7 @@ struct Rectangle {
 	uint32_t& height = size.height;
 
 	JSON_SERIALIZABLE(Rectangle, position, size);
-	// TOML_SERIALIZABLE(Rectangle, position);
+	TOML_SERIALIZABLE(Rectangle, position, size);
 };
 
 enum class WindowMode {
@@ -66,14 +66,17 @@ struct WindowParameters {
 	JSON_SERIALIZABLE(
 	    WindowParameters, title, mode, placement, position, size
 	);
+	TOML_SERIALIZABLE(
+	    WindowParameters, title, mode, placement, position, size
+	);
 };
 
 struct RendererSettings {
 	WindowParameters window;
 	Resolution resolution;
-	int field1;
 
-	JSON_SERIALIZABLE(RendererSettings, window, resolution, field1);
+	JSON_SERIALIZABLE(RendererSettings, window, resolution);
+	TOML_SERIALIZABLE(RendererSettings, window, resolution);
 };
 
 } // namespace elemental
