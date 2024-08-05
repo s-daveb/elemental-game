@@ -12,7 +12,6 @@ PROPERTIES
 target_link_libraries(ResourceEditor
 PRIVATE
 	fmt::fmt-header-only
-	nlohmann_json::nlohmann_json
 	Qt6::Core
 	Qt6::Gui
 	Qt6::Widgets

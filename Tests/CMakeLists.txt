@@ -2,10 +2,10 @@
 add_executable(test-runner
 	runtime.test.cpp
 	Singleton.template.test.cpp
-	IRenderer.test.cpp
 	LoopRegulator.test.cpp
-	sdl/SdlRenderer.test.cpp
 	Observable.test.cpp
+	IRenderer.test.cpp
+	sdl/SdlRenderer.test.cpp
 	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
 	paths.test.cpp
@@ -26,11 +26,6 @@ target_include_directories(test-runner
 	PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
 )
 
-#set(Elemental_TEST_SUITE_LIBS
-#IOCore
-#${SDL2_COMBINED_LINK_DEPS}
-#${STACKTRACE_DEP_LIBS}
-#)
 target_link_libraries(test-runner
 PRIVATE
 	elemental
