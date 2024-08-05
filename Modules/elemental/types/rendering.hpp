@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "util/serialization.hpp"
+#include "IOCore/util/serialization.hpp"
 
 #include <cstdint>
 #include <string>
@@ -18,13 +18,15 @@ namespace elemental {
 
 struct Point {
 	uint32_t x, y;
-	SERIALIZABLE(Point, x, y);
+	JSON_SERIALIZABLE(Point, x, y);
+	TOML_SERIALIZABLE(Point, x, y);
 };
 using Position2D = Point;
 
 struct Area {
 	uint32_t width, height;
-	SERIALIZABLE(Area, width, height);
+	JSON_SERIALIZABLE(Area, width, height);
+	TOML_SERIALIZABLE(Area, width, height);
 };
 using Resolution = Area;
 
@@ -38,7 +40,8 @@ struct Rectangle {
 	uint32_t& width = size.width;
 	uint32_t& height = size.height;
 
-	SERIALIZABLE(Rectangle, position, size);
+	JSON_SERIALIZABLE(Rectangle, position, size);
+	// TOML_SERIALIZABLE(Rectangle, position);
 };
 
 enum class WindowMode {
@@ -46,23 +49,12 @@ enum class WindowMode {
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
-// NOLINTNEXTLINE(readability-identifier-length)
-SERIALIZABLE_ENUM(
-    WindowMode, { { WindowMode::Windowed, "windowed" },
-                  { WindowMode::Borderless, "borderless" },
-                  { WindowMode::Fullscreen, "fullscreen" } }
+JSON_SERIALIZABLE_ENUM( // NOLINT(readability-identifier-length)
+    WindowMode, { { WindowMode::Windowed, "Windowed" },
+                  { WindowMode::Borderless, "Borderless" },
+                  { WindowMode::Fullscreen, "Fullscreen" } }
 );
-enum class WindowPlacement : int
-
-{
-	Manual = 0x00,
-	Centered = 0x01
-};
-// NOLINTNEXTLINE(readability-identifier-length)
-SERIALIZABLE_ENUM(
-    WindowPlacement, { { WindowPlacement::Manual, "manual" },
-                       { WindowPlacement::Centered, "centered" } }
-);
+enum class WindowPlacement : int { Manual = 0x00, Centered = 0x01 };
 
 struct WindowParameters {
 	std::string title;
@@ -71,14 +63,17 @@ struct WindowParameters {
 	Position2D position;
 	Area size;
 
-	SERIALIZABLE(WindowParameters, title, mode, placement, position, size);
+	JSON_SERIALIZABLE(
+	    WindowParameters, title, mode, placement, position, size
+	);
 };
 
 struct RendererSettings {
 	WindowParameters window;
 	Resolution resolution;
+	int field1;
 
-	SERIALIZABLE(RendererSettings, window, resolution);
+	JSON_SERIALIZABLE(RendererSettings, window, resolution, field1);
 };
 
 } // namespace elemental

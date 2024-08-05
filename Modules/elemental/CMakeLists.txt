@@ -1,6 +1,5 @@
 add_library(elemental
 OBJECT
-	JsonConfigFile.cpp
 	LoopRegulator.cpp
 	Observable.cpp
 	SdlRenderer.cpp

@@ -8,9 +8,7 @@ add_executable(test-runner
 	Observable.test.cpp
 	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
-	JsonConfigFile.test.cpp
 	paths.test.cpp
-
 )
 
 set_target_properties(test-runner

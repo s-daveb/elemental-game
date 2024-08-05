@@ -15,7 +15,6 @@
 #include "util/debug.hpp"
 
 #include "IOCore/Exception.hpp"
-#include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"

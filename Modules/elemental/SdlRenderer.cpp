@@ -7,18 +7,17 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include <SDL.h>
-#include <SDL_image.h>
-
-#include "IOCore/Exception.hpp"
-#include "IRenderer.hpp"
 #include "SdlRenderer.hpp"
-
-#include "util/debug.hpp"
 
 #include "types/input.hpp"
 #include "types/rendering.hpp"
+#include "util/debug.hpp"
 
+#include <IOCore/Exception.hpp>
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <fmt/core.h>
 #include <nlohmann/json.hpp>
 
 #include <memory>
@@ -53,10 +52,11 @@ void SdlRenderer::init(RendererSettings& settings)
 	    IMG_Init(
 		IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP
 	    )) {
-		error_buffer.str("");
-		error_buffer << "Could not initialize SDL_Image: IMG_INIT() == 0"
-			     << std::flush;
-		throw IOCore::Exception(error_buffer.str());
+		HANDLE_SDL_ERROR(fmt::format(
+				     "Could not initialize SDL_Image: {}",
+				     IMG_GetError()
+		)
+		                     .c_str());
 	}
 	int window_xpos, window_ypos, window_width, window_height, res_width,
 	    res_height;

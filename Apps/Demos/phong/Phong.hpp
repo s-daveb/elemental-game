@@ -14,7 +14,9 @@
 #include "IObserver.hpp"
 
 #include "IOCore/Application.hpp"
-#include "JsonConfigFile.hpp"
+#include "IOCore/JsonConfigFile.hpp"
+
+// #include "JsonConfigFile.hpp"
 #include "LoopRegulator.hpp"
 #include "Observable.hpp"
 #include "Singleton.hpp"
@@ -65,7 +67,7 @@ class Phong
 	SdlEventSource& event_emitter;
 
 	GameSettings settings;
-	configuration::JsonConfigFile settings_file;
+	IOCore::JsonConfigFile settings_file;
 };
 
 } // namespace elemental
