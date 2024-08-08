@@ -119,9 +119,6 @@ set(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2_GFX
 )
 
-#pkg_check_modules(NLOHMANN_JSON "nlohmann_json >= 3.11.2" REQUIRED)
-#include_directories(SYSTEM ${NLOHMANN_JSON_INCLUDE_DIRS})
-
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(-DDEBUG=1)
 endif()
