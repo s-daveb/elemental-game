@@ -10,6 +10,7 @@
 #pragma once
 
 #include "IOCore/util/serialization.hpp"
+#include "IOCore/util/toml.hpp"
 
 #include <cstdint>
 #include <string>
@@ -19,14 +20,14 @@ namespace elemental {
 struct Point {
 	uint32_t x, y;
 	JSON_SERIALIZABLE(Point, x, y);
-	TOML_SERIALIZABLE(Point, x, y);
+	TOML_CLASS(Point, x, y);
 };
 using Position2D = Point;
 
 struct Area {
 	uint32_t width, height;
 	JSON_SERIALIZABLE(Area, width, height);
-	TOML_SERIALIZABLE(Area, width, height);
+	TOML_CLASS(Area, width, height);
 };
 using Resolution = Area;
 
@@ -41,7 +42,7 @@ struct Rectangle {
 	uint32_t& height = size.height;
 
 	JSON_SERIALIZABLE(Rectangle, position, size);
-	TOML_SERIALIZABLE(Rectangle, position, size);
+	TOML_CLASS(Rectangle, position, size);
 };
 
 enum class WindowMode {
@@ -49,12 +50,18 @@ enum class WindowMode {
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
+TOML_ENUM(
+    WindowMode, WindowMode::Windowed, WindowMode::Borderless,
+    WindowMode::Fullscreen
+);
 JSON_SERIALIZABLE_ENUM( // NOLINT(readability-identifier-length)
     WindowMode, { { WindowMode::Windowed, "Windowed" },
                   { WindowMode::Borderless, "Borderless" },
                   { WindowMode::Fullscreen, "Fullscreen" } }
 );
-enum class WindowPlacement : int { Manual = 0x00, Centered = 0x01 };
+
+enum WindowPlacement { Manual, Centered };
+TOML_ENUM(WindowPlacement, Manual, Centered);
 
 struct WindowParameters {
 	std::string title;
@@ -66,9 +73,7 @@ struct WindowParameters {
 	JSON_SERIALIZABLE(
 	    WindowParameters, title, mode, placement, position, size
 	);
-	TOML_SERIALIZABLE(
-	    WindowParameters, title, mode, placement, position, size
-	);
+	TOML_CLASS(WindowParameters, title, mode, placement, position, size);
 };
 
 struct RendererSettings {
@@ -76,9 +81,10 @@ struct RendererSettings {
 	Resolution resolution;
 
 	JSON_SERIALIZABLE(RendererSettings, window, resolution);
-	TOML_SERIALIZABLE(RendererSettings, window, resolution);
+	TOML_CLASS(RendererSettings, window, resolution);
 };
 
 } // namespace elemental
-  // clang-format off
+
+// clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

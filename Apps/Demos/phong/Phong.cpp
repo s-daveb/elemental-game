@@ -54,7 +54,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
     , video_renderer(IRenderer::GetInstance<SdlRenderer>())
     , event_emitter(Singleton::getReference<SdlEventSource>())
     , settings_file(
-	  paths::get_app_config_root() / "phong" / "settings.json",
+	  paths::get_app_config_root() / "phong" / "settings.toml",
 	  CreateDirs::Enabled
       )
     , settings()
@@ -62,13 +62,12 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 
 	try {
 		settings_file.read();
+		settings = settings_file.get<GameSettings>();
 	} catch (std::exception& except) {
 		settings_file.set(kDefaultSettings);
 		settings_file.write();
 		settings = settings_file.get<GameSettings>();
 	}
-
-	settings = settings_file.get<GameSettings>();
 
 	this->video_renderer.init(settings.renderer_settings);
 
