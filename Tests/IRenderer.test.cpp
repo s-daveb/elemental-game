@@ -12,6 +12,8 @@
 
 #include "test-utils/common.hpp"
 
+#include "IOCore/TomlTable.hpp"
+
 #include <any>
 #include <utility>
 
@@ -54,14 +56,14 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	TEST("elemental::Point serialization and deserialization")
 	{
 		Point original_point{ 42, 24 };
-		nlohmann::json json_point = original_point;
+		IOCore::TomlTable toml_point = original_point;
 
 		// Check serialization
-		REQUIRE(json_point["x"] == 42);
-		REQUIRE(json_point["y"] == 24);
+		REQUIRE(toml_point["x"] == 42);
+		REQUIRE(toml_point["y"] == 24);
 
 		// Check deserialization
-		Point deserialized_point = json_point;
+		auto deserialized_point = toml_point.as<Point>();
 		REQUIRE(deserialized_point.x == 42);
 		REQUIRE(deserialized_point.y == 24);
 	}
@@ -69,14 +71,14 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	TEST("elemental::Area serialization and deserialization")
 	{
 		Area original_area{ 800, 600 };
-		nlohmann::json json_area = original_area;
+		IOCore::TomlTable toml_area = original_area;
 
 		// Check serialization
-		REQUIRE(json_area["width"] == 800);
-		REQUIRE(json_area["height"] == 600);
+		REQUIRE(toml_area["width"] == 800);
+		REQUIRE(toml_area["height"] == 600);
 
 		// Check deserialization
-		Area deserialized_area = json_area;
+		auto deserialized_area = toml_area.as<Area>();
 		REQUIRE(deserialized_area.width == 800);
 		REQUIRE(deserialized_area.height == 600);
 	}
@@ -84,14 +86,14 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	TEST("elemental::Resolution serialization and deserialization")
 	{
 		Resolution original_resolution{ 1920, 1080 };
-		nlohmann::json json_resolution = original_resolution;
+		IOCore::TomlTable toml_resolution = original_resolution;
 
 		// Check serialization
-		REQUIRE(json_resolution["width"] == 1920);
-		REQUIRE(json_resolution["height"] == 1080);
+		REQUIRE(toml_resolution["width"] == 1920);
+		REQUIRE(toml_resolution["height"] == 1080);
 
 		// Check deserialization
-		Resolution deserialized_resolution = json_resolution;
+		auto deserialized_resolution = toml_resolution.as<Resolution>();
 		REQUIRE(deserialized_resolution.width == 1920);
 		REQUIRE(deserialized_resolution.height == 1080);
 	}
@@ -99,16 +101,16 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	TEST("elemental::Rectangle serialization and deserialization")
 	{
 		Rectangle original_rectangle{ { 10, 20 }, { 30, 40 } };
-		nlohmann::json json_rectangle = original_rectangle;
+		IOCore::TomlTable toml_rectangle = original_rectangle;
 
 		// Check serialization
-		REQUIRE(json_rectangle["position"]["x"] == 10);
-		REQUIRE(json_rectangle["position"]["y"] == 20);
-		REQUIRE(json_rectangle["size"]["width"] == 30);
-		REQUIRE(json_rectangle["size"]["height"] == 40);
+		REQUIRE(toml_rectangle["position"]["x"] == 10);
+		REQUIRE(toml_rectangle["position"]["y"] == 20);
+		REQUIRE(toml_rectangle["size"]["width"] == 30);
+		REQUIRE(toml_rectangle["size"]["height"] == 40);
 
 		// Check deserialization
-		Rectangle deserialized_rectangle = json_rectangle;
+		auto deserialized_rectangle = toml_rectangle.as<Rectangle>();
 		REQUIRE(deserialized_rectangle.position.x == 10);
 		REQUIRE(deserialized_rectangle.position.y == 20);
 		REQUIRE(deserialized_rectangle.size.width == 30);
