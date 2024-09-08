@@ -21,7 +21,6 @@ namespace elemental {
 struct GameSettings {
 	RendererSettings renderer_settings;
 
-	JSON_SERIALIZABLE(GameSettings, renderer_settings);
 	TOML_CLASS(GameSettings, renderer_settings);
 };
 

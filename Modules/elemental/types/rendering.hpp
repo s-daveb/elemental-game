@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "IOCore/util/serialization.hpp"
 #include "IOCore/util/toml.hpp"
 
 #include <cstdint>
@@ -19,14 +18,12 @@ namespace elemental {
 
 struct Point {
 	uint32_t x, y;
-	JSON_SERIALIZABLE(Point, x, y);
 	TOML_CLASS(Point, x, y);
 };
 using Position2D = Point;
 
 struct Area {
 	uint32_t width, height;
-	JSON_SERIALIZABLE(Area, width, height);
 	TOML_CLASS(Area, width, height);
 };
 using Resolution = Area;
@@ -41,7 +38,6 @@ struct Rectangle {
 	uint32_t& width = size.width;
 	uint32_t& height = size.height;
 
-	JSON_SERIALIZABLE(Rectangle, position, size);
 	TOML_CLASS(Rectangle, position, size);
 };
 
@@ -54,25 +50,19 @@ TOML_ENUM(
     WindowMode, WindowMode::Windowed, WindowMode::Borderless,
     WindowMode::Fullscreen
 );
-JSON_SERIALIZABLE_ENUM( // NOLINT(readability-identifier-length)
-    WindowMode, { { WindowMode::Windowed, "Windowed" },
-                  { WindowMode::Borderless, "Borderless" },
-                  { WindowMode::Fullscreen, "Fullscreen" } }
-);
 
 enum WindowPlacement { Manual, Centered };
 TOML_ENUM(WindowPlacement, Manual, Centered);
 
 struct WindowParameters {
 	std::string title;
+
 	WindowMode mode;
 	WindowPlacement placement;
+
 	Position2D position;
 	Area size;
 
-	JSON_SERIALIZABLE(
-	    WindowParameters, title, mode, placement, position, size
-	);
 	TOML_CLASS(WindowParameters, title, mode, placement, position, size);
 };
 
@@ -80,8 +70,7 @@ struct RendererSettings {
 	WindowParameters window;
 	Resolution resolution;
 
-	JSON_SERIALIZABLE(RendererSettings, window, resolution);
-	TOML_CLASS(RendererSettings, window, resolution);
+	TOML_CLASS(RendererSettings, window); // resolution);
 };
 
 } // namespace elemental
