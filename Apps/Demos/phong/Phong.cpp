@@ -72,15 +72,6 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 
 	this->video_renderer.init(settings.renderer_settings);
 
-	auto quit_event_handler = [&](std::any event_data) -> void {
-		auto sdl_event_data = std::any_cast<SDL_Event>(event_data);
-
-		if (sdl_event_data.type == SDL_EventType::SDL_QUIT) {
-			this->is_running = false;
-		}
-	};
-	/**/
-
 	this->event_emitter.registerObserver(*this);
 	this->event_emitter.pollEvents();
 }
