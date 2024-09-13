@@ -60,6 +60,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
     , settings()
 {
 
+	// Load settings -or- create default settings
 	try {
 		settings_file.read();
 		settings = settings_file.get<GameSettings>();
@@ -71,10 +72,6 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 
 	this->video_renderer.init(settings.renderer_settings);
 
-	//** EventDispatcher ** /
-	auto quit_event_filter = [](SDL_Event& event) -> bool {
-		return event.type == SDL_QUIT;
-	};
 	auto quit_event_handler = [&](std::any event_data) -> void {
 		auto sdl_event_data = std::any_cast<SDL_Event>(event_data);
 
