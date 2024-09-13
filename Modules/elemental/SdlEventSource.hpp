@@ -25,29 +25,26 @@
 
 namespace elemental {
 
-class SdlEventSource : public IEventSource
-{
+class SdlEventSource : public IEventSource {
 	TEST_INSPECTABLE(SdlEventSource);
 
-  public:
-	using Mutex = std::mutex;
-	using MutexLock = std::lock_guard<Mutex>;
-
+    public:
 	friend class Singleton;
 
 	explicit SdlEventSource(
-	    InputDevices device_flags = InputDevices::Keyboard);
+	    InputDevices device_flags = InputDevices::Keyboard
+	);
 
 	~SdlEventSource() override = default;
 
 	void pollEvents() override;
 	void sendEvents() override;
 
-  protected:
+    protected:
 	std::queue<SDL_Event> event_queue;
 	UniqueSdlPtr<SDL_Joystick> joydev_ptr;
 
-	Mutex mutex;
+	std::mutex mutex;
 };
 } // namespace elemental
   // clang-format off

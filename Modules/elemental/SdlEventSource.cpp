@@ -27,7 +27,6 @@ using namespace elemental;
 SdlEventSource::SdlEventSource(InputDevices device_flags)
     : IEventSource(device_flags)
 {
-
 	SDL_InitSubSystem(SDL_INIT_EVENTS);
 
 	if (Enum::ContainsFlag(device_flags, InputDevices::Joystick)) {
@@ -68,7 +67,7 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 
 auto SdlEventSource::pollEvents() -> void
 {
-	auto thread_lock = MutexLock(this->mutex);
+	auto thread_lock = std::lock_guard(this->mutex);
 
 	SDL_Event event;
 
@@ -79,7 +78,7 @@ auto SdlEventSource::pollEvents() -> void
 
 auto SdlEventSource::sendEvents() -> void
 {
-	auto thread_lock = MutexLock(this->mutex);
+	auto thread_lock = std::lock_guard(this->mutex);
 
 	while (!event_queue.empty()) {
 		auto& sdl_event = event_queue.front();
