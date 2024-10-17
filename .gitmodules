@@ -1,10 +1,10 @@
 [submodule "third_party/QJsonModel"]
 	path = Modules/External/QJsonModel
-	url = https://gitea.beniquez.me/sdaveb/QJsonModel.git
+	url = http://gitea/sdaveb/QJsonModel.git
 [submodule "CMake"]
 	path = CMake
-	url = https://gitea.beniquez.me/sdaveb/CmakeTools.git
+	url = http://gitea/sdaveb/CmakeTools.git
 [submodule "Modules/External/IOCore"]
 	path = Modules/External/IOCore
-	url = https://gitea.beniquez.me/sdaveb/IOCore.git
+	url = http://gitea/sdaveb/IOCore.git
 	branch = devel
