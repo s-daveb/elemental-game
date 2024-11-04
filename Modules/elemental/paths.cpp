@@ -48,7 +48,7 @@ auto get_app_config_root() -> fs::path
 			result = get_home() / ".config";
 			break;
 		case platform::kWINDOWS:
-			result = getenv("APPDATA");
+			result = fs::path(getenv("APPDATA")) / "Local";
 			break;
 		default:
 			throw IOCore::NotImplementedException();

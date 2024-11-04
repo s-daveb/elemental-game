@@ -149,3 +149,4 @@ docs/
 .cache/
 .vim/
 build/*
+neovim.json
