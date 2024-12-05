@@ -11,7 +11,7 @@
 
 #include "IOCore/sys/debuginfo.hpp"
 
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp> // IWYU pragma: export
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #define BEGIN_TEST_SUITE(name)                                                  \
