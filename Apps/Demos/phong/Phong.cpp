@@ -9,18 +9,28 @@
 
 #include "./Phong.hpp"
 
-#include "IRenderer.hpp"
-
 #include "sys/paths.hpp"
+#include "types/errors.hpp"
+#include "types/rendering.hpp"
 #include "util/debug.hpp"
 
+#include "IOCore/Application.hpp"
 #include "IOCore/Exception.hpp"
+#include "IOCore/FileResource.hpp"
+#include "IObserver.hpp"
+#include "IRenderer.hpp"
+
+#include "GameSettings.hpp"
 #include "LoopRegulator.hpp"
+#include "Observable.hpp"
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"
+#include "Singleton.hpp"
 
 #include <SDL_events.h>
+#include <any>
 #include <chrono>
+#include <exception>
 #include <iostream>
 #include <stack>
 #include <thread>
@@ -37,7 +47,6 @@ const GameSettings kDefaultSettings{ { { "Phong",
 	                                 Position2D({ 0, 0 }),
 	                                 { 1270_px, 720_px } },
 	                               { 1024_px, 768_px } } };
-
 /// \name Helper Functions
 /// \{
 void print_cycle_rate(
@@ -58,6 +67,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	  CreateDirs::Enabled
       )
     , settings()
+    , state_stack()
 {
 
 	// Load settings -or- create default settings
@@ -73,6 +83,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	this->video_renderer.init(settings.renderer_settings);
 
 	this->event_emitter.registerObserver(*this);
+	this->event_emitter.registerObserver(state_stack);
 	this->event_emitter.pollEvents();
 }
 Phong::~Phong()
@@ -90,8 +101,7 @@ auto Phong::run() -> int
 
 		this->event_and_rendering_loop();
 
-		/* threading clean-up:
-		 * wait for all child threads to finish */
+		/* threading clean-up: wait for all child threads to finish */
 		for (auto& [key, values] : this->running_threads) {
 			values.join();
 		}
@@ -141,6 +151,8 @@ void Phong::simulation_thread_loop()
 		loop_regulator.startUpdate();
 
 		this->event_emitter.sendEvents();
+
+		state_stack.step();
 
 		auto cycle_delay_ms = loop_regulator.delay();
 		print_cycle_rate(cycle_delay_ms);

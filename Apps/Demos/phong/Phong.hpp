@@ -10,6 +10,7 @@
 #pragma once
 
 #include "./GameSettings.hpp"
+#include "./StateStack.hpp"
 
 #include "IOCore/Application.hpp"
 #include "IOCore/JsonConfigFile.hpp"
@@ -20,6 +21,7 @@
 #include "elemental/Observable.hpp"
 #include "elemental/Singleton.hpp"
 
+#include <any>
 #include <functional>
 #include <memory>
 #include <stack>
@@ -33,6 +35,7 @@ class SdlEventSource;
 
 using IOCore::Application;
 using IOCore::Dictionary;
+using IOCore::TomlConfigFile;
 
 class Phong
     : public Application
@@ -65,8 +68,10 @@ class Phong
 	IRenderer& video_renderer;
 	SdlEventSource& event_emitter;
 
+	StateStack state_stack;
+
 	GameSettings settings;
-	IOCore::TomlConfigFile settings_file;
+	TomlConfigFile settings_file;
 };
 
 } // namespace elemental

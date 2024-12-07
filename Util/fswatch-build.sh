@@ -16,7 +16,7 @@ die() {
 
 
 if [ -z "$FSWATCH_ENV_LOADED" ]; then
-	source ${BASE_DIR}/scripts/fswatch-build.env
+	source ${BASE_DIR}/Util/fswatch-build.env
 	unset FSWATCH_ENV_LOADED
 fi
 trap 'debugprint "Exiting script"; exit' INT
@@ -42,7 +42,7 @@ while true; do
 	debugprint  "File change detected: ${changed_file}"
 	debugprint -n  "Regenerating docs..."
 
-        nice -20 -- cmake --build ${FSWATCH_BUILD_DIR} -t ctest -j 2
+        nice -20 -- cmake --build ${FSWATCH_BUILD_DIR} -t phong -j 2
 	debugprint "done!"
     fi
 
