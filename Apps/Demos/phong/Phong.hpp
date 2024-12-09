@@ -12,6 +12,7 @@
 #include "./GameSettings.hpp"
 #include "./StateStack.hpp"
 
+#include "External/IOCore/include/types/containers.hpp"
 #include "IOCore/Application.hpp"
 #include "IOCore/JsonConfigFile.hpp"
 #include "IOCore/TomlConfigFile.hpp"
@@ -33,12 +34,8 @@ namespace elemental {
 class IRenderer;
 class SdlEventSource;
 
-using IOCore::Application;
-using IOCore::Dictionary;
-using IOCore::TomlConfigFile;
-
 class Phong
-    : public Application
+    : public IOCore::Application
     , public IObserver {
     public:
 	Phong(int argc, c::const_string args[], c::const_string env[]);
@@ -60,7 +57,7 @@ class Phong
 
 	bool is_running{ false };
 
-	Dictionary<std::thread> running_threads;
+	IOCore::Dictionary<std::thread> running_threads;
 
 	void event_and_rendering_loop();
 	void simulation_thread_loop();
@@ -71,7 +68,7 @@ class Phong
 	StateStack state_stack;
 
 	GameSettings settings;
-	TomlConfigFile settings_file;
+	IOCore::TomlConfigFile settings_file;
 };
 
 } // namespace elemental

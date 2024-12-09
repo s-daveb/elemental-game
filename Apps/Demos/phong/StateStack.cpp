@@ -7,22 +7,31 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#pragma once
-
 #include "StateStack.hpp"
 
-using elemental::IStateMachine;
+#include "IState.hpp"
+
 using elemental::StateStack;
 
 auto StateStack::step() -> void
 {
-	throw IOCore::NotImplementedException();
+	ASSERT(this->stack.empty() == false);
+
+	stack.top()->step();
+}
+
+auto StateStack::pushState(std::unique_ptr<IState> state) -> void
+{
+	this->stack.push(std::move(state));
 }
 
 auto StateStack::recieveMessage(const Observable& sender, std::any message)
     -> void
 {
-	throw IOCore::NotImplementedException();
+	ASSERT(message.has_value());
+	ASSERT(this->stack.empty() == false);
+
+	this->stack.top()->recieveMessage(sender, message);
 }
 
 // clang-format off

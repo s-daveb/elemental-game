@@ -9,32 +9,18 @@
 
 #pragma once
 
-#include "IObserver.hpp"
 #include "IState.hpp"
-#include "IStateMachine.hpp"
-
-#include "IOCore/Exception.hpp"
-
-#include <any>
-#include <stack>
 
 namespace elemental {
 
-struct StateStack
-    : public IObserver
-    , public IStateMachine {
-	StateStack() = default;
-	~StateStack() override = default;
+class MainMenu : public IState {
+    public:
+	MainMenu() = default;
+	~MainMenu() override = default;
 
-	void step() override;
-	auto pushState(std::unique_ptr<IState> state) -> void;
-
-	void recieveMessage(
-	    const Observable& sender, std::any message = std::any()
-	) override;
-
-    private:
-	std::stack<std::unique_ptr<IState>> stack;
+	auto step() -> void override;
+	auto recieveMessage(const Observable& sender, std::any message)
+	    -> void override;
 };
 
 } // namespace elemental

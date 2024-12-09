@@ -4,23 +4,19 @@
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * obtain one at https://mozilla.org/MPL/2.0/.`
  */
 
-#pragma once
+#include "MainMenu.hpp"
 
-#include "Observable.hpp"
-namespace elemental {
+#include "IOCore/Exception.hpp"
 
-struct IState {
-	IState() = default;
-	virtual ~IState() = default;
+using namespace elemental;
 
-	virtual auto step() -> void = 0;
-	virtual auto recieveMessage(const Observable& sender, std::any message)
-	    -> void = 0;
-};
+auto MainMenu::step() -> void {}
 
+auto MainMenu::recieveMessage(const Observable& sender, std::any message) -> void
+{
 }
 
 // clang-format off

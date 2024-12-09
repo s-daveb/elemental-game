@@ -22,6 +22,7 @@
 
 #include "GameSettings.hpp"
 #include "LoopRegulator.hpp"
+#include "MainMenu.hpp"
 #include "Observable.hpp"
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"
@@ -85,6 +86,8 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	this->event_emitter.registerObserver(*this);
 	this->event_emitter.registerObserver(state_stack);
 	this->event_emitter.pollEvents();
+
+	this->state_stack.pushState(std::make_unique<MainMenu>());
 }
 Phong::~Phong()
 {
