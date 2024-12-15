@@ -41,6 +41,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+CPMFindPackage(NAME span-lite
+	GITHUB_REPOSITORY martinmoene/span-lite
+	GIT_TAG v0.11.0
+	OPTIONS
+		"SPAN_LITE_OPT_BUILD_TESTS OFF"
+		"SPAN_LITE_OPT_BUILD_EXAMPLES OFF"
+)
+
+find_package(Fontconfig REQUIRED)
+
 if (BUILD_TESTING)
 	CPMFindPackage(NAME Catch2
 		GITHUB_REPOSITORY catchorg/Catch2
@@ -99,16 +109,20 @@ include(CheckIncludeFile)
 find_package(Threads)  # POSIX thread support
 find_package(PkgConfig REQUIRED)
 
+# TODO: Switch this to CPM Package manager
+
 # Example: Find SDL2, SDL2_image, and SDL2_gfx using PkgConfig
 # add IMPORTED_TARGET to enable fancy PkgConfig::SDL2 syntax
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
+pkg_check_modules(SDL2_TTF REQUIRED IMPORTED_TARGET SDL2_ttf)
 
 SET(SDL2_COMBINED_INCLUDE_DIRS "")
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
 list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
+list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIRS})
 list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
 
 include_directories(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
@@ -117,6 +131,7 @@ set(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2
 	PkgConfig::SDL2_IMAGE
 	PkgConfig::SDL2_GFX
+	PkgConfig::SDL2_TTF
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
