@@ -9,16 +9,25 @@
 
 #pragma once
 
+#include <list>
+#include <memory>
+
+#include "IDrawable.hpp"
+
+#include "IObserver.hpp"
 #include "Observable.hpp"
+
 namespace elemental {
 
-struct IState {
+struct IState : public IObserver {
 	IState() = default;
-	virtual ~IState() = default;
+	~IState() override = default;
+
+	auto recieveMessage(const Observable& sender, std::any message)
+	    -> void override = 0;
 
 	virtual auto step() -> void = 0;
-	virtual auto recieveMessage(const Observable& sender, std::any message)
-	    -> void = 0;
+	virtual auto getDrawables() -> std::list<std::unique_ptr<IDrawable>> = 0;
 };
 
 }

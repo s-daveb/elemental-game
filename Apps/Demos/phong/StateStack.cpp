@@ -34,5 +34,14 @@ auto StateStack::recieveMessage(const Observable& sender, std::any message)
 	this->stack.top()->recieveMessage(sender, message);
 }
 
+auto StateStack::draw() -> ErrorFlag
+{
+	auto return_value = kSuccess;
+	for (auto& drawable : this->stack.top()->getDrawables()) {
+		return_value &= drawable->draw();
+	}
+	return return_value;
+}
+
 // clang-format off
 // vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

@@ -9,11 +9,16 @@
 
 #pragma once
 
+#include "IDrawable.hpp"
+
 namespace elemental {
 
-struct IStateMachine {
+struct IStateMachine : public IDrawable {
 	virtual void step() = 0;
-	virtual ~IStateMachine() = default;
+	~IStateMachine() override = default;
+
+	auto draw() -> ErrorFlag override = 0;
+	auto draw(const Rectangle& rect) -> ErrorFlag override { return draw(); }
 };
 
 }

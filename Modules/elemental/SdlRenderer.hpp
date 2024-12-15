@@ -21,8 +21,7 @@
 namespace elemental {
 class SdlRenderer;
 
-struct SdlRenderer : public IRenderer
-{
+struct SdlRenderer : public IRenderer {
 	TEST_INSPECTABLE(SdlRenderer);
 
 	friend class IRenderer;
@@ -39,10 +38,9 @@ struct SdlRenderer : public IRenderer
 	void clearScreen() override;
 	void flip() override;
 
-	void blit(std::shared_ptr<void> img_data,
-	          Rectangle& placement) override;
+	void blit(std::shared_ptr<void> img_data, Rectangle& placement) override;
 
-  protected:
+    protected:
 	bool is_initialized{ false };
 	SdlRenderer();
 
@@ -51,18 +49,19 @@ struct SdlRenderer : public IRenderer
 };
 
 template<>
-inline auto
-IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other) -> Rectangle
+inline auto IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other) -> Rectangle
 {
-	return { static_cast<uint32_t>(other.x), static_cast<uint32_t>(other.y),
-		 static_cast<uint32_t>(other.w),
-		 static_cast<uint32_t>(other.h) };
+	return { { static_cast<uint32_t>(other.x),
+		   static_cast<uint32_t>(other.y) },
+		 { static_cast<uint32_t>(other.w),
+		   static_cast<uint32_t>(other.h) } };
 }
 template<>
-inline auto
-IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other) -> SDL_Rect
+inline auto IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other)
+    -> SDL_Rect
 {
-	return { static_cast<int>(other.x), static_cast<int>(other.y),
+	return { static_cast<int>(other.x),
+		 static_cast<int>(other.y),
 		 static_cast<int>(other.width),
 		 static_cast<int>(other.height) };
 }

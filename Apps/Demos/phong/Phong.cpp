@@ -28,6 +28,8 @@
 #include "SdlRenderer.hpp"
 #include "Singleton.hpp"
 
+#include "types/units.hpp"
+
 #include <SDL_events.h>
 #include <any>
 #include <chrono>
@@ -36,8 +38,6 @@
 #include <stack>
 #include <thread>
 #include <utility>
-
-#include "types/units.hpp"
 
 using namespace elemental;
 using namespace IOCore;
@@ -137,6 +137,8 @@ void Phong::event_and_rendering_loop()
 		this->video_renderer.clearScreen();
 
 		this->event_emitter.pollEvents();
+
+		this->state_stack.draw();
 
 		auto cycle_delay_ms = frame_regulator.delay();
 		print_cycle_rate(cycle_delay_ms, "frame delay");

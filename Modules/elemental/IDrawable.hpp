@@ -9,18 +9,32 @@
 
 #pragma once
 
+#include "External/IOCore/include/Exception.hpp"
 #include "types.hpp"
 #include "types/rendering.hpp"
 
+#include <any>
+
 namespace elemental {
 
-struct IDrawable
-{
+struct IDrawable {
+	IDrawable() = default;
 	virtual ~IDrawable(){};
 
-	virtual void draw(const Rectangle& rect) = 0;
+	virtual auto rectangle() const -> Rectangle&
+	{
+		throw IOCore::NotImplementedException();
+	}
+	virtual auto imageData() const -> std::any&
+	{
+		throw IOCore::NotImplementedException();
+	}
 
-	void draw(Position2D& pos) { this->draw(Rectangle{ pos.x, pos.y }); }
+	virtual auto draw() -> ErrorFlag
+	{
+		throw IOCore::NotImplementedException();
+	}
+	virtual auto draw(const Rectangle& rect) -> ErrorFlag = 0;
 };
 
 } // namespace elemental

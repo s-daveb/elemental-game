@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "IDrawable.hpp"
 #include "IObserver.hpp"
 #include "IState.hpp"
 #include "IStateMachine.hpp"
@@ -16,6 +17,7 @@
 #include "IOCore/Exception.hpp"
 
 #include <any>
+#include <memory>
 #include <stack>
 
 namespace elemental {
@@ -23,6 +25,7 @@ namespace elemental {
 struct StateStack
     : public IObserver
     , public IStateMachine {
+    public:
 	StateStack() = default;
 	~StateStack() override = default;
 
@@ -32,6 +35,8 @@ struct StateStack
 	void recieveMessage(
 	    const Observable& sender, std::any message = std::any()
 	) override;
+
+	auto draw() -> ErrorFlag override;
 
     private:
 	std::stack<std::unique_ptr<IState>> stack;

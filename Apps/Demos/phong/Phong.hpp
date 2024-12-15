@@ -12,12 +12,15 @@
 #include "./GameSettings.hpp"
 #include "./StateStack.hpp"
 
-#include "External/IOCore/include/types/containers.hpp"
 #include "IOCore/Application.hpp"
 #include "IOCore/JsonConfigFile.hpp"
 #include "IOCore/TomlConfigFile.hpp"
 
+#include "IOCore/types.hpp"
+#include "IOCore/types/containers.hpp"
+
 #include "elemental/IObserver.hpp"
+#include "elemental/IRenderer.hpp"
 #include "elemental/LoopRegulator.hpp"
 #include "elemental/Observable.hpp"
 #include "elemental/Singleton.hpp"
@@ -31,7 +34,6 @@
 namespace elemental {
 
 // Forward declarations
-class IRenderer;
 class SdlEventSource;
 
 class Phong
@@ -56,7 +58,6 @@ class Phong
 	/// \}
 
 	bool is_running{ false };
-
 	IOCore::Dictionary<std::thread> running_threads;
 
 	void event_and_rendering_loop();

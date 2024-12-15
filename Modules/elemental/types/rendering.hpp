@@ -29,6 +29,16 @@ struct Area {
 using Resolution = Area;
 
 struct Rectangle {
+	Rectangle() = default;
+	Rectangle(Position2D position, Area size = { 0, 0 })
+	    : position(position), size(size)
+	{
+	}
+	Rectangle(const Rectangle& other)
+	    : position(other.position), size(other.size)
+	{
+	}
+
 	Point position;
 	Area size;
 

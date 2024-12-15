@@ -17,6 +17,8 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
+
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
 
@@ -44,7 +46,6 @@ SdlRenderer::~SdlRenderer()
 
 void SdlRenderer::init(RendererSettings& settings)
 {
-
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
@@ -55,6 +56,13 @@ void SdlRenderer::init(RendererSettings& settings)
 		HANDLE_SDL_ERROR(fmt::format(
 				     "Could not initialize SDL_Image: {}",
 				     IMG_GetError()
+		)
+		                     .c_str());
+	}
+	if (kError == TTF_Init()) {
+		HANDLE_SDL_ERROR(fmt::format(
+				     "Could not initialize SDL_TTF: {}",
+				     TTF_GetError()
 		)
 		                     .c_str());
 	}
