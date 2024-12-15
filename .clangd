@@ -1,9 +1,18 @@
 #.clangd
 CompileFlags:
-	Add: [-DCLANGD, -DVIM_LSP=1]
+  Add: [-DCLANGD, -DVIM_LSP=1]
 
 Diagnostics:
   UnusedIncludes: Strict
   MissingIncludes: Strict
-  Includes:
-    IgnoreHeader: types\.hpp
+  #AnalyzeAngledIncludes: true
+
+#InlayHints:
+#  BlockEnd: No
+#  Designators: Yes
+#  Enabled: Yes
+#  ParameterNames: Yes
+#  DeducedTypes: Yes
+#  TypeNameLimit: 24
+
+# vim: set ft=yaml ts=2 sts=2 et sw=2 :
