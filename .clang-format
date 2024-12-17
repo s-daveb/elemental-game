@@ -4,7 +4,7 @@ Language: Cpp
 
 IndentWidth: 8
 UseTab: AlignWithSpaces
-ColumnLimit: 81
+ColumnLimit: 77
 AccessModifierOffset: -4
 BinPackParameters: true
 AlwaysBreakAfterDefinitionReturnType: None
