@@ -10,6 +10,14 @@
 #include "StateStack.hpp"
 
 #include "IState.hpp"
+#include "Observable.hpp"
+
+#include "IOCore/Exception.hpp"
+#include "types/errors.hpp"
+
+#include <any>
+#include <memory>
+#include <utility>
 
 using elemental::StateStack;
 

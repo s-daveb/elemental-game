@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "./Phong.hpp"
@@ -35,6 +35,7 @@
 #include <chrono>
 #include <exception>
 #include <iostream>
+#include <memory>
 #include <stack>
 #include <thread>
 #include <utility>
@@ -100,11 +101,12 @@ auto Phong::run() -> int
 	try {
 
 		this->running_threads["simulation_thread"] =
-		    std::thread([this]() { this->simulation_thread_loop(); });
+		    std::thread([this]() { this->simulation_thread_loop(); }
+		    );
 
 		this->event_and_rendering_loop();
 
-		/* threading clean-up: wait for all child threads to finish */
+		// threading clean-up: wait for all child threads to finish
 		for (auto& [key, values] : this->running_threads) {
 			values.join();
 		}
@@ -141,7 +143,7 @@ void Phong::event_and_rendering_loop()
 		this->state_stack.draw();
 
 		auto cycle_delay_ms = frame_regulator.delay();
-		print_cycle_rate(cycle_delay_ms, "frame delay");
+		// print_cycle_rate(cycle_delay_ms, "frame delay");
 		video_renderer.flip();
 	} while (this->is_running);
 
@@ -160,7 +162,7 @@ void Phong::simulation_thread_loop()
 		state_stack.step();
 
 		auto cycle_delay_ms = loop_regulator.delay();
-		print_cycle_rate(cycle_delay_ms);
+		// print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }
 

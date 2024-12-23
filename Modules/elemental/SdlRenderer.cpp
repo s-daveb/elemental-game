@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "SdlRenderer.hpp"
@@ -32,9 +32,10 @@ namespace {
 std::stringstream error_buffer;
 } // namespace
 
-#define HANDLE_SDL_ERROR(what)                                                  \
-	error_buffer.str("");                                                   \
-	error_buffer << what << ", SDL Error:" << SDL_GetError() << std::flush; \
+#define HANDLE_SDL_ERROR(what)                                              \
+	error_buffer.str("");                                               \
+	error_buffer << what << ", SDL Error:" << SDL_GetError()            \
+		     << std::flush;                                         \
 	throw IOCore::Exception(error_buffer.str());
 
 SdlRenderer::~SdlRenderer()
@@ -149,7 +150,8 @@ auto SdlRenderer::getResolution() -> Resolution
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
-	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
+	return { static_cast<uint32_t>(width),
+		 static_cast<uint32_t>(height) };
 }
 
 auto SdlRenderer::getWindowSize() -> Area
@@ -165,7 +167,8 @@ auto SdlRenderer::getWindowSize() -> Area
 	ASSERT(width > 0);
 	ASSERT(height > 0);
 
-	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
+	return { static_cast<uint32_t>(width),
+		 static_cast<uint32_t>(height) };
 }
 
 void SdlRenderer::clearScreen()
@@ -187,14 +190,18 @@ void SdlRenderer::flip()
 	SDL_RenderPresent(this->sdl_renderer_ptr.get());
 }
 
-/*! \todo convert this to a private method, used internally to wrap SDL_Blit */
-void SdlRenderer::blit(std::shared_ptr<void> image_data, Rectangle& placement)
+/*! \todo convert this to a private method, used internally to wrap SDL_Blit
+ */
+void SdlRenderer::blit(
+    std::shared_ptr<void> image_data, const Rectangle& placement
+)
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 	ASSERT(image_data.get() != nullptr);
 
 	try {
-		auto to_draw = std::static_pointer_cast<SDL_Texture>(image_data);
+		auto to_draw =
+		    std::static_pointer_cast<SDL_Texture>(image_data);
 		auto position = fromRectangle<SDL_Rect>(placement);
 
 		if (kError == SDL_RenderCopy(

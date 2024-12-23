@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/ .
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/ .
  */
 
 #pragma once
@@ -25,11 +25,9 @@
 
 namespace elemental {
 
-struct IRenderer
-{
-	/*! \brief This macro is used in child classes to construct instances of
-	 * the derived classes.
-	 * \see Singleton.hpp  */
+struct IRenderer {
+	/*! \brief This macro is used in child classes to construct instances
+	 * of the derived classes. \see Singleton.hpp  */
 	SINGLETON_INTERFACE(IRenderer);
 
 	/* This macro adds a friend class to this class definition that
@@ -39,8 +37,8 @@ struct IRenderer
 	virtual ~IRenderer() = default;
 
 	/*! \name Lazy Initialization Methods
-	 * These initialize the current rendering subsystema and de-initialize
-	 * it on-demand \{ */
+	 * These initialize the current rendering subsystema and
+	 * de-initialize it on-demand \{ */
 	virtual void init(RendererSettings& settings) = 0;
 	virtual void deactivate() = 0;
 	virtual auto isInitialized() -> bool = 0;
@@ -63,25 +61,27 @@ struct IRenderer
 	virtual void flip() = 0;
 	//! \}
 
-	virtual void blit(std::shared_ptr<void> image_data,
-	                  Rectangle& placement) = 0;
+	virtual void blit(
+	    std::shared_ptr<void> image_data, const Rectangle& placement
+	) = 0;
 
 	/*! \name DataType Conversion methods
-	 * \brief Conversion functions to convert Rectangle objects to the types
-	 * used by native APIs to update blocks of the screen.
+	 * \brief Conversion functions to convert Rectangle objects to the
+	 * types used by native APIs to update blocks of the screen.
 	 *
 	 * Template method bodies shall be  defined by child classes.
-	 * \note These are only exposed on the public interface for test builds
+	 * \note These are only exposed on the public interface for test
+	 * builds
 	 */
 	/*! \{ */
 	template<typename TR>
-	auto toRectangle(const TR& data) -> Rectangle;
+	auto static toRectangle(const TR& data) -> Rectangle;
 
 	template<typename TR>
-	auto fromRectangle(const Rectangle& rectangle) -> TR;
+	auto static fromRectangle(const Rectangle& rectangle) -> TR;
 	/*! \}  */
 
-  protected:
+    protected:
 	IRenderer() = default;
 };
 } // namespace elemental

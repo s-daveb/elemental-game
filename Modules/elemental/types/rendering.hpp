@@ -2,9 +2,9 @@
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
@@ -37,6 +37,19 @@ struct Rectangle {
 	Rectangle(const Rectangle& other)
 	    : position(other.position), size(other.size)
 	{
+	}
+	auto operator=(const Rectangle& other) -> Rectangle&
+	{
+		position = other.position;
+		size = other.size;
+		return *this;
+	}
+	auto operator==(const Rectangle& other) const -> bool
+	{
+		return position.x == other.position.x &&
+		       position.y == other.position.y &&
+		       size.width == other.size.width &&
+		       size.height == other.size.height;
 	}
 
 	Point position;

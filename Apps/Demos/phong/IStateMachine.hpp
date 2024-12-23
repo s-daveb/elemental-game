@@ -9,7 +9,10 @@
 
 #pragma once
 
-#include "IDrawable.hpp"
+#include "elemental/IDrawable.hpp"
+#include "elemental/types/rendering.hpp"
+
+#include "types/errors.hpp"
 
 namespace elemental {
 

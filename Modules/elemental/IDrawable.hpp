@@ -10,7 +10,9 @@
 #pragma once
 
 #include "External/IOCore/include/Exception.hpp"
+
 #include "types.hpp"
+#include "types/errors.hpp"
 #include "types/rendering.hpp"
 
 #include <any>

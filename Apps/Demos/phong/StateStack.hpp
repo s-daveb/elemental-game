@@ -15,6 +15,7 @@
 #include "IStateMachine.hpp"
 
 #include "IOCore/Exception.hpp"
+#include "types/errors.hpp"
 
 #include <any>
 #include <memory>
