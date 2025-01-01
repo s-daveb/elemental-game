@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "FontBook.hpp"
+#include "FontConfig.hpp"
 #include "IOCore/types/errors.hpp"
 #include "IState.hpp"
 

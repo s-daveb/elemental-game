@@ -10,7 +10,7 @@
 #include "MainMenu.hpp"
 
 #include "DrawCommand.hpp"
-#include "FontBook.hpp"
+#include "FontConfig.hpp"
 #include "IOCore/Exception.hpp"
 #include "IRenderer.hpp"
 #include "IState.hpp"
@@ -131,8 +131,8 @@ void MainMenu::init_textures()
 {
 	SdlRenderer& sdl_renderer = IRenderer::GetInstance<SdlRenderer>();
 
-	FontBook& font_book = FontBook::getInstance();
-	auto font_path = font_book.getFont("Berkeley Mono");
+	FontConfig& font_book = FontConfig::getInstance();
+	auto font_path = font_book.getFont("monospace");
 
 	font = TTF_OpenFont(font_path.c_str(), 24);
 

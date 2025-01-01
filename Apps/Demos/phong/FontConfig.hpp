@@ -16,12 +16,12 @@
 #include <stdexcept>
 #include <string>
 
-class FontBook {
+class FontConfig {
     public:
 	// Get the singleton instance of FontBook
-	static auto getInstance() -> FontBook&
+	static auto getInstance() -> FontConfig&
 	{
-		static FontBook instance;
+		static FontConfig instance;
 		return instance;
 	}
 
@@ -81,13 +81,13 @@ class FontBook {
 		return font_file_path;
 	}
 
-	~FontBook() { FcFini(); }
+	~FontConfig() { FcFini(); }
 
-	FontBook(const FontBook&) = delete;
-	auto operator=(const FontBook&) -> FontBook& = delete;
+	FontConfig(const FontConfig&) = delete;
+	auto operator=(const FontConfig&) -> FontConfig& = delete;
 
     private:
-	FontBook()
+	FontConfig()
 	{
 		if (!FcInit()) {
 			throw IOCore::Exception(
