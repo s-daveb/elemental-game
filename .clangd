@@ -4,8 +4,7 @@ CompileFlags:
 
 Diagnostics:
   UnusedIncludes: Strict
-  MissingIncludes: Strict
-  #AnalyzeAngledIncludes: true
+  MissingIncludes: None
 
 #InlayHints:
 #  BlockEnd: No

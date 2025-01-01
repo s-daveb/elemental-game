@@ -15,19 +15,15 @@
 #include "IRenderer.hpp"
 #include "IState.hpp"
 #include "SdlRenderer.hpp"
-#include "nonstd/span.hpp"
+
 #include "types/errors.hpp"
 #include "types/rendering.hpp"
 #include "util/debug.hpp"
 
-#include <fmt/core.h>
+#include <SDL.h>
 
-#include <SDL_events.h>
-#include <SDL_keyboard.h>
-#include <SDL_rect.h>
-#include <SDL_render.h>
-#include <SDL_scancode.h>
-#include <SDL_ttf.h>
+#include <fmt/core.h>
+#include <nonstd/span.hpp>
 
 #include <any>
 #include <cstddef>
@@ -78,7 +74,7 @@ auto MainMenu::recieveMessage(const Observable& sender, std::any message)
 			    this->selected_menu_item
 			));
 			if (this->selected_menu_item == 0) {
-				this->selected_menu_item = 4;
+				this->selected_menu_item = 3;
 			} else {
 				this->selected_menu_item--;
 			}
