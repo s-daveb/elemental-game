@@ -96,6 +96,9 @@ find_package(Qt6 COMPONENTS
 	Widgets REQUIRED
 	Gui REQUIRED
 )
+set(CMAKE_AUTOMOC OFF)
+set(CMAKE_AUTOUIC OFF)
+
 qt_standard_project_setup()
 
 # Set output directories for build targets

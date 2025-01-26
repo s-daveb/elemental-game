@@ -5,7 +5,7 @@ add_executable(phong
 	MainMenu.cpp
 )
 
-target_include_Directories(phong
+target_include_directories(phong
 PRIVATE
 	${CMAKE_CURRENT_DIR}
 )
