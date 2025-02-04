@@ -2,15 +2,16 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
 
-#include "External/IOCore/include/Exception.hpp"
+#include "IOCore/Exception.hpp"
 
+#include "IRenderer.hpp"
 #include "types.hpp"
 #include "types/errors.hpp"
 #include "types/rendering.hpp"
@@ -19,24 +20,16 @@
 
 namespace elemental {
 
+class IRenderer;
+
+/// @todo move this to its own file
 struct IDrawable {
-	IDrawable() = default;
 	virtual ~IDrawable(){};
 
-	virtual auto rectangle() const -> Rectangle&
-	{
-		throw IOCore::NotImplementedException();
-	}
-	virtual auto imageData() const -> std::any&
-	{
-		throw IOCore::NotImplementedException();
-	}
+	virtual auto draw(const Rectangle& location) -> ErrorFlag = 0;
 
-	virtual auto draw() -> ErrorFlag
-	{
-		throw IOCore::NotImplementedException();
-	}
-	virtual auto draw(const Rectangle& rect) -> ErrorFlag = 0;
+    protected:
+	IDrawable(IRenderer& renderer) {}
 };
 
 } // namespace elemental

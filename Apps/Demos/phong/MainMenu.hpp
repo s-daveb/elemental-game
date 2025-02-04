@@ -11,6 +11,8 @@
 
 #include "FontConfig.hpp"
 #include "IOCore/types/errors.hpp"
+
+#include "IDrawCommand.hpp"
 #include "IState.hpp"
 
 #include "elemental/SDL_Memory.hpp"
@@ -38,7 +40,8 @@ using IOCore::ErrorFlag;
 #define s(x) x
 
 class MainMenu : public IState {
-	using SdlTextPtr = SdlPtr<SDL_Texture>;
+	using TextureDataPtr = SdlPtr<SDL_Texture>;
+	using TextureDataStore = std::vector<TextureDataPtr>;
 
     public:
 	MainMenu();
@@ -48,8 +51,8 @@ class MainMenu : public IState {
 	auto recieveMessage(const Observable& sender, std::any message)
 	    -> void override;
 
-	auto getDrawables()
-	    -> std::list<std::shared_ptr<IDrawable>> override;
+	auto getDrawCommands()
+	    -> std::list<std::shared_ptr<IDrawCommand>> override;
 
     private:
 	TTF_Font* font{ nullptr };
@@ -59,8 +62,8 @@ class MainMenu : public IState {
 		                             "Settings",
 		                             "Exit" };
 
-	std::vector<SdlTextPtr> unselected_textures;
-	std::vector<SdlTextPtr> selected_textures;
+	TextureDataStore unselected_textures;
+	TextureDataStore selected_textures;
 
 	void init_textures();
 

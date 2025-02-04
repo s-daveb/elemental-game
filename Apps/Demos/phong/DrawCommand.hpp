@@ -11,22 +11,31 @@
 #include <exception>
 #include <memory>
 
-#include "IDrawable.hpp"
+#include "IDrawCommand.hpp"
 #include "IRenderer.hpp"
 #include "types/errors.hpp"
 #include "types/rendering.hpp"
 
 namespace elemental {
 
-struct DrawCommand : public IDrawable {
+struct DrawCommand : public IDrawCommand {
 	DrawCommand(
-	    IRenderer& renderer, std::shared_ptr<void> data, Rectangle rect
+	    IRenderer& renderer, Rectangle rect, std::shared_ptr<void> data
 	)
-	    : IDrawable(), renderer(renderer), texture(data), rect(rect)
+	    : IDrawCommand(rect, data)
+	    , renderer(renderer)
+	    , texture(data)
+	    , rect(rect)
 	{
 	}
 
-	auto draw(const Rectangle& rect) -> ErrorFlag override
+	auto rectangle() -> Rectangle& override { return this->rect; }
+	auto imageData() -> std::shared_ptr<void>& override
+	{
+		return this->texture;
+	}
+
+	auto draw() -> ErrorFlag override
 	{
 		try {
 			renderer.blit(texture, rect);
@@ -35,8 +44,6 @@ struct DrawCommand : public IDrawable {
 			return kError;
 		}
 	}
-
-	auto draw() -> ErrorFlag override { return this->draw(this->rect); }
 
 	IRenderer& renderer;
 

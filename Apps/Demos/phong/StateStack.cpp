@@ -2,9 +2,9 @@
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "StateStack.hpp"
@@ -45,7 +45,7 @@ auto StateStack::recieveMessage(const Observable& sender, std::any message)
 auto StateStack::draw() -> ErrorFlag
 {
 	auto return_value = kSuccess;
-	for (auto& drawable : this->stack.top()->getDrawables()) {
+	for (auto& drawable : this->stack.top()->getDrawCommands()) {
 		return_value &= drawable->draw();
 	}
 	return return_value;

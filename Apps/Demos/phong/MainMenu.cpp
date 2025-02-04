@@ -16,6 +16,8 @@
 #include "IState.hpp"
 #include "SdlRenderer.hpp"
 
+#include "IDrawCommand.hpp"
+
 #include "types/errors.hpp"
 #include "types/rendering.hpp"
 #include "util/debug.hpp"
@@ -95,19 +97,22 @@ auto MainMenu::recieveMessage(const Observable& sender, std::any message)
 	}
 }
 
-auto MainMenu::getDrawables() -> std::list<std::shared_ptr<IDrawable>>
+auto MainMenu::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
+
 {
 	static IRenderer& renderer = IRenderer::GetInstance<SdlRenderer>();
-	std::list<std::shared_ptr<IDrawable>> result;
+	std::list<std::shared_ptr<IDrawCommand>> result;
 
 	for (size_t i = 0; i < menu_items.size(); i++) {
-		SdlTextPtr texture;
+		TextureDataPtr texture;
 
 		if (i == selected_menu_item) {
 			texture = selected_textures.at(i);
 		} else {
 			texture = unselected_textures.at(i);
 		}
+		auto sdl_texture =
+		    std::static_pointer_cast<SDL_Texture>(texture);
 
 		SDL_Rect sdl_rect = { 0, 0, 0, 0 };
 		SDL_QueryTexture(
@@ -120,9 +125,9 @@ auto MainMenu::getDrawables() -> std::list<std::shared_ptr<IDrawable>>
 		    ((properties.screen_height / 2) + (i * sdl_rect.h));
 
 		auto rect = renderer.toRectangle<SDL_Rect>(sdl_rect);
-		result.push_back(
-		    std::make_shared<DrawCommand>(renderer, texture, rect)
-		);
+		result.push_back(std::make_shared<DrawCommand>(
+		    renderer, rect, sdl_texture
+		));
 	}
 	return result;
 }
@@ -132,7 +137,7 @@ void MainMenu::init_textures()
 	SdlRenderer& sdl_renderer = IRenderer::GetInstance<SdlRenderer>();
 
 	FontConfig& font_book = FontConfig::getInstance();
-	auto font_path = font_book.getFont("monospace");
+	auto font_path = font_book.getFont("Arial");
 
 	font = TTF_OpenFont(font_path.c_str(), 24);
 

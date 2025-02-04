@@ -13,7 +13,7 @@
 #include <list>
 #include <memory>
 
-#include "IDrawable.hpp"
+#include "IDrawCommand.hpp"
 
 #include "IObserver.hpp"
 #include "Observable.hpp"
@@ -28,8 +28,8 @@ struct IState : public IObserver {
 	    -> void override = 0;
 
 	virtual auto step() -> void = 0;
-	virtual auto getDrawables()
-	    -> std::list<std::shared_ptr<IDrawable>> = 0;
+	virtual auto getDrawCommands()
+	    -> std::list<std::shared_ptr<IDrawCommand>> = 0;
 };
 
 }

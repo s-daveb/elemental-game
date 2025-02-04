@@ -1,4 +1,4 @@
-/*
+/* IDrawCommand.hpp
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
@@ -9,21 +9,21 @@
 
 #pragma once
 
-#include "elemental/IDrawable.hpp"
-#include "elemental/types/rendering.hpp"
-
-#include "types/errors.hpp"
+#include "IRenderer.hpp"
+#include "types.hpp"
 
 namespace elemental {
 
-struct IStateMachine {
-	virtual void step() = 0;
-	virtual ~IStateMachine() = default;
-
+struct IDrawCommand {
+	virtual ~IDrawCommand() = default;
+	virtual auto rectangle() -> Rectangle& = 0;
+	virtual auto imageData() -> std::shared_ptr<void>& = 0;
 	virtual auto draw() -> ErrorFlag = 0;
+
+    protected:
+	IDrawCommand(Rectangle& rect, std::shared_ptr<void>& data) {}
 };
-
 }
-
 // clang-format off
 // vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+
