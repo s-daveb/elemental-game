@@ -2,40 +2,39 @@
  * Copyright © 2024 Saul D. Beniquez
  * License:  Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
 
 #include "Component.hpp"
-#include "Exception.hpp"
+#include "IOCore/Exception.hpp"
 
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
 
 namespace elemental {
-class ComponentFactory
-{
+struct ComponentFactory {
 	using TypeInfo = Component::TypeInfo;
 	using ComponentPtr = std::shared_ptr<Component>;
 	using ComponentVector = std::vector<std::shared_ptr<Component>>;
 	using ComponentPool = std::unordered_map<TypeInfo, ComponentVector>;
 
-  public:
-	template<typename TComponent, typename... Args>
-	std::shared_ptr<TComponent> createComponent(
-	    const Component::InstanceID&, Args&&...);
+	template<typename TComponent, typename... TArgs>
+	auto createComponent(const Component::InstanceID&, TArgs&&...)
+	    -> std::shared_ptr<TComponent>;
 
 	template<typename TComponent>
-	std::shared_ptr<TComponent> getComponent(const Component::InstanceID&);
+	auto getComponent(const Component::InstanceID&)
+	    -> std::shared_ptr<TComponent>;
 
 	template<typename TComponent>
-	ComponentVector& GetComponentVector(const TypeInfo&);
+	auto getComponentVector(const TypeInfo&) -> ComponentVector&;
 
-  private:
+    private:
 	ComponentPool component_pool;
 };
 } // namespace elemental

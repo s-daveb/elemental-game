@@ -1,7 +1,6 @@
 add_executable(phong
 	main.cpp
 	Phong.cpp
-	StateStack.cpp
 	MainMenu.cpp
 )
 

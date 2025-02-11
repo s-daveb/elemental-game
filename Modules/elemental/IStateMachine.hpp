@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "elemental/IDrawable.hpp"
-#include "elemental/types/rendering.hpp"
+#include "IDrawable.hpp"
+#include "types/rendering.hpp"
 
 #include "types/errors.hpp"
 

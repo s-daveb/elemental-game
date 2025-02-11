@@ -4,6 +4,8 @@ OBJECT
 	Observable.cpp
 	SdlRenderer.cpp
 	SdlEventSource.cpp
+	Entity.cpp
+	StateStack.cpp
 	paths.cpp)
 
 target_include_directories(elemental
