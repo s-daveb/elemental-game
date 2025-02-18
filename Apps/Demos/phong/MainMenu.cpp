@@ -62,38 +62,8 @@ auto MainMenu::recieveMessage(const Observable& sender, std::any message)
 	ASSERT_MSG(message.has_value(), "[Message : std::any] is empty");
 
 	SDL_Event event = std::any_cast<SDL_Event>(message);
-
 	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-		this->state.keystates = nonstd::span<const uint8_t>(
-		    SDL_GetKeyboardState(nullptr), properties.keyboard_size
-		);
-
-		// Check for Up Arrow key
-		if (this->state.keystates[SDL_SCANCODE_UP]) {
-			DBG_PRINT(fmt::format(
-			    "Message received {} {}",
-			    "UP",
-			    this->selected_menu_item
-			));
-			if (this->selected_menu_item == 0) {
-				this->selected_menu_item = 3;
-			} else {
-				this->selected_menu_item--;
-			}
-		}
-		// Check for Down Arrow key
-		if (this->state.keystates[SDL_SCANCODE_DOWN]) {
-			DBG_PRINT(fmt::format(
-			    "Message received {} {}",
-			    "DOWN",
-			    this->selected_menu_item
-			));
-			if (++this->selected_menu_item < menu_items.size()) {
-				;
-			} else {
-				this->selected_menu_item = 0;
-			}
-		}
+		handle_events(event);
 	}
 }
 
@@ -130,6 +100,40 @@ auto MainMenu::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 		));
 	}
 	return result;
+}
+
+void MainMenu::handle_events(InputEvent& event)
+{
+	ASSERT(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP);
+
+	this->state.keystates = nonstd::span<const uint8_t>(
+	    SDL_GetKeyboardState(nullptr), properties.keyboard_size
+	);
+
+	// Check for Up Arrow key
+	if (this->state.keystates[SDL_SCANCODE_UP]) {
+		DBG_PRINT(fmt::format(
+		    "Message received {} {}", "UP", this->selected_menu_item
+		));
+		if (this->selected_menu_item == 0) {
+			this->selected_menu_item = 3;
+		} else {
+			this->selected_menu_item--;
+		}
+	}
+	// Check for Down Arrow key
+	if (this->state.keystates[SDL_SCANCODE_DOWN]) {
+		DBG_PRINT(fmt::format(
+		    "Message received {} {}",
+		    "DOWN",
+		    this->selected_menu_item
+		));
+		if (++this->selected_menu_item < menu_items.size()) {
+			;
+		} else {
+			this->selected_menu_item = 0;
+		}
+	}
 }
 
 void MainMenu::init_textures()

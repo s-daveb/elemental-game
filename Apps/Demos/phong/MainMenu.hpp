@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+#define test_function(x) tesadas(x)
+
 namespace elemental {
 
 class Observable;
@@ -42,17 +44,21 @@ using IOCore::ErrorFlag;
 class MainMenu : public IState {
 	using TextureDataPtr = SdlPtr<SDL_Texture>;
 	using TextureDataStore = std::vector<TextureDataPtr>;
+	using InputEvent = SDL_Event;
 
     public:
 	MainMenu();
 	~MainMenu() override = default;
 
 	auto step() -> void override;
-	auto recieveMessage(const Observable& sender, std::any message)
-	    -> void override;
+	void recieveMessage(const Observable&, std::any) override;
 
 	auto getDrawCommands()
 	    -> std::list<std::shared_ptr<IDrawCommand>> override;
+
+    protected:
+	virtual void handle_events(InputEvent& event);
+	virtual void init_textures();
 
     private:
 	TTF_Font* font{ nullptr };
@@ -64,8 +70,6 @@ class MainMenu : public IState {
 
 	TextureDataStore unselected_textures;
 	TextureDataStore selected_textures;
-
-	void init_textures();
 
 	struct {
 		std::size_t keyboard_size;
