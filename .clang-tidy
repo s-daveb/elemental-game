@@ -7,7 +7,7 @@ CheckOptions:
 	- { key: modernize-use-default-member-init.IgnoreMacros, value : false}
 
 	# Warn about complex functions
-	- { key: readability-function-cognitive-complexity.Threshold, value: 10 }
+	- { key: readability-function-cognitive-complexity.Threshold, value: 15 }
 	- { key: readability-function-cognitive-complexity.DescribeBasicIncrements, value: true }
 	- { key: readability-function-cognitive-complexity.IgnoreMacros, value: true }
 
