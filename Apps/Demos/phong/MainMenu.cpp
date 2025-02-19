@@ -134,6 +134,19 @@ void MainMenu::handle_events(InputEvent& event)
 			this->selected_menu_item = 0;
 		}
 	}
+	if (this->state.keystates[SDL_SCANCODE_RETURN]) {
+		DBG_PRINT(fmt::format(
+		    "Message received {} {}",
+		    "RETURN",
+		    this->selected_menu_item
+		));
+
+		if (this->selected_menu_item == 3) {
+			SDL_Event* event = new SDL_Event();
+			event->type = SDL_QUIT;
+			SDL_PushEvent(event);
+		}
+	}
 }
 
 void MainMenu::init_textures()
