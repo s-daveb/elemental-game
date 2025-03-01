@@ -9,6 +9,8 @@ add_executable(test-runner
 	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
 	paths.test.cpp
+	IDrawCommand.test.cpp
+	DrawCommand.test.cpp
 )
 
 set_target_properties(test-runner
