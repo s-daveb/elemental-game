@@ -116,7 +116,7 @@ void MainMenu::handle_events(InputEvent& event)
 		    "Message received {} {}", "UP", this->selected_menu_item
 		));
 		if (this->selected_menu_item == 0) {
-			this->selected_menu_item = 3;
+			this->selected_menu_item = (menu_items.size() - 1);
 		} else {
 			this->selected_menu_item--;
 		}
@@ -141,7 +141,7 @@ void MainMenu::handle_events(InputEvent& event)
 		    this->selected_menu_item
 		));
 
-		if (this->selected_menu_item == 3) {
+		if (this->selected_menu_item == 2) { // index 2 = quit button
 			SDL_Event* event = new SDL_Event();
 			event->type = SDL_QUIT;
 			SDL_PushEvent(event);
@@ -154,7 +154,7 @@ void MainMenu::init_textures()
 	SdlRenderer& sdl_renderer = IRenderer::GetInstance<SdlRenderer>();
 
 	FontConfig& font_book = FontConfig::getInstance();
-	auto font_path = font_book.getFont("Arial");
+	auto font_path = font_book.getFont("monospace");
 
 	font = TTF_OpenFont(font_path.c_str(), 24);
 

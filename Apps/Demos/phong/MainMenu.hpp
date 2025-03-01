@@ -63,8 +63,7 @@ class MainMenu : public IState {
     private:
 	TTF_Font* font{ nullptr };
 	std::size_t selected_menu_item{ 0 };
-	std::vector<std::string> menu_items{ "New Game",
-		                             "Load Game",
+	std::vector<std::string> menu_items{ "Start Game",
 		                             "Settings",
 		                             "Exit" };
 
