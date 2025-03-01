@@ -11,6 +11,8 @@
 
 #include "IOCore/Exception.hpp"
 
+#include <fmt/format.h>
+
 #include <fontconfig/fontconfig.h>
 #include <mutex>
 #include <stdexcept>
@@ -26,42 +28,32 @@ class FontConfig {
 	}
 
 	// Retrieve the font path by name (e.g., "monospace")
-	auto getFont(const std::string& name) -> std::string
+	auto getFont(const std::string& font_name) -> std::string
 	{
 		std::lock_guard<std::mutex> lock(access_mutex);
 
 		// Create a pattern for the font name
-		FcPattern* pattern =
-		    FcNameParse(reinterpret_cast<const FcChar8*>(name.c_str()
-		    ));
-		if (!pattern) {
-			throw IOCore::Exception(
-			    "Failed to create Fontconfig pattern."
-			);
-		}
+		FcPattern* pattern = FcNameParse(
+		    reinterpret_cast<const FcChar8*>(font_name.c_str())
+		);
+		ASSERT_MSG(pattern, "Failed to create FontConfig pattern")
 
-		// Add a filter to prioritize TrueType fonts
-		// FcPatternAddString(
-		//    pattern,
-		//    FC_FONTFORMAT,
-		//    reinterpret_cast<const FcChar8*>("TrueType")
-		//);
-
-		// Match the pattern
-		FcConfig* config = FcConfigGetCurrent();
+		// Error check the font config pattern to make sure it exists
+		FcDefaultSubstitute(pattern);
 		FcResult result;
+		FcPattern* match = FcFontMatch(config, pattern, &result);
+		ASSERT_MSG(
+		    match,
+		    fmt::format("Font {} does not exist", font_name).c_str()
+		);
 		FcPattern* matched_font =
 		    FcFontMatch(config, pattern, &result);
+		ASSERT_MSG(
+		    matched_font,
+		    fmt::format("No matching font found for: {}", font_name)
+			.c_str()
+		);
 
-		FcPatternDestroy(pattern); // Free the pattern
-
-		if (!matched_font) {
-			throw IOCore::Exception(
-			    "No matching font found for: " + name
-			);
-		}
-
-		// Get the font file path
 		FcChar8* font_path = nullptr;
 		if (FcPatternGetString(
 			matched_font, FC_FILE, 0, &font_path
@@ -69,7 +61,7 @@ class FontConfig {
 			FcPatternDestroy(matched_font
 			); // Free the matched pattern
 			throw IOCore::Exception(
-			    "Failed to retrieve font path for: " + name
+			    "Failed to retrieve font path for: " + font_name
 			);
 		}
 
@@ -94,8 +86,10 @@ class FontConfig {
 			    "Failed to initialize Fontconfig."
 			);
 		}
+		config = FcInitLoadConfigAndFonts();
 	}
 
+	FcConfig* config;
 	std::mutex access_mutex;
 };
 
