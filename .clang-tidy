@@ -75,10 +75,16 @@ CheckOptions:
 	- { key: readability-identifier-naming.EnumConstantCase,   value: CamelCase }
 
 	# Constant Expression
-	- { key: readability-identifier-naming.ConstexprVariablePrefix, value: 'k' }
-	- { key: readability-identifier-naming.ConstexprVariableCase,   value: Camel_Snake_Case }
 
-	- { key: readability-identifier-naming.ConstexprFunctionCase, value: Camel_Snake_Case }
-	- { key: readability-identifier-naming.ConstexprMethodCase,   value: Camel_Snake_Case }
+	- { key: readability-identifier-naming.ConstexprFunctionCase, value: lower_case }
+
+	- { key: readability-identifier-naming.ConstexprFunctionPrefix, value: '' }
+	- { key: readability-identifier-naming.ConstexprFunctionSuffix, value: '_f' }
+	- { key: readability-identifier-naming.ConstexprMethodCase,   value: lower_case }
+	- { key: readability-identifier-naming.ConstexprMetehodSuffix, value: '_m' }
+
+	- { key: readability-identifier-naming.ConstexprVariablePrefix, value: '' }
+	- { key: readability-identifier-naming.ConstexprVariableCase,   value: lower_case }
+	- { key: readability-identifier-naming.ConstexprMetehodSuffix, value: '_v' }
 
 # vim: set ts=4 noet sw=4 sts=0 colorcolumn=100 :

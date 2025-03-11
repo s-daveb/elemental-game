@@ -11,6 +11,8 @@ add_executable(test-runner
 	paths.test.cpp
 	IDrawCommand.test.cpp
 	DrawCommand.test.cpp
+	ComponentFactory.test.cpp
+	FontConfig.test.cpp
 )
 
 set_target_properties(test-runner

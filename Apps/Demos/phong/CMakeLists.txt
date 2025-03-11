@@ -13,7 +13,6 @@ target_link_libraries(phong PRIVATE
 	elemental
 	IOCore
 	span-lite
-	Fontconfig::Fontconfig
 )
 
 

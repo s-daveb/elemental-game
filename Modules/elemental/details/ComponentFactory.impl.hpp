@@ -10,12 +10,14 @@
 #pragma once
 
 #include "Component.hpp"
+
 #include "IOCore/Exception.hpp"
 
 #ifndef COMP_FACTORY_DECL
 #include "ComponentFactory.hpp"
 #endif
 
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -23,17 +25,25 @@ namespace elemental {
 
 using ComponentVector = ComponentFactory::ComponentVector;
 
-template<typename TComponent, typename... TArgs>
-auto ComponentFactory::createComponent(
-    const Component::InstanceID& id_no, TArgs&&... args
-) -> std::shared_ptr<TComponent>
-{
+template<typename TComponent>
+constexpr bool is_component_v = std::is_base_of_v<Component, TComponent>;
 
-	auto new_object =
-	    std::make_shared<TComponent>(std::forward<TArgs>(args)...);
+template<typename TComponent, typename... TArgs>
+auto ComponentFactory::createComponent(TArgs&&... args)
+    -> std::shared_ptr<TComponent>
+{
+	static_assert(
+	    is_component_v<TComponent>,
+	    "TComponent must be a base class of Component"
+	);
+
+	using ComponentType = typename std::remove_reference_t<TComponent>;
+	auto new_object = std::make_shared<ComponentType>(
+	    *this, std::forward<TArgs>(args)...
+	);
 
 	auto component_type =
-	    static_cast<std::type_index>(typeid(TComponent));
+	    static_cast<std::type_index>(typeid(ComponentType));
 	auto& component_vector = component_pool[component_type];
 
 	component_vector.push_back(new_object);
@@ -42,19 +52,39 @@ auto ComponentFactory::createComponent(
 }
 
 template<typename TComponent>
-auto ComponentFactory::getComponent(const Component::InstanceID& id_no)
-    -> std::shared_ptr<TComponent>
+auto ComponentFactory::getComponentVector() -> ComponentVector&
 {
-	return nullptr;
-}
+	static_assert(
+	    is_component_v<TComponent>,
+	    "TComponent must be a base class of Component"
+	);
+	using ComponentType = typename std::remove_reference_t<TComponent>;
 
-template<typename TComponent>
-auto ComponentFactory::getComponentVector(const TypeInfo& type)
-    -> ComponentVector&
-{
+	auto type = static_cast<std::type_index>(typeid(ComponentType));
+
 	auto& pool = this->component_pool;
 
 	return pool.at(type);
+}
+
+template<typename TComponent>
+auto ComponentFactory::getComponent(const Component::InstanceID& id_no)
+    -> std::shared_ptr<TComponent>
+{
+	static_assert(
+	    is_component_v<TComponent>,
+	    "TComponent must be a base class of Component"
+	);
+	using ComponentType = typename std::remove_reference_t<TComponent>;
+
+	std::shared_ptr<ComponentType> result(nullptr);
+
+	auto component_list = this->getComponentVector<ComponentType>();
+	result =
+	    std::static_pointer_cast<ComponentType>(component_list.at(id_no)
+	    );
+
+	return result;
 }
 
 } // namespace elemental

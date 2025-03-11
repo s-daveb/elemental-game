@@ -2,9 +2,9 @@
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
@@ -15,9 +15,8 @@ namespace elemental {
 
 class ComponentFactory;
 
-struct Component
-{
-  public:
+struct Component {
+    public:
 	using TypeInfo = std::type_index;
 
 	// using EntityId = unsigned int;
@@ -33,11 +32,13 @@ struct Component
 	template<typename T_>
 	static auto isChildClass() -> bool
 	{
-		static_assert(std::is_base_of_v<Component, T_>,
-		              "T must be a derived class of Component");
+		static_assert(
+		    std::is_base_of_v<Component, T_>,
+		    "T must be a derived class of Component"
+		);
 	}
 
-  protected:
+    protected:
 	InstanceID instance_id;
 	// unsigned int entity_id;
 	ComponentFactory& factory;
@@ -49,12 +50,13 @@ struct Component
 	{
 	}
 
-  private:
+    private:
 	static unsigned int next_instance_id;
 };
 
 unsigned int Component::next_instance_id = 0;
 
 } // namespace elemental
-  // clang-format off
+
+// clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

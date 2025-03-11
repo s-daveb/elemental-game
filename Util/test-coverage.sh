@@ -42,7 +42,7 @@ while IFS= read -r header; do
 "
     fi
 done <<EOF
-$(find "$MODULES_DIR" -type f -name "*.hpp")
+$(find "$MODULES_DIR" -type f -name "*.hpp" -and -not -name "*.impl.hpp")
 EOF
 
 # Print files without tests first

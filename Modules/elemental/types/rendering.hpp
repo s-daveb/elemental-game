@@ -34,6 +34,11 @@ struct Rectangle {
 	    : position(position), size(size)
 	{
 	}
+	Rectangle(unsigned x, unsigned y, unsigned width, unsigned height)
+	    : position({ x, y }), size({ width, height })
+	{
+	}
+
 	Rectangle(const Rectangle& other)
 	    : position(other.position), size(other.size)
 	{

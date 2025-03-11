@@ -143,7 +143,6 @@ void Phong::event_and_rendering_loop()
 
 		auto cycle_delay_ms = frame_regulator.delay();
 
-		// print_cycle_rate(cycle_delay_ms, "frame delay");
 		video_renderer.flip();
 	} while (this->is_running);
 
@@ -162,7 +161,6 @@ void Phong::simulation_thread_loop()
 		state_stack.step();
 
 		auto cycle_delay_ms = loop_regulator.delay();
-		// print_cycle_rate(cycle_delay_ms);
 	} while (this->is_running);
 }
 

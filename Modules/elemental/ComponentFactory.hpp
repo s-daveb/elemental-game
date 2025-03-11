@@ -24,15 +24,14 @@ struct ComponentFactory {
 	using ComponentPool = std::unordered_map<TypeInfo, ComponentVector>;
 
 	template<typename TComponent, typename... TArgs>
-	auto createComponent(const Component::InstanceID&, TArgs&&...)
-	    -> std::shared_ptr<TComponent>;
+	auto createComponent(TArgs&&...) -> std::shared_ptr<TComponent>;
+
+	template<typename TComponent>
+	auto getComponentVector() -> ComponentVector&;
 
 	template<typename TComponent>
 	auto getComponent(const Component::InstanceID&)
 	    -> std::shared_ptr<TComponent>;
-
-	template<typename TComponent>
-	auto getComponentVector(const TypeInfo&) -> ComponentVector&;
 
     private:
 	ComponentPool component_pool;

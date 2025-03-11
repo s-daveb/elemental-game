@@ -31,7 +31,8 @@ struct StateStack
 	~StateStack() override = default;
 
 	void step() override;
-	auto pushState(std::unique_ptr<IState> state) -> void;
+	void pop();
+	void pushState(std::unique_ptr<IState> state);
 
 	void recieveMessage(
 	    const Observable& sender, std::any message = std::any()

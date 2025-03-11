@@ -6,7 +6,9 @@ OBJECT
 	SdlEventSource.cpp
 	Entity.cpp
 	StateStack.cpp
-	paths.cpp)
+	paths.cpp
+	FontConfig.cpp
+)
 
 target_include_directories(elemental
 PUBLIC
@@ -18,6 +20,8 @@ target_link_libraries(elemental PUBLIC
 	Threads::Threads
 	${SDL2_COMBINED_LINK_DEPS}
 	${STACKTRACE_DEP_LIBS}
+
+	Fontconfig::Fontconfig
 )
 
 package_library_headers(elemental

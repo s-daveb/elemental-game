@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include <SDL.h>
@@ -22,17 +22,16 @@
 
 namespace elemental::debug {
 template<>
-struct Inspector<SdlRenderer>
-{
-	struct
-	{
+struct Inspector<SdlRenderer> {
+	struct {
 		bool& is_initialized;
 		SdlPtr<SDL_Window>& sdl_window_ptr;
 		SdlPtr<SDL_Renderer>& sdl_renderer_ptr;
 	} state;
 
 	Inspector(SdlRenderer& subject)
-	    : state{ subject.is_initialized, subject.sdl_window_ptr,
+	    : state{ subject.is_initialized,
+		     subject.sdl_window_ptr,
 		     subject.sdl_renderer_ptr } {};
 };
 } // namespace elemental::debug
@@ -42,23 +41,27 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	using namespace elemental;
 	using namespace elemental::debug;
 
-	struct SdlRendererFixture : public SdlTestFixture
-	{
+	struct SdlRendererFixture : public SdlTestFixture {
 		SdlRendererFixture()
 		    : SdlTestFixture()
 		    , settings()
 		    , test_renderer(IRenderer::GetInstance<SdlRenderer>())
 		    , renderer_info(test_renderer)
 		{
-			settings = { { "Test",
-				       WindowMode::Windowed,      // mode
-				       WindowPlacement::Centered, // placement
-				       { 0, 0 },                  // window.pos
-				       { 1024, 768 } },           // window.size
-				     { 1024, 768 } }; // renderer res
+			settings = {
+				{ "Test",
+				  WindowMode::Windowed,      // mode
+				  WindowPlacement::Centered, // placement
+				  { 0, 0 },                  // window.pos
+				  { 1024, 768 } },           // window.size
+				{ 1024, 768 }
+			}; // renderer res
 		}
 
-		~SdlRendererFixture() override { test_renderer.deactivate(); }
+		~SdlRendererFixture() override
+		{
+			test_renderer.deactivate();
+		}
 
 		RendererSettings settings;
 		SdlRenderer& test_renderer;
@@ -77,8 +80,9 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	TEST("elemental::SdlRenderer - convert Rectangle to SDL_Rect")
 	{
 		REQUIRE_NOTHROW([&]() {
-			auto& renderer = IRenderer::GetInstance<SdlRenderer>();
-			auto test_input = Rectangle{ 0, 1, 10, 20 };
+			auto& renderer =
+			    IRenderer::GetInstance<SdlRenderer>();
+			auto test_input = Rectangle(0, 1, 10, 20);
 			SDL_Rect result =
 			    renderer.fromRectangle<SDL_Rect>(test_input);
 
@@ -91,7 +95,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	TEST("elemental::SdlRenderer - convert SDL_Rect to Rectangle")
 	{
 		REQUIRE_NOTHROW([&]() {
-			auto& renderer = IRenderer::GetInstance<SdlRenderer>();
+			auto& renderer =
+			    IRenderer::GetInstance<SdlRenderer>();
 			auto test_input = SDL_Rect{ 0, 1, 10, 20 };
 			Rectangle result =
 			    renderer.toRectangle<SDL_Rect>(test_input);
@@ -125,37 +130,45 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 		test_renderer.deactivate();
 		REQUIRE(false == renderer_info.state.is_initialized);
 
-		// 2. Verify that an SDL_Window and SDL_Renderer ptrs have been
-		// cleared
+		// 2. Verify that an SDL_Window and SDL_Renderer ptrs have
+		// been cleared
 		REQUIRE(renderer_info.state.sdl_window_ptr == nullptr);
 		REQUIRE(renderer_info.state.sdl_renderer_ptr == nullptr);
 	}
 	FIXTURE_TEST("elemental::SdlRenderer - IsInitialized Accessor")
 	{
 		// 1. Default initialization does not throw errors
-		CHECK(test_renderer.isInitialized() ==
-		      renderer_info.state.is_initialized);
+		CHECK(
+		    test_renderer.isInitialized() ==
+		    renderer_info.state.is_initialized
+		);
 		test_renderer.init(settings);
-		CHECK(test_renderer.isInitialized() ==
-		      renderer_info.state.is_initialized);
+		CHECK(
+		    test_renderer.isInitialized() ==
+		    renderer_info.state.is_initialized
+		);
 	}
 
 	FIXTURE_TEST("elemental::SdlRenderer - GetResolution works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.getResolution(); }());
+		REQUIRE_THROWS([this]() { test_renderer.getResolution(); }()
+		);
 
 		// 2. After initializtion, the method works
 		test_renderer.init(settings);
 		auto resolution_data = test_renderer.getResolution();
 
 		REQUIRE(resolution_data.width == settings.resolution.width);
-		REQUIRE(resolution_data.height == settings.resolution.height);
+		REQUIRE(
+		    resolution_data.height == settings.resolution.height
+		);
 	}
 	FIXTURE_TEST("elemental::SdlRenderer - GetWindowSize works")
 	{
 		// 1. Before initialization, throws error
-		REQUIRE_THROWS([this]() { test_renderer.getWindowSize(); }());
+		REQUIRE_THROWS([this]() { test_renderer.getWindowSize(); }()
+		);
 
 		// 2. After initializtion, the method works
 		test_renderer.init(settings);
@@ -199,7 +212,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 
 		REQUIRE(renderer_info.state.sdl_renderer_ptr != nullptr);
 		img_texture_ptr = SDL_CreateTextureFromSurface(
-		    renderer_info.state.sdl_renderer_ptr, image_surf_ptr);
+		    renderer_info.state.sdl_renderer_ptr, image_surf_ptr
+		);
 		REQUIRE(img_texture_ptr != nullptr);
 
 		// C1. Renderer becomes invalid before blitting, throws error
@@ -212,9 +226,11 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 			test_renderer.blit(img_texture_ptr, location);
 		}());
 
-		// C2. With a valid, initialized SdlRenderer, the method works
+		// C2. With a valid, initialized SdlRenderer, the method
+		// works
 		renderer_info.state.sdl_renderer_ptr.swap(
-		    temporary_render_storage);
+		    temporary_render_storage
+		);
 		test_renderer.blit(img_texture_ptr, location);
 
 		// Display the image and pause so the user can see it!
