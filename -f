@@ -1,35 +1,83 @@
 #!/bin/sh
 
-# Ensure Homebrew's LLVM is installed
-if ! brew list llvm &>/dev/null; then
-	echo "LLVM is not installed via Homebrew. Installing..."
-	brew install llvm
+# Determine the directory of the sourced script
+CURRENT_DIR=$(pwd)
+ENV_DIR="${CURRENT_DIR}/Util/Env"
+
+if ! command -v uname >/dev/null 2>&1; then
+    echo "udev is required. Set up a POSIX userspace and try again"
+    return 1
 fi
-# Detect the path to the currently active macOS SDK
-export CMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
 
-# Determine the Homebrew prefix
-BREW_PREFIX=$(brew --prefix)
-
-export PATH="${BREW_PREFIX}/opt/llvm/bin:${PATH}"
-
-export CMAKE_C_COMPILER=${CMAKE_C_COMPILER:-"clang"}
-export CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER:-"clang++"}
+OS="$(uname)"
+ARCH="$(uname -m)"
+FULL_ARCH="$(uname -a)"
 
 
+portable_nproc() {
+    if [ "$OS" = "Linux" ]; then
+        NPROCS="$(nproc --all)"
+    elif [ "$OS" = "Darwin" ] || \
+         [ "$(echo "$OS" | grep -q BSD)" = "BSD" ]; then
+        NPROCS="$(sysctl -n hw.ncpu)"
+    else
+        NPROCS="$(getconf _NPROCESSORS_ONLN)"  # glibc/coreutils fallback
+    fi
+    echo "$NPROCS"
+}
 
-# Set environment variables for compilers
+# Check if 'Util/Env' is accessible from the current directory
+if [[ ! -d "${CURRENT_DIR}/Util/Env" ]]; then
+    echo "Error: 'Util/Env' directory is not accessible from the current directory."
+    echo "Skipping environment setup."
+    echo $CURRENT_DIR
+    return 1
+fi
 
-# Set flags for linker and compiler to use Homebrew's LLVM
-#  You don't want to uncomment this unless you know what you're doing
-#export LDFLAGS="-L${BREW_PREFIX}/opt/llvm/lib -Wl,-rpath,${BREW_PREFIX/}opt/llvm/lib"
-#export LDFLAGS="${LDFLAGS} -L${BREW_PREFIX}/opt/llvm/lib/c++ -L${BREW_PREFIX}/opt/llvm/lib/unwind"
-#
-#export CXXFLAGS="-I${BREW_PREFIX}/opt/llvm/include"
-# Set SDKROOT to ensure compatibility with macOS SDK
-#export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+# Source the homebrew-llvm.env.env script
+# Adjust the path if homebrew-llvm.env.env is located elsewhere
+if [[ -z "${HOMEBREW_LLVM}" ]] && [[ "$(uname)" == "Darwin" ]] && [[ -f "${ENV_DIR}/homebrew-llvm.env.env" ]]; then
+    . "${ENV_DIR}/homebrew-llvm.env.env"
+else
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "Warning: 'homebrew-llvm.env.env' not found in ${ENV_DIR}."
+        echo "Skipping environment setup."
+    fi
+fi
 
-# Inform the user
-echo "Environment configured to use Homebrew's LLVM/Clang with CMake."
+# Ensure 'distcc' is installed
+if ! command -v distcc >/dev/null 2>&1; then
+    echo "Error: 'distcc' is not installed. Please install it."
+    return 1
+fi
 
-# vim: set ts=4 sw=4 noet:
+# Capture the system's architecture using uname -m
+CPUARCH=$(uname -m)
+
+if [[ "$OS" == "Darwin" ]]; then
+    export CFLAGS="-arch $CPUARCH"
+    export CXXFLAGS="-arch $CPUARCH"
+fi
+
+if command -v clang >/dev/null 2>&1; then
+    TARGET_TRIPLET=$(clang -dumpmachine)
+    export CMAKE_CXX_COMPILER_TARGET="$TARGET_TRIPLET"
+    export CMAKE_CC_COMPILER_TARGET="$TARGET_TRIPLET"
+else
+    echo "Warning: 'clang' is not available. Cannot determine target triplet."
+fi
+
+# Set CMake to use 'distcc' as the compiler launcher
+export CMAKE_C_COMPILER_LAUNCHER="distcc"
+export CMAKE_CXX_COMPILER_LAUNCHER="distcc"
+
+
+# Optionally, set the number of jobs 'distcc' can run in parallel
+export DISTCC_FALLBACK=0
+export DISTCC_BACKOFF_PERIOD=0
+export DISTCC_JOBS=$(portable_nproc)
+
+echo "Distcc Environment setup complete."
+echo "WARNING: Be sure to reconfigure the project WITHOUT ccache or you may incur strange errors"
+
+# vim: set ts=4 sts=4 expandtab sw=4 :
