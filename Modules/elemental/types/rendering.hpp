@@ -69,15 +69,13 @@ struct Rectangle {
 	TOML_CLASS(Rectangle, position, size);
 };
 
-enum class WindowMode {
+enum WindowMode {
 	Windowed = 0x00,
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
-TOML_ENUM(
-    WindowMode, WindowMode::Windowed, WindowMode::Borderless,
-    WindowMode::Fullscreen
-);
+
+TOML_ENUM(WindowMode, Windowed, Borderless, Fullscreen);
 
 enum WindowPlacement { Manual, Centered };
 TOML_ENUM(WindowPlacement, Manual, Centered);
