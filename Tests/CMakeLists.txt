@@ -13,7 +13,7 @@ add_executable(test-runner
 	DrawCommand.test.cpp
 	ComponentFactory.test.cpp
 	FontConfig.test.cpp
-	rendering-types.test.cpp
+	types/rendering.test.cpp
 )
 
 set_target_properties(test-runner
@@ -64,6 +64,9 @@ catch_discover_tests(test-runner)
 #        correct directory
 add_custom_target(ctest
 	COMMAND ctest -C $configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --output-on-failure
+)
+add_custom_target(coverage
+	COMMAND /bin/sh ${CMAKE_SOURCE_DIR}/Util/test-coverage.sh
 )
 add_custom_target(copy_test_assets
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data

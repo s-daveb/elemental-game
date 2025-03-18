@@ -2,9 +2,9 @@
  * Copyright © 2024 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
@@ -14,8 +14,7 @@
 #include <type_traits>
 
 namespace elemental {
-enum class InputDevices : unsigned int
-{
+enum class InputDevices : unsigned int {
 	None = 0x0000,
 	Keyboard = 0x0001,
 	Mouse = 0x0010,
@@ -23,19 +22,19 @@ enum class InputDevices : unsigned int
 	All = 0x0111 // Keyboard & Mouse & Joystick
 };
 // Enable bitwise operations on InputDevice
-constexpr auto
-operator|(InputDevices lhs, InputDevices rhs) -> InputDevices
+constexpr auto operator|(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) |
-	    static_cast<std::underlying_type_t<InputDevices>>(rhs));
+	    static_cast<std::underlying_type_t<InputDevices>>(rhs)
+	);
 }
-constexpr auto
-operator&(InputDevices lhs, InputDevices rhs) -> InputDevices
+constexpr auto operator&(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) &
-	    static_cast<std::underlying_type_t<InputDevices>>(rhs));
+	    static_cast<std::underlying_type_t<InputDevices>>(rhs)
+	);
 }
 
 } // namespace elemental
