@@ -14,6 +14,7 @@ add_executable(test-runner
 	ComponentFactory.test.cpp
 	FontConfig.test.cpp
 	types/rendering.test.cpp
+	types/input.test.cpp
 )
 
 set_target_properties(test-runner
