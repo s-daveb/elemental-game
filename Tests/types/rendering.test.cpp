@@ -7,10 +7,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "External/IOCore/include/TomlTable.hpp"
+#include "types/rendering.hpp"
 #include "IOCore/TomlTable.hpp"
 #include "test-utils/common.hpp"
-#include "types/rendering.hpp"
 
 #include <string>
 

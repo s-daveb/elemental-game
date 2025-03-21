@@ -15,6 +15,7 @@ add_executable(test-runner
 	FontConfig.test.cpp
 	types/rendering.test.cpp
 	types/input.test.cpp
+	util/testing.test.cpp
 )
 
 set_target_properties(test-runner
