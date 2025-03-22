@@ -32,12 +32,12 @@ struct BlackBox {
 template<>
 struct NS::debug::Inspector<BlackBox> {
 	Inspector<BlackBox>(BlackBox& subject) : impl(&subject) {}
-	using data_t = std::tuple<char*, size_t>;
+	using data_t = std::tuple<const char*, size_t>;
 	auto getData() -> data_t
 	{
 		return { impl->data, strlen(impl->data) };
 	};
-	BlackBox* impl;
+	const BlackBox* impl;
 };
 
 BEGIN_TEST_SUITE("testing-utils")
