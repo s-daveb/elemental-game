@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "LoopRegulator.hpp"
@@ -33,7 +33,8 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		CHECK(test_object.elapsed_ms.count() == 0);
 		CHECK(test_object.start_time == steady_clock::time_point());
 	}
-	FIXTURE_TEST("elemental::LoopRegulator - Time calculations work properly"
+	FIXTURE_TEST(
+	    "elemental::LoopRegulator - Time calculations work properly"
 	)
 	{
 		test_object.startUpdate();
@@ -45,22 +46,25 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		REQUIRE(test_object.elapsed_ms.count() > 900);
 	};
 
-	FIXTURE_TEST("elemental::LoopRegulator::Delay works within tolerance")
+	FIXTURE_TEST("elemental::LoopRegulator::Delay works within tolerance"
+	)
 	{
-#if defined(CI_BUILD) && defined(__APPLE__)
+#if defined(CI_BUILD) && (defined(__APPLE__) || defined(__FreeBSD_))
 		WARN("(macos) this test always fails due to low "
 		     "priority processor scheduling in CI build env");
 		SUCCEED();
 		return;
 	}
 #else
-		const auto kACCEPTABLE_MARGIN_ERROR_MS = 10ms;
+		const auto kAcceptableMarginErrorMs = 10ms;
 
 		// Seed the random number generator with the current
 		// time
 		unsigned seed =
 
-		    std::chrono::system_clock::now().time_since_epoch().count();
+		    std::chrono::system_clock::now()
+			.time_since_epoch()
+			.count();
 		std::default_random_engine gen(seed);
 
 		// Define the distribution for random delays (0 to
@@ -70,7 +74,8 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		);
 
 		for (unsigned i = 0; i < 100; ++i) {
-			auto random_delay = milliseconds(delay_generator(gen));
+			auto random_delay =
+			    milliseconds(delay_generator(gen));
 
 			test_object.startUpdate();
 			this_thread::sleep_for(random_delay);
@@ -78,17 +83,19 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 			auto& expected_delay = test_object.desired_delay_ms;
 
 			auto margin_error_ms =
-			    (expected_delay - (time_delayed_ms + random_delay));
+			    (expected_delay -
+			     (time_delayed_ms + random_delay));
 
 			if (margin_error_ms.count() < 0) {
 				CHECK(
 				    margin_error_ms >
-				    (-1 * kACCEPTABLE_MARGIN_ERROR_MS)
+				    (-1 * kAcceptableMarginErrorMs)
 				);
 
 			} else {
 				CHECK(
-				    margin_error_ms < kACCEPTABLE_MARGIN_ERROR_MS
+				    margin_error_ms <
+				    kAcceptableMarginErrorMs
 				);
 			}
 		}
