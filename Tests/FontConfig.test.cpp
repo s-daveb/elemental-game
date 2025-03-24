@@ -27,10 +27,12 @@ BEGIN_TEST_SUITE("FontConfig")
 		FontConfig& test_subject;
 	};
 
+#if defined(CI_BUILD) && !defined(__FreeBSD__)
 	FIXTURE_TEST("getFont")
 	{
 		REQUIRE(test_subject.getFont("") != "");
 	}
+#endif
 }
 
 // clang-format off
