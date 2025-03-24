@@ -31,7 +31,7 @@ struct BlackBox {
 
 template<>
 struct NS::debug::Inspector<BlackBox> {
-	Inspector<BlackBox>(BlackBox& subject) : impl(&subject) {}
+	Inspector(BlackBox& subject) : impl(&subject) {}
 	using data_t = std::tuple<const char*, size_t>;
 	auto getData() -> data_t
 	{

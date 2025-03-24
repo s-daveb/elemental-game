@@ -36,6 +36,7 @@ struct Component {
 		    std::is_base_of_v<Component, T_>,
 		    "T must be a derived class of Component"
 		);
+		return false;
 	}
 
     protected:

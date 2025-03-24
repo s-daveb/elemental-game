@@ -15,6 +15,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 namespace elemental {
 struct ComponentFactory {
