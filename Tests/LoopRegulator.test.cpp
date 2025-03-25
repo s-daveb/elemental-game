@@ -49,13 +49,12 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	FIXTURE_TEST("elemental::LoopRegulator::Delay works within tolerance"
 	)
 	{
-#if defined(CI_BUILD) && (defined(__APPLE__) || defined(__FreeBSD__))
-		WARN("(macos|freebsd) this test always fails due to low "
-		     "priority processor scheduling in CI build env");
-		SUCCEED();
-		return;
-	}
-#else
+		/* #if defined(CI_BUILD) && (defined(__APPLE__) ||
+		defined(__FreeBSD__)) WARN("(macos|freebsd) this test always
+		fails due to low " "priority processor scheduling in CI build
+		env"); SUCCEED(); return;
+		        }
+		#else */
 		const auto kAcceptableMarginErrorMs = 10ms;
 
 		// Seed the random number generator with the current
@@ -100,7 +99,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 			}
 		}
 	}
-#endif
+	// #endif
 };
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
