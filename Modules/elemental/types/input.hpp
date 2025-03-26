@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "util/bitwise.hpp"
-
 #include <type_traits>
 
 namespace elemental {

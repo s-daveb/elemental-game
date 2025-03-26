@@ -2,21 +2,21 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SDL_Memory.hpp"
+#include "IOCore/Exception.hpp"
+#include "IOCore/util/bitwise.hpp"
 
 #include "sys/debuginfo.hpp"
+#include "types/input.hpp"
 #include "util/debug.hpp"
 
-#include "IOCore/Exception.hpp"
 #include "IObserver.hpp"
-
+#include "SDL_Memory.hpp"
 #include "SdlEventSource.hpp"
-#include "types/input.hpp"
 
 #include <SDL.h>
 
@@ -32,14 +32,17 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 	if (Enum::ContainsFlag(device_flags, InputDevices::Joystick)) {
 
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
-		SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
+		SDL_InitSubSystem(
+		    SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER
+		);
 
 		if (SDL_NumJoysticks() > 0) {
 			this->joydev_ptr = SDL_JoystickOpen(0);
 
 			DBG_PRINT("Opened Joystick 0" << std::endl);
 			DBG_PRINT(
-			    "Name: " << SDL_JoystickNameForIndex(0) << std::endl
+			    "Name: " << SDL_JoystickNameForIndex(0)
+				     << std::endl
 			);
 			DBG_PRINT(
 			    "Number of Axes: "
