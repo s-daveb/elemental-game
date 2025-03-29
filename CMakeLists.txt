@@ -61,7 +61,7 @@ if (BUILD_TESTING)
 		GITHUB_REPOSITORY eranpeer/FakeIt
 		GIT_TAG 2.4.1
 		OPTIONS
- 		 		"BUILD_TESTINGING OFF"
+ 		 		"BUILD_TESTING OFF"
 	)
 
 	if (TARGET Catch2)
