@@ -17,8 +17,13 @@ class Inspector;
 
 /** \brief this macro adds a friend class to this class definition that
  * can be used in unit tests to view private variables */
+#if defined(UNIT_TEST)
 #define TEST_INSPECTABLE(TClass)                                            \
 	friend class elemental::debug::Inspector<TClass>;
+#else
+#define TEST_INSPECTABLE(TClass)
+
+#endif
 
 /*
 #define TEST_INSPECTABLE(TClassName) \

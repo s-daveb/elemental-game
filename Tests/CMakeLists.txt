@@ -5,8 +5,6 @@ add_executable(test-runner
 	LoopRegulator.test.cpp
 	Observable.test.cpp
 	IRenderer.test.cpp
-	sdl/SdlRenderer.test.cpp
-	sdl/SdlEventSource.test.cpp
 	SDL_Memory.test.cpp
 	paths.test.cpp
 	IDrawCommand.test.cpp
@@ -16,6 +14,7 @@ add_executable(test-runner
 	types/rendering.test.cpp
 	types/input.test.cpp
 	util/testing.test.cpp
+	IObserver.test.cpp
 )
 
 set_target_properties(test-runner

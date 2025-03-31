@@ -2,9 +2,9 @@
  * Copyright © 2019-2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #pragma once
@@ -13,29 +13,37 @@
 #include <functional>
 #include <list>
 
+#include "util/testing.hpp"
+
+#ifdef UNIT_TEST
+#define MOCKABLE virtual
+#else
+#define MOCKABLE
+#endif
+
 namespace elemental {
 
 class IObserver;
 
-class Observable
-{
-  public:
+class Observable {
+    public:
 	using ObserverRef = std::reference_wrapper<IObserver>;
 	using ObserverList = std::list<ObserverRef>;
+
+	virtual ~Observable() = default;
 
 	/** \name Deleteed Constructors & Operators
 	 * \{ */
 	Observable(const Observable&) = default;
 	Observable(Observable&&) = delete;
-	auto operator=(const Observable&) -> Observable& = default;
-	auto operator=(Observable&&) -> Observable& = delete;
+
+	MOCKABLE auto operator=(const Observable&) -> Observable& = delete;
+	MOCKABLE auto operator=(Observable&&) -> Observable& = delete;
 	/**  \} */
 
-	virtual ~Observable() = default;
+	MOCKABLE void registerObserver(ObserverRef);
 
-	void registerObserver(ObserverRef);
-
-  protected:
+    protected:
 	Observable() = default;
 	void notify_all(std::any message = std::any());
 	ObserverList observers;
