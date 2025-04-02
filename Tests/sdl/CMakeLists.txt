@@ -14,7 +14,7 @@ target_include_directories(SDL_test-runner
 	PRIVATE
 	${Elemental_CMAKE_SOURCE_DIR}/Tests
 )
-#target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
+target_compile_definitions(SDL_test-runner PRIVATE -DUNIT_TEST=1)
 
 target_link_libraries(SDL_test-runner
 PRIVATE
