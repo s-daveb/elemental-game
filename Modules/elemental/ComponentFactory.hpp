@@ -12,10 +12,10 @@
 #include "Component.hpp"
 #include "IOCore/Exception.hpp"
 
+#include <memory>
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 
 namespace elemental {
 struct ComponentFactory {
@@ -23,6 +23,8 @@ struct ComponentFactory {
 	using ComponentPtr = std::shared_ptr<Component>;
 	using ComponentVector = std::vector<std::shared_ptr<Component>>;
 	using ComponentPool = std::unordered_map<TypeInfo, ComponentVector>;
+
+	virtual ~ComponentFactory();
 
 	template<typename TComponent, typename... TArgs>
 	auto createComponent(TArgs&&...) -> std::shared_ptr<TComponent>;

@@ -25,6 +25,17 @@ namespace elemental {
 
 using ComponentVector = ComponentFactory::ComponentVector;
 
+inline ComponentFactory::~ComponentFactory()
+{
+	for (auto pair : component_pool) {
+		auto key = pair.first;
+		auto value = pair.second;
+
+		value.clear();
+	}
+	component_pool.clear();
+}
+
 template<typename TComponent>
 constexpr bool is_component_v = std::is_base_of_v<Component, TComponent>;
 

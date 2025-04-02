@@ -16,12 +16,8 @@ namespace elemental {
 class ComponentFactory;
 
 struct Component {
-    public:
 	using TypeInfo = std::type_index;
-
-	// using EntityId = unsigned int;
 	using InstanceID = unsigned int;
-
 	friend class ComponentFactory;
 
 	virtual ~Component() = default;
@@ -29,14 +25,15 @@ struct Component {
 	auto getInstanceId() const -> InstanceID { return instance_id; }
 	virtual auto getTypeIndex() -> TypeInfo = 0;
 
-	template<typename T_>
-	static auto isChildClass() -> bool
+	template<typename TComponent>
+	static constexpr auto is_child_class() -> bool
 	{
 		static_assert(
-		    std::is_base_of_v<Component, T_>,
+		    (std::is_base_of_v<Component, TComponent> ||
+		     std::is_same_v<Component, TComponent>),
 		    "T must be a derived class of Component"
 		);
-		return false;
+		return true;
 	}
 
     protected:
@@ -52,10 +49,8 @@ struct Component {
 	}
 
     private:
-	static unsigned int next_instance_id;
+	static inline unsigned int next_instance_id = 0;
 };
-
-unsigned int Component::next_instance_id = 0;
 
 } // namespace elemental
 
