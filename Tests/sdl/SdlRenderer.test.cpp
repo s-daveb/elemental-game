@@ -54,8 +54,8 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 				  WindowPlacement::Centered, // placement
 				  { 0, 0 },                  // window.pos
 				  { 1024, 768 } },           // window.size
-				{ 1024, 768 }
-			}; // renderer res
+				{ 1024, 768 }                // renderer res
+			};
 		}
 
 		~SdlRendererFixture() override

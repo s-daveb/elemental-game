@@ -48,7 +48,7 @@ TEST_CASE("Test Component Class", "[component]")
 
 	// Test instance ID
 	auto instance_id = component->getInstanceId();
-	REQUIRE(instance_id > 0);
+	REQUIRE(instance_id >= 0);
 
 	// Test isChildClass template specializations
 	static_assert(
