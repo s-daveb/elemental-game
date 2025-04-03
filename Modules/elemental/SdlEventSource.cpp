@@ -8,9 +8,9 @@
  */
 
 #include "IOCore/Exception.hpp"
+#include "IOCore/sys/debuginfo.hpp"
 #include "IOCore/util/bitwise.hpp"
 
-#include "sys/debuginfo.hpp"
 #include "types/input.hpp"
 #include "util/debug.hpp"
 
@@ -62,8 +62,10 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 
 			SDL_GameControllerEventState(SDL_ENABLE);
 		} else {
-			DBG_PRINT("Warning: No Joystick or Core::Input "
-			          "detected");
+			DBG_PRINT(
+			    "Warning: No Joystick or Core::Input "
+			    "detected"
+			);
 		}
 	}
 }
