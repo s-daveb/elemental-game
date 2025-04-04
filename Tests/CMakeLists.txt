@@ -16,6 +16,7 @@ add_executable(test-runner
 	util/testing.test.cpp
 	IObserver.test.cpp
 	Component.test.cpp
+	IEventSource.test.cpp
 )
 
 set_target_properties(test-runner

@@ -3,3 +3,4 @@ units.hpp
 debug.hpp
 platform.hpp
 types.hpp
+INonCopyable.hpp
