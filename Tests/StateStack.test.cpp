@@ -27,49 +27,50 @@ struct elemental::debug::Inspector<StateStack> {
 	inline auto getStdStack() -> auto& { return stack.stack; }
 	StateStack& stack;
 };
+
 BEGIN_TEST_SUITE("StateStack")
 {
-	struct TestFixture : public Observable {
-		Mock<IState> mock_state;
-		std::unique_ptr<IState> state;
-		StateStack stack;
-		debug::Inspector<decltype(stack)> inspector;
-
-		TestFixture()
-		    : Observable()
-		    , mock_state()
-		    , state(&mock_state.get())
-		    , inspector(stack)
-		{
-			Fake(Dtor(mock_state));
-			Fake(Method(mock_state, step));
-			When(Method(mock_state, getDrawCommands)).Return({});
-			When(Method(mock_state, recieveMessage)).AlwaysDo(
-		}
-
-		virtual ~TestFixture() = default;
-	};
-
 	struct MockState : public IState {
 		MockState(bool& flag) : IState(), triggered(flag) {}
 		~MockState() override = default;
 
 		void recieveMessage(
 		    const Observable& sender, std::any message
-		) override {};
+		) override
+		{
+			this->triggered = true;
+		};
 
 		void step() override { this->triggered = true; }
 		auto getDrawCommands()
 		    -> std::list<std::shared_ptr<IDrawCommand>> override
 		{
+			this->triggered = true;
 			return {};
 		}
 		bool& triggered;
 	};
 
+	struct TestFixture : public Observable {
+		bool flag = false;
+		std::unique_ptr<IState> state;
+
+		StateStack stack;
+		debug::Inspector<decltype(stack)> stack_inspector;
+
+		TestFixture()
+		    : Observable()
+		    , state(std::make_unique<MockState>(flag))
+		    , stack_inspector(stack)
+		{
+		}
+
+		~TestFixture() override = default;
+	};
+
 	FIXTURE_TEST("Basic State Management")
 	{
-		auto& real_stack = inspector.getStdStack();
+		auto& real_stack = stack_inspector.getStdStack();
 		CHECK(real_stack.size() == 0);
 
 		stack.pushState(state);
@@ -84,9 +85,9 @@ BEGIN_TEST_SUITE("StateStack")
 	{
 		bool triggered = false;
 
-		std::unique_ptr<IState> mock_state_ptr =
+		std::unique_ptr<IState> state_ptr =
 		    std::make_unique<MockState>(triggered);
-		stack.pushState(mock_state_ptr);
+		stack.pushState(state_ptr);
 
 		CHECK(!triggered);
 		stack.step();
@@ -99,9 +100,9 @@ BEGIN_TEST_SUITE("StateStack")
 		bool triggered = false;
 		Mock<Observable> mock_observable;
 
-		std::unique_ptr<IState> mock_state_ptr =
+		std::unique_ptr<IState> state_ptr =
 		    std::make_unique<MockState>(triggered);
-		stack.pushState(mock_state_ptr);
+		stack.pushState(state_ptr);
 
 		CHECK(!triggered);
 		stack.recieveMessage(*this, "Test");
@@ -110,4 +111,4 @@ BEGIN_TEST_SUITE("StateStack")
 }
 
 // clang-format off
-// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=4 sts=0 sw=4 noexpandtab ft=cpp.doxygen :
