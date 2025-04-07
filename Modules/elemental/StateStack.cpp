@@ -38,6 +38,11 @@ auto StateStack::pushState(std::unique_ptr<IState>& state) -> void
 	this->stack.push(std::move(state));
 }
 
+auto StateStack::pushState(std::unique_ptr<IState>&& state) -> void
+{
+	this->stack.push(std::move(state));
+}
+
 auto StateStack::recieveMessage(const Observable& sender, std::any message)
     -> void
 {
