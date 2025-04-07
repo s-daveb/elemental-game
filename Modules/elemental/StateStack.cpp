@@ -28,7 +28,12 @@ auto StateStack::step() -> void
 	stack.top()->step();
 }
 
-auto StateStack::pushState(std::unique_ptr<IState> state) -> void
+void StateStack::pop()
+{
+	this->stack.pop();
+}
+
+auto StateStack::pushState(std::unique_ptr<IState>& state) -> void
 {
 	this->stack.push(std::move(state));
 }

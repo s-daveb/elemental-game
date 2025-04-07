@@ -32,7 +32,7 @@ struct StateStack
 
 	void step() override;
 	void pop();
-	void pushState(std::unique_ptr<IState> state);
+	void pushState(std::unique_ptr<IState>& state);
 
 	void recieveMessage(
 	    const Observable& sender, std::any message = std::any()
@@ -40,8 +40,9 @@ struct StateStack
 
 	auto draw() -> ErrorFlag override;
 
-    private:
+    protected:
 	std::stack<std::unique_ptr<IState>> stack;
+	TEST_INSPECTABLE(StateStack);
 };
 
 } // namespace elemental
