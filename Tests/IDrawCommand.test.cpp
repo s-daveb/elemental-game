@@ -32,7 +32,7 @@ struct DummyDrawCommand : public IDrawCommand {
 	auto rectangle() -> Rectangle& override { return rect; }
 
 	auto imageData() -> std::shared_ptr<void>& override { return data; }
-	auto draw() -> ErrorFlag override { return kSuccess; }
+	auto draw() -> ErrorFlag override { return IOCore::kSuccess; }
 };
 }
 
