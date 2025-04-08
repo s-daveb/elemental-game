@@ -11,9 +11,9 @@
 
 #include "Singleton.hpp"
 
-#include "types.hpp"
-#include "types/rendering.hpp"
+#include "IOCore/types.hpp"
 
+#include "types/rendering.hpp"
 #include "util/testing.hpp"
 
 #include <any>

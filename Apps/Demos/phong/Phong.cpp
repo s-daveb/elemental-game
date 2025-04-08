@@ -10,13 +10,13 @@
 #include "./Phong.hpp"
 
 #include "sys/paths.hpp"
-#include "types/errors.hpp"
 #include "types/rendering.hpp"
 #include "util/debug.hpp"
 
 #include "IOCore/Application.hpp"
 #include "IOCore/Exception.hpp"
 #include "IOCore/FileResource.hpp"
+#include "IOCore/types/errors.hpp"
 #include "IObserver.hpp"
 #include "IRenderer.hpp"
 

@@ -10,21 +10,24 @@
 #pragma once
 
 #include "IOCore/Exception.hpp"
+#include "IOCore/types/errors.hpp"
 
 #include "IRenderer.hpp"
+
 #include "types.hpp"
-#include "types/errors.hpp"
 #include "types/rendering.hpp"
 
 #include <any>
 
 namespace elemental {
 
+using IOCore::ErrorFlag;
+
 class IRenderer;
 
 /// @todo move this to its own file
 struct IDrawable {
-	virtual ~IDrawable(){};
+	virtual ~IDrawable() {};
 
 	virtual auto draw(const Rectangle& location) -> ErrorFlag = 0;
 

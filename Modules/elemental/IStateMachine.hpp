@@ -12,7 +12,7 @@
 #include "IDrawable.hpp"
 #include "types/rendering.hpp"
 
-#include "types/errors.hpp"
+#include "IOCore/types/errors.hpp"
 
 namespace elemental {
 

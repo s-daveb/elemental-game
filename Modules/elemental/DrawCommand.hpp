@@ -11,12 +11,15 @@
 #include <exception>
 #include <memory>
 
+#include "IOCore/types/errors.hpp"
+
 #include "IDrawCommand.hpp"
 #include "IRenderer.hpp"
-#include "types/errors.hpp"
+
 #include "types/rendering.hpp"
 
 namespace elemental {
+using namespace IOCore;
 
 struct DrawCommand : public IDrawCommand {
 	DrawCommand(

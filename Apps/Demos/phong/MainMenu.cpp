@@ -11,16 +11,17 @@
 
 #include "DrawCommand.hpp"
 #include "FontConfig.hpp"
-#include "IOCore/Exception.hpp"
 #include "IRenderer.hpp"
 #include "IState.hpp"
 #include "SdlRenderer.hpp"
 
 #include "IDrawCommand.hpp"
 
-#include "types/errors.hpp"
 #include "types/rendering.hpp"
 #include "util/debug.hpp"
+
+#include "IOCore/Exception.hpp"
+#include "IOCore/types/errors.hpp"
 
 #include <SDL.h>
 
@@ -95,9 +96,11 @@ auto MainMenu::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 		    ((properties.screen_height / 2) + (i * sdl_rect.h));
 
 		auto rect = renderer.toRectangle<SDL_Rect>(sdl_rect);
-		result.push_back(std::make_shared<DrawCommand>(
-		    renderer, rect, sdl_texture
-		));
+		result.push_back(
+		    std::make_shared<DrawCommand>(
+			renderer, rect, sdl_texture
+		    )
+		);
 	}
 	return result;
 }
@@ -112,9 +115,13 @@ void MainMenu::handle_events(InputEvent& event)
 
 	// Check for Up Arrow key
 	if (this->state.keystates[SDL_SCANCODE_UP]) {
-		DBG_PRINT(fmt::format(
-		    "Message received {} {}", "UP", this->selected_menu_item
-		));
+		DBG_PRINT(
+		    fmt::format(
+			"Message received {} {}",
+			"UP",
+			this->selected_menu_item
+		    )
+		);
 		if (this->selected_menu_item == 0) {
 			this->selected_menu_item = (menu_items.size() - 1);
 		} else {
@@ -123,11 +130,13 @@ void MainMenu::handle_events(InputEvent& event)
 	}
 	// Check for Down Arrow key
 	if (this->state.keystates[SDL_SCANCODE_DOWN]) {
-		DBG_PRINT(fmt::format(
-		    "Message received {} {}",
-		    "DOWN",
-		    this->selected_menu_item
-		));
+		DBG_PRINT(
+		    fmt::format(
+			"Message received {} {}",
+			"DOWN",
+			this->selected_menu_item
+		    )
+		);
 		if (++this->selected_menu_item < menu_items.size()) {
 			;
 		} else {
@@ -135,11 +144,13 @@ void MainMenu::handle_events(InputEvent& event)
 		}
 	}
 	if (this->state.keystates[SDL_SCANCODE_RETURN]) {
-		DBG_PRINT(fmt::format(
-		    "Message received {} {}",
-		    "RETURN",
-		    this->selected_menu_item
-		));
+		DBG_PRINT(
+		    fmt::format(
+			"Message received {} {}",
+			"RETURN",
+			this->selected_menu_item
+		    )
+		);
 
 		if (this->selected_menu_item == 2) { // index 2 = quit button
 			SDL_Event* event = new SDL_Event();

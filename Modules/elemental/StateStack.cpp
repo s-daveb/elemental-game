@@ -13,13 +13,14 @@
 #include "Observable.hpp"
 
 #include "IOCore/Exception.hpp"
-#include "types/errors.hpp"
+#include "IOCore/types/errors.hpp"
 
 #include <any>
 #include <memory>
 #include <utility>
 
 using elemental::StateStack;
+using namespace IOCore;
 
 auto StateStack::step() -> void
 {

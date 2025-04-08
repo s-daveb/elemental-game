@@ -13,6 +13,7 @@
 #include "types.hpp"
 
 namespace elemental {
+using IOCore::ErrorFlag;
 
 struct IDrawCommand {
 	virtual ~IDrawCommand() = default;

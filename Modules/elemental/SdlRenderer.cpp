@@ -27,6 +27,7 @@
 #include <utility>
 
 using namespace elemental;
+using namespace IOCore;
 
 namespace {
 std::stringstream error_buffer;
@@ -54,18 +55,20 @@ void SdlRenderer::init(RendererSettings& settings)
 	    IMG_Init(
 		IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP
 	    )) {
-		HANDLE_SDL_ERROR(fmt::format(
-				     "Could not initialize SDL_Image: {}",
-				     IMG_GetError()
-		)
-		                     .c_str());
+		HANDLE_SDL_ERROR(
+		    fmt::format(
+			"Could not initialize SDL_Image: {}", IMG_GetError()
+		    )
+			.c_str()
+		);
 	}
 	if (kError == TTF_Init()) {
-		HANDLE_SDL_ERROR(fmt::format(
-				     "Could not initialize SDL_TTF: {}",
-				     TTF_GetError()
-		)
-		                     .c_str());
+		HANDLE_SDL_ERROR(
+		    fmt::format(
+			"Could not initialize SDL_TTF: {}", TTF_GetError()
+		    )
+			.c_str()
+		);
 	}
 	int window_xpos, window_ypos, window_width, window_height, res_width,
 	    res_height;
