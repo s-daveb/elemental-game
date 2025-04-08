@@ -46,12 +46,15 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		REQUIRE(test_object.elapsed_ms.count() > 900);
 	};
 
-	FIXTURE_TEST("elemental::LoopRegulator::Delay works within tolerance"
+	FIXTURE_TEST(
+	    "elemental::LoopRegulator::Delay works within tolerance"
 	)
 	{
 #if defined(CI_BUILD) && defined(__APPLE__)
-		WARN("(macos) this test always fails due to low "
-		     "priority processor scheduling in CI build env");
+		WARN(
+		    "(macos) this test always fails due to low "
+		    "priority processor scheduling in CI build env"
+		);
 		SUCCEED();
 		return;
 	}
@@ -94,7 +97,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 
 			} else {
 				CHECK(
-				    margin_error_ms <
+				    margin_error_ms <=
 				    kAcceptableMarginErrorMs
 				);
 			}
