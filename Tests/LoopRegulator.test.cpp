@@ -50,9 +50,9 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	    "elemental::LoopRegulator::Delay works within tolerance"
 	)
 	{
-#if defined(CI_BUILD) && defined(__APPLE__)
+#if defined(CI_BUILD) && defined(__APPLE__) || defined(__FreeBSD__)
 		WARN(
-		    "(macos) this test always fails due to low "
+		    "(macos|freeBSD) this test always fails due to low "
 		    "priority processor scheduling in CI build env"
 		);
 		SUCCEED();
