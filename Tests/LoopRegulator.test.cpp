@@ -50,15 +50,6 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	    "elemental::LoopRegulator::Delay works within tolerance"
 	)
 	{
-#if defined(CI_BUILD) && defined(__APPLE__) || defined(__FreeBSD__)
-		WARN(
-		    "(macos|freeBSD) this test always fails due to low "
-		    "priority processor scheduling in CI build env"
-		);
-		SUCCEED();
-		return;
-	}
-#else
 		const auto kAcceptableMarginErrorMs = 10ms;
 
 		// Seed the random number generator with the current
@@ -77,7 +68,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		);
 
 		for (unsigned i = 0; i < 100; ++i) {
-			auto random_delay =
+			auto randomdelay =
 			    milliseconds(delay_generator(gen));
 
 			test_object.startUpdate();
