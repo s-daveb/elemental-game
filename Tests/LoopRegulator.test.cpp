@@ -68,7 +68,7 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		);
 
 		for (unsigned i = 0; i < 100; ++i) {
-			auto randomdelay =
+			auto random_delay =
 			    milliseconds(delay_generator(gen));
 
 			test_object.startUpdate();
@@ -94,7 +94,6 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 			}
 		}
 	}
-#endif
 };
 // clang-format off
-// vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldmethod=marker foldtmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
