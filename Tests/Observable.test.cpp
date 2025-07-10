@@ -86,4 +86,4 @@ BEGIN_TEST_SUITE("elemental::Observable")
 }
 
 // clang-format off
-// vim: set foldmethod=syntax foldlevel=2 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldlevel=2 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

@@ -248,4 +248,4 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 }
 
 // clang-format off
-// vim: set foldmethod=syntax foldlevel=1 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set foldlevel=1 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

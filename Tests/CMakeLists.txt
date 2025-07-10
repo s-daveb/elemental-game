@@ -1,7 +1,7 @@
 # Define the executable 'test-runner'
 add_executable(test-runner
 	runtime.test.cpp
-	Singleton.template.test.cpp
+	Singleton.test.cpp
 	LoopRegulator.test.cpp
 	Observable.test.cpp
 	IRenderer.test.cpp
@@ -19,6 +19,7 @@ add_executable(test-runner
 	IEventSource.test.cpp
 	IState.test.cpp
 	StateStack.test.cpp
+	Entity.test.cpp
 )
 
 set_target_properties(test-runner

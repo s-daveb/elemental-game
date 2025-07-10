@@ -2,9 +2,9 @@
  * Copyright © 2023 Saul D. Beniquez
  * License: Mozilla Public License v. 2.0
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v.2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v.2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "elemental/Singleton.hpp"
@@ -30,9 +30,9 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		uint32_t id;
 		char name[128];
 
-	    private:
-		NonConstructibleStructure(){};
-		friend class Singleton;
+	    protected:
+		NonConstructibleStructure() {};
+		friend class elemental::Singleton;
 	};
 
 	TEST("elemental::Singleton<T> - Can wrap a simple class")
@@ -46,8 +46,10 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 			SUCCEED();
 		}
 
-		SECTION("2. Subsequent calls result in the same object being "
-		        "returned")
+		SECTION(
+		    "2. Subsequent calls result in the same object being "
+		    "returned"
+		)
 		{
 			auto& second_reference =
 			    Singleton::getReference<SimpleStructure>();
@@ -56,26 +58,30 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		}
 	}
 
-	TEST("elemental::Singleton<T> - As a friend class, can call a "
-	     "private constructor")
+	TEST(
+	    "elemental::Singleton<T> - As a friend class, can call a "
+	    "private constructor"
+	)
 	{
 		auto& first_reference =
-		    Singleton::getReference<SimpleStructure>();
+		    Singleton::getReference<NonConstructibleStructure>();
 
 		SECTION("1. No exceptions were thrown")
 		{
 			SUCCEED();
 		}
 
-		SECTION("2. Subsequent calls result in the same object being "
-		        "returned")
+		SECTION(
+		    "2. Subsequent calls result in the same object being "
+		    "returned"
+		)
 		{
-			auto& second_reference =
-			    Singleton::getReference<SimpleStructure>();
+			auto& second_reference = Singleton::getReference<
+			    NonConstructibleStructure>();
 			CHECK(&first_reference == &second_reference);
 		}
 	}
 }
 
 // clang-format off
-// vim: set foldmethod=syntax  textwidth=80 ts=4 sts=0 sw=4  noexpandtab ft=cpp.doxygen :
+// vim: set textwidth=80 ts=4 sts=0 sw=4  noexpandtab ft=cpp.doxygen :

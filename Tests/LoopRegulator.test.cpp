@@ -54,11 +54,9 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 
 		// Seed the random number generator with the current
 		// time
-		unsigned seed =
-
-		    std::chrono::system_clock::now()
-			.time_since_epoch()
-			.count();
+		unsigned seed = std::chrono::system_clock::now()
+		                    .time_since_epoch()
+		                    .count();
 		std::default_random_engine gen(seed);
 
 		// Define the distribution for random delays (0 to

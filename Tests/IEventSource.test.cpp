@@ -47,4 +47,4 @@ BEGIN_TEST_SUITE("IEventSource_Mocks")
 	}
 }
 // clang-format off
-// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
