@@ -17,18 +17,20 @@
 namespace elemental {
 
 Entity::Entity(
-    const std::string& type, const std::vector<int>& position,
-    const std::vector<int>& size, const std::string& layer
+    const EntityTypedata& typedata, const std::vector<int>& position,
+    const std::vector<int>& size, uint8_t layer)
 )
-    : type(type), position(position), size(size), layer(layer)
+    : metadata(typedata), position(position), size(size), layer(layer)
 {
 }
 
 Entity::~Entity() = default;
 
-void Entity::loadBehavior(const std::string& script)
+std::ostream&
+operator<<(std::ostream& outstream, const EntityTypedata& entityInfo)
 {
-	throw IOCore::NotImplementedException();
+}
+
 }
 
 } // namespace elemental
