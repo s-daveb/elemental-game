@@ -1,26 +1,5 @@
 ---
 BasedOnStyle: Mozilla
-Language: Cpp
-
-IndentWidth: 8
-UseTab: AlignWithSpaces
-ColumnLimit: 77
-AccessModifierOffset: -4
-BinPackParameters: true
-AlwaysBreakAfterDefinitionReturnType: None
-AlwaysBreakAfterReturnType: None
-PenaltyReturnTypeOnItsOwnLine: 50
-ContinuationIndentWidth: 4
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth: 4
-AllowAllArgumentsOnNextLine: true
-AlignAfterOpenBracket: BlockIndent
-
-BreakBeforeBraces:  WebKit
-
-...
-﻿---
-BasedOnStyle: Mozilla
 AccessModifierOffset: '-4'
 AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveMacros: 'true'
@@ -31,14 +10,13 @@ AlignOperands: 'true'
 AlignTrailingComments: 'true'
 AllowAllArgumentsOnNextLine: 'true'
 AllowAllConstructorInitializersOnNextLine: 'true'
-AllowAllParametersOfDeclarationOnNextLine: 'true'
 AllowShortBlocksOnASingleLine: 'true'
 AllowShortCaseLabelsOnASingleLine: 'true'
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Always
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: 'false'
-AlwaysBreakAfterDefinitionReturnType: All
+AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: 'false'
 AlwaysBreakTemplateDeclarations: 'Yes'
@@ -86,7 +64,7 @@ SpacesInContainerLiterals: 'true'
 SpacesInParentheses: 'false'
 SpacesInSquareBrackets: 'false'
 Standard: Auto
-TabWidth: '4'
+TabWidth: '8'
 UseTab: ForIndentation
 
 ...
