@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.26)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.26)
 
 # Additional paths to search for custom and third-party CMake modules
-list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+LIST(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
-include(DefaultConfig)
+INCLUDE(DefaultConfig)
 
-include(BuildOptions)
-include(BuildProperties)
+INCLUDE(BuildOptions)
+INCLUDE(BuildProperties)
 
-project(Elemental
+PROJECT(Elemental
 	VERSION 0.0.6
 	LANGUAGES C CXX
 	# Save this for later:
@@ -16,28 +16,31 @@ project(Elemental
 	DESCRIPTION "A simple top-down strategy game"
 )
 
-include(CPM)
+INCLUDE(CPM)
 
 SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-option(CI_BUILD "Mark this as a CI/CD system build. Defines a C++ preprocessor macro CI_BUILD=1.")
-if (CI_BUILD)
-	add_compile_definitions(-DCI_BUILD=1)
-endif()
+OPTION(CI_BUILD
+	"Mark this as a CI/CD system build."
+)
+
+IF(CI_BUILD)
+	ADD_COMPILE_DEFINITIONS(-DCI_BUILD=1)
+ENDIF()
 
 # enable compile_commands.json generation for clangd
-set(CMAKE_EXPORT_COMPILE_COMMANDS On)
+SET(CMAKE_EXPORT_COMPILE_COMMANDS On)
 
 IF(NOT CMAKE_BUILD_TYPE)
 	SET( CMAKE_BUILD_TYPE Debug )
 ENDIF()
 
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
+SET(CMAKE_C_STANDARD 17)
+SET(CMAKE_CXX_STANDARD 20)
 
 # Disable GNU compiler extensions
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_CXX_EXTENSIONS OFF)
+SET(CMAKE_C_EXTENSIONS OFF)
+SET(CMAKE_CXX_EXTENSIONS OFF)
 
 CPMFindPackage(NAME span-lite
 	GITHUB_REPOSITORY martinmoene/span-lite
@@ -47,38 +50,38 @@ CPMFindPackage(NAME span-lite
 		"SPAN_LITE_OPT_BUILD_EXAMPLES OFF"
 )
 
-find_package(Fontconfig REQUIRED)
+FIND_PACKAGE(Fontconfig REQUIRED)
 
-if (BUILD_TESTING)
+IF(BUILD_TESTING)
+
 	CPMFindPackage(NAME Catch2
 		GITHUB_REPOSITORY catchorg/Catch2
 		VERSION 3.6.0
-		OPTIONS
-			"CATCH_DEVELOPMENT_BUILD OFF"
-			"CATCH_BUILD_TESTING OFF"
+		OPTIONS "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_BUILD_TESTING OFF"
 	)
+
 	CPMFindPackage(NAME FakeIt
 		GITHUB_REPOSITORY eranpeer/FakeIt
 		GIT_TAG 2.4.1
 		OPTIONS
- 		 		"BUILD_TESTING OFF"
+		"BUILD_TESTING OFF"
 	)
 
-	if (TARGET Catch2)
+	IF(TARGET Catch2)
 		set_target_properties(Catch2 PROPERTIES
 			CXX_STANDARD 20
 		)
 	endif()
-	if (TARGET Catch2WithMain)
+	IF(TARGET Catch2WithMain)
 		set_target_properties(Catch2WithMain PROPERTIES
  			CXX_STANDARD 20
 		)
 	endif()
 
-	if (Catch2_ADDED)
+	IF(Catch2_ADDED)
 		list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
 	else()
-		if (Catch2_DIR)
+		IF(Catch2_DIR)
 			list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
 		endif()
 	endif()
@@ -89,13 +92,13 @@ CPMFindPackage(
 	URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
 	URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
 )
-find_package(Qt6 COMPONENTS
+FIND_PACKAGE(Qt6 COMPONENTS
 	Core REQUIRED
 	Widgets REQUIRED
 	Gui REQUIRED
 )
-set(CMAKE_AUTOMOC OFF)
-set(CMAKE_AUTOUIC OFF)
+SET(CMAKE_AUTOMOC OFF)
+SET(CMAKE_AUTOUIC OFF)
 
 qt_standard_project_setup()
 
@@ -103,12 +106,12 @@ qt_standard_project_setup()
 set_artifact_dir(${CMAKE_BINARY_DIR}/out)
 
 # Initialize FetchContent
-include(FetchContent)
-include(CheckIncludeFile)
+INCLUDE(FetchContent)
+INCLUDE(CheckIncludeFile)
 
 # Initialize pkgconf
-find_package(Threads)  # POSIX thread support
-find_package(PkgConfig REQUIRED)
+FIND_PACKAGE(Threads)  # POSIX thread support
+FIND_PACKAGE(PkgConfig REQUIRED)
 
 # TODO: Switch this to CPM Package manager
 
@@ -120,33 +123,33 @@ pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
 pkg_check_modules(SDL2_TTF REQUIRED IMPORTED_TARGET SDL2_ttf)
 
 SET(SDL2_COMBINED_INCLUDE_DIRS "")
-list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
-list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
-list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
-list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIRS})
-list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
+LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
+LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
+LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
+LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIRS})
+LIST(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
 
-include_directories(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
 
-set(SDL2_COMBINED_LINK_DEPS
+SET(SDL2_COMBINED_LINK_DEPS
 	PkgConfig::SDL2
 	PkgConfig::SDL2_IMAGE
 	PkgConfig::SDL2_GFX
 	PkgConfig::SDL2_TTF
 )
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_compile_definitions(-DDEBUG=1)
-endif()
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	ADD_COMPILE_DEFINITIONS(-DDEBUG=1)
+ENDIF()
 
 # Add subdirectories
-add_subdirectory(Modules)
-include_directories(BEFORE ${Elemental_CMAKE_SOURCE_DIR}/Modules)
+ADD_SUBDIRECTORY(Modules)
+INCLUDE_DIRECTORIES(BEFORE ${Elemental_CMAKE_SOURCE_DIR}/Modules)
 
-if(BUILD_TESTING)
-	add_subdirectory(Tests)
-endif()
+IF(BUILD_TESTING)
+	ADD_SUBDIRECTORY(Tests)
+ENDIF()
 
-add_subdirectory(Apps)
+ADD_SUBDIRECTORY(Apps)
 
 # vim: ts=4 sw=4 noet foldmethod=indent :
