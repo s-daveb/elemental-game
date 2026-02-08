@@ -111,7 +111,7 @@ INCLUDE(CheckIncludeFile)
 
 # Initialize pkgconf
 FIND_PACKAGE(Threads)  # POSIX thread support
-FIND_PACAGE(PkgConfig REQUIRED)
+FIND_PACKAGE(PkgConfig REQUIRED)
 
 # TODO: Switch this to CPM Package manager
 
