@@ -15,25 +15,25 @@
 #include "types/entities.hpp"
 
 namespace elemental {
-
 class Entity {
     protected:
-	EntityTypedata metadata;
+	EntityMetadata metadata;
 	std::vector<int> position;
 	std::vector<int> size;
 	std::string layer;
 
     public:
 	Entity(
-	    const EntityTypedata& typedata, const std::vector<int>& size,
-	    const std::vector<int>& position, uint8_t layer = 3
+	    const std::string& type, const std::vector<int>& position,
+	    const std::vector<int>& size, const std::string& layer
 	);
 	virtual ~Entity();
 
-	const EntityTypedata& Metadata = metadata;
+	void loadBehavior(const std::string& script);
 
-	friend auto operator<<(std::ostream&, const EntityTypedata&)
-	    -> std::ostream&;
+	const EntityMetadata& Metadata = metadata;
+
+	friend auto operator<<(std::ostream&, const EntityMetadata&) -> std::ostream&;
 };
 
 }

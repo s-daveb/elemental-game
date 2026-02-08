@@ -18,6 +18,7 @@ namespace elemental {
 void
 Observable::registerObserver(Observable::ObserverRef observer)
 {
+	
 	this->observers.push_back(observer);
 }
 
