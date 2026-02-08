@@ -1,104 +1,104 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.26)
+cmake_minimum_required(VERSION 3.26)
 
 # Additional paths to search for custom and third-party CMake modules
-LIST(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
-INCLUDE(DefaultConfig)
+include(DefaultConfig)
 
-INCLUDE(BuildOptions)
-INCLUDE(BuildProperties)
+include(BuildOptions)
+include(BuildProperties)
 
-PROJECT(Elemental
-	VERSION 0.0.6
-	LANGUAGES C CXX
-	# Save this for later:
-	# HOMEPAGE_URL <URL>
-	DESCRIPTION "A simple top-down strategy game"
+project(Elemental
+    VERSION 0.0.6
+    LANGUAGES C CXX
+    # Save this for later:
+    # HOMEPAGE_URL <URL>
+    DESCRIPTION "A simple top-down strategy game"
 )
 
-INCLUDE(CPM)
+include(CPM)
 
-SET(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 OPTION(CI_BUILD
-	"Mark this as a CI/CD system build."
+    "Mark this as a CI/CD system build."
 )
 
-IF(CI_BUILD)
-	ADD_COMPILE_DEFINITIONS(-DCI_BUILD=1)
-ENDIF()
+if(CI_BUILD)
+    ADD_COMPILE_DEFINITIONS(-DCI_BUILD=1)
+endif()
 
 # enable compile_commands.json generation for clangd
-SET(CMAKE_EXPORT_COMPILE_COMMANDS On)
+set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 
-IF(NOT CMAKE_BUILD_TYPE)
-	SET( CMAKE_BUILD_TYPE Debug )
-ENDIF()
+if(NOT CMAKE_BUILD_TYPE)
+    set( CMAKE_BUILD_TYPE Debug )
+endif()
 
-SET(CMAKE_C_STANDARD 17)
-SET(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Disable GNU compiler extensions
-SET(CMAKE_C_EXTENSIONS OFF)
-SET(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 CPMFindPackage(NAME span-lite
-	GITHUB_REPOSITORY martinmoene/span-lite
-	GIT_TAG v0.11.0
-	OPTIONS
-		"SPAN_LITE_OPT_BUILD_TESTS OFF"
-		"SPAN_LITE_OPT_BUILD_EXAMPLES OFF"
+    GITHUB_REPOSITORY martinmoene/span-lite
+    GIT_TAG v0.11.0
+    OPTIONS
+        "SPAN_LITE_OPT_BUILD_TESTS OFF"
+        "SPAN_LITE_OPT_BUILD_EXAMPLES OFF"
 )
 
 FIND_PACKAGE(Fontconfig REQUIRED)
 
-IF(BUILD_TESTING)
+if(BUILD_TESTING)
 
-	CPMFindPackage(NAME Catch2
-		GITHUB_REPOSITORY catchorg/Catch2
-		VERSION 3.6.0
-		OPTIONS "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_BUILD_TESTING OFF"
-	)
+    CPMFindPackage(NAME Catch2
+        GITHUB_REPOSITORY catchorg/Catch2
+        VERSION 3.6.0
+        OPTIONS "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_BUILD_TESTING OFF"
+    )
 
-	CPMFindPackage(NAME FakeIt
-		GITHUB_REPOSITORY eranpeer/FakeIt
-		GIT_TAG 2.4.1
-		OPTIONS
-		"BUILD_TESTING OFF"
-	)
+    CPMFindPackage(NAME FakeIt
+        GITHUB_REPOSITORY eranpeer/FakeIt
+        GIT_TAG 2.4.1
+        OPTIONS
+        "BUILD_TESTING OFF"
+    )
 
-	IF(TARGET Catch2)
-		set_target_properties(Catch2 PROPERTIES
-			CXX_STANDARD 20
-		)
-	endif()
-	IF(TARGET Catch2WithMain)
-		set_target_properties(Catch2WithMain PROPERTIES
- 			CXX_STANDARD 20
-		)
-	endif()
+    if(TARGET Catch2)
+        set_target_properties(Catch2 PROPERTIES
+            CXX_STANDARD 20
+        )
+    endif()
+    if(TARGET Catch2WithMain)
+        set_target_properties(Catch2WithMain PROPERTIES
+            CXX_STANDARD 20
+        )
+    endif()
 
-	IF(Catch2_ADDED)
-		list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
-	else()
-		IF(Catch2_DIR)
-			list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
-		endif()
-	endif()
+    if(Catch2_ADDED)
+        list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
+    else()
+        if(Catch2_DIR)
+            list(APPEND CMAKE_MODULE_PATH ${Catch2_DIR})
+        endif()
+    endif()
 endif()
 
 CPMFindPackage(
-	NAME fmt
-	URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
-	URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
+    NAME fmt
+    URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
+    URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
 )
 FIND_PACKAGE(Qt6 COMPONENTS
-	Core REQUIRED
-	Widgets REQUIRED
-	Gui REQUIRED
+    Core REQUIRED
+    Widgets REQUIRED
+    Gui REQUIRED
 )
-SET(CMAKE_AUTOMOC OFF)
-SET(CMAKE_AUTOUIC OFF)
+set(CMAKE_AUTOMOC OFF)
+set(CMAKE_AUTOUIC OFF)
 
 qt_standard_project_setup()
 
@@ -111,7 +111,7 @@ INCLUDE(CheckIncludeFile)
 
 # Initialize pkgconf
 FIND_PACKAGE(Threads)  # POSIX thread support
-FIND_PACKAGE(PkgConfig REQUIRED)
+FIND_PACAGE(PkgConfig REQUIRED)
 
 # TODO: Switch this to CPM Package manager
 
@@ -122,34 +122,34 @@ pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX REQUIRED IMPORTED_TARGET SDL2_gfx)
 pkg_check_modules(SDL2_TTF REQUIRED IMPORTED_TARGET SDL2_ttf)
 
-SET(SDL2_COMBINED_INCLUDE_DIRS "")
-LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
-LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
-LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
-LIST(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIRS})
-LIST(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
+set(SDL2_COMBINED_INCLUDE_DIRS "")
+list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_INCLUDE_DIRS})
+list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_IMAGE_INCLUDE_DIRS})
+list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_GFX_INCLUDE_DIRS})
+list(APPEND SDL2_COMBINED_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIRS})
+list(REMOVE_DUPLICATES SDL2_COMBINED_INCLUDE_DIRS)
 
-INCLUDE_DIRECTORIES(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
+include_directories(SYSTEM ${SDL2_COMBINED_INCLUDE_DIRS})
 
-SET(SDL2_COMBINED_LINK_DEPS
-	PkgConfig::SDL2
-	PkgConfig::SDL2_IMAGE
-	PkgConfig::SDL2_GFX
-	PkgConfig::SDL2_TTF
+set(SDL2_COMBINED_LINK_DEPS
+    PkgConfig::SDL2
+    PkgConfig::SDL2_IMAGE
+    PkgConfig::SDL2_GFX
+    PkgConfig::SDL2_TTF
 )
 
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	ADD_COMPILE_DEFINITIONS(-DDEBUG=1)
-ENDIF()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    ADD_COMPILE_DEFINITIONS(-DDEBUG=1)
+endif()
 
 # Add subdirectories
-ADD_SUBDIRECTORY(Modules)
-INCLUDE_DIRECTORIES(BEFORE ${Elemental_CMAKE_SOURCE_DIR}/Modules)
+add_subdirectory(Modules)
+include_directories(BEFORE ${Elemental_CMAKE_SOURCE_DIR}/Modules)
 
-IF(BUILD_TESTING)
-	ADD_SUBDIRECTORY(Tests)
-ENDIF()
+if(BUILD_TESTING)
+    add_subdirectory(Tests)
+endif()
 
-ADD_SUBDIRECTORY(Apps)
+add_subdirectory(Apps)
 
-# vim: ts=4 sw=4 noet foldmethod=indent :
+# vim: ts=4 sw=4 et foldmethod=indent :

@@ -29,10 +29,11 @@ class Entity {
 	);
 	virtual ~Entity();
 
+	void loadBehavior(const std::string& script);
+
 	const EntityMetadata& Metadata = metadata;
 
-	friend std::ostream&
-	operator<<(std::operator&, const EntittyMetadata&);
+	friend auto operator<<(std::ostream&, const EntityMetadata&) -> std::ostream&;
 };
 
 }

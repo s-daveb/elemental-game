@@ -20,7 +20,7 @@ Entity::Entity(
     const std::string& type, const std::vector<int>& position,
     const std::vector<int>& size, const std::string& layer
 )
-    : type(type), position(position), size(size), layer(layer)
+    : position(position), size(size), layer(layer)
 {
 }
 

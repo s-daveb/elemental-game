@@ -1,4 +1,4 @@
-add_library(elemental
+ADD_LIBRARY(elemental
 OBJECT
 	LoopRegulator.cpp
 	Observable.cpp
@@ -10,12 +10,12 @@ OBJECT
 	FontConfig.cpp
 )
 
-target_include_directories(elemental
+TARGET_INCLUDE_DIRECTORIES(elemental
 PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(elemental PUBLIC
+TARGET_LINK_LIBRARIES(elemental PUBLIC
 	IOCore
 	Threads::Threads
 	${SDL2_COMBINED_LINK_DEPS}
@@ -28,26 +28,9 @@ package_library_headers(elemental
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_include_directories(elemental
+TARGET_INCLUDE_DIRECTORIES(elemental
 INTERFACE
 	${CMAKE_BINARY_DIR}/include
 )
-#target_include_directories(elemental
-#PUBLIC
-#	$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-#    $<INSTALL_INTERFACE:include>
-#)
-#install(TARGETS elemental
-#	EXPORT elemental
-#	ARCHIVE DESTINATION lib
-#	LIBRARY DESTINATION lib
-#	RUNTIME DESTINATION bin
-#)
-#install(DIRECTORY ${CMAKE_BINARY_DIR}/include DESTINATION include)
-#
-#install(EXPORT elemental
-#    NAMESPACE Elemental::
-#    DESTINATION lib/cmake/elemental
-#)
 
 # vim: ts=4 sw=4 noet foldmethod=indent :
