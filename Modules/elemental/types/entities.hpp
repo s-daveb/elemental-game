@@ -17,26 +17,31 @@
 namespace elemental {
 using entity_type_t = uint16_t;
 
-struct EntityTypedata {
+struct EntityMetadata {
 	entity_type_t type_id;
+	idtype_t      instance_id;
+
 	const char* type_name;
+	const char* instance_name;
 };
 
-auto operator<<(std::ostream& stream, const EntityTypedata& data)
+inline auto operator<<(std::ostream& stream, const EntityMetadata& data)
     -> std::ostream&
 {
-	stream << "[" << data.type_name << "]" << std::flush;
+	stream << "[" << data.type_id     << "|" << data.type_name     << "]" << std::flush;
+	stream << "[" << data.instance_id << "|" << data.instance_name << "]" << std::flush;
+
 	return stream;
-}
+} 
 
 }
 
 namespace std {
-using elemental::EntityTypedata;
+using elemental::EntityMetadata;
 
 template<>
-struct hash<EntityTypedata> {
-	auto operator()(const EntityTypedata& data) const -> size_t
+struct hash<EntityMetadata> { // NOLINT
+	auto operator()(const EntityMetadata& data) const -> size_t
 	{
 		return std::hash<decltype(data.type_id)>{}(data.type_id);
 	}

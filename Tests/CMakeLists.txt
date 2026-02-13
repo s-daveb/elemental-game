@@ -1,49 +1,49 @@
 # Define the executable 'test-runner'
 add_executable(test-runner
-	runtime.test.cpp
-	Singleton.test.cpp
-	LoopRegulator.test.cpp
-	Observable.test.cpp
-	IRenderer.test.cpp
-	SDL_Memory.test.cpp
-	paths.test.cpp
-	IDrawCommand.test.cpp
-	DrawCommand.test.cpp
-	ComponentFactory.test.cpp
-	FontConfig.test.cpp
-	types/rendering.test.cpp
-	types/input.test.cpp
-	util/testing.test.cpp
-	IObserver.test.cpp
-	Component.test.cpp
-	IEventSource.test.cpp
-	IState.test.cpp
-	StateStack.test.cpp
-	Entity.test.cpp
+  runtime.test.cpp
+  Singleton.test.cpp
+  LoopRegulator.test.cpp
+  Observable.test.cpp
+  IRenderer.test.cpp
+  SDL_Memory.test.cpp
+  paths.test.cpp
+  IDrawCommand.test.cpp
+  DrawCommand.test.cpp
+  ComponentFactory.test.cpp
+  FontConfig.test.cpp
+  types/rendering.test.cpp
+  types/input.test.cpp
+  util/testing.test.cpp
+  IObserver.test.cpp
+  Component.test.cpp
+  IEventSource.test.cpp
+  IState.test.cpp
+  StateStack.test.cpp
+  Entity.test.cpp
 )
 
 set_target_properties(test-runner
 PROPERTIES
-	EXCLUDE_FROM_ALL 1
+  EXCLUDE_FROM_ALL 1
 )
 
 target_compile_definitions(test-runner PRIVATE
-	-DUNIT_TEST=1
-	-DNO_GUI=1
+  -DUNIT_TEST=1
+  -DNO_GUI=1
 )
 
 target_include_directories(test-runner
-	#PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
-	PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
+  #PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
+  PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests
 )
 
 target_link_libraries(test-runner
 PRIVATE
-	elemental
-	IOCore
-	Catch2::Catch2WithMain
-	FakeIt::FakeIt-catch
-	Threads::Threads
+  elemental
+  IOCore
+  Catch2::Catch2WithMain
+  FakeIt::FakeIt-catch
+  Threads::Threads
 )
 
 # Set output directories for build targets
@@ -52,11 +52,11 @@ set_target_properties(test-runner PROPERTIES
 )
 
 if(NOT TARGET test_bin)
-	add_custom_target(test_bin)
+  add_custom_target(test_bin)
 endif()
 
 add_dependencies(test_bin
-	test-runner
+  test-runner
 )
 
 # extras: catch2 ctest integration.
@@ -69,20 +69,20 @@ catch_discover_tests(test-runner)
 # bonus: add a custom ctest target to the build system, to run tests in the
 #        correct directory
 add_custom_target(ctest
-	COMMAND ctest -C $configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --output-on-failure
+  COMMAND ctest -C ${CMAKE_BINARY_DIR}/Tests configuration --test-dir ${CMAKE_BINARY_DIR}/Tests --output-on-failure
 )
 add_custom_target(coverage
-	COMMAND /bin/sh ${CMAKE_SOURCE_DIR}/Util/test-coverage.sh
+  COMMAND /bin/sh ${CMAKE_SOURCE_DIR}/Util/test-coverage.sh
 )
 add_custom_target(copy_test_assets
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_BINARY_DIR}/tests/data
 )
 set_target_properties(ctest PROPERTIES EXCLUDE_FROM_ALL 1)
 add_dependencies(ctest
-	test_bin
-	copy_test_assets
+  test_bin
+  copy_test_assets
 )
 
 add_subdirectory(sdl)
 
-# vim: ts=2 sw=2 noet foldmethod=indent  :
+# vim: ts=2 sw=2 et foldmethod=indent  :

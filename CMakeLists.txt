@@ -43,7 +43,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-CPMFindPackage(NAME span-lite
+CPMFINDPACKAGE(NAME span-lite
     GITHUB_REPOSITORY martinmoene/span-lite
     GIT_TAG v0.11.0
     OPTIONS
@@ -55,13 +55,13 @@ FIND_PACKAGE(Fontconfig REQUIRED)
 
 if(BUILD_TESTING)
 
-    CPMFindPackage(NAME Catch2
+    CPMFINDPACKAGE(NAME Catch2
         GITHUB_REPOSITORY catchorg/Catch2
         VERSION 3.6.0
         OPTIONS "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_BUILD_TESTING OFF"
     )
 
-    CPMFindPackage(NAME FakeIt
+    CPMFINDPACKAGE(NAME FakeIt
         GITHUB_REPOSITORY eranpeer/FakeIt
         GIT_TAG 2.4.1
         OPTIONS
@@ -88,11 +88,12 @@ if(BUILD_TESTING)
     endif()
 endif()
 
-CPMFindPackage(
+CPMFINDPACKAGE(
     NAME fmt
     URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
     URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
 )
+
 FIND_PACKAGE(Qt6 COMPONENTS
     Core REQUIRED
     Widgets REQUIRED

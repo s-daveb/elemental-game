@@ -13,13 +13,24 @@
 
 BEGIN_TEST_SUITE("Entity.test.cpp")
 {
+
+	struct TestEntityType : public elemental::Entity {
+		TestEntityType() : Entity("Test", [ 10, 10 ], [ 16, 16 ], "sprite") 
+		{}
+
+		virtual ~TestEntityType() = default;
+	};
+
 	struct TestFixture {
 		std::string type = "player", layer = "main";
 		std::vector<int> position = { 0, 0 }, size = { 10, 10 };
 
+		TestEntityType object;
+
+		TestFixture() : object() {
+		}
 		virtual ~TestFixture() = default;
 
-		elemental::Entity object;
 	};
 
 	FIXTURE_TEST("Test") {}
