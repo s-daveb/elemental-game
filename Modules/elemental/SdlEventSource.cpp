@@ -29,7 +29,7 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 {
 	SDL_InitSubSystem(SDL_INIT_EVENTS);
 
-	if (Enum::ContainsFlag(device_flags, InputDevices::Joystick)) {
+	if (Enum::Contains_Flag(device_flags, InputDevices::Joystick)) {
 
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 		SDL_InitSubSystem(
