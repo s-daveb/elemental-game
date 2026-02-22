@@ -1,10 +1,10 @@
 [submodule "third_party/QJsonModel"]
 	path = Modules/External/QJsonModel
-	url = http://gitea/crystalsoft/QJsonModel.git
+	url = git@gitea:crystalsoft/QJsonModel.git
 [submodule "CMake"]
 	path = CMake
-	url = http://gitea/crystalsoft/CmakeTools.git
+	url = git@gitea:crystalsoft/CmakeTools.git
 [submodule "Modules/External/IOCore"]
 	path = Modules/External/IOCore
-	url = http://gitea/crystalsoft/IOCore.git
+	url = git@gitea:crystalsoft/IOCore.git
 	branch = devel
