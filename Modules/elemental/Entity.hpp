@@ -37,4 +37,4 @@ class Entity {
 }
 
 // clang-format off
-// vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set ts=8 sts=8 sw=8 noexpandtab ft=cpp.doxygen :
