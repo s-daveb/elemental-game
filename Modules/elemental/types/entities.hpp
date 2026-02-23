@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include <functional>
 #include <ostream>
 
 #include "types.hpp"

@@ -13,9 +13,8 @@
 
 BEGIN_TEST_SUITE("Entity.test.cpp")
 {
-
 	struct TestEntityType : public elemental::Entity {
-		TestEntityType() : Entity("Test", [ 10, 10 ], [ 16, 16 ], "sprite") 
+		TestEntityType() : Entity("Test", { 10, 10 }, { 16, 16 }, "sprite") 
 		{}
 
 		virtual ~TestEntityType() = default;
