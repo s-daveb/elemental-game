@@ -1,0 +1,104 @@
+#!/bin/sh
+# pre-commit: format staged C/C++ files with clang-format
+# Compatible with: bash, dash, ash (macOS, Linux, FreeBSD)
+#
+# Install:
+#   cp pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+# Adjust if your clang-format binary has a version suffix (e.g. clang-format-18)
+CLANG_FORMAT="${CLANG_FORMAT:-clang-format}"
+
+# ---------------------------------------------------------------------------
+# Find a writable temp directory
+# ---------------------------------------------------------------------------
+find_tmpdir() {
+    for candidate in "${TMPDIR}" /tmp /var/tmp "${HOME}/.cache"; do
+        # Skip empty candidates (e.g. unset TMPDIR)
+        [ -z "$candidate" ] && continue
+        [ -d "$candidate" ] && [ -w "$candidate" ] && { echo "$candidate"; return 0; }
+    done
+    return 1
+}
+
+WORK_TMPDIR=$(find_tmpdir) || {
+    echo "pre-commit: no writable temp directory found, aborting." >&2
+    exit 1
+}
+
+# ---------------------------------------------------------------------------
+# Temp file helpers — mktemp -t is POSIX and works on Linux/macOS/FreeBSD,
+# but the suffix/template handling differs slightly across implementations.
+# Using a plain prefix + $$ + a counter avoids all that.
+# ---------------------------------------------------------------------------
+_tmpfile_n=0
+make_tmpfile() {
+    _tmpfile_n=$(( _tmpfile_n + 1 ))
+    echo "${WORK_TMPDIR}/clang-fmt-$$.${_tmpfile_n}"
+}
+
+# Accumulate temp files so cleanup is guaranteed even on early exit
+_tmpfiles=""
+register_tmpfile() {
+    _tmpfiles="${_tmpfiles} $1"
+}
+
+cleanup() {
+    for f in $_tmpfiles; do
+        rm -f "$f"
+    done
+}
+trap cleanup EXIT INT TERM
+
+# ---------------------------------------------------------------------------
+# Sanity-check clang-format
+# ---------------------------------------------------------------------------
+if ! command -v "$CLANG_FORMAT" >/dev/null 2>&1; then
+    echo "pre-commit: '$CLANG_FORMAT' not found, skipping format check." >&2
+    echo "  Install it or set CLANG_FORMAT=/path/to/clang-format to suppress this." >&2
+    exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Collect staged files matching our extensions
+# ---------------------------------------------------------------------------
+EXTENSIONS="c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm"
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACMR | \
+    grep -E "\.(${EXTENSIONS})$")
+
+[ -z "$staged_files" ] && exit 0
+
+# ---------------------------------------------------------------------------
+# Format each file
+# ---------------------------------------------------------------------------
+for file in $staged_files; do
+    [ -f "$file" ] || continue
+
+    orig=$(make_tmpfile)
+    formatted=$(make_tmpfile)
+    register_tmpfile "$orig"
+    register_tmpfile "$formatted"
+
+    # Extract the staged blob (not the working tree) into a temp file.
+    # Using a file preserves exact bytes including any trailing newline.
+    git show ":${file}" > "$orig"
+
+    "$CLANG_FORMAT" --assume-filename="$file" < "$orig" > "$formatted"
+
+    # cmp -s exits 0 if identical, 1 if different
+    if ! cmp -s "$orig" "$formatted"; then
+        echo "pre-commit: formatting $file"
+        # Overwrite the working tree file with the formatted version...
+        cp "$formatted" "$file"
+        # ...and re-stage it so the commit contains formatted content
+        git add "$file"
+    fi
+
+    # Clean up this pair immediately rather than waiting for EXIT
+    rm -f "$orig" "$formatted"
+    # Remove from the registered list so the trap doesn't double-rm
+    _tmpfiles=$(echo "$_tmpfiles" | sed "s| ${orig}||g; s| ${formatted}||g")
+done
+
+exit 0

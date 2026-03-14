@@ -15,6 +15,8 @@ project(Elemental
     DESCRIPTION "A simple top-down strategy game"
 )
 
+git_setup_hooks(Util/hooks)
+
 include(CPM)
 
 set(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -152,5 +154,6 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(Apps)
+
 
 # vim: ts=4 sw=4 et foldmethod=indent :
