@@ -26,7 +26,7 @@ target_link_libraries(elemental
 )
 
 package_library_headers(elemental
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_include_directories(elemental
