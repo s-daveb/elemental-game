@@ -1,9 +1,8 @@
 ---
 CompileFlags:
   Add: [
-    -DCLANGD, -DVIM_LSP=1
+    -DCLANGD
   ]
-  BuiltinHeaders: QueryDriver
 
 Diagnostics:
   UnusedIncludes: Strict
