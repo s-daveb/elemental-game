@@ -21,21 +21,7 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 
 	class MockObservable : public Observable {
 	    public:
-		MockObservable()
-		{
-			using namespace fakeit;
-			// In the test build these methods are virtual so we
-			// can override them
-			When(Method(mock, registerObserver))
-			    .AlwaysDo([](elemental::Observable::ObserverRef
-			              ) {});
-			//			When(Method(mock,
-			// notify_all))
-			//    .AlwaysDo([](std::any) {});
-		}
-
-		fakeit::Mock<elemental::Observable> mock;
-		elemental::Observable& get() { return mock.get(); }
+		MockObservable() = default;
 	};
 
 	struct DummyObserver : public IObserver {
@@ -83,5 +69,3 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
-// clang-format off
-// vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

@@ -51,22 +51,23 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		REQUIRE(2 == subject.getObserverCount());
 	}
+
 	TEST("elemental::Observabl::Notify - properly notifies observers")
 	{
 		Mock<elemental::IObserver> observer_type1;
 		Mock<elemental::IObserver> observer_type2;
 		ObservableSubject subject;
 
-		static std::vector<std::string> buffer;
+		std::vector<std::string> buffer;
 
 		When(Method(observer_type1, recieveMessage))
-		    .Do([](const Observable& o, std::any m) {
+		    .Do([&](const Observable& o, std::any m) {
 			    buffer.emplace_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
 		When(Method(observer_type2, recieveMessage))
-		    .Do([](const Observable& o, std::any m) {
+		    .Do([&](const Observable& o, std::any m) {
 			    buffer.emplace_back("Second Observer");
 		    })
 		    .AlwaysReturn();
@@ -86,4 +87,4 @@ BEGIN_TEST_SUITE("elemental::Observable")
 }
 
 // clang-format off
-// vim: set foldlevel=2 textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
+// vim: set textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
