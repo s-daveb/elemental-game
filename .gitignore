@@ -152,6 +152,6 @@ build/*
 neovim.json
 neovim.json
 
-
 # CMake
 CMakeFiles/
+build.*/*
