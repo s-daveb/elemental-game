@@ -25,13 +25,10 @@ target_link_libraries(elemental
     Fontconfig::Fontconfig
 )
 
-package_library_headers(elemental
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-target_include_directories(elemental
-    INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+publish_library_headers(
+    LIBRARY elemental
+    HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    GLOB
 )
 
 # vim: ts=4 sw=4 sts=4 et foldmethod=indent :
