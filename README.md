@@ -26,6 +26,9 @@ A game and custom-built game engine designed for creating simple, top-down strat
 - [SDL2_Gfx](https://sourceforge.net/projects/sdl2gfx/): A graphics primitive extension library for SDL2, providing additional functionality for efficient graphics rendering.
 
 ### Building the Project
+The project builds in Debug mode by default. 
+Note: Use -DCMAKE_BUILD_TYPE=Release to build in release mode.
+
 1. Clone the repository:
     ```
     git clone <URL>
@@ -37,13 +40,15 @@ A game and custom-built game engine designed for creating simple, top-down strat
     ```
 3. Configure your build system:
     ```bash
-    cmake -B debug -G Unix Makefiles
+    cmake -B build/debug.$(uname -m) -G Unix Makefiles
     # or
-    cmake -B debug -G Ninja   # this is faster and more modern
+    cmake -B build/debug.$(uname -m) -G Ninja   # this is faster and more modern
     ```
+    Optional: 
+    add `--fresh` to remove cached values.
 4. Invoke your build system
     ```
-    cmake --build debug
+    cmake --build build/debug.$(uname -m)
     ```
 
 ### Running Unit Tests
@@ -61,6 +66,15 @@ That being said, feel free to fork this project and use it as a base for your ow
 ([See here](https://www.tldrlegal.com/license/mozilla-public-license-2-0-mpl-2))
 
 Official rules for contribution might be outlined in a CONTRIBUTING.md at some point in the future, as needed.
+
+### Subrepositories
+This project is structured to include repositories under Modules/External and ./CMake that are updated with `git submodule update --recursive`. Each of these Modules/External projects also contain references to ./CMake.
+
+For your convenience, there are two scripts to help you update the subrepos.
+- `./Util/cmake-subrepo-exec.sh`: Allows you to execute any commands in the cmake subrepositories sequentially. 
+- `./Util/modules-subrepo-exec.sh`: Allows you to execute any commands in the cmake subrepositories sequentially. 
+
+These can be dangerous, but they should help you update all the references and commit new revisions to the nested subrepositories.
 
 ## License
 This project is licensed under the MPL 2.0 License.
