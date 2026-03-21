@@ -7,20 +7,22 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/IDrawCommand.hpp"
-#include "types/rendering.hpp"
-
 #include "test-utils/common.hpp"
 
 #include "IOCore/TomlTable.hpp"
+
+#include "elemental/IDrawCommand.hpp"
+
+#include "types/rendering.hpp"
 
 #include <any>
 #include <utility>
 
 namespace {
 using namespace elemental;
-struct DummyDrawCommand : public IDrawCommand {
-	Rectangle rect;
+struct DummyDrawCommand : public IDrawCommand
+{
+	Rectangle             rect;
 	std::shared_ptr<void> data;
 
 	DummyDrawCommand(Rectangle& rect, std::shared_ptr<void>& data)
@@ -34,7 +36,7 @@ struct DummyDrawCommand : public IDrawCommand {
 	auto imageData() -> std::shared_ptr<void>& override { return data; }
 	auto draw() -> ErrorFlag override { return IOCore::kSuccess; }
 };
-}
+}  // namespace
 
 BEGIN_TEST_SUITE("elemental::IDrawCommand")
 {
@@ -42,7 +44,7 @@ BEGIN_TEST_SUITE("elemental::IDrawCommand")
 
 	TEST_CASE("Basic IDrawCommand functionality")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data = nullptr;
 
 		DummyDrawCommand cmd(rect, image_data);

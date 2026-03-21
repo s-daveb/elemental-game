@@ -7,16 +7,16 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "MainWindow.hpp"
+#include "IOCore/Exception.hpp"
 
 #include "EditorWidgets/ExceptionDialog.hpp"
-
-#include "IOCore/Exception.hpp"
-#include <stdexcept>
+#include "MainWindow.hpp"
 
 #include <QApplication>
 #include <QDir>
 #include <QMessageBox>
+
+#include <stdexcept>
 
 void handleError(QApplication& app, const std::exception& exception)
 {
@@ -38,14 +38,15 @@ auto main(int argc, char* argv[]) -> int
 
 		auto window = ResourceEditor::MainWindow();
 
-		window.show();     // Show the main window
-		return app.exec(); // Enter the application's event loop
+		window.show();      // Show the main window
+		return app.exec();  // Enter the application's event loop
 	} catch (IOCore::Exception& exception) {
 		handleError(app, exception);
 	} catch (std::exception& exception) {
 		handleError(app, exception);
 	} catch (...) {
-		handleError(app, std::runtime_error("Caught unknown exception"));
+		handleError(
+		    app, std::runtime_error("Caught unknown exception"));
 	}
 
 	return -1;

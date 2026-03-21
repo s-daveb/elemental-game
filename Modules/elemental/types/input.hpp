@@ -12,30 +12,29 @@
 #include <type_traits>
 
 namespace elemental {
-enum class InputDevices : unsigned int {
-	None = 0x0000,
+enum class InputDevices : unsigned int
+{
+	None     = 0x0000,
 	Keyboard = 0x0001,
-	Mouse = 0x0010,
+	Mouse    = 0x0010,
 	Joystick = 0x0100,
-	All = 0x0111 // Keyboard & Mouse & Joystick
+	All      = 0x0111  // Keyboard & Mouse & Joystick
 };
 // Enable bitwise operations on InputDevice
 constexpr auto operator|(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) |
-	    static_cast<std::underlying_type_t<InputDevices>>(rhs)
-	);
+	    static_cast<std::underlying_type_t<InputDevices>>(rhs));
 }
 constexpr auto operator&(InputDevices lhs, InputDevices rhs) -> InputDevices
 {
 	return static_cast<InputDevices>(
 	    static_cast<std::underlying_type_t<InputDevices>>(lhs) &
-	    static_cast<std::underlying_type_t<InputDevices>>(rhs)
-	);
+	    static_cast<std::underlying_type_t<InputDevices>>(rhs));
 }
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

@@ -9,23 +9,24 @@
 
 #pragma once
 
-#include "Singleton.hpp"
+#include "util/testing.hpp"
 
 #include "IOCore/types.hpp"
 
+#include "Singleton.hpp"
 #include "types/rendering.hpp"
-#include "util/testing.hpp"
+
+#include <SDL.h>
 
 #include <any>
 #include <memory>
 #include <type_traits>
 #include <utility>
 
-#include <SDL.h>
-
 namespace elemental {
 
-struct IRenderer {
+struct IRenderer
+{
 	/*! \brief This macro is used in child classes to construct instances
 	 * of the derived classes. \see Singleton.hpp  */
 	SINGLETON_INTERFACE(IRenderer);
@@ -40,8 +41,8 @@ struct IRenderer {
 	 * These initialize the current rendering subsystema and
 	 * de-initialize it on-demand \{ */
 	virtual void init(RendererSettings& settings) = 0;
-	virtual void deactivate() = 0;
-	virtual auto isInitialized() -> bool = 0;
+	virtual void deactivate()                     = 0;
+	virtual auto isInitialized() -> bool          = 0;
 	/*! \} */
 
 	//! \brief Does what it says on the tin.
@@ -62,8 +63,8 @@ struct IRenderer {
 	//! \}
 
 	virtual void blit(
-	    std::shared_ptr<void> image_data, const Rectangle& placement
-	) = 0;
+	    std::shared_ptr<void> image_data,
+	    const Rectangle&      placement) = 0;
 
 	/*! \name DataType Conversion methods
 	 * \brief Conversion functions to convert Rectangle objects to the
@@ -84,7 +85,7 @@ struct IRenderer {
     protected:
 	IRenderer() = default;
 };
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

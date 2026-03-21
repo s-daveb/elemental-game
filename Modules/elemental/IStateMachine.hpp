@@ -9,21 +9,22 @@
 
 #pragma once
 
+#include "IOCore/types/errors.hpp"
+
 #include "IDrawable.hpp"
 #include "types/rendering.hpp"
 
-#include "IOCore/types/errors.hpp"
-
 namespace elemental {
 
-struct IStateMachine {
-	virtual void step() = 0;
+struct IStateMachine
+{
+	virtual void step()      = 0;
 	virtual ~IStateMachine() = default;
 
 	virtual auto draw() -> ErrorFlag = 0;
 };
 
-}
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

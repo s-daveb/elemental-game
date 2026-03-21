@@ -9,24 +9,26 @@
 
 #pragma once
 
+#include "types/entities.hpp"
+
 #include <string>
 #include <vector>
 
-#include "types/entities.hpp"
-
 namespace elemental {
-class Entity {
+class Entity
+{
     protected:
-	EntityMetadata metadata;
+	EntityMetadata   metadata;
 	std::vector<int> position;
 	std::vector<int> size;
-	std::string layer;
+	std::string      layer;
 
     public:
 	Entity(
-	    const std::string& type, const std::vector<int>& position,
-	    const std::vector<int>& size, const std::string& layer
-	);
+	    const std::string&      type,
+	    const std::vector<int>& position,
+	    const std::vector<int>& size,
+	    const std::string&      layer);
 	virtual ~Entity();
 
 	void loadBehavior(const std::string& script);
@@ -34,7 +36,7 @@ class Entity {
 	const EntityMetadata& Metadata = metadata;
 };
 
-}
+}  // namespace elemental
 
 // clang-format off
 // vim: set ts=8 sts=8 sw=8 noexpandtab ft=cpp.doxygen :

@@ -9,19 +9,19 @@
 
 #pragma once
 
+#include "IDrawCommand.hpp"
+#include "IObserver.hpp"
+#include "Observable.hpp"
+
 #include <any>
 #include <list>
 #include <memory>
 
-#include "IDrawCommand.hpp"
-
-#include "IObserver.hpp"
-#include "Observable.hpp"
-
 namespace elemental {
 
-struct IState : public IObserver {
-	IState() = default;
+struct IState : public IObserver
+{
+	IState()           = default;
 	~IState() override = default;
 
 	auto recieveMessage(const Observable& sender, std::any message)
@@ -32,7 +32,7 @@ struct IState : public IObserver {
 	    -> std::list<std::shared_ptr<IDrawCommand>> = 0;
 };
 
-}
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

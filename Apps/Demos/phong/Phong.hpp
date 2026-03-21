@@ -9,13 +9,9 @@
 
 #pragma once
 
-#include "./GameSettings.hpp"
-#include "./StateStack.hpp"
-
 #include "IOCore/Application.hpp"
 #include "IOCore/JsonConfigFile.hpp"
 #include "IOCore/TomlConfigFile.hpp"
-
 #include "IOCore/types.hpp"
 #include "IOCore/types/containers.hpp"
 
@@ -24,6 +20,9 @@
 #include "elemental/LoopRegulator.hpp"
 #include "elemental/Observable.hpp"
 #include "elemental/Singleton.hpp"
+
+#include "./GameSettings.hpp"
+#include "./StateStack.hpp"
 
 #include <any>
 #include <functional>
@@ -36,43 +35,42 @@ namespace elemental {
 // Forward declarations
 class SdlEventSource;
 
-class Phong
-    : public IOCore::Application
-    , public IObserver {
+class Phong : public IOCore::Application, public IObserver
+{
     public:
 	Phong(int argc, c::const_string args[], c::const_string env[]);
 	~Phong() override;
 
 	auto run() -> int override;
 	void recieveMessage(
-	    const Observable& sender, std::any message = std::any()
-	) override;
+	    const Observable& sender,
+	    std::any          message = std::any()) override;
 
     protected:
 	/// \name Deleted constructors & operators
 	/// \{
-	Phong(const Phong&) = delete;
-	Phong(Phong&&) = delete;
+	Phong(const Phong&)                    = delete;
+	Phong(Phong&&)                         = delete;
 	auto operator=(const Phong&) -> Phong& = delete;
-	auto operator=(Phong&&) -> Phong& = delete;
+	auto operator=(Phong&&) -> Phong&      = delete;
 	/// \}
 
-	bool is_running{ false };
+	bool                            is_running{ false };
 	IOCore::Dictionary<std::thread> running_threads;
 
 	void event_and_rendering_loop();
 	void simulation_thread_loop();
 
-	IRenderer& video_renderer;
+	IRenderer&      video_renderer;
 	SdlEventSource& event_emitter;
 
 	StateStack state_stack;
 
-	GameSettings settings;
+	GameSettings           settings;
 	IOCore::TomlConfigFile settings_file;
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

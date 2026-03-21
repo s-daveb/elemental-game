@@ -9,13 +9,13 @@
 
 #pragma once
 
+#include "IOCore/Exception.hpp"
+#include "IOCore/types/errors.hpp"
+
 #include "IDrawable.hpp"
 #include "IObserver.hpp"
 #include "IState.hpp"
 #include "IStateMachine.hpp"
-
-#include "IOCore/Exception.hpp"
-#include "IOCore/types/errors.hpp"
 
 #include <any>
 #include <memory>
@@ -23,11 +23,10 @@
 
 namespace elemental {
 
-struct StateStack
-    : public IObserver
-    , public IStateMachine {
+struct StateStack : public IObserver, public IStateMachine
+{
     public:
-	StateStack() = default;
+	StateStack()           = default;
 	~StateStack() override = default;
 
 	void step() override;
@@ -37,8 +36,8 @@ struct StateStack
 	void pushState(std::unique_ptr<IState>&& state);
 
 	void recieveMessage(
-	    const Observable& sender, std::any message = std::any()
-	) override;
+	    const Observable& sender,
+	    std::any          message = std::any()) override;
 
 	auto draw() -> ErrorFlag override;
 
@@ -47,7 +46,7 @@ struct StateStack
 	TEST_INSPECTABLE(StateStack);
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

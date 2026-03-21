@@ -44,6 +44,7 @@
 #pragma once
 
 #include <SDL.h>
+
 #include <memory>
 
 namespace elemental {
@@ -53,31 +54,20 @@ namespace elemental {
 struct SdlResourceDeleter
 {
 	auto operator()(SDL_Window* window_ptr) -> void
-	{
-		SDL_DestroyWindow(window_ptr);
-	}
+	{ SDL_DestroyWindow(window_ptr); }
 	auto operator()(SDL_Renderer* renderer_ptr) -> void
-	{
-		SDL_DestroyRenderer(renderer_ptr);
-	}
+	{ SDL_DestroyRenderer(renderer_ptr); }
 	auto operator()(SDL_Surface* surface_ptr) -> void
-	{
-		SDL_FreeSurface(surface_ptr);
-	}
+	{ SDL_FreeSurface(surface_ptr); }
 	auto operator()(SDL_Texture* texture_ptr) -> void
-	{
-		SDL_DestroyTexture(texture_ptr);
-	}
+	{ SDL_DestroyTexture(texture_ptr); }
 	auto operator()(SDL_Joystick* joystick_ptr) -> void
-	{
-		SDL_JoystickClose(joystick_ptr);
-	}
+	{ SDL_JoystickClose(joystick_ptr); }
 };
 
 template<typename TSdlData, typename TDeleter = SdlResourceDeleter>
 struct UniqueSdlPtr : public std::unique_ptr<TSdlData, TDeleter>
 {
-
 	using std::unique_ptr<TSdlData, TDeleter>::unique_ptr;
 
 	operator TSdlData*() const { return this->get(); }
@@ -106,7 +96,7 @@ struct SdlPtr : public std::shared_ptr<TSdlData>
 		return *this;
 	}
 };
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

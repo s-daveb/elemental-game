@@ -24,7 +24,8 @@ class JsonEditor;
 class QMainWindow;
 class QJsonModel;
 
-class JsonEditor : public QWidget {
+class JsonEditor : public QWidget
+{
 	// NOLINTNEXTLINE
 	Q_OBJECT
 	friend class DocumentEditor;
@@ -35,9 +36,7 @@ class JsonEditor : public QWidget {
 
 	auto getFileInfo() -> const QFileInfo& { return this->file_info; }
 	auto getJsonModel() -> std::unique_ptr<QJsonModel>&
-	{
-		return this->json_model;
-	}
+	{ return this->json_model; }
 
 	QAction* getSaveAction() const { return this->action_save; }
 	QAction* getSaveAsAction() const { return this->action_save_as; }
@@ -49,11 +48,11 @@ class JsonEditor : public QWidget {
 	QAction* action_save;
 	QAction* action_save_as;
 
-	QFileInfo file_info;
+	QFileInfo                   file_info;
 	std::unique_ptr<QJsonModel> json_model;
 
     private:
-	QMainWindow* main_window = nullptr;
+	QMainWindow*                    main_window = nullptr;
 	std::unique_ptr<Ui::JsonEditor> ui;
 };
 

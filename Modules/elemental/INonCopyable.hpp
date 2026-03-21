@@ -12,16 +12,16 @@ namespace elemental {
 
 class INonCopyable
 {
-  protected:
+    protected:
 	INonCopyable() = default;
 
-  private:
-	INonCopyable(const INonCopyable&) = default;
-	INonCopyable(INonCopyable&&) = default;
+    private:
+	INonCopyable(const INonCopyable&)                    = default;
+	INonCopyable(INonCopyable&&)                         = default;
 	auto operator=(const INonCopyable&) -> INonCopyable& = default;
-	auto operator=(INonCopyable&&) -> INonCopyable& = default;
+	auto operator=(INonCopyable&&) -> INonCopyable&      = default;
 };
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

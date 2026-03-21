@@ -8,10 +8,12 @@
  */
 
 #include "JsonEditor.hpp"
-#include "ui_JsonEditor.h"
 
 #include "IOCore/Exception.hpp"
+
 #include "QJsonModel/QJsonModel.hpp"
+
+#include "ui_JsonEditor.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -21,31 +23,29 @@
 #include <QWidget>
 
 #include <fmt/format.h>
-#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <fstream>
 #include <functional>
 #include <memory>
+#include <nlohmann/json.hpp>
 
 using nlohmann::json;
 
 const auto k_default_perms = static_cast<QJsonModel::FieldPermissions>(
-    QJsonModel::kWritableKey | QJsonModel::kWritableValue
-);
+    QJsonModel::kWritableKey | QJsonModel::kWritableValue);
 
 JsonEditor::JsonEditor(QWidget* parent, const QString& filePath)
-    : QWidget(parent)
-    , file_info(filePath)
-    , json_model(std::make_unique<QJsonModel>(filePath, this, k_default_perms))
-    , ui(std::make_unique<Ui::JsonEditor>())
+    : QWidget(parent), file_info(filePath),
+      json_model(std::make_unique<QJsonModel>(filePath, this, k_default_perms)),
+      ui(std::make_unique<Ui::JsonEditor>())
 {
 	this->ui->setupUi(this);
 	this->main_window = qobject_cast<QMainWindow*>(parent->parent());
 
 	this->loadFile(filePath);
 
-	this->action_save = new QAction(tr("Save"), this);
+	this->action_save    = new QAction(tr("Save"), this);
 	this->action_save_as = new QAction(tr("Save As..."), this);
 
 	connect(this->action_save, &QAction::triggered, this, [this]() {
@@ -55,8 +55,7 @@ JsonEditor::JsonEditor(QWidget* parent, const QString& filePath)
 		auto selected_filepath = QFileDialog::getSaveFileName(
 		    this->main_window,
 		    tr("Save File As"),
-		    this->file_info.filePath()
-		);
+		    this->file_info.filePath());
 		this->file_info.setFile(selected_filepath);
 		this->saveFile(false);
 	});
@@ -65,9 +64,7 @@ JsonEditor::JsonEditor(QWidget* parent, const QString& filePath)
 }
 
 JsonEditor::~JsonEditor()
-{
-	this->ui.reset(nullptr);
-}
+{ this->ui.reset(nullptr); }
 
 void JsonEditor::saveFile(bool compact)
 {
@@ -87,8 +84,7 @@ void JsonEditor::loadFile(const QString& path)
 
 	if (this->json_model->load(path) == QJsonModel::kError) {
 		throw IOCore::Exception(
-		    fmt::format("Failed to load file: {}", path.toStdString())
-		);
+		    fmt::format("Failed to load file: {}", path.toStdString()));
 	}
 	this->ui->treeView->setModel(this->json_model.get());
 }

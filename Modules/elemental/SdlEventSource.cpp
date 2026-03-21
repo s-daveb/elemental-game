@@ -7,16 +7,17 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "SdlEventSource.hpp"
+
+#include "util/debug.hpp"
+
 #include "IOCore/Exception.hpp"
 #include "IOCore/sys/debuginfo.hpp"
 #include "IOCore/util/bitwise.hpp"
 
-#include "types/input.hpp"
-#include "util/debug.hpp"
-
 #include "IObserver.hpp"
 #include "SDL_Memory.hpp"
-#include "SdlEventSource.hpp"
+#include "types/input.hpp"
 
 #include <SDL.h>
 
@@ -30,11 +31,8 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 	SDL_InitSubSystem(SDL_INIT_EVENTS);
 
 	if (Enum::Contains_Flag(device_flags, InputDevices::Joystick)) {
-
 		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
-		SDL_InitSubSystem(
-		    SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER
-		);
+		SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
 
 		if (SDL_NumJoysticks() > 0) {
 			this->joydev_ptr = SDL_JoystickOpen(0);
@@ -42,30 +40,25 @@ SdlEventSource::SdlEventSource(InputDevices device_flags)
 			DBG_PRINT("Opened Joystick 0" << std::endl);
 			DBG_PRINT(
 			    "Name: " << SDL_JoystickNameForIndex(0)
-				     << std::endl
-			);
+			             << std::endl);
 			DBG_PRINT(
 			    "Number of Axes: "
 			    << SDL_JoystickNumAxes(this->joydev_ptr.get())
-			    << std::endl
-			);
+			    << std::endl);
 			DBG_PRINT(
 			    "Number of Buttons: "
 			    << SDL_JoystickNumButtons(this->joydev_ptr.get())
-			    << std::endl
-			);
+			    << std::endl);
 			DBG_PRINT(
 			    "Number of Balls: "
 			    << SDL_JoystickNumBalls(this->joydev_ptr.get())
-			    << std::endl
-			);
+			    << std::endl);
 
 			SDL_GameControllerEventState(SDL_ENABLE);
 		} else {
 			DBG_PRINT(
 			    "Warning: No Joystick or Core::Input "
-			    "detected"
-			);
+			    "detected");
 		}
 	}
 }

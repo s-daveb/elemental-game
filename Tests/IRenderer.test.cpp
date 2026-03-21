@@ -7,12 +7,13 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/IRenderer.hpp"
-#include "types/rendering.hpp"
-
 #include "test-utils/common.hpp"
 
 #include "IOCore/TomlTable.hpp"
+
+#include "elemental/IRenderer.hpp"
+
+#include "types/rendering.hpp"
 
 #include <any>
 #include <utility>
@@ -20,7 +21,8 @@
 BEGIN_TEST_SUITE("elemental::IRenderer")
 {
 	using namespace elemental;
-	struct DummyRenderer : public IRenderer {
+	struct DummyRenderer : public IRenderer
+	{
 		friend class IRenderer;
 		~DummyRenderer() override = default;
 
@@ -29,26 +31,19 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		auto isInitialized() -> bool override { return false; }
 
 		auto getWindowSize() -> Area override { return { 0, 0 }; }
-		auto getResolution() -> Resolution override
-		{
-			return { 0, 0 };
-		}
+		auto getResolution() -> Resolution override { return { 0, 0 }; }
 
 		void clearScreen() override { return; }
 		void flip() override { return; }
 
-		void blit(
-		    std::shared_ptr<void> image_data,
-		    const Rectangle& placement
-		) override
+		void blit(std::shared_ptr<void> image_data,
+		          const Rectangle&      placement) override
 		{
 		}
 
-		virtual void
-		blit(std::shared_ptr<void> image_data, Rectangle& placement)
-		{
-			return;
-		}
+		virtual void blit(std::shared_ptr<void> image_data,
+		                  Rectangle&            placement)
+		{ return; }
 
 	    protected:
 		DummyRenderer() : IRenderer() {}
@@ -57,9 +52,8 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 	TEST("elemental::IRenderer::GetInstance works with "
 	     "properly-derived class")
 	{
-		REQUIRE_NOTHROW([&]() {
-			IRenderer::GetInstance<DummyRenderer>();
-		}());
+		REQUIRE_NOTHROW(
+		    [&]() { IRenderer::GetInstance<DummyRenderer>(); }());
 		SUCCEED();
 	}
 }

@@ -9,25 +9,26 @@
 
 #pragma once
 
+#include "util/testing.hpp"
+
 #include <any>
 #include <functional>
 #include <list>
 
-#include "util/testing.hpp"
-
 #ifdef UNIT_TEST
-#define MOCKABLE virtual
+#	define MOCKABLE virtual
 #else
-#define MOCKABLE
+#	define MOCKABLE
 #endif
 
 namespace elemental {
 
 class IObserver;
 
-class Observable {
+class Observable
+{
     public:
-	using ObserverRef = std::reference_wrapper<IObserver>;
+	using ObserverRef  = std::reference_wrapper<IObserver>;
 	using ObserverList = std::list<ObserverRef>;
 
 	virtual ~Observable() = default;
@@ -35,20 +36,20 @@ class Observable {
 	/** \name Deleteed Constructors & Operators
 	 * \{ */
 	Observable(const Observable&) = default;
-	Observable(Observable&&) = delete;
+	Observable(Observable&&)      = delete;
 
 	MOCKABLE auto operator=(const Observable&) -> Observable& = delete;
-	MOCKABLE auto operator=(Observable&&) -> Observable& = delete;
+	MOCKABLE auto operator=(Observable&&) -> Observable&      = delete;
 	/**  \} */
 
 	MOCKABLE void registerObserver(ObserverRef);
 
     protected:
 	Observable() = default;
-	void notify_all(std::any message = std::any());
+	void         notify_all(std::any message = std::any());
 	ObserverList observers;
 };
 
-} // namespace elemental
-  // clang-format off
+}  // namespace elemental
+   // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

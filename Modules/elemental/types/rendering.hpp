@@ -16,19 +16,22 @@
 
 namespace elemental {
 
-struct Point {
+struct Point
+{
 	uint32_t x, y;
 	TOML_CLASS(Point, x, y);
 };
 using Position2D = Point;
 
-struct Area {
+struct Area
+{
 	uint32_t width, height;
 	TOML_CLASS(Area, width, height);
 };
 using Resolution = Area;
 
-struct Rectangle {
+struct Rectangle
+{
 	Rectangle() = default;
 	Rectangle(Position2D position, Area size = { 0, 0 })
 	    : position(position), size(size)
@@ -46,7 +49,7 @@ struct Rectangle {
 	auto operator=(const Rectangle& other) -> Rectangle&
 	{
 		position = other.position;
-		size = other.size;
+		size     = other.size;
 		return *this;
 	}
 	auto operator==(const Rectangle& other) const -> bool
@@ -58,48 +61,55 @@ struct Rectangle {
 	}
 
 	Point position;
-	Area size;
+	Area  size;
 
 	uint32_t& x = position.x;
 	uint32_t& y = position.y;
 
-	uint32_t& width = size.width;
+	uint32_t& width  = size.width;
 	uint32_t& height = size.height;
 
 	TOML_CLASS(Rectangle, position, size);
 };
 
-enum WindowMode {
-	Windowed = 0x00,
+enum WindowMode
+{
+	Windowed   = 0x00,
 	Borderless = 0x01,
 	Fullscreen = 0x11,
 };
 
 TOML_ENUM(WindowMode, Windowed, Borderless, Fullscreen);
 
-enum WindowPlacement { Manual, Centered };
+enum WindowPlacement
+{
+	Manual,
+	Centered
+};
 TOML_ENUM(WindowPlacement, Manual, Centered);
 
-struct WindowParameters {
+struct WindowParameters
+{
 	std::string title;
 
-	WindowMode mode;
+	WindowMode      mode;
 	WindowPlacement placement;
 
 	Position2D position;
-	Area size;
+	Area       size;
 
 	TOML_CLASS(WindowParameters, title, mode, placement, position, size);
 };
 
-struct RendererSettings {
+struct RendererSettings
+{
 	WindowParameters window;
-	Resolution resolution;
+	Resolution       resolution;
 
-	TOML_CLASS(RendererSettings, window); // resolution);
+	TOML_CLASS(RendererSettings, window);  // resolution);
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

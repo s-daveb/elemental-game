@@ -7,8 +7,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "util/testing.hpp"
 #include "test-utils/common.hpp"
+
+#include "util/testing.hpp"
 
 #include <array>
 #include <cstring>
@@ -20,7 +21,8 @@ using namespace elemental;
 
 namespace NS = elemental;
 
-struct BlackBox {
+struct BlackBox
+{
 	BlackBox(const char* in_data) { std::strcpy(this->data, in_data); }
 	~BlackBox() = default;
 
@@ -30,13 +32,11 @@ struct BlackBox {
 };
 
 template<>
-struct NS::debug::Inspector<BlackBox> {
+struct NS::debug::Inspector<BlackBox>
+{
 	Inspector(BlackBox& subject) : impl(&subject) {}
 	using data_t = std::tuple<const char*, size_t>;
-	auto getData() -> data_t
-	{
-		return { impl->data, strlen(impl->data) };
-	};
+	auto getData() -> data_t { return { impl->data, strlen(impl->data) }; };
 	const BlackBox* impl;
 };
 
@@ -49,10 +49,8 @@ BEGIN_TEST_SUITE("testing-utils")
 		debug::Inspector<BlackBox> data_viewer(hidden_data);
 
 		auto boxed_data = data_viewer.getData();
-		REQUIRE(
-		    std::string(std::get<0>(boxed_data)) ==
-		    std::string("Hello World")
-		);
+		REQUIRE(std::string(std::get<0>(boxed_data)) ==
+		        std::string("Hello World"));
 	}
 }
 

@@ -7,13 +7,12 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "IOCore/Exception.hpp"
-
 #include "test-utils/common.hpp"
+
+#include "IOCore/Exception.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_all.hpp>
-
 #include <exception>
 #include <iostream>
 #include <optional>

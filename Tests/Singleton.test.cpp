@@ -7,9 +7,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/Singleton.hpp"
-
 #include "test-utils/common.hpp"
+
+#include "elemental/Singleton.hpp"
 
 #include <exception>
 #include <iostream>
@@ -20,15 +20,17 @@ using elemental::Singleton;
 
 BEGIN_TEST_SUITE("elemental::Singleton<T>")
 {
-	struct SimpleStructure {
+	struct SimpleStructure
+	{
 		uint32_t id;
-		char name[128];
+		char     name[128];
 		uint32_t flags;
 	};
 
-	struct NonConstructibleStructure {
+	struct NonConstructibleStructure
+	{
 		uint32_t id;
-		char name[128];
+		char     name[128];
 
 	    protected:
 		NonConstructibleStructure() {};
@@ -38,18 +40,14 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 	TEST("elemental::Singleton<T> - Can wrap a simple class")
 	{
 		SimpleStructure stack_obj;
-		auto& first_reference =
+		auto&           first_reference =
 		    Singleton::getReference<SimpleStructure>();
 
 		SECTION("1. No exceptions were thrown")
-		{
-			SUCCEED();
-		}
+		{ SUCCEED(); }
 
-		SECTION(
-		    "2. Subsequent calls result in the same object being "
-		    "returned"
-		)
+		SECTION("2. Subsequent calls result in the same object being "
+		        "returned")
 		{
 			auto& second_reference =
 			    Singleton::getReference<SimpleStructure>();
@@ -58,23 +56,17 @@ BEGIN_TEST_SUITE("elemental::Singleton<T>")
 		}
 	}
 
-	TEST(
-	    "elemental::Singleton<T> - As a friend class, can call a "
-	    "private constructor"
-	)
+	TEST("elemental::Singleton<T> - As a friend class, can call a "
+	     "private constructor")
 	{
 		auto& first_reference =
 		    Singleton::getReference<NonConstructibleStructure>();
 
 		SECTION("1. No exceptions were thrown")
-		{
-			SUCCEED();
-		}
+		{ SUCCEED(); }
 
-		SECTION(
-		    "2. Subsequent calls result in the same object being "
-		    "returned"
-		)
+		SECTION("2. Subsequent calls result in the same object being "
+		        "returned")
 		{
 			auto& second_reference = Singleton::getReference<
 			    NonConstructibleStructure>();

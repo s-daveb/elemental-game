@@ -8,28 +8,31 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/Entity.hpp"
 #include "test-utils/common.hpp"
+
+#include "elemental/Entity.hpp"
 
 BEGIN_TEST_SUITE("Entity.test.cpp")
 {
-	struct TestEntityType : public elemental::Entity {
-		TestEntityType() : Entity("Test", { 10, 10 }, { 16, 16 }, "sprite") 
-		{}
+	struct TestEntityType : public elemental::Entity
+	{
+		TestEntityType()
+		    : Entity("Test", { 10, 10 }, { 16, 16 }, "sprite")
+		{
+		}
 
 		virtual ~TestEntityType() = default;
 	};
 
-	struct TestFixture {
-		std::string type = "player", layer = "main";
+	struct TestFixture
+	{
+		std::string      type = "player", layer = "main";
 		std::vector<int> position = { 0, 0 }, size = { 10, 10 };
 
 		TestEntityType object;
 
-		TestFixture() : object() {
-		}
+		TestFixture() : object() {}
 		virtual ~TestFixture() = default;
-
 	};
 
 	FIXTURE_TEST("Test") {}

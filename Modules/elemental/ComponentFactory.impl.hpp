@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include "Component.hpp"
-
 #include "IOCore/Exception.hpp"
 
+#include "Component.hpp"
+
 #ifndef COMP_FACTORY_DECL
-#include "ComponentFactory.hpp"
+#	include "ComponentFactory.hpp"
 #endif
 
 #include <type_traits>
@@ -27,8 +27,8 @@ using ComponentVector = ComponentFactory::ComponentVector;
 
 inline ComponentFactory::~ComponentFactory()
 {
-	for (auto pair : component_pool) {
-		auto key = pair.first;
+	for (auto pair: component_pool) {
+		auto key   = pair.first;
 		auto value = pair.second;
 
 		value.clear();
@@ -45,13 +45,11 @@ auto ComponentFactory::createComponent(TArgs&&... args)
 {
 	static_assert(
 	    is_component_v<TComponent>,
-	    "TComponent must be a base class of Component"
-	);
+	    "TComponent must be a base class of Component");
 
 	using ComponentType = typename std::remove_reference_t<TComponent>;
-	auto new_object = std::make_shared<ComponentType>(
-	    *this, std::forward<TArgs>(args)...
-	);
+	auto new_object     = std::make_shared<ComponentType>(
+	    *this, std::forward<TArgs>(args)...);
 
 	auto component_type =
 	    static_cast<std::type_index>(typeid(ComponentType));
@@ -67,8 +65,7 @@ auto ComponentFactory::getComponentVector() -> ComponentVector&
 {
 	static_assert(
 	    is_component_v<TComponent>,
-	    "TComponent must be a base class of Component"
-	);
+	    "TComponent must be a base class of Component");
 	using ComponentType = typename std::remove_reference_t<TComponent>;
 
 	auto type = static_cast<std::type_index>(typeid(ComponentType));
@@ -84,21 +81,19 @@ auto ComponentFactory::getComponent(const Component::InstanceID& id_no)
 {
 	static_assert(
 	    is_component_v<TComponent>,
-	    "TComponent must be a base class of Component"
-	);
+	    "TComponent must be a base class of Component");
 	using ComponentType = typename std::remove_reference_t<TComponent>;
 
 	std::shared_ptr<ComponentType> result(nullptr);
 
 	auto component_list = this->getComponentVector<ComponentType>();
 	result =
-	    std::static_pointer_cast<ComponentType>(component_list.at(id_no)
-	    );
+	    std::static_pointer_cast<ComponentType>(component_list.at(id_no));
 
 	return result;
 }
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

@@ -7,9 +7,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "types/rendering.hpp"
-#include "IOCore/TomlTable.hpp"
 #include "test-utils/common.hpp"
+
+#include "IOCore/TomlTable.hpp"
+
+#include "types/rendering.hpp"
 
 #include <string>
 
@@ -22,7 +24,7 @@ BEGIN_TEST_SUITE("rendering-types")
 
 	TEST_CASE("Point class")
 	{
-		Point test_point{ 10, 10 };
+		Point             test_point{ 10, 10 };
 		IOCore::TomlTable table;
 
 		table = test_point;
@@ -49,7 +51,7 @@ BEGIN_TEST_SUITE("rendering-types")
 		SECTION("Rectangle from Position2D and Area")
 		{
 			Point position{ 5, 10 };
-			Area size{ 200, 300 };
+			Area  size{ 200, 300 };
 
 			Rectangle rect(position, size);
 
@@ -111,29 +113,20 @@ BEGIN_TEST_SUITE("rendering-types")
 
 			TomlTable table = params;
 
-			REQUIRE(
-			    table["title"].value<std::string>() == "My Game"
-			);
-			REQUIRE(
-			    table["mode"].value<std::string>() ==
-			    "Fullscreen"
-			);
-			REQUIRE(
-			    table["placement"].value<std::string>() ==
-			    "Centered"
-			);
-			REQUIRE(
-			    table["position"]["x"].value<uint32_t>() == 100
-			);
-			REQUIRE(
-			    table["position"]["y"].value<uint32_t>() == 200
-			);
-			REQUIRE(
-			    table["size"]["width"].value<uint32_t>() == 800
-			);
-			REQUIRE(
-			    table["size"]["height"].value<uint32_t>() == 600
-			);
+			REQUIRE(table["title"].value<std::string>() ==
+			        "My Game");
+			REQUIRE(table["mode"].value<std::string>() ==
+			        "Fullscreen");
+			REQUIRE(table["placement"].value<std::string>() ==
+			        "Centered");
+			REQUIRE(table["position"]["x"].value<uint32_t>() ==
+			        100);
+			REQUIRE(table["position"]["y"].value<uint32_t>() ==
+			        200);
+			REQUIRE(table["size"]["width"].value<uint32_t>() ==
+			        800);
+			REQUIRE(table["size"]["height"].value<uint32_t>() ==
+			        600);
 		}
 	}
 
@@ -147,38 +140,27 @@ BEGIN_TEST_SUITE("rendering-types")
 
 		RendererSettings settings{ params,
 			                   Resolution{
-					       0,
-					       0,
-					   } };
+			                       0,
+			                       0,
+			                   } };
 
 		TomlTable table = settings;
 
 		REQUIRE(table["window"].is_table());
-		CHECK(
-		    table["window"]["title"].value<std::string>() ==
-		    "My Game"
-		);
-		CHECK(
-		    table["window"]["mode"].value<std::string>() ==
-		    "Fullscreen"
-		);
-		CHECK(
-		    table["window"]["placement"].value<std::string>() ==
-		    "Centered"
-		);
-		CHECK(
-		    table["window"]["position"]["x"].value<uint32_t>() == 100
-		);
-		CHECK(
-		    table["window"]["position"]["y"].value<uint32_t>() == 200
-		);
-		REQUIRE(
-		    table["window"]["size"]["width"].value<uint32_t>() == 800
-		);
-		REQUIRE(
-		    table["window"]["size"]["height"].value<uint32_t>() ==
-		    600
-		);
+		CHECK(table["window"]["title"].value<std::string>() ==
+		      "My Game");
+		CHECK(table["window"]["mode"].value<std::string>() ==
+		      "Fullscreen");
+		CHECK(table["window"]["placement"].value<std::string>() ==
+		      "Centered");
+		CHECK(table["window"]["position"]["x"].value<uint32_t>() ==
+		      100);
+		CHECK(table["window"]["position"]["y"].value<uint32_t>() ==
+		      200);
+		REQUIRE(table["window"]["size"]["width"].value<uint32_t>() ==
+		        800);
+		REQUIRE(table["window"]["size"]["height"].value<uint32_t>() ==
+		        600);
 	}
 }
 
