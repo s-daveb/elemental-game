@@ -7,12 +7,13 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SDL_Memory.hpp"
-
 #include "test-utils/common.hpp"
+
 #include "util/debug.hpp"
 
 #include "IOCore/Exception.hpp"
+
+#include "SDL_Memory.hpp"
 
 #include <exception>
 #include <iostream>
@@ -36,7 +37,6 @@ BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 	{
 		void operator()(FakeSdlObject* ptr)
 		{
-
 			// DBG_PRINT("FakeDeleter::operator() called!");
 			ptr->initialized = false;
 			// DBG_PRINT(((ptr->initialized) ? " initialized"
@@ -52,8 +52,8 @@ BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 
 	TEST("UniqueSdlPtr is convertible to and from raw pointers")
 	{
-		bool is_initialized = true;
-		auto* fake_object = new FakeSdlObject(is_initialized);
+		bool  is_initialized = true;
+		auto* fake_object    = new FakeSdlObject(is_initialized);
 		{
 			TestSdlUniquePtr unique_ptr;
 			unique_ptr = fake_object;
@@ -68,8 +68,8 @@ BEGIN_TEST_SUITE("SDL_Memory.hpp tests")
 
 	TEST("SdlPtr is convertible to and from raw pointers")
 	{
-		bool is_initialized = true;
-		auto* fake_object = new FakeSdlObject(is_initialized);
+		bool  is_initialized = true;
+		auto* fake_object    = new FakeSdlObject(is_initialized);
 		{
 			TestSdlSharedPtr shared_ptr;
 			shared_ptr = fake_object;

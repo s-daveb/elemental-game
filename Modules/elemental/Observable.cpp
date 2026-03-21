@@ -8,28 +8,23 @@
  */
 
 #include "Observable.hpp"
-#include "IObserver.hpp"
 
 #include "IObserver.hpp"
+
 #include <functional>
 
 namespace elemental {
 
-void
-Observable::registerObserver(Observable::ObserverRef observer)
-{
-	
-	this->observers.push_back(observer);
-}
+void Observable::registerObserver(Observable::ObserverRef observer)
+{ this->observers.push_back(observer); }
 
-void
-Observable::notify_all(std::any message)
+void Observable::notify_all(std::any message)
 {
-	for (auto& observer_ref : this->observers) {
+	for (auto& observer_ref: this->observers) {
 		observer_ref.get().recieveMessage(*this, message);
 	}
 }
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // clang-format off

@@ -9,14 +9,15 @@
 
 #pragma once
 
-#include <ostream>
-
 #include "types.hpp"
+
+#include <ostream>
 
 namespace elemental {
 using entity_type_t = uint16_t;
 
-struct EntityMetadata {
+struct EntityMetadata
+{
 	entity_type_t type_id;
 	idtype_t      instance_id;
 
@@ -27,25 +28,26 @@ struct EntityMetadata {
 inline auto operator<<(std::ostream& stream, const EntityMetadata& data)
     -> std::ostream&
 {
-	stream << "[" << data.type_id     << "|" << data.type_name     << "]" << std::flush;
-	stream << "[" << data.instance_id << "|" << data.instance_name << "]" << std::flush;
+	stream << "[" << data.type_id << "|" << data.type_name << "]"
+	       << std::flush;
+	stream << "[" << data.instance_id << "|" << data.instance_name << "]"
+	       << std::flush;
 
 	return stream;
-} 
-
 }
+
+}  // namespace elemental
 
 namespace std {
 using elemental::EntityMetadata;
 
 template<>
-struct hash<EntityMetadata> { // NOLINT
+struct hash<EntityMetadata>
+{  // NOLINT
 	auto operator()(const EntityMetadata& data) const -> size_t
-	{
-		return std::hash<decltype(data.type_id)>{}(data.type_id);
-	}
+	{ return std::hash<decltype(data.type_id)>{}(data.type_id); }
 };
-}
+}  // namespace std
 
 // clang-format off
 // vim: set ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

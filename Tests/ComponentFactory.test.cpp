@@ -7,38 +7,36 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "ComponentFactory.hpp"
 #include "test-utils/common.hpp"
+
+#include "ComponentFactory.hpp"
 
 namespace {
 using namespace elemental;
 
- /* This class cannot use FakeIt::Mock because the Component class is a
-  * template. At least, I current do not know of a way in which it can 
-  * be used */
-class TestComponent : public Component {
+/* This class cannot use FakeIt::Mock because the Component class is a
+ * template. At least, I current do not know of a way in which it can
+ * be used */
+class TestComponent : public Component
+{
     public:
-    using Base = Component;
+	using Base = Component;
 
-    auto getTypeIndex() -> TypeInfo override
-    {
-        return typeid(TestComponent);
-    }
+	auto getTypeIndex() -> TypeInfo override
+	{ return typeid(TestComponent); }
 
-    TestComponent(ComponentFactory& owner) : Component(owner) {}
-    ~TestComponent() override = default;
+	TestComponent(ComponentFactory& owner) : Component(owner) {}
+	~TestComponent() override = default;
 };
 
-} // namespace
+}  // namespace
 
 BEGIN_TEST_SUITE("elemental::ComponentFactory")
 {
 	using namespace elemental;
 
 	TEST_CASE("Basic ComponentFactory construction")
-	{
-		ComponentFactory factory;
-	}
+	{ ComponentFactory factory; }
 
 	TEST_CASE("ComponentFactory::createComponent")
 	{
@@ -52,8 +50,7 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory factory;
 
-		auto new_component =
-		    factory.createComponent<TestComponent>();
+		auto new_component = factory.createComponent<TestComponent>();
 
 		REQUIRE_NOTHROW([&]() -> void {
 			auto result =
@@ -66,11 +63,11 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory factory;
 
-		REQUIRE_THROWS_AS([&]() -> void {
+		REQUIRE_THROWS_AS(
+		    [&]() -> void {
 			    factory.getComponent<TestComponent>(0x0);
-			}(),
-			std::out_of_range
-		);
+		    }(),
+		    std::out_of_range);
 	}
 }
 

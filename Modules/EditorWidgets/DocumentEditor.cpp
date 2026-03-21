@@ -21,14 +21,14 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "ui_DocumentEditor.h"
-
 #include "DocumentEditor.hpp"
-#include "ExceptionDialog.hpp"
-#include "JsonEditor.hpp"
 
 #include "IOCore/Exception.hpp"
+
+#include "ExceptionDialog.hpp"
+#include "JsonEditor.hpp"
 #include "fmt/core.h"
+#include "ui_DocumentEditor.h"
 
 #include <QFileDialog>
 #include <QFileInfo>
@@ -41,12 +41,11 @@
 #include <memory>
 
 DocumentEditor::DocumentEditor(
-    QWidget* parent, QMainWindow* mainWindow, const QString& filepath
-)
-    : QWidget(parent)
-    , main_window(mainWindow)
-    , file_info(filepath)
-    , ui(std::make_unique<Ui::DocumentEditor>())
+    QWidget*       parent,
+    QMainWindow*   mainWindow,
+    const QString& filepath)
+    : QWidget(parent), main_window(mainWindow), file_info(filepath),
+      ui(std::make_unique<Ui::DocumentEditor>())
 {
 	this->ui->setupUi(this);
 	ASSERT(this->main_window);
@@ -60,9 +59,7 @@ void DocumentEditor::saveFile(bool compact)
 	if (file_info.suffix() == "json") {
 		auto json_editor =
 		    qobject_cast<JsonEditor*>(this->editor_widget);
-		if (json_editor) {
-			json_editor->saveFile(compact);
-		}
+		if (json_editor) { json_editor->saveFile(compact); }
 		this->main_window->statusBar()->showMessage("File saved", 2000);
 	} else {
 		throw IOCore::NotImplementedException();
@@ -71,7 +68,7 @@ void DocumentEditor::saveFile(bool compact)
 
 void DocumentEditor::setupActions()
 {
-	this->action_save = new QAction("Save", this);
+	this->action_save    = new QAction("Save", this);
 	this->action_save_as = new QAction("Save As", this);
 
 	this->action_save->setShortcut(QKeySequence::Save);
@@ -79,8 +76,7 @@ void DocumentEditor::setupActions()
 
 	this->action_save_as->setShortcut(QKeySequence::SaveAs);
 	this->action_save_as->setStatusTip(
-	    "Save currently delected file with a new name"
-	);
+	    "Save currently delected file with a new name");
 
 	auto file_menu =
 	    this->main_window->menuBar()->findChild<QMenu*>("menuFile");
@@ -99,8 +95,7 @@ void DocumentEditor::setupActions()
 		auto selected_filepath = QFileDialog::getSaveFileName(
 		    this->main_window,
 		    tr("Save File As"),
-		    this->file_info.filePath()
-		);
+		    this->file_info.filePath());
 
 		if (!selected_filepath.isEmpty()) {
 			this->file_info.setFile(selected_filepath);

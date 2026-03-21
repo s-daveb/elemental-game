@@ -7,13 +7,13 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "IOCore/Exception.hpp"
+
 #include "./Phong.hpp"
+#include "Singleton.hpp"
 
 #include <exception>
 #include <iostream>
-
-#include "IOCore/Exception.hpp"
-#include "Singleton.hpp"
 
 using namespace elemental;
 

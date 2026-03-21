@@ -9,8 +9,9 @@
  */
 // clang-format on
 
-#include "DrawCommand.hpp"
 #include "IOCore/Exception.hpp"
+
+#include "DrawCommand.hpp"
 
 #include <IOCore/TomlTable.hpp>
 #include <test-utils/common.hpp>
@@ -18,7 +19,8 @@
 namespace {
 using namespace elemental;
 
-class DummyRenderer : public IRenderer {
+class DummyRenderer : public IRenderer
+{
     public:
 	static auto getInstance() -> DummyRenderer&
 	{
@@ -38,35 +40,32 @@ class DummyRenderer : public IRenderer {
 
 	void flip() override {}
 
-	void blit(
-	    std::shared_ptr<void> image_data, const Rectangle& placement
-	) override
+	void blit(std::shared_ptr<void> image_data,
+	          const Rectangle&      placement) override
 	{
 	}
 
 	[[nodiscard]] auto getResolution() -> Resolution override
 	{
-		return { 0, 0 }; // Default resolution
+		return { 0, 0 };  // Default resolution
 	}
 
 	[[nodiscard]] auto getWindowSize() -> Area override
 	{
-		return { 0, 0 }; // Default window size
+		return { 0, 0 };  // Default window size
 	}
 
 	template<typename TR>
 	static auto toRectangle(const TR& data) -> Rectangle
 	{
-		return {}; // Placeholder implementation
+		return {};  // Placeholder implementation
 	}
 
 	template<typename TR>
 	static auto fromRectangle(const Rectangle& rectangle) -> TR
-	{
-		return {};
-	}
+	{ return {}; }
 };
-} // namespace
+}  // namespace
 
 BEGIN_TEST_SUITE("elemental::DrawCommand")
 {
@@ -74,7 +73,7 @@ BEGIN_TEST_SUITE("elemental::DrawCommand")
 
 	TEST_CASE("Basic DrawCommand construction")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data =
 		    std::make_shared<SDL_Surface>();
 		DummyRenderer renderer;
@@ -84,9 +83,9 @@ BEGIN_TEST_SUITE("elemental::DrawCommand")
 
 	TEST_CASE("DrawCommand rectangle getter")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data = nullptr;
-		DummyRenderer renderer;
+		DummyRenderer         renderer;
 
 		DrawCommand cmd(renderer, rect, image_data);
 
@@ -98,9 +97,9 @@ BEGIN_TEST_SUITE("elemental::DrawCommand")
 
 	TEST_CASE("DrawCommand image data getter")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data = nullptr;
-		DummyRenderer renderer;
+		DummyRenderer         renderer;
 
 		DrawCommand cmd(renderer, rect, image_data);
 
@@ -111,9 +110,9 @@ BEGIN_TEST_SUITE("elemental::DrawCommand")
 
 	TEST_CASE("DrawCommand draw method success case")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data = nullptr;
-		DummyRenderer renderer;
+		DummyRenderer         renderer;
 
 		DrawCommand cmd(renderer, rect, image_data);
 
@@ -123,19 +122,16 @@ BEGIN_TEST_SUITE("elemental::DrawCommand")
 
 	TEST_CASE("DrawCommand draw method error case")
 	{
-		Rectangle rect{ { 0, 0 }, { 100, 200 } };
+		Rectangle             rect{ { 0, 0 }, { 100, 200 } };
 		std::shared_ptr<void> image_data = nullptr;
 
 		// Override render() to throw an exception
-		class FaultyRenderer : public DummyRenderer {
+		class FaultyRenderer : public DummyRenderer
+		{
 		    public:
-			void blit(
-			    std::shared_ptr<void> image_data,
-			    const Rectangle& placement
-			) override
-			{
-				throw std::runtime_error("Rendering failed");
-			}
+			void blit(std::shared_ptr<void> image_data,
+			          const Rectangle&      placement) override
+			{ throw std::runtime_error("Rendering failed"); }
 		} renderer;
 
 		DrawCommand cmd(renderer, rect, image_data);

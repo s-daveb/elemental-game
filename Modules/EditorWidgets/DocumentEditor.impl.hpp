@@ -8,22 +8,22 @@
  */
 
 #ifndef DOCUMENT_EDITOR_IMPL_HPP
-#define DOCUMENT_EDITOR_IMPL_HPP
+#	define DOCUMENT_EDITOR_IMPL_HPP
 
-#include "DocumentEditor.hpp"
-#include "ExceptionDialog.hpp"
-#include "JsonEditor.hpp"
+#	include "IOCore/Exception.hpp"
 
-#include "IOCore/Exception.hpp"
-#include "fmt/core.h"
+#	include <QFileDialog>
+#	include <QFileInfo>
+#	include <QMainWindow>
+#	include <QMenu>
+#	include <QMenuBar>
+#	include <QVBoxLayout>
+#	include <QWidget>
 
-#include <QFileDialog>
-#include <QFileInfo>
-#include <QMainWindow>
-#include <QMenu>
-#include <QMenuBar>
-#include <QVBoxLayout>
-#include <QWidget>
+#	include "DocumentEditor.hpp"
+#	include "ExceptionDialog.hpp"
+#	include "JsonEditor.hpp"
+#	include "fmt/core.h"
 
 template<typename TChild>
 void DocumentEditor::connectActions(const TChild* child)
@@ -35,8 +35,7 @@ void DocumentEditor::connectActions(const TChild* child)
 		auto selected_filepath = QFileDialog::getSaveFileName(
 		    this->main_window,
 		    tr("Save File As"),
-		    child->file_info.filePath()
-		);
+		    child->file_info.filePath());
 	});
 }
 
@@ -46,8 +45,7 @@ void DocumentEditor::loadFile(const QString& path)
 	QFileInfo file_info(path);
 	if (!file_info.exists()) {
 		throw IOCore::Exception(
-		    fmt::format("File not found: {}", path.toStdString())
-		);
+		    fmt::format("File not found: {}", path.toStdString()));
 	}
 
 	QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
@@ -57,7 +55,7 @@ void DocumentEditor::loadFile(const QString& path)
 	}
 
 	auto filename = file_info.baseName();
-	auto suffix = file_info.suffix();
+	auto suffix   = file_info.suffix();
 
 	if (suffix == "json") {
 		this->editor_widget = new JsonEditor(this, path);
@@ -68,9 +66,10 @@ void DocumentEditor::loadFile(const QString& path)
 
 	} else {
 		try {
-			throw IOCore::Exception(fmt::format(
-			    "Unsupported file type: {}", suffix.toStdString()
-			));
+			throw IOCore::Exception(
+			    fmt::format(
+			        "Unsupported file type: {}",
+			        suffix.toStdString()));
 		} catch (IOCore::Exception& e) {
 			auto dialog = ExceptionDialog::display(this, e);
 		}

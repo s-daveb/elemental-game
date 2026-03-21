@@ -17,9 +17,10 @@
 namespace elemental {
 
 Entity::Entity(
-    const std::string& type, const std::vector<int>& position,
-    const std::vector<int>& size, const std::string& layer
-)
+    const std::string&      type,
+    const std::vector<int>& position,
+    const std::vector<int>& size,
+    const std::string&      layer)
     : position(position), size(size), layer(layer)
 {
 }
@@ -27,8 +28,6 @@ Entity::Entity(
 Entity::~Entity() = default;
 
 void Entity::loadBehavior(const std::string& script)
-{
-	throw IOCore::NotImplementedException();
-}
+{ throw IOCore::NotImplementedException(); }
 
-} // namespace elemental
+}  // namespace elemental

@@ -9,29 +9,27 @@
 
 #pragma once
 
-#include <any>
-#include <functional>
-
 #include "INonCopyable.hpp"
 #include "Observable.hpp"
+
+#include <any>
+#include <functional>
 
 namespace elemental {
 
 enum class InputDevices : unsigned int;
 
-struct IEventSource
-    : public Observable
-    , private INonCopyable
+struct IEventSource : public Observable, private INonCopyable
 {
-	~IEventSource() override = default;
+	~IEventSource() override  = default;
 	virtual void pollEvents() = 0;
 	virtual void sendEvents() = 0;
 
-  protected:
+    protected:
 	explicit IEventSource(InputDevices device_flags) {}
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

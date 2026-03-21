@@ -11,15 +11,16 @@
 
 #include <QApplication>
 #include <QMessageBox>
+
 #include <typeinfo>
 
-class QwApplication : public QApplication {
+class QwApplication : public QApplication
+{
     public:
 	QwApplication(int argc, char* argv[]) : QApplication(argc, argv) {}
 
 	inline bool notify(QObject* receiver, QEvent* e) override
 	{
-
 		try {
 			return QApplication::notify(receiver, e);
 		} catch (std::exception& ex) {
@@ -34,8 +35,7 @@ class QwApplication : public QApplication {
 			    ex.what(),
 			    typeid(*e).name(),
 			    qPrintable(receiver->objectName()),
-			    typeid(*receiver).name()
-			);
+			    typeid(*receiver).name());
 		} catch (...) {
 			QMessageBox messageBox;
 			messageBox.setWindowTitle("Uncaught Exception");
@@ -44,11 +44,11 @@ class QwApplication : public QApplication {
 			messageBox.setText("Unknown Error");
 			messageBox.exec();
 			qFatal(
-			    "Error <unknown> sending event %s to object %s (%s)",
+			    "Error <unknown> sending event %s to object %s "
+			    "(%s)",
 			    typeid(*e).name(),
 			    qPrintable(receiver->objectName()),
-			    typeid(*receiver).name()
-			);
+			    typeid(*receiver).name());
 		}
 
 		return false;

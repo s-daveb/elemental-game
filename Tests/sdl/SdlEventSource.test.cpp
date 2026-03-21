@@ -7,16 +7,17 @@
  * obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "SdlEventSource.hpp"
-#include "IObserver.hpp"
-
 #include "test-utils/SdlHelpers.hpp"
 #include "test-utils/common.hpp"
-#include "types/rendering.hpp"
 
 #include "util/testing.hpp"
 
+#include "IObserver.hpp"
+#include "SdlEventSource.hpp"
+#include "types/rendering.hpp"
+
 #include <SDL.h>
+
 #include <random>
 
 namespace NS = elemental;
@@ -25,12 +26,10 @@ using NS::SdlEventSource;
 template<>
 class NS::debug::Inspector<SdlEventSource>
 {
-  public:
+    public:
 	static auto getEventQueue(SdlEventSource& other)
 	    -> std::queue<SDL_Event>&
-	{
-		return other.event_queue;
-	}
+	{ return other.event_queue; }
 };
 typedef NS::debug::Inspector<NS::SdlEventSource> Inspector;
 
@@ -39,11 +38,11 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	using namespace NS;
 	class EventRecorder : public IObserver
 	{
-	  public:
+	    public:
 		EventRecorder() : IObserver() {}
 
 		void recieveMessage(const Observable& sender,
-		                    std::any message) override
+		                    std::any          message) override
 		{
 			auto event = std::any_cast<SDL_Event&>(message);
 			received.push_back(event);
@@ -54,13 +53,12 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 	struct SdlEventSourceFixture : public SdlTestFixture
 	{
-
 		SdlEventSourceFixture()
-		    : SdlTestFixture()
-		    , test_object(Singleton::getReference<SdlEventSource>())
-		    , recorder()
-		    , event_queue_ref(Inspector::getEventQueue(test_object))
-		    , dev_rand()
+		    : SdlTestFixture(),
+		      test_object(Singleton::getReference<SdlEventSource>()),
+		      recorder(),
+		      event_queue_ref(Inspector::getEventQueue(test_object)),
+		      dev_rand()
 		{
 			/* Clear the event queue in between tests */
 			while (!event_queue_ref.empty()) {
@@ -69,8 +67,8 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		}
 
 		~SdlEventSourceFixture() override = default;
-		SdlEventSource& test_object;
-		EventRecorder recorder;
+		SdlEventSource&        test_object;
+		EventRecorder          recorder;
 		std::queue<SDL_Event>& event_queue_ref;
 
 		std::random_device dev_rand;
@@ -88,7 +86,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 		for (unsigned i = 0; i < rand_count; ++i) {
 			auto& input = test_input_list[i];
-			input = SdlEventSimulator::randomArrowKey();
+			input       = SdlEventSimulator::randomArrowKey();
 			event_queue_ref.push(input);
 		}
 
@@ -117,7 +115,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 
 		for (unsigned i = 0; i < rand_count; ++i) {
 			auto& input = test_input[i];
-			input = SdlEventSimulator::randomArrowKey();
+			input       = SdlEventSimulator::randomArrowKey();
 			event_queue_ref.push(input);
 		}
 
@@ -139,7 +137,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 		while (!event_queue.empty()) {
 			event_queue.pop();
 		}
-		
+
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			;

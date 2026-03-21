@@ -10,6 +10,7 @@
 #pragma once
 
 #include "IOCore/Exception.hpp"
+
 #include "sys/platform.hpp"
 
 #include <filesystem>
@@ -19,7 +20,7 @@ auto get_home() -> std::filesystem::path;
 auto get_app_config_root() -> std::filesystem::path;
 
 auto expand_path(const std::filesystem::path&) -> std::filesystem::path;
-} // namespace elemental::paths
+}  // namespace elemental::paths
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

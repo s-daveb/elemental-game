@@ -9,22 +9,23 @@
 
 #pragma once
 
-#include "types/rendering.hpp"
-
 #include "IOCore/util/serialization.hpp"
 #include "IOCore/util/toml.hpp"
+
+#include "types/rendering.hpp"
 
 #include <nlohmann/json.hpp>
 
 namespace elemental {
 
-struct GameSettings {
+struct GameSettings
+{
 	RendererSettings renderer_settings;
 
 	TOML_CLASS(GameSettings, renderer_settings);
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

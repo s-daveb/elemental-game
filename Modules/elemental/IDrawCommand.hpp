@@ -15,16 +15,17 @@
 namespace elemental {
 using IOCore::ErrorFlag;
 
-struct IDrawCommand {
-	virtual ~IDrawCommand() = default;
-	virtual auto rectangle() -> Rectangle& = 0;
+struct IDrawCommand
+{
+	virtual ~IDrawCommand()                            = default;
+	virtual auto rectangle() -> Rectangle&             = 0;
 	virtual auto imageData() -> std::shared_ptr<void>& = 0;
-	virtual auto draw() -> ErrorFlag = 0;
+	virtual auto draw() -> ErrorFlag                   = 0;
 
     protected:
 	IDrawCommand(Rectangle& rect, std::shared_ptr<void>& data) {}
 };
-}
+}  // namespace elemental
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
 

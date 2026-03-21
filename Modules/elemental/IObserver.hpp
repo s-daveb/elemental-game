@@ -9,6 +9,7 @@
 #pragma once
 
 #include "INonCopyable.hpp"
+
 #include <any>
 
 namespace elemental {
@@ -17,16 +18,17 @@ class Observable;
 
 class IObserver : INonCopyable
 {
-  public:
-	virtual void recieveMessage(const Observable& sender,
-	                            std::any message = std::any()) = 0;
+    public:
+	virtual void recieveMessage(
+	    const Observable& sender,
+	    std::any          message = std::any()) = 0;
 
 	virtual ~IObserver() = default;
 
-  protected:
+    protected:
 	IObserver() = default;
 };
 
-}
+}  // namespace elemental
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

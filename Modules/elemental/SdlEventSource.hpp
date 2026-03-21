@@ -9,31 +9,31 @@
 
 #pragma once
 
-#include "SDL_Memory.hpp"
-#include "Singleton.hpp"
+#include "util/testing.hpp"
 
 #include "IEventSource.hpp"
+#include "SDL_Memory.hpp"
+#include "Singleton.hpp"
 #include "types/input.hpp"
 
-#include "util/testing.hpp"
+#include <queue>
 
 #include <SDL.h>
 
 #include <memory>
 #include <mutex>
-#include <queue>
 
 namespace elemental {
 
-class SdlEventSource : public IEventSource {
+class SdlEventSource : public IEventSource
+{
 	TEST_INSPECTABLE(SdlEventSource);
 
     public:
 	friend class Singleton;
 
 	explicit SdlEventSource(
-	    InputDevices device_flags = InputDevices::Keyboard
-	);
+	    InputDevices device_flags = InputDevices::Keyboard);
 
 	~SdlEventSource() override = default;
 
@@ -41,11 +41,11 @@ class SdlEventSource : public IEventSource {
 	void sendEvents() override;
 
     protected:
-	std::queue<SDL_Event> event_queue;
+	std::queue<SDL_Event>      event_queue;
 	UniqueSdlPtr<SDL_Joystick> joydev_ptr;
 
 	std::mutex mutex;
 };
-} // namespace elemental
-  // clang-format off
+}  // namespace elemental
+   // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

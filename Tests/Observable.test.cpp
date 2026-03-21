@@ -7,17 +7,17 @@
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <any>
-#include <iostream>
-#include <list>
-#include <string>
+#include "test-utils/common.hpp"
 
 #include "INonCopyable.hpp"
 #include "IObserver.hpp"
 #include "Observable.hpp"
 
-#include "test-utils/common.hpp"
+#include <any>
 #include <fakeit.hpp>
+#include <iostream>
+#include <list>
+#include <string>
 
 using elemental::Observable;
 using fakeit::Mock;
@@ -27,21 +27,19 @@ BEGIN_TEST_SUITE("elemental::Observable")
 {
 	class ObservableSubject : public Observable
 	{
-	  public:
+	    public:
 		ObservableSubject() : Observable() {}
 
-		auto notify()  { this->notify_all(); }
+		auto notify() { this->notify_all(); }
 		auto getObserverCount() const -> const size_t
-		{
-			return observers.size();
-		}
+		{ return observers.size(); }
 	};
 
 	TEST("elemental::Observable::RegisterObserver works")
 	{
 		Mock<elemental::IObserver> observer_type1;
 		Mock<elemental::IObserver> observer_type2;
-		ObservableSubject subject;
+		ObservableSubject          subject;
 
 		elemental::IObserver& observer1 = observer_type1.get();
 		elemental::IObserver& observer2 = observer_type2.get();
@@ -56,7 +54,7 @@ BEGIN_TEST_SUITE("elemental::Observable")
 	{
 		Mock<elemental::IObserver> observer_type1;
 		Mock<elemental::IObserver> observer_type2;
-		ObservableSubject subject;
+		ObservableSubject          subject;
 
 		std::vector<std::string> buffer;
 

@@ -9,28 +9,28 @@
 
 #include "./Phong.hpp"
 
-#include "sys/paths.hpp"
-#include "types/rendering.hpp"
 #include "util/debug.hpp"
 
 #include "IOCore/Application.hpp"
 #include "IOCore/Exception.hpp"
 #include "IOCore/FileResource.hpp"
 #include "IOCore/types/errors.hpp"
-#include "IObserver.hpp"
-#include "IRenderer.hpp"
 
 #include "GameSettings.hpp"
+#include "IObserver.hpp"
+#include "IRenderer.hpp"
 #include "LoopRegulator.hpp"
 #include "MainMenu.hpp"
 #include "Observable.hpp"
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"
 #include "Singleton.hpp"
-
+#include "sys/paths.hpp"
+#include "types/rendering.hpp"
 #include "types/units.hpp"
 
 #include <SDL_events.h>
+
 #include <any>
 #include <chrono>
 #include <exception>
@@ -52,26 +52,19 @@ const GameSettings kDefaultSettings{ { { "Phong",
 /// \name Helper Functions
 /// \{
 void print_cycle_rate(
-    milliseconds& cycle_length, c::const_string label = "cycle_length"
-)
-{
-	DBG_PRINT(label << cycle_length.count() << "ms.");
-}
+    milliseconds&   cycle_length,
+    c::const_string label = "cycle_length")
+{ DBG_PRINT(label << cycle_length.count() << "ms."); }
 /// \}
 Phong::Phong(int argc, c::const_string args[], c::const_string env[])
-    : Application(argc, args, env)
-    , IObserver()
-    , running_threads()
-    , video_renderer(IRenderer::GetInstance<SdlRenderer>())
-    , event_emitter(Singleton::getReference<SdlEventSource>())
-    , settings_file(
-	  paths::get_app_config_root() / "phong" / "settings.toml",
-	  CreateDirs::Enabled
-      )
-    , settings()
-    , state_stack()
+    : Application(argc, args, env), IObserver(), running_threads(),
+      video_renderer(IRenderer::GetInstance<SdlRenderer>()),
+      event_emitter(Singleton::getReference<SdlEventSource>()),
+      settings_file(
+          paths::get_app_config_root() / "phong" / "settings.toml",
+          CreateDirs::Enabled),
+      settings(), state_stack()
 {
-
 	// Load settings -or- create default settings
 	try {
 		settings_file.read();
@@ -90,23 +83,19 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	this->state_stack.pushState(std::make_unique<MainMenu>());
 }
 Phong::~Phong()
-{
-	video_renderer.deactivate();
-}
+{ video_renderer.deactivate(); }
 
 auto Phong::run() -> int
 {
 	this->is_running = true;
 	try {
-
 		this->running_threads["simulation_thread"] =
-		    std::thread([this]() { this->simulation_thread_loop(); }
-		    );
+		    std::thread([this]() { this->simulation_thread_loop(); });
 
 		this->event_and_rendering_loop();
 
 		// threading clean-up: wait for all child threads to finish
-		for (auto& [key, values] : this->running_threads) {
+		for (auto& [key, values]: this->running_threads) {
 			values.join();
 		}
 
@@ -124,9 +113,7 @@ void Phong::recieveMessage(const Observable& sender, std::any message)
 	ASSERT(message.has_value());
 
 	auto event = std::any_cast<SDL_Event>(message);
-	if (event.type == SDL_QUIT) {
-		this->is_running = false;
-	}
+	if (event.type == SDL_QUIT) { this->is_running = false; }
 }
 
 void Phong::event_and_rendering_loop()

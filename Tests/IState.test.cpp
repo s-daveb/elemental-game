@@ -7,10 +7,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "test-utils/common.hpp"
+
 #include "elemental/IState.hpp"
 #include "elemental/Observable.hpp"
-
-#include "test-utils/common.hpp"
 
 using namespace elemental;
 using namespace fakeit;
@@ -19,30 +19,29 @@ using DrawCommandPtr = std::shared_ptr<IDrawCommand>;
 
 BEGIN_TEST_SUITE("IState")
 {
-	class TestState : public elemental::IState {
+	class TestState : public elemental::IState
+	{
 	    public:
-		void recieveMessage(
-		    const Observable& sender, std::any message
-		) override
+		void recieveMessage(const Observable& sender,
+		                    std::any          message) override
 		{
 		}
 
 		void step() override {}
 
 		auto getDrawCommands() -> std::list<DrawCommandPtr> override
-		{
-			return {};
-		}
+		{ return {}; }
 	};
-	struct TestFixture {
+	struct TestFixture
+	{
 		TestFixture()
-		    : fixture(this)
-		    , state_under_test(std::make_shared<TestState>())
+		    : fixture(this),
+		      state_under_test(std::make_shared<TestState>())
 		{
 		}
 		~TestFixture() {}
 
-		TestFixture* fixture;
+		TestFixture*            fixture;
 		std::shared_ptr<IState> state_under_test;
 	};
 
@@ -63,23 +62,21 @@ BEGIN_TEST_SUITE("IState")
 	TEST_WITH_FIXTURE(TestFixture, "recieveMessage() handles messages")
 	{
 		// Given
-		auto& state = fixture->state_under_test;
+		auto&    state = fixture->state_under_test;
 		std::any message;
 
 		Mock<Observable> mock_sender;
-		auto& sender = mock_sender.get();
+		auto&            sender = mock_sender.get();
 
-		REQUIRE_NOTHROW([&]() {
-			state->recieveMessage(sender, message);
-		}());
+		REQUIRE_NOTHROW(
+		    [&]() { state->recieveMessage(sender, message); }());
 	}
 
-	TEST_WITH_FIXTURE(
-	    TestFixture, "getDrawCommands() returns empty list by default"
-	)
+	TEST_WITH_FIXTURE(TestFixture,
+	                  "getDrawCommands() returns empty list by default")
 	{
-		auto& state = fixture->state_under_test;
-		auto commands = state->getDrawCommands();
+		auto& state    = fixture->state_under_test;
+		auto  commands = state->getDrawCommands();
 
 		REQUIRE(commands.empty());
 	}

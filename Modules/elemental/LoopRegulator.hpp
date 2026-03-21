@@ -9,12 +9,13 @@
 
 #pragma once
 
+#include "types/units.hpp"
+
 #include <SDL.h>
+
 #include <chrono>
 #include <ratio>
 #include <thread>
-
-#include "types/units.hpp"
 
 using namespace std::chrono;
 
@@ -22,7 +23,7 @@ namespace elemental {
 
 class LoopRegulator
 {
-  public:
+    public:
 	// Constructor with default desired framerate of 30 frames per second
 	LoopRegulator(uint32_t rate_per_second = 30_Hz);
 	virtual ~LoopRegulator();
@@ -38,7 +39,7 @@ class LoopRegulator
 	// Delay the loop to achieve the desired framerate
 	auto delay() -> milliseconds;
 #ifndef UNIT_TEST
-  protected:
+    protected:
 #endif
 	uint32_t desired_rate_per_second{ 0 };
 
@@ -48,6 +49,6 @@ class LoopRegulator
 	milliseconds elapsed_ms;
 	milliseconds desired_delay_ms;
 };
-} // namespace elemental
-  // clang-format off
+}  // namespace elemental
+   // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :
