@@ -13,17 +13,20 @@
 namespace {
 using namespace elemental;
 
-class MockComponent : public Component {
+ /* This class cannot use FakeIt::Mock because the Component class is a
+  * template. At least, I current do not know of a way in which it can 
+  * be used */
+class TestComponent : public Component {
     public:
-	using Base = Component;
+    using Base = Component;
 
-	auto getTypeIndex() -> TypeInfo override
-	{
-		return typeid(MockComponent);
-	}
+    auto getTypeIndex() -> TypeInfo override
+    {
+        return typeid(TestComponent);
+    }
 
-	MockComponent(ComponentFactory& owner) : Component(owner) {}
-	~MockComponent() override = default;
+    TestComponent(ComponentFactory& owner) : Component(owner) {}
+    ~TestComponent() override = default;
 };
 
 } // namespace
@@ -41,7 +44,7 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory factory;
 
-		auto result = factory.createComponent<MockComponent>();
+		auto result = factory.createComponent<TestComponent>();
 		REQUIRE(result != nullptr);
 	}
 
@@ -50,11 +53,11 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 		ComponentFactory factory;
 
 		auto new_component =
-		    factory.createComponent<MockComponent>();
+		    factory.createComponent<TestComponent>();
 
-		REQUIRE_NOTHROW([&]() {
+		REQUIRE_NOTHROW([&]() -> void {
 			auto result =
-			    factory.getComponentVector<MockComponent>();
+			    factory.getComponentVector<TestComponent>();
 			REQUIRE(result.size() == 1);
 		}());
 	}
@@ -63,12 +66,13 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory factory;
 
-		REQUIRE_THROWS_AS(
-		    [&]() { factory.getComponent<MockComponent>(0x0); }(),
-		    std::out_of_range
+		REQUIRE_THROWS_AS([&]() -> void {
+			    factory.getComponent<TestComponent>(0x0);
+			}(),
+			std::out_of_range
 		);
 	}
 }
 
 // clang-format off
-// vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+// vim: set textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
