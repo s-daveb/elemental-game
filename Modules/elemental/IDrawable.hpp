@@ -13,7 +13,6 @@
 #include "IOCore/types/errors.hpp"
 
 #include "IRenderer.hpp"
-
 #include "types.hpp"
 #include "types/rendering.hpp"
 
@@ -26,7 +25,8 @@ using IOCore::ErrorFlag;
 class IRenderer;
 
 /// @todo move this to its own file
-struct IDrawable {
+struct IDrawable
+{
 	virtual ~IDrawable() {};
 
 	virtual auto draw(const Rectangle& location) -> ErrorFlag = 0;
@@ -35,7 +35,7 @@ struct IDrawable {
 	IDrawable(IRenderer& renderer) {}
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

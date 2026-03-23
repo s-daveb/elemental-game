@@ -27,7 +27,8 @@ class QJsonModel;
 class QFileInfo;
 
 namespace ResourceEditor {
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
 	// NOLINTNEXTLINE
 	Q_OBJECT
 
@@ -49,15 +50,15 @@ class MainWindow : public QMainWindow {
     protected:
 	void showEvent(QShowEvent*) override;
 
-	void readDirectory(const QString& directory = "");
+	void           readDirectory(const QString& directory = "");
 	QMdiSubWindow* loadFile(QFileInfo& fileInfo);
 
 	QString current_directory;
 
-	Ptr<Ui::MainWindow> ui;
+	Ptr<Ui::MainWindow>   ui;
 	Ptr<QFileSystemModel> filesystem_model;
 };
-}
+}  // namespace ResourceEditor
 
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

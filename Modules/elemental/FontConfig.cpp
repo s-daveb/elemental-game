@@ -11,16 +11,16 @@
 #include "FontConfig.hpp"
 
 #include "IOCore/Exception.hpp"
+
 #include <fmt/format.h>
 #include <fontconfig/fontconfig.h>
+
 #include <stdexcept>
 
 using elemental::FontConfig;
 
 FontConfig::~FontConfig()
-{
-	FcFini();
-}
+{ FcFini(); }
 
 auto FontConfig::getInstance() -> FontConfig&
 {
@@ -40,24 +40,21 @@ auto FontConfig::getFont(const std::string& font_name) -> std::string
 
 	// Error check the font config pattern to make sure it exists
 	FcDefaultSubstitute(pattern);
-	FcResult result;
+	FcResult   result;
 	FcPattern* match = FcFontMatch(config, pattern, &result);
 	ASSERT_MSG(
-	    match, fmt::format("Font {} does not exist", font_name).c_str()
-	);
+	    match, fmt::format("Font {} does not exist", font_name).c_str());
 	FcPattern* matched_font = FcFontMatch(config, pattern, &result);
 	ASSERT_MSG(
 	    matched_font,
-	    fmt::format("No matching font found for: {}", font_name).c_str()
-	);
+	    fmt::format("No matching font found for: {}", font_name).c_str());
 
 	FcChar8* font_path = nullptr;
 	if (FcPatternGetString(matched_font, FC_FILE, 0, &font_path) !=
 	    FcResultMatch) {
-		FcPatternDestroy(matched_font); // Free the matched pattern
+		FcPatternDestroy(matched_font);  // Free the matched pattern
 		throw IOCore::Exception(
-		    "Failed to retrieve font path for: " + font_name
-		);
+		    "Failed to retrieve font path for: " + font_name);
 	}
 
 	std::string font_file_path(reinterpret_cast<const char*>(font_path));

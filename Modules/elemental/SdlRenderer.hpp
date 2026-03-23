@@ -9,14 +9,13 @@
 
 #pragma once
 
-#include <SDL.h>
+#include "util/testing.hpp"
 
 #include "IRenderer.hpp"
 #include "SDL_Memory.hpp"
-
 #include "types/rendering.hpp"
-#include "util/testing.hpp"
 
+#include <SDL.h>
 #include <SDL_rect.h>
 #include <SDL_render.h>
 #include <SDL_video.h>
@@ -28,7 +27,8 @@
 namespace elemental {
 class SdlRenderer;
 
-struct SdlRenderer : public IRenderer {
+struct SdlRenderer : public IRenderer
+{
 	TEST_INSPECTABLE(SdlRenderer);
 
 	friend class IRenderer;
@@ -51,9 +51,7 @@ struct SdlRenderer : public IRenderer {
 	template<typename T>
 	auto get() const -> T
 	{
-		static_assert(
-		    std::is_pointer_v<T>, "T must be a pointer type"
-		);
+		static_assert(std::is_pointer_v<T>, "T must be a pointer type");
 
 		using Type = std::remove_pointer_t<T>;
 
@@ -66,21 +64,19 @@ struct SdlRenderer : public IRenderer {
 		static_assert(
 		    (std::is_same_v<Type, SDL_Renderer> ||
 		     std::is_same_v<Type, SDL_Window>),
-		    "Invalid type"
-		);
+		    "Invalid type");
 	}
 
     protected:
 	bool is_initialized{ false };
 	SdlRenderer();
 
-	SdlPtr<SDL_Window> sdl_window_ptr;
+	SdlPtr<SDL_Window>   sdl_window_ptr;
 	SdlPtr<SDL_Renderer> sdl_renderer_ptr;
 };
 
 template<>
-inline auto IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other)
-    -> Rectangle
+inline auto IRenderer::toRectangle<SDL_Rect>(const SDL_Rect& other) -> Rectangle
 {
 	return { { static_cast<uint32_t>(other.x),
 		   static_cast<uint32_t>(other.y) },
@@ -96,7 +92,7 @@ inline auto IRenderer::fromRectangle<SDL_Rect>(const Rectangle& other)
 		 static_cast<int>(other.width),
 		 static_cast<int>(other.height) };
 }
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

@@ -7,10 +7,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/IStateMachine.hpp"
+#include "test-utils/common.hpp"
+
 #include "IOCore/types/errors.hpp"
 
-#include "test-utils/common.hpp"
+#include "elemental/IStateMachine.hpp"
 
 using namespace elemental;
 using namespace fakeit;
@@ -18,27 +19,29 @@ using namespace IOCore;
 
 BEGIN_TEST_SUITE("IStateMachine")
 {
-	class TestStateMachine : public IStateMachine {
+	class TestStateMachine : public IStateMachine
+	{
 	    public:
 		void step() override {}
 
 		auto draw() -> ErrorFlag override
 		{
-			return kSuccess; // Implement actual
-			                 // drawing logic as needed
+			return kSuccess;  // Implement actual
+			                  // drawing logic as needed
 		}
 	};
 
-	struct TestFixture {
+	struct TestFixture
+	{
 		TestFixture()
-		    : fixture(this)
-		    , state_under_test(std::make_shared<TestStateMachine>())
+		    : fixture(this),
+		      state_under_test(std::make_shared<TestStateMachine>())
 		{
 		}
 
 		~TestFixture() {}
 
-		TestFixture* fixture;
+		TestFixture*                   fixture;
 		std::shared_ptr<IStateMachine> state_under_test;
 	};
 
@@ -58,8 +61,8 @@ BEGIN_TEST_SUITE("IStateMachine")
 
 	FIXTURE_TEST("draw() returns success flag by default")
 	{
-		auto& state = fixture->state_under_test;
-		auto result = state->draw();
+		auto& state  = fixture->state_under_test;
+		auto  result = state->draw();
 
 		REQUIRE(result == kSuccess);
 	}

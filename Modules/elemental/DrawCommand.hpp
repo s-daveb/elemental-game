@@ -7,36 +7,34 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include <SDL_render.h>
-#include <exception>
-#include <memory>
-
 #include "IOCore/types/errors.hpp"
 
 #include "IDrawCommand.hpp"
 #include "IRenderer.hpp"
-
 #include "types/rendering.hpp"
+
+#include <SDL_render.h>
+
+#include <exception>
+#include <memory>
 
 namespace elemental {
 using namespace IOCore;
 
-struct DrawCommand : public IDrawCommand {
+struct DrawCommand : public IDrawCommand
+{
 	DrawCommand(
-	    IRenderer& renderer, Rectangle rect, std::shared_ptr<void> data
-	)
-	    : IDrawCommand(rect, data)
-	    , renderer(renderer)
-	    , texture(data)
-	    , rect(rect)
+	    IRenderer&            renderer,
+	    Rectangle             rect,
+	    std::shared_ptr<void> data)
+	    : IDrawCommand(rect, data), renderer(renderer), texture(data),
+	      rect(rect)
 	{
 	}
 
 	auto rectangle() -> Rectangle& override { return this->rect; }
 	auto imageData() -> std::shared_ptr<void>& override
-	{
-		return this->texture;
-	}
+	{ return this->texture; }
 
 	auto draw() -> ErrorFlag override
 	{
@@ -51,9 +49,9 @@ struct DrawCommand : public IDrawCommand {
 	IRenderer& renderer;
 
 	std::shared_ptr<void> texture;
-	Rectangle rect;
+	Rectangle             rect;
 };
 
-}
+}  // namespace elemental
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

@@ -9,24 +9,21 @@
 
 #include "MainMenu.hpp"
 
-#include "DrawCommand.hpp"
-#include "FontConfig.hpp"
-#include "IRenderer.hpp"
-#include "IState.hpp"
-#include "SdlRenderer.hpp"
-
-#include "IDrawCommand.hpp"
-
-#include "types/rendering.hpp"
 #include "util/debug.hpp"
 
 #include "IOCore/Exception.hpp"
 #include "IOCore/types/errors.hpp"
 
-#include <SDL.h>
+#include "DrawCommand.hpp"
+#include "FontConfig.hpp"
+#include "IDrawCommand.hpp"
+#include "IRenderer.hpp"
+#include "IState.hpp"
+#include "SdlRenderer.hpp"
+#include "types/rendering.hpp"
 
+#include <SDL.h>
 #include <fmt/core.h>
-#include <nonstd/span.hpp>
 
 #include <any>
 #include <cstddef>
@@ -35,23 +32,23 @@
 #include <exception>
 #include <list>
 #include <memory>
+#include <nonstd/span.hpp>
 #include <vector>
 
 using elemental::MainMenu;
 
-static auto font_color = SDL_Color{ 255, 255, 255 };
+static auto font_color          = SDL_Color{ 255, 255, 255 };
 static auto selected_font_color = SDL_Color{ 255, 0, 0 };
 
 MainMenu::MainMenu() : IState()
 {
 	static IRenderer& renderer = IRenderer::GetInstance<SdlRenderer>();
 
-	this->properties.screen_width = renderer.getWindowSize().width;
+	this->properties.screen_width  = renderer.getWindowSize().width;
 	this->properties.screen_height = renderer.getWindowSize().height;
 
 	SDL_GetKeyboardState(
-	    reinterpret_cast<int*>(&(properties.keyboard_size))
-	);
+	    reinterpret_cast<int*>(&(properties.keyboard_size)));
 	init_textures();
 }
 
@@ -87,20 +84,15 @@ auto MainMenu::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 
 		SDL_Rect sdl_rect = { 0, 0, 0, 0 };
 		SDL_QueryTexture(
-		    texture, nullptr, nullptr, &sdl_rect.w, &sdl_rect.h
-		);
+		    texture, nullptr, nullptr, &sdl_rect.w, &sdl_rect.h);
 
-		sdl_rect.x =
-		    (properties.screen_width / 2) - (sdl_rect.w / 2);
+		sdl_rect.x = (properties.screen_width / 2) - (sdl_rect.w / 2);
 		sdl_rect.y =
 		    ((properties.screen_height / 2) + (i * sdl_rect.h));
 
 		auto rect = renderer.toRectangle<SDL_Rect>(sdl_rect);
 		result.push_back(
-		    std::make_shared<DrawCommand>(
-			renderer, rect, sdl_texture
-		    )
-		);
+		    std::make_shared<DrawCommand>(renderer, rect, sdl_texture));
 	}
 	return result;
 }
@@ -110,18 +102,15 @@ void MainMenu::handle_events(InputEvent& event)
 	ASSERT(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP);
 
 	this->state.keystates = nonstd::span<const uint8_t>(
-	    SDL_GetKeyboardState(nullptr), properties.keyboard_size
-	);
+	    SDL_GetKeyboardState(nullptr), properties.keyboard_size);
 
 	// Check for Up Arrow key
 	if (this->state.keystates[SDL_SCANCODE_UP]) {
 		DBG_PRINT(
 		    fmt::format(
-			"Message received {} {}",
-			"UP",
-			this->selected_menu_item
-		    )
-		);
+		        "Message received {} {}",
+		        "UP",
+		        this->selected_menu_item));
 		if (this->selected_menu_item == 0) {
 			this->selected_menu_item = (menu_items.size() - 1);
 		} else {
@@ -132,11 +121,9 @@ void MainMenu::handle_events(InputEvent& event)
 	if (this->state.keystates[SDL_SCANCODE_DOWN]) {
 		DBG_PRINT(
 		    fmt::format(
-			"Message received {} {}",
-			"DOWN",
-			this->selected_menu_item
-		    )
-		);
+		        "Message received {} {}",
+		        "DOWN",
+		        this->selected_menu_item));
 		if (++this->selected_menu_item < menu_items.size()) {
 			;
 		} else {
@@ -146,15 +133,13 @@ void MainMenu::handle_events(InputEvent& event)
 	if (this->state.keystates[SDL_SCANCODE_RETURN]) {
 		DBG_PRINT(
 		    fmt::format(
-			"Message received {} {}",
-			"RETURN",
-			this->selected_menu_item
-		    )
-		);
+		        "Message received {} {}",
+		        "RETURN",
+		        this->selected_menu_item));
 
-		if (this->selected_menu_item == 2) { // index 2 = quit button
+		if (this->selected_menu_item == 2) {  // index 2 = quit button
 			SDL_Event* event = new SDL_Event();
-			event->type = SDL_QUIT;
+			event->type      = SDL_QUIT;
 			SDL_PushEvent(event);
 		}
 	}
@@ -165,15 +150,13 @@ void MainMenu::init_textures()
 	SdlRenderer& sdl_renderer = IRenderer::GetInstance<SdlRenderer>();
 
 	FontConfig& font_book = FontConfig::getInstance();
-	auto font_path = font_book.getFont("monospace");
+	auto        font_path = font_book.getFont("monospace");
 
 	font = TTF_OpenFont(font_path.c_str(), 24);
 
-	if (font == nullptr) {
-		throw IOCore::Exception("Failed to load font");
-	}
+	if (font == nullptr) { throw IOCore::Exception("Failed to load font"); }
 
-	for (auto& item : menu_items) {
+	for (auto& item: menu_items) {
 		// Unselected texture
 		auto surface =
 		    TTF_RenderText_Solid(font, item.c_str(), font_color);
@@ -181,8 +164,7 @@ void MainMenu::init_textures()
 			throw IOCore::Exception("Failed to render text");
 		}
 		auto texture = SDL_CreateTextureFromSurface(
-		    sdl_renderer.get<SDL_Renderer*>(), surface
-		);
+		    sdl_renderer.get<SDL_Renderer*>(), surface);
 		if (texture == nullptr) {
 			throw IOCore::Exception("Failed to create texture");
 		}
@@ -192,14 +174,12 @@ void MainMenu::init_textures()
 
 		// Selected texture
 		surface = TTF_RenderText_Solid(
-		    font, item.c_str(), selected_font_color
-		);
+		    font, item.c_str(), selected_font_color);
 		if (surface == nullptr) {
 			throw IOCore::Exception("Failed to render text");
 		}
 		texture = SDL_CreateTextureFromSurface(
-		    sdl_renderer.get<SDL_Renderer*>(), surface
-		);
+		    sdl_renderer.get<SDL_Renderer*>(), surface);
 		if (texture == nullptr) {
 			throw IOCore::Exception("Failed to create texture");
 		}

@@ -9,10 +9,11 @@
 
 #include "test-utils/common.hpp"
 
+#include "util/testing.hpp"
+
 #include "elemental/IState.hpp"
 #include "elemental/Observable.hpp"
 #include "elemental/StateStack.hpp"
-#include "util/testing.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -21,7 +22,8 @@ using namespace elemental;
 using namespace fakeit;
 
 template<>
-struct elemental::debug::Inspector<StateStack> {
+struct elemental::debug::Inspector<StateStack>
+{
 	Inspector(StateStack& ref) : stack(ref) {}
 
 	inline auto getStdStack() -> auto& { return stack.stack; }
@@ -30,16 +32,14 @@ struct elemental::debug::Inspector<StateStack> {
 
 BEGIN_TEST_SUITE("StateStack")
 {
-	struct MockState : public IState {
+	struct MockState : public IState
+	{
 		MockState(bool& flag) : IState(), triggered(flag) {}
 		~MockState() override = default;
 
-		void recieveMessage(
-		    const Observable& sender, std::any message
-		) override
-		{
-			this->triggered = true;
-		};
+		void recieveMessage(const Observable& sender,
+		                    std::any          message) override
+		{ this->triggered = true; };
 
 		void step() override { this->triggered = true; }
 		auto getDrawCommands()
@@ -51,17 +51,17 @@ BEGIN_TEST_SUITE("StateStack")
 		bool& triggered;
 	};
 
-	struct TestFixture : public Observable {
-		bool flag = false;
+	struct TestFixture : public Observable
+	{
+		bool                    flag = false;
 		std::unique_ptr<IState> state;
 
-		StateStack stack;
+		StateStack                        stack;
 		debug::Inspector<decltype(stack)> stack_inspector;
 
 		TestFixture()
-		    : Observable()
-		    , state(std::make_unique<MockState>(flag))
-		    , stack_inspector(stack)
+		    : Observable(), state(std::make_unique<MockState>(flag)),
+		      stack_inspector(stack)
 		{
 		}
 
@@ -93,11 +93,9 @@ BEGIN_TEST_SUITE("StateStack")
 		stack.step();
 		REQUIRE(triggered);
 	}
-	FIXTURE_TEST(
-	    "StateStack:receiveMessage passes notification to child"
-	)
+	FIXTURE_TEST("StateStack:receiveMessage passes notification to child")
 	{
-		bool triggered = false;
+		bool             triggered = false;
 		Mock<Observable> mock_observable;
 
 		std::unique_ptr<IState> state_ptr =

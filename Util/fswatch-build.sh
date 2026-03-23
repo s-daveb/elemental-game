@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)";
+SCRIPT_DIR="$(cd "$(dirname "$0")" || exit; pwd)";
 BASE_DIR=$(realpath "$SCRIPT_DIR/..")
 
 die() {
@@ -12,7 +12,7 @@ die() {
 	return 1
 }
 
-[[ "$(realpath .)" == "$BASE_DIR" ]] || die "Please run from project root."
+[ "$(realpath .)" -eq "$BASE_DIR" ] || die "Please run from project root."
 
 
 if [ -z "$FSWATCH_ENV_LOADED" ]; then

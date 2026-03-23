@@ -9,22 +9,21 @@
 
 #pragma once
 
-#include "FontConfig.hpp"
 #include "IOCore/types/errors.hpp"
-
-#include "IDrawCommand.hpp"
-#include "IState.hpp"
 
 #include "elemental/SDL_Memory.hpp"
 
+#include "FontConfig.hpp"
+#include "IDrawCommand.hpp"
+#include "IState.hpp"
 #include "nonstd/span.hpp"
 
 #include <SDL_render.h>
 #include <SDL_ttf.h>
-#include <cstddef>
-#include <cstdint>
 
 #include <any>
+#include <cstddef>
+#include <cstdint>
 #include <list>
 #include <memory>
 #include <span>
@@ -41,10 +40,11 @@ using IOCore::ErrorFlag;
 
 #define s(x) x
 
-class MainMenu : public IState {
-	using TextureDataPtr = SdlPtr<SDL_Texture>;
+class MainMenu : public IState
+{
+	using TextureDataPtr   = SdlPtr<SDL_Texture>;
 	using TextureDataStore = std::vector<TextureDataPtr>;
-	using InputEvent = SDL_Event;
+	using InputEvent       = SDL_Event;
 
     public:
 	MainMenu();
@@ -61,26 +61,26 @@ class MainMenu : public IState {
 	virtual void init_textures();
 
     private:
-	TTF_Font* font{ nullptr };
-	std::size_t selected_menu_item{ 0 };
-	std::vector<std::string> menu_items{ "Start Game",
-		                             "Settings",
-		                             "Exit" };
+	TTF_Font*                font{ nullptr };
+	std::size_t              selected_menu_item{ 0 };
+	std::vector<std::string> menu_items{ "Start Game", "Settings", "Exit" };
 
 	TextureDataStore unselected_textures;
 	TextureDataStore selected_textures;
 
-	struct {
+	struct
+	{
 		std::size_t keyboard_size;
 		std::size_t screen_width{ 0 };
 		std::size_t screen_height{ 0 };
 	} properties;
-	struct {
+	struct
+	{
 		nonstd::span<const uint8_t> keystates;
 	} state;
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

@@ -1,12 +1,14 @@
-#.clangd
+---
 CompileFlags:
-  Add: [-DCLANGD, -DVIM_LSP=1]
+  Add: [
+    -DCLANGD
+  ]
 
 Diagnostics:
   UnusedIncludes: Strict
   MissingIncludes: None
 
-#InlayHints:
+# InlayHints:
 #  BlockEnd: No
 #  Designators: Yes
 #  Enabled: Yes

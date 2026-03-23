@@ -8,13 +8,15 @@
  */
 
 #include "IOCore/sys/paths.hpp"
+
 #include "IOCore/Exception.hpp"
+
 #include "sys/platform.hpp"
 
 #include <cstdlib>
 
 #ifndef __WIN32__
-#include <unistd.h>
+#	include <unistd.h>
 #endif
 
 #include <algorithm>
@@ -39,20 +41,16 @@ auto get_app_config_root() -> fs::path
 	fs::path result;
 
 	switch (platform::kCurrentPlatform) {
-		case platform::kMACOS:
-			result = get_home() / "Library" / "Application Support";
-			break;
-		case platform::kUNIX:
-		case platform::kLINUX:
-		case platform::kFREEBSD:
-			result = get_home() / ".config";
-			break;
-		case platform::kWINDOWS:
-			result = fs::path(getenv("APPDATA")) / "Local";
-			break;
-		default:
-			throw IOCore::NotImplementedException();
-			break;
+	case platform::kMACOS:
+		result = get_home() / "Library" / "Application Support";
+		break;
+	case platform::kUNIX:
+	case platform::kLINUX:
+	case platform::kFREEBSD: result = get_home() / ".config"; break;
+	case platform::kWINDOWS:
+		result = fs::path(getenv("APPDATA")) / "Local";
+		break;
+	default: throw IOCore::NotImplementedException(); break;
 	}
 	return result;
 }
@@ -66,26 +64,29 @@ auto expand_path(const fs::path& location) -> fs::path
 		     path_iter != location.end();
 		     ++path_iter) {
 			std::string token(path_iter->string());
-			c::string env_val;
+			c::string   env_val;
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 			if (token == "~" || token == "$HOME") {
 				env_val = getenv("HOME");
-				result = result / (env_val ? std::string(env_val)
-				                           : std::string(""));
+				result =
+				    result / (env_val ? std::string(env_val)
+				                      : std::string(""));
 			} else if (token[0] == '$') {
 				// remove the $ from the varaible
-				token = token.substr(1, token.length());
+				token   = token.substr(1, token.length());
 				env_val = getenv(token.c_str());
-				result = result / (env_val ? std::string(env_val)
-				                           : std::string(""));
+				result =
+				    result / (env_val ? std::string(env_val)
+				                      : std::string(""));
 			} else {
 #elif defined(__WIN32__)
 			if (token[0] == '%' && token[token.length()] == '%') {
 				// Remove the % around the varaible
-				token = token.substr(1, token.length() - 1);
+				token   = token.substr(1, token.length() - 1);
 				env_val = getenv(token.c_str());
-				result = result / (env_val ? std::string(env_val)
-				                           : std::string(""));
+				result =
+				    result / (env_val ? std::string(env_val)
+				                      : std::string(""));
 
 			} else {
 #endif
@@ -99,7 +100,7 @@ auto expand_path(const fs::path& location) -> fs::path
 		throw IOCore::Exception(e);
 	}
 }
-} // namespace elemental::paths
+}  // namespace elemental::paths
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

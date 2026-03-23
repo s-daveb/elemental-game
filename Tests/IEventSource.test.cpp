@@ -8,17 +8,16 @@
  */
 
 #include "test-utils/common.hpp"
-#include "types/input.hpp"
 
 #include "IEventSource.hpp"
+#include "types/input.hpp"
 
 using elemental::IEventSource;
 using elemental::InputDevices;
 
-struct MockEventSource : public elemental::IEventSource {
-	explicit MockEventSource(
-	    InputDevices device_flags = InputDevices::None
-	)
+struct MockEventSource : public elemental::IEventSource
+{
+	explicit MockEventSource(InputDevices device_flags = InputDevices::None)
 	    : IEventSource(device_flags), device_flags(device_flags)
 	{
 	}

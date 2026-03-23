@@ -7,19 +7,20 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "test-utils/common.hpp"
+
 #include "IDrawable.hpp"
 #include "fakeit.hpp"
-#include "test-utils/common.hpp"
 
 using fakeit::Mock;
 
-class TestFixture {
-
+class TestFixture
+{
 	TestFixture() {}
 	virtual ~TestFixture() default;
 
 	Mock<IDrawable> mockDrawble;
-	IRenderer& renderer;
+	IRenderer&      renderer;
 
 	void SetUp() override
 	{
@@ -29,14 +30,12 @@ class TestFixture {
 
 	auto CreateDrawable() -> std::any { return mockDrawble.fake(); }
 };
-} // namespace elemental
+}  // namespace elemental
 
 TEST_WITH_FIXTURE(IDrawableTest, test_draw_success)
 {
 	WHEN(mockDrawable.draw(Rectangle{}))
-	{
-		fake().should(BeCalled()).andReturn(ErrorFlag::Success);
-	}
+	{ fake().should(BeCalled()).andReturn(ErrorFlag::Success); }
 
 	auto drawable = CreateDrawable();
 
@@ -50,9 +49,7 @@ TEST_WITH_FIXTURE(IDrawableTest, test_draw_success)
 TEST_WITH_FIXTURE(IDrawableTest, test_draw_failure)
 {
 	WHEN(mockDrawable.draw(Rectangle{}))
-	{
-		fake().should(BeCalled()).andReturn(ErrorFlag::Failure);
-	}
+	{ fake().should(BeCalled()).andReturn(ErrorFlag::Failure); }
 
 	auto drawable = CreateDrawable();
 

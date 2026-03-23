@@ -4,7 +4,6 @@ cmake_minimum_required(VERSION 3.26)
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
 include(DefaultConfig)
-
 include(BuildOptions)
 include(BuildProperties)
 
@@ -16,16 +15,18 @@ project(Elemental
     DESCRIPTION "A simple top-down strategy game"
 )
 
+git_setup_hooks(Util/hooks)
+
 include(CPM)
 
 set(${PROJECT_NAME}_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-OPTION(CI_BUILD
+option(CI_BUILD
     "Mark this as a CI/CD system build."
 )
 
 if(CI_BUILD)
-    ADD_COMPILE_DEFINITIONS(-DCI_BUILD=1)
+    add_compile_definitions(-DCI_BUILD=1)
 endif()
 
 # enable compile_commands.json generation for clangd
@@ -42,7 +43,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-CPMFindPackage(NAME span-lite
+cpmfindpackage(NAME span-lite
     GITHUB_REPOSITORY martinmoene/span-lite
     GIT_TAG v0.11.0
     OPTIONS
@@ -50,17 +51,17 @@ CPMFindPackage(NAME span-lite
         "SPAN_LITE_OPT_BUILD_EXAMPLES OFF"
 )
 
-FIND_PACKAGE(Fontconfig REQUIRED)
+find_package(Fontconfig REQUIRED)
 
 if(BUILD_TESTING)
 
-    CPMFindPackage(NAME Catch2
+    cpmfindpackage(NAME Catch2
         GITHUB_REPOSITORY catchorg/Catch2
         VERSION 3.6.0
         OPTIONS "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_BUILD_TESTING OFF"
     )
 
-    CPMFindPackage(NAME FakeIt
+    cpmfindpackage(NAME FakeIt
         GITHUB_REPOSITORY eranpeer/FakeIt
         GIT_TAG 2.4.1
         OPTIONS
@@ -87,12 +88,14 @@ if(BUILD_TESTING)
     endif()
 endif()
 
-CPMFindPackage(
+cpmfindpackage(
     NAME fmt
     URL https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.zip
-    URL_HASH SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
+    URL_HASH
+        SHA256=d368f9c39a33a3aef800f5be372ec1df1c12ad57ada1f60adc62f24c0e348469
 )
-FIND_PACKAGE(Qt6 COMPONENTS
+
+find_package(Qt6 COMPONENTS
     Core REQUIRED
     Widgets REQUIRED
     Gui REQUIRED
@@ -106,12 +109,12 @@ qt_standard_project_setup()
 set_artifact_dir(${CMAKE_BINARY_DIR}/out)
 
 # Initialize FetchContent
-INCLUDE(FetchContent)
-INCLUDE(CheckIncludeFile)
+include(FetchContent)
+include(CheckIncludeFile)
 
 # Initialize pkgconf
-FIND_PACKAGE(Threads)  # POSIX thread support
-FIND_PACKAGE(PkgConfig REQUIRED)
+find_package(Threads)  # POSIX thread support
+find_package(PkgConfig REQUIRED)
 
 # TODO: Switch this to CPM Package manager
 
@@ -139,7 +142,7 @@ set(SDL2_COMBINED_LINK_DEPS
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    ADD_COMPILE_DEFINITIONS(-DDEBUG=1)
+    add_compile_definitions(-DDEBUG=1)
 endif()
 
 # Add subdirectories
@@ -151,5 +154,6 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(Apps)
+
 
 # vim: ts=4 sw=4 et foldmethod=indent :

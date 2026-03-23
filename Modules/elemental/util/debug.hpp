@@ -12,12 +12,12 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef DEBUG // #region
-#include <iostream>
-#define DBG_PRINT(msg) std::cout << "[DBG]  " << msg << std::endl
+#ifdef DEBUG  // #region
+#	include <iostream>
+#	define DBG_PRINT(msg) std::cout << "[DBG]  " << msg << std::endl
 #else
-#define DBG_PRINT(msg) ;
-#endif // #endregion
+#	define DBG_PRINT(msg) ;
+#endif  // #endregion
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

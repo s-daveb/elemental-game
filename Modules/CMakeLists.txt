@@ -1,12 +1,12 @@
 
-SET(MODULES_EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/External)
+set(MODULES_EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/External)
 
-ADD_SUBDIRECTORY(${MODULES_EXTERNAL_DIR}/IOCore)
-ADD_SUBDIRECTORY(${MODULES_EXTERNAL_DIR}/QJsonModel)
+add_subdirectory(${MODULES_EXTERNAL_DIR}/IOCore EXCLUDE_FROM_ALL)
+add_subdirectory(${MODULES_EXTERNAL_DIR}/QJsonModel)
 
 # Add ${MODULES_EXTERNAL_DIR} modules to the C++ include search path
-INCLUDE_DIRECTORIES(${MODULES_EXTERNAL_DIR})
+include_directories(BEFORE SYSTEM${MODULES_EXTERNAL_DIR})
 
-ADD_SUBDIRECTORY(elemental)
-ADD_SUBDIRECTORY(EditorWidgets)
+add_subdirectory(elemental)
+add_subdirectory(EditorWidgets)
 

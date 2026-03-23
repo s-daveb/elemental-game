@@ -7,8 +7,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "../Modules/elemental/types/input.hpp"
 #include "test-utils/common.hpp"
+
+#include "../Modules/elemental/types/input.hpp"
 
 BEGIN_TEST_SUITE("input-types")
 {
@@ -17,57 +18,39 @@ BEGIN_TEST_SUITE("input-types")
 	TEST_CASE("types/input.hpp: Bitwise OR operator")
 	{
 		// Test combining multiple devices
-		REQUIRE(
-		    (InputDevices::Keyboard | InputDevices::Mouse) ==
-		    static_cast<elemental::InputDevices>(0x0011)
-		);
+		REQUIRE((InputDevices::Keyboard | InputDevices::Mouse) ==
+		        static_cast<elemental::InputDevices>(0x0011));
 
 		// Test combining any device with InputDevices::All should
 		// result in InputDevices::All
-		REQUIRE(
-		    (InputDevices::Keyboard | InputDevices::All) ==
-		    InputDevices::All
-		);
-		REQUIRE(
-		    (InputDevices::Mouse | InputDevices::All) ==
-		    InputDevices::All
-		);
-		REQUIRE(
-		    (InputDevices::Joystick | InputDevices::All) ==
-		    InputDevices::All
-		);
+		REQUIRE((InputDevices::Keyboard | InputDevices::All) ==
+		        InputDevices::All);
+		REQUIRE((InputDevices::Mouse | InputDevices::All) ==
+		        InputDevices::All);
+		REQUIRE((InputDevices::Joystick | InputDevices::All) ==
+		        InputDevices::All);
 
 		// Test InputDevices::Joystick and InputDevices::Mouse
 		// combination
-		REQUIRE(
-		    (InputDevices::Joystick | InputDevices::Mouse) ==
-		    static_cast<InputDevices>(0x0110)
-		);
+		REQUIRE((InputDevices::Joystick | InputDevices::Mouse) ==
+		        static_cast<InputDevices>(0x0110));
 	}
 
 	// Test cases for bitwise AND operator
 	TEST_CASE("types/input.hpp: Bitwise AND operator")
 	{
 		// Test combining multiple devices using AND
-		REQUIRE(
-		    (InputDevices::Keyboard & InputDevices::Mouse) ==
-		    InputDevices::None
-		);
+		REQUIRE((InputDevices::Keyboard & InputDevices::Mouse) ==
+		        InputDevices::None);
 
 		// Test InputDevices::All with a subset should return that
 		// subset
-		REQUIRE(
-		    (InputDevices::All & InputDevices::Keyboard) ==
-		    InputDevices::Keyboard
-		);
-		REQUIRE(
-		    (InputDevices::All & InputDevices::Mouse) ==
-		    InputDevices::Mouse
-		);
-		REQUIRE(
-		    (InputDevices::All & InputDevices::Joystick) ==
-		    InputDevices::Joystick
-		);
+		REQUIRE((InputDevices::All & InputDevices::Keyboard) ==
+		        InputDevices::Keyboard);
+		REQUIRE((InputDevices::All & InputDevices::Mouse) ==
+		        InputDevices::Mouse);
+		REQUIRE((InputDevices::All & InputDevices::Joystick) ==
+		        InputDevices::Joystick);
 	}
 }
 

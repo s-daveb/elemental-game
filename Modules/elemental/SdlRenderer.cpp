@@ -9,20 +9,19 @@
 
 #include "SdlRenderer.hpp"
 
-#include "types/input.hpp"
-#include "types/rendering.hpp"
 #include "util/debug.hpp"
 
-#include <IOCore/Exception.hpp>
+#include "types/input.hpp"
+#include "types/rendering.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-
 #include <fmt/core.h>
-#include <nlohmann/json.hpp>
 
+#include <IOCore/Exception.hpp>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <utility>
 
@@ -31,19 +30,17 @@ using namespace IOCore;
 
 namespace {
 std::stringstream error_buffer;
-} // namespace
+}  // namespace
 
-#define HANDLE_SDL_ERROR(what)                                              \
-	error_buffer.str("");                                               \
-	error_buffer << what << ", SDL Error:" << SDL_GetError()            \
-		     << std::flush;                                         \
+#define HANDLE_SDL_ERROR(what)                                   \
+	error_buffer.str("");                                    \
+	error_buffer << what << ", SDL Error:" << SDL_GetError() \
+	             << std::flush;                              \
 	throw IOCore::Exception(error_buffer.str());
 
 SdlRenderer::~SdlRenderer()
 {
-	if (this->is_initialized) {
-		this->deactivate();
-	}
+	if (this->is_initialized) { this->deactivate(); }
 }
 
 void SdlRenderer::init(RendererSettings& settings)
@@ -53,33 +50,28 @@ void SdlRenderer::init(RendererSettings& settings)
 	}
 	if (kError ==
 	    IMG_Init(
-		IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP
-	    )) {
+	        IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP)) {
 		HANDLE_SDL_ERROR(
 		    fmt::format(
-			"Could not initialize SDL_Image: {}", IMG_GetError()
-		    )
-			.c_str()
-		);
+		        "Could not initialize SDL_Image: {}", IMG_GetError())
+		        .c_str());
 	}
 	if (kError == TTF_Init()) {
 		HANDLE_SDL_ERROR(
 		    fmt::format(
-			"Could not initialize SDL_TTF: {}", TTF_GetError()
-		    )
-			.c_str()
-		);
+		        "Could not initialize SDL_TTF: {}", TTF_GetError())
+		        .c_str());
 	}
 	int window_xpos, window_ypos, window_width, window_height, res_width,
 	    res_height;
-	Uint32 sdl_flags = SDL_WINDOW_SHOWN;
+	Uint32      sdl_flags = SDL_WINDOW_SHOWN;
 	std::string window_title;
 
-	window_title = settings.window.title;
-	window_width = settings.window.size.width;
+	window_title  = settings.window.title;
+	window_width  = settings.window.size.width;
 	window_height = settings.window.size.height;
 
-	res_width = settings.resolution.width;
+	res_width  = settings.resolution.width;
 	res_height = settings.resolution.height;
 
 	if (settings.window.placement == WindowPlacement::Manual) {
@@ -99,23 +91,19 @@ void SdlRenderer::init(RendererSettings& settings)
 	    window_ypos,
 	    window_width,
 	    window_height,
-	    sdl_flags
-	);
+	    sdl_flags);
 	if (nullptr == this->sdl_window_ptr) {
 		HANDLE_SDL_ERROR("Could not create SDL_Window");
 	}
 
 	this->sdl_renderer_ptr = SDL_CreateRenderer(
-	    this->sdl_window_ptr, 0, SDL_RENDERER_ACCELERATED
-	);
+	    this->sdl_window_ptr, 0, SDL_RENDERER_ACCELERATED);
 	if (nullptr == this->sdl_renderer_ptr) {
 		HANDLE_SDL_ERROR("Could not initialize SDL_Renderer");
 	}
 
 	if (SDL_RenderSetLogicalSize(
-		this->sdl_renderer_ptr, res_width, res_height
-	    )) {
-
+	        this->sdl_renderer_ptr, res_width, res_height)) {
 		HANDLE_SDL_ERROR("Could not set SDL_Renderer LogicalSize");
 	}
 
@@ -125,9 +113,7 @@ void SdlRenderer::init(RendererSettings& settings)
 void SdlRenderer::deactivate()
 {
 	DBG_PRINT("SdlRenderer::Deactivate called!");
-	if (this->sdl_window_ptr != nullptr) {
-		this->sdl_window_ptr.reset();
-	}
+	if (this->sdl_window_ptr != nullptr) { this->sdl_window_ptr.reset(); }
 	if (this->sdl_renderer_ptr != nullptr) {
 		this->sdl_renderer_ptr.reset();
 	}
@@ -136,9 +122,7 @@ void SdlRenderer::deactivate()
 	this->is_initialized = false;
 }
 auto SdlRenderer::isInitialized() -> bool
-{
-	return this->is_initialized;
-};
+{ return this->is_initialized; };
 
 auto SdlRenderer::getResolution() -> Resolution
 {
@@ -148,13 +132,11 @@ auto SdlRenderer::getResolution() -> Resolution
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
 	if (kError == SDL_GetRendererOutputSize(
-			  this->sdl_renderer_ptr.get(), &width, &height
-		      )) {
+	                  this->sdl_renderer_ptr.get(), &width, &height)) {
 		HANDLE_SDL_ERROR("Could not get Renderer output size");
 	}
 
-	return { static_cast<uint32_t>(width),
-		 static_cast<uint32_t>(height) };
+	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
 auto SdlRenderer::getWindowSize() -> Area
@@ -170,8 +152,7 @@ auto SdlRenderer::getWindowSize() -> Area
 	ASSERT(width > 0);
 	ASSERT(height > 0);
 
-	return { static_cast<uint32_t>(width),
-		 static_cast<uint32_t>(height) };
+	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 }
 
 void SdlRenderer::clearScreen()
@@ -196,8 +177,8 @@ void SdlRenderer::flip()
 /*! \todo convert this to a private method, used internally to wrap SDL_Blit
  */
 void SdlRenderer::blit(
-    std::shared_ptr<void> image_data, const Rectangle& placement
-)
+    std::shared_ptr<void> image_data,
+    const Rectangle&      placement)
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 	ASSERT(image_data.get() != nullptr);
@@ -208,11 +189,10 @@ void SdlRenderer::blit(
 		auto position = fromRectangle<SDL_Rect>(placement);
 
 		if (kError == SDL_RenderCopy(
-				  this->sdl_renderer_ptr.get(),
-				  to_draw.get(),
-				  nullptr,
-				  &position
-			      )) {
+		                  this->sdl_renderer_ptr.get(),
+		                  to_draw.get(),
+		                  nullptr,
+		                  &position)) {
 			HANDLE_SDL_ERROR("SDL_RenderCopy failed.");
 		}
 	} catch (IOCore::Exception& thrown_exception) {

@@ -22,7 +22,9 @@
  */
 
 #include "ExceptionDialog.hpp"
+
 #include "IOCore/Exception.hpp"
+
 #include "ui_ExceptionDialog.h"
 
 #include <QDialog>

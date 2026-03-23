@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Refactored script to use clang-format command-set
+
+# Set the CLANG_FORMAT variable if not already set
+CLANG_FORMAT="${CLANG_FORMAT:-clang-format}"
+
+# Sanity-check clang-format
+if ! command -v "$CLANG_FORMAT" >/dev/null 2>&1; then
+  echo "pre-commit: '$CLANG_FORMAT' not found, skipping format check." >&2
+  echo "  Install it or set CLANG_FORMAT=/path/to/clang-format to suppress this." >&2
+  exit 1
+fi
+
+# Collect staged files matching our extensions
+EXTENSIONS="c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm"
+staged_files=$(git diff --cached --name-only --diff-filter=ACMR | \
+  grep -E "\.(${EXTENSIONS})$")
+[ -z "$staged_files" ] && exit 0
+
+# Format each file
+for file in $staged_files; do
+  [ -f "$file" ] || continue
+  "$CLANG_FORMAT" -i --assume-filename="$file" "$file"
+  git add "$file"
+done
+
+exit 0

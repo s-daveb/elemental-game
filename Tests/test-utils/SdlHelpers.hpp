@@ -14,28 +14,35 @@
 #include <SDL.h>
 
 #include <iostream>
-#include <sstream>
-#include <string>
-
 #include <memory>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 
 namespace elemental {
 
-struct SdlEventSimulator {
-	enum KeyDir { Up = 0, Right, Down, Left };
+struct SdlEventSimulator
+{
+	enum KeyDir
+	{
+		Up = 0,
+		Right,
+		Down,
+		Left
+	};
 
 	static inline auto eventFromScancode(SDL_Scancode scancode) -> SDL_Event
 	{
-		SDL_Event event{ .key = { .type = SDL_KEYDOWN,
-			                  .keysym = { .scancode = scancode } } };
+		SDL_Event event{ .key = {
+			             .type   = SDL_KEYDOWN,
+			             .keysym = { .scancode = scancode } } };
 		return event;
 	}
 
 	static inline auto specificArrowKey(KeyDir dir) -> SDL_Event
 	{
 		SDL_Event event = {};
-		event.type = SDL_KEYDOWN;
+		event.type      = SDL_KEYDOWN;
 
 		int keyboard_len = 0;
 
@@ -48,34 +55,34 @@ struct SdlEventSimulator {
 		    const_cast<Uint8*>(SDL_GetKeyboardState(&keyboard_len));
 
 		switch (dir) {
-			case Up:
-				event.key.keysym.scancode = SDL_SCANCODE_UP;
-				keyboard[SDL_SCANCODE_UP] = 1;
-				keyboard[SDL_SCANCODE_DOWN] = 0;
-				keyboard[SDL_SCANCODE_LEFT] = 0;
-				keyboard[SDL_SCANCODE_RIGHT] = 0;
-				break;
-			case Down:
-				event.key.keysym.scancode = SDL_SCANCODE_DOWN;
-				keyboard[SDL_SCANCODE_UP] = 0;
-				keyboard[SDL_SCANCODE_DOWN] = 1;
-				keyboard[SDL_SCANCODE_LEFT] = 0;
-				keyboard[SDL_SCANCODE_RIGHT] = 0;
-				break;
-			case Left:
-				event.key.keysym.scancode = SDL_SCANCODE_LEFT;
-				keyboard[SDL_SCANCODE_UP] = 0;
-				keyboard[SDL_SCANCODE_DOWN] = 0;
-				keyboard[SDL_SCANCODE_LEFT] = 1;
-				keyboard[SDL_SCANCODE_RIGHT] = 0;
-				break;
-			case Right:
-				event.key.keysym.scancode = SDL_SCANCODE_RIGHT;
-				keyboard[SDL_SCANCODE_UP] = 0;
-				keyboard[SDL_SCANCODE_DOWN] = 0;
-				keyboard[SDL_SCANCODE_LEFT] = 0;
-				keyboard[SDL_SCANCODE_RIGHT] = 1;
-				break;
+		case Up:
+			event.key.keysym.scancode    = SDL_SCANCODE_UP;
+			keyboard[SDL_SCANCODE_UP]    = 1;
+			keyboard[SDL_SCANCODE_DOWN]  = 0;
+			keyboard[SDL_SCANCODE_LEFT]  = 0;
+			keyboard[SDL_SCANCODE_RIGHT] = 0;
+			break;
+		case Down:
+			event.key.keysym.scancode    = SDL_SCANCODE_DOWN;
+			keyboard[SDL_SCANCODE_UP]    = 0;
+			keyboard[SDL_SCANCODE_DOWN]  = 1;
+			keyboard[SDL_SCANCODE_LEFT]  = 0;
+			keyboard[SDL_SCANCODE_RIGHT] = 0;
+			break;
+		case Left:
+			event.key.keysym.scancode    = SDL_SCANCODE_LEFT;
+			keyboard[SDL_SCANCODE_UP]    = 0;
+			keyboard[SDL_SCANCODE_DOWN]  = 0;
+			keyboard[SDL_SCANCODE_LEFT]  = 1;
+			keyboard[SDL_SCANCODE_RIGHT] = 0;
+			break;
+		case Right:
+			event.key.keysym.scancode    = SDL_SCANCODE_RIGHT;
+			keyboard[SDL_SCANCODE_UP]    = 0;
+			keyboard[SDL_SCANCODE_DOWN]  = 0;
+			keyboard[SDL_SCANCODE_LEFT]  = 0;
+			keyboard[SDL_SCANCODE_RIGHT] = 1;
+			break;
 		}
 
 		// wiki.libsdl.org: The event queue can actually be used as a
@@ -94,9 +101,10 @@ struct SdlEventSimulator {
 		auto value = static_cast<KeyDir>(::rand() % 4);
 		return specificArrowKey(value);
 	}
-}; // #endregion
+};  // #endregion
 
-struct SdlTestFixture {
+struct SdlTestFixture
+{
 	std::stringstream buffer;
 
 	SdlTestFixture() : buffer()
@@ -114,7 +122,7 @@ struct SdlTestFixture {
 	virtual ~SdlTestFixture() = default;
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

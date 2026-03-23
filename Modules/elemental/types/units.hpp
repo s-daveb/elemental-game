@@ -12,16 +12,12 @@
 namespace elemental {
 
 constexpr auto operator""_Hz(unsigned long long value) -> unsigned long long
-{
-	return value;
-}
+{ return value; }
 
 constexpr auto operator""_px(unsigned long long value) -> unsigned long long
-{
-	return value;
-}
+{ return value; }
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

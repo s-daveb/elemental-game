@@ -18,20 +18,20 @@
 //!\note
 //! Make sure to make your child class's Constructor "protected", and declare
 //! the parent class with this SINLGETON_INTERFACE as a friend class!
-#define SINGLETON_INTERFACE(TypeName)                                       \
-	template<typename T>                                                \
-	static auto GetInstance() -> T&                                     \
-	{                                                                   \
-		static_assert(                                              \
-		    std::is_base_of_v<TypeName, T>,                         \
-		    "T must be a derivative of " #TypeName                  \
-		);                                                          \
-		static T instance;                                          \
-		return instance;                                            \
+#define SINGLETON_INTERFACE(TypeName)                        \
+	template<typename T>                                 \
+	static auto GetInstance() -> T&                      \
+	{                                                    \
+		static_assert(                               \
+		    std::is_base_of_v<TypeName, T>,          \
+		    "T must be a derivative of " #TypeName); \
+		static T instance;                           \
+		return instance;                             \
 	}
 
 namespace elemental {
-struct Singleton {
+struct Singleton
+{
     public:
 	template<typename T_>
 	static auto getReference() -> T_&
@@ -42,12 +42,10 @@ struct Singleton {
 
 	template<typename T_>
 	static auto getPointer() -> T_*
-	{
-		return &Singleton::getReference<T_>();
-	}
+	{ return &Singleton::getReference<T_>(); }
 };
 
-} // namespace elemental
+}  // namespace elemental
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

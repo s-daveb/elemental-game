@@ -9,11 +9,11 @@
 
 #include "StateStack.hpp"
 
-#include "IState.hpp"
-#include "Observable.hpp"
-
 #include "IOCore/Exception.hpp"
 #include "IOCore/types/errors.hpp"
+
+#include "IState.hpp"
+#include "Observable.hpp"
 
 #include <any>
 #include <memory>
@@ -30,19 +30,13 @@ auto StateStack::step() -> void
 }
 
 void StateStack::pop()
-{
-	this->stack.pop();
-}
+{ this->stack.pop(); }
 
 auto StateStack::pushState(std::unique_ptr<IState>& state) -> void
-{
-	this->stack.push(std::move(state));
-}
+{ this->stack.push(std::move(state)); }
 
 auto StateStack::pushState(std::unique_ptr<IState>&& state) -> void
-{
-	this->stack.push(std::move(state));
-}
+{ this->stack.push(std::move(state)); }
 
 auto StateStack::recieveMessage(const Observable& sender, std::any message)
     -> void
@@ -56,7 +50,7 @@ auto StateStack::recieveMessage(const Observable& sender, std::any message)
 auto StateStack::draw() -> ErrorFlag
 {
 	auto return_value = kSuccess;
-	for (auto& drawable : this->stack.top()->getDrawCommands()) {
+	for (auto& drawable: this->stack.top()->getDrawCommands()) {
 		return_value &= drawable->draw();
 	}
 	return return_value;

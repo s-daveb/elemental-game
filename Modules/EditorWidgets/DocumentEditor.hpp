@@ -20,7 +20,8 @@ class DocumentEditor;
 
 class QMainWindow;
 
-class DocumentEditor : public QWidget {
+class DocumentEditor : public QWidget
+{
 	// NOLINTNEXTLINE
 	Q_OBJECT
 
@@ -29,9 +30,9 @@ class DocumentEditor : public QWidget {
 
     public:
 	DocumentEditor(
-	    QWidget* parent = nullptr, QMainWindow* mainWindow = nullptr,
-	    const QString& filepath = ""
-	);
+	    QWidget*       parent     = nullptr,
+	    QMainWindow*   mainWindow = nullptr,
+	    const QString& filepath   = "");
 	~DocumentEditor() override;
 
 	auto getFileInfo() -> const QFileInfo& { return this->file_info; }
@@ -49,18 +50,18 @@ class DocumentEditor : public QWidget {
 
 	void setupActions();
 
-	QAction* separator = nullptr;
-	QAction* action_save = nullptr;
+	QAction* separator      = nullptr;
+	QAction* action_save    = nullptr;
 	QAction* action_save_as = nullptr;
 
-	QWidget* editor_widget = nullptr;
-	QMainWindow* main_window = nullptr;
+	QWidget*     editor_widget = nullptr;
+	QMainWindow* main_window   = nullptr;
 
 	Ptr<Ui::DocumentEditor> ui;
 };
 
 #ifndef DOCUMENT_EDITOR_IMPL_HPP
-#include "DocumentEditor.impl.hpp"
+#	include "DocumentEditor.impl.hpp"
 #endif
 // clang-format off
 // vim: set foldmethod=marker foldmarker=#region,#endregion textwidth=80 ts=8 sts=0 sw=8  noexpandtab ft=cpp.doxygen :

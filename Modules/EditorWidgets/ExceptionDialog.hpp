@@ -24,6 +24,7 @@
 #pragma once
 
 #include "IOCore/Exception.hpp"
+
 #include "ui_ExceptionDialog.h"
 
 #include <QDialog>
@@ -33,28 +34,29 @@
 
 #include <memory>
 
-class ExceptionDialog : public QDialog {
+class ExceptionDialog : public QDialog
+{
 	// NOLINTNEXTLINE
 	Q_OBJECT
 
     public:
 	explicit ExceptionDialog(
-	    QWidget* parent = nullptr, QString problem = "Uncaught Exception"
-	)
+	    QWidget* parent  = nullptr,
+	    QString  problem = "Uncaught Exception")
 	{
 		this->ui.setupUi(this);
 		this->ui.label->setText(problem);
 	}
 
-	ExceptionDialog(const ExceptionDialog&) = delete;
+	ExceptionDialog(const ExceptionDialog&)            = delete;
 	ExceptionDialog& operator=(const ExceptionDialog&) = delete;
 
 	~ExceptionDialog() override = default;
 
 	static std::shared_ptr<ExceptionDialog> display(
-	    QWidget* parent, const IOCore::Exception& exception,
-	    bool killProgram = false
-	)
+	    QWidget*                 parent,
+	    const IOCore::Exception& exception,
+	    bool                     killProgram = false)
 	{
 		auto instance = std::make_shared<ExceptionDialog>(parent);
 		if (parent && killProgram) {
@@ -62,21 +64,18 @@ class ExceptionDialog : public QDialog {
 			    instance.get(),
 			    &QDialog::finished,
 			    parent,
-			    &QWidget::close
-			);
+			    &QWidget::close);
 		}
 
 		instance->setModal(true);
 		instance->displayException(exception);
-		instance->exec(); // Use exec() to make it modal immediately
+		instance->exec();  // Use exec() to make it modal immediately
 		return instance;
 	}
 
     protected:
 	void displayException(const IOCore::Exception& exception)
-	{
-		this->ui.textDisplay->setText(exception.what());
-	}
+	{ this->ui.textDisplay->setText(exception.what()); }
 
     private:
 	Ui::ExceptionDialog ui;

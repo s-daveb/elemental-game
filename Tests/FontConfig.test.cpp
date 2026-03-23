@@ -7,8 +7,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "elemental/FontConfig.hpp"
 #include "test-utils/common.hpp"
+
+#include "elemental/FontConfig.hpp"
 
 BEGIN_TEST_SUITE("FontConfig")
 {
@@ -16,12 +17,13 @@ BEGIN_TEST_SUITE("FontConfig")
 
 	TEST_CASE("getInstance")
 	{
-		auto& instance = FontConfig::getInstance();
+		auto& instance        = FontConfig::getInstance();
 		auto& second_instance = FontConfig::getInstance();
 		REQUIRE(&instance == &second_instance);
 	}
 
-	struct TestFixture {
+	struct TestFixture
+	{
 		TestFixture() : test_subject{ FontConfig::getInstance() } {}
 
 		FontConfig& test_subject;
@@ -30,9 +32,7 @@ BEGIN_TEST_SUITE("FontConfig")
 	/// \TODO figure out why this isnt working in FreeBSD and Linux!
 #if defined(CI_BUILD) && !(defined(__FreeBSD__) || (defined(__linux__)))
 	FIXTURE_TEST("getFont")
-	{
-		REQUIRE(test_subject.getFont("") != "");
-	}
+	{ REQUIRE(test_subject.getFont("") != ""); }
 #endif
 }
 

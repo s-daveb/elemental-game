@@ -9,8 +9,9 @@
 
 #pragma once
 
-#include "Component.hpp"
 #include "IOCore/Exception.hpp"
+
+#include "Component.hpp"
 
 #include <memory>
 #include <typeindex>
@@ -18,11 +19,12 @@
 #include <vector>
 
 namespace elemental {
-struct ComponentFactory {
-	using TypeInfo = Component::TypeInfo;
-	using ComponentPtr = std::shared_ptr<Component>;
+struct ComponentFactory
+{
+	using TypeInfo        = Component::TypeInfo;
+	using ComponentPtr    = std::shared_ptr<Component>;
 	using ComponentVector = std::vector<std::shared_ptr<Component>>;
-	using ComponentPool = std::unordered_map<TypeInfo, ComponentVector>;
+	using ComponentPool   = std::unordered_map<TypeInfo, ComponentVector>;
 
 	virtual ~ComponentFactory();
 
@@ -39,10 +41,10 @@ struct ComponentFactory {
     private:
 	ComponentPool component_pool;
 };
-} // namespace elemental
+}  // namespace elemental
 
 #define COMP_FACTORY_DECL
 #include "ComponentFactory.impl.hpp"
 #undef COMP_FACTORY_DECL
-  // clang-format off
+   // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8 foldlevel=99 noexpandtab ft=cpp.doxygen :

@@ -1,41 +1,115 @@
 ---
 BasedOnStyle: Mozilla
-Language: Cpp
-
-IndentWidth: 8
-UseTab: AlignWithSpaces
-ColumnLimit: 77
-AccessModifierOffset: -4
-BinPackParameters: true
+AccessModifierOffset: '-4'
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveMacros: 'true'
+AlignConsecutiveAssignments: 'true'
+AlignConsecutiveDeclarations: 'true'
+AlignEscapedNewlines: Left
+AlignOperands: 'true'
+AlignTrailingComments: 'true'
+AllowAllArgumentsOnNextLine: 'true'
+AllowAllConstructorInitializersOnNextLine: 'true'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Always
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: 'false'
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
-PenaltyReturnTypeOnItsOwnLine: 50
-ContinuationIndentWidth: 4
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth: 4
-AllowAllArgumentsOnNextLine: true
-AlignAfterOpenBracket: BlockIndent
+AlwaysBreakBeforeMultilineStrings: 'false'
+AlwaysBreakTemplateDeclarations: 'Yes'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakBeforeBraces: Mozilla
+BreakBeforeTernaryOperators: 'true'
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+BreakStringLiterals: 'true'
+ColumnLimit: '80'
+CompactNamespaces: 'true'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
+ConstructorInitializerIndentWidth: '4'
+ContinuationIndentWidth: '4'
+Cpp11BracedListStyle: 'false'
+DerivePointerAlignment: 'true'
+FixNamespaceComments: 'true'
+IncludeBlocks: Regroup
+IncludeCategories:
+  # [1] Test utilities
+  - Regex: '^"test-utils/'
+    Priority: 1
+    SortPriority: 1
 
-BreakBeforeBraces:  WebKit
-#BraceWrapping:
-#  AfterCaseLabel:  false
-#  AfterClass:      true
-#  AfterControlStatement:  MultiLine
-#  AfterEnum:       false
-#  AfterFunction:   true
-#  AfterNamespace:  false
-#  AfterObjCDeclaration: false
-#  AfterStruct:     true
-#  AfterUnion:      true
-#  AfterExternBlock: false
-#
-#  BeforeCatch:     true
-#  BeforeElse:      false
-#  BeforeLambdaBody: false
-#  BeforeWhile:     false
-#  IndentBraces:    false
-#  SplitEmptyFunction: true
-#  SplitEmptyRecord: false
-#  SplitEmptyNamespace: true
-#
----
+  # [2] Internal utilities — general-purpose project helpers
+  - Regex: '^"util/'
+    Priority: 5
+    SortPriority: 5
+
+  # [3] IOCore — I/O subsystem headers
+  - Regex: '^"IOCore/'
+    Priority: 10
+    SortPriority: 10
+
+  # [4] elemental — core engine/framework headers
+  - Regex: '^"elemental/'
+    Priority: 15
+    SortPriority: 15
+
+  # [5] Qt extensions — project-local Qt subclasses and wrappers (quoted)
+  - Regex: '^"Q'
+    Priority: 20
+    SortPriority: 20
+
+  # [6] Catch-all for any other quoted includes not matched above
+  - Regex: '^"'
+    Priority: 50
+    SortPriority: 50
+
+  # [7] Qt framework — angle-bracket Qt headers e.g. <QWidget>, <QApplication>
+  - Regex: '^<Q'
+    Priority: 80
+    SortPriority: 80
+
+  # [8] C system headers — anything with a .h extension e.g. <stdlib.h>
+  - Regex: '^<.*\.h>'
+    Priority: 90
+    SortPriority: 90
+
+  # [9] C++ STL — extensionless angle-bracket headers e.g. <vector>, <string>
+  - Regex: '^<.*>'
+    Priority: 99
+    SortPriority: 99
+IndentCaseLabels: 'false'
+IndentPPDirectives: AfterHash
+IndentWidth: '8'
+IndentWrappedFunctionNames: 'false'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+Language: Cpp
+MaxEmptyLinesToKeep: '1'
+NamespaceIndentation: Inner
+PointerAlignment: Left
+ReflowComments: 'true'
+SortIncludes: 'true'
+SpaceAfterCStyleCast: 'false'
+SpaceAfterLogicalNot: 'false'
+SpaceAfterTemplateKeyword: 'false'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeCpp11BracedList: 'false'
+SpaceBeforeCtorInitializerColon: 'true'
+SpaceBeforeInheritanceColon: 'true'
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: 'false'
+SpaceInEmptyParentheses: 'false'
+SpacesBeforeTrailingComments: '2'
+SpacesInAngles: 'false'
+SpacesInCStyleCastParentheses: 'false'
+SpacesInContainerLiterals: 'true'
+SpacesInParentheses: 'false'
+SpacesInSquareBrackets: 'false'
+Standard: Auto
+TabWidth: '8'
+UseTab: ForIndentation
+
+...

@@ -9,14 +9,15 @@
 
 #pragma once
 
+#include <fontconfig/fontconfig.h>
+
 #include <mutex>
 #include <string>
 
-#include <fontconfig/fontconfig.h>
-
 namespace elemental {
 
-class FontConfig {
+class FontConfig
+{
     public:
 	virtual ~FontConfig();
 
@@ -26,16 +27,16 @@ class FontConfig {
 	// Retrieve the font path by name (e.g., "monospace")
 	auto getFont(const std::string& font_name) -> std::string;
 
-	FontConfig(const FontConfig&) = delete;
+	FontConfig(const FontConfig&)                    = delete;
 	auto operator=(const FontConfig&) -> FontConfig& = delete;
 
     protected:
 	FontConfig();
 
-	FcConfig* config;
+	FcConfig*  config;
 	std::mutex access_mutex;
 };
-}
+}  // namespace elemental
 
 // clang-format off
 // vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

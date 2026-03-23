@@ -7,10 +7,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#include "test-utils/common.hpp"
+
 #include "elemental/IObserver.hpp"
 #include "elemental/Observable.hpp"
-
-#include "test-utils/common.hpp"
 
 #include <any>
 #include <fakeit.hpp>
@@ -19,35 +19,20 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 {
 	using namespace elemental;
 
-	class MockObservable : public Observable {
+	class MockObservable : public Observable
+	{
 	    public:
-		MockObservable()
-		{
-			using namespace fakeit;
-			// In the test build these methods are virtual so we
-			// can override them
-			When(Method(mock, registerObserver))
-			    .AlwaysDo([](elemental::Observable::ObserverRef
-			              ) {});
-			//			When(Method(mock,
-			// notify_all))
-			//    .AlwaysDo([](std::any) {});
-		}
-
-		fakeit::Mock<elemental::Observable> mock;
-		elemental::Observable& get() { return mock.get(); }
+		MockObservable() = default;
 	};
 
-	struct DummyObserver : public IObserver {
+	struct DummyObserver : public IObserver
+	{
 		friend class IObserver;
 		virtual ~DummyObserver() override = default;
 
-		void recieveMessage(
-		    const Observable& sender, std::any message = std::any()
-		) override
-		{
-			toggled = true;
-		}
+		void recieveMessage(const Observable& sender,
+		                    std::any message = std::any()) override
+		{ toggled = true; }
 
 		DummyObserver() : IObserver() {}
 		bool toggled = false;
@@ -62,13 +47,14 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 	{
 		// Create a concrete observable that uses the real
 		// implementation.
-		class TestObservable : public elemental::Observable {
+		class TestObservable : public elemental::Observable
+		{
 		    public:
 			using elemental::Observable::notify_all;
 		};
 
 		TestObservable observable;
-		DummyObserver dummy;
+		DummyObserver  dummy;
 		// Register the observer using std::ref to wrap it as a
 		// reference_wrapper.
 		REQUIRE(dummy.toggled == false);
@@ -83,5 +69,3 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 
 // clang-format off
 // vim: set textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
-// clang-format off
-// vim: set  textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :

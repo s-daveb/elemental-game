@@ -7,14 +7,14 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "LoopRegulator.hpp"
-#include "IOCore/Exception.hpp"
-#include "sys/platform.hpp"
-
 #include "test-utils/common.hpp"
 
-#include <catch2/matchers/catch_matchers_string.hpp>
+#include "IOCore/Exception.hpp"
 
+#include "LoopRegulator.hpp"
+#include "sys/platform.hpp"
+
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <chrono>
 #include <cmath>
 #include <random>
@@ -25,7 +25,8 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 	using namespace elemental;
 	namespace this_thread = std::this_thread;
 
-	struct TestFixture {
+	struct TestFixture
+	{
 		LoopRegulator test_object;
 	};
 	FIXTURE_TEST("elemental::LoopRegulator - Initialization")
@@ -34,61 +35,50 @@ BEGIN_TEST_SUITE("elemental::LoopRegulator")
 		CHECK(test_object.start_time == steady_clock::time_point());
 	}
 	FIXTURE_TEST(
-	    "elemental::LoopRegulator - Time calculations work properly"
-	)
+	    "elemental::LoopRegulator - Time calculations work properly")
 	{
 		test_object.startUpdate();
 		this_thread::sleep_for(std::chrono::seconds(1));
-		auto timestamp1 = test_object.start_time;
+		auto timestamp1   = test_object.start_time;
 		auto elapsed_time = test_object.endUpdate();
-		auto timestamp2 = test_object.end_time;
+		auto timestamp2   = test_object.end_time;
 		CHECK(timestamp1 < timestamp2);
 		REQUIRE(test_object.elapsed_ms.count() > 900);
 	};
 
-	FIXTURE_TEST(
-	    "elemental::LoopRegulator::Delay works within tolerance"
-	)
+	FIXTURE_TEST("elemental::LoopRegulator::Delay works within tolerance")
 	{
 		const auto kAcceptableMarginErrorMs = 10ms;
 
 		// Seed the random number generator with the current
 		// time
-		unsigned seed = std::chrono::system_clock::now()
-		                    .time_since_epoch()
-		                    .count();
+		unsigned seed =
+		    std::chrono::system_clock::now().time_since_epoch().count();
 		std::default_random_engine gen(seed);
 
 		// Define the distribution for random delays (0 to
 		// 1000/60 milliseconds)
 		std::uniform_int_distribution<int> delay_generator(
-		    0, static_cast<int>(1000.0 / 60)
-		);
+		    0, static_cast<int>(1000.0 / 60));
 
 		for (unsigned i = 0; i < 100; ++i) {
-			auto random_delay =
-			    milliseconds(delay_generator(gen));
+			auto random_delay = milliseconds(delay_generator(gen));
 
 			test_object.startUpdate();
 			this_thread::sleep_for(random_delay);
-			auto time_delayed_ms = test_object.delay();
-			auto& expected_delay = test_object.desired_delay_ms;
+			auto  time_delayed_ms = test_object.delay();
+			auto& expected_delay  = test_object.desired_delay_ms;
 
 			auto margin_error_ms =
-			    (expected_delay -
-			     (time_delayed_ms + random_delay));
+			    (expected_delay - (time_delayed_ms + random_delay));
 
 			if (margin_error_ms.count() < 0) {
-				CHECK(
-				    margin_error_ms >
-				    (-1 * kAcceptableMarginErrorMs)
-				);
+				CHECK(margin_error_ms >
+				      (-1 * kAcceptableMarginErrorMs));
 
 			} else {
-				CHECK(
-				    margin_error_ms <=
-				    kAcceptableMarginErrorMs
-				);
+				CHECK(margin_error_ms <=
+				      kAcceptableMarginErrorMs);
 			}
 		}
 	}
