@@ -162,3 +162,5 @@ CLAUDE.md
 .claude/*
 Memory/*
 .clinerules
+.agents/
+AGENTS.md
