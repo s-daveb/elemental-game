@@ -1,9 +1,4 @@
 ---
-CompileFlags:
-  Add: [
-    -DCLANGD
-  ]
-
 Diagnostics:
   UnusedIncludes: Strict
   MissingIncludes: None
@@ -15,5 +10,17 @@ Diagnostics:
 #  ParameterNames: Yes
 #  DeducedTypes: Yes
 #  TypeNameLimit: 24
+
+# ---
+# If:
+#   PathMatch: .*\.hpp
+# CompileFlags:
+#   Add: [
+#     -xc++,
+#     -std=c++20,
+#     -fsyntax-only,
+#     --sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+#   ]
+#   Compiler: clang++
 
 # vim: set ft=yaml ts=2 sts=2 et sw=2 :
