@@ -10,6 +10,7 @@
 #include "PongScene.hpp"
 
 #include "CircleViewComponent.hpp"
+#include "ComponentPool.hpp"
 #include "Observable.hpp"
 #include "RectangleViewComponent.hpp"
 
@@ -21,20 +22,41 @@ namespace elemental {
 
 PongScene::PongScene(const SceneConfig& config) : GameScene(config)
 {
+	auto& pool = ComponentPool::getInstance();
+	pool.registerFactory<BallPositionComponent>(ball_pos_factory_);
+	pool.registerFactory<PaddlePositionComponent>(paddle_pos_factory_);
+
+	constexpr float half_paddle = static_cast<float>(kPaddleHeight_) / 2.0f;
+
+	ball_pos_ = &ball_pos_factory_.create(
+	    static_cast<float>(court_width_) / 2.0f,
+	    static_cast<float>(court_height_) / 2.0f,
+	    kBallSpeed,
+	    kBallSpeed * 0.6f,
+	    static_cast<float>(kBallRadius_));
+
+	player_pos_ = &paddle_pos_factory_.create(
+	    static_cast<float>(court_height_) / 2.0f - half_paddle,
+	    kPaddleSpeed);
+
+	enemy_pos_ = &paddle_pos_factory_.create(
+	    static_cast<float>(court_height_) / 2.0f - half_paddle,
+	    kEnemySpeed);
+
 	auto& ball_entity   = getEntity(kBallId);
 	auto& player_entity = getEntity(kPlayerId);
 	auto& enemy_entity  = getEntity(kEnemyId);
 
 	if (!ball_entity.views.empty()) {
-		ball_ =
+		ball_view_ =
 		    dynamic_cast<CircleViewComponent*>(ball_entity.views[0]);
 	}
 	if (!player_entity.views.empty()) {
-		player_paddle_ = dynamic_cast<RectangleViewComponent*>(
+		player_view_ = dynamic_cast<RectangleViewComponent*>(
 		    player_entity.views[0]);
 	}
 	if (!enemy_entity.views.empty()) {
-		enemy_paddle_ = dynamic_cast<RectangleViewComponent*>(
+		enemy_view_ = dynamic_cast<RectangleViewComponent*>(
 		    enemy_entity.views[0]);
 	}
 
@@ -42,12 +64,12 @@ PongScene::PongScene(const SceneConfig& config) : GameScene(config)
 	court_width_    = resolution.width;
 	court_height_   = resolution.height;
 	enemy_x_        = static_cast<float>(court_width_) - 36.0f;
-	ball_state_.x   = static_cast<float>(court_width_) / 2.0f;
-	ball_state_.y   = static_cast<float>(court_height_) / 2.0f;
-	player_.y       = static_cast<float>(court_height_) / 2.0f -
-	                  static_cast<float>(kPaddleHeight_) / 2.0f;
-	enemy_.y        = static_cast<float>(court_height_) / 2.0f -
-	                  static_cast<float>(kPaddleHeight_) / 2.0f;
+	ball_pos_->setX(static_cast<float>(court_width_) / 2.0f);
+	ball_pos_->setY(static_cast<float>(court_height_) / 2.0f);
+	player_pos_->setY(
+	    static_cast<float>(court_height_) / 2.0f - half_paddle);
+	enemy_pos_->setY(
+	    static_cast<float>(court_height_) / 2.0f - half_paddle);
 }
 
 auto PongScene::onUpdate() -> void
@@ -68,50 +90,50 @@ auto PongScene::onMessage(const Observable& sender, std::any message) -> void
 	auto event = std::any_cast<SDL_Event>(message);
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
-			player_.up_pressed = true;
+			player_pos_->setUpPressed(true);
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
-			player_.down_pressed = true;
+			player_pos_->setDownPressed(true);
 		}
 	}
 	if (event.type == SDL_KEYUP) {
 		if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
-			player_.up_pressed = false;
+			player_pos_->setUpPressed(false);
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
-			player_.down_pressed = false;
+			player_pos_->setDownPressed(false);
 		}
 	}
 }
 
 auto PongScene::resetBall() -> void
 {
-	ball_state_.x  = static_cast<float>(court_width_) / 2.0f;
-	ball_state_.y  = static_cast<float>(court_height_) / 2.0f;
-	ball_state_.vx = kBallSpeed;
-	ball_state_.vy = kBallSpeed * 0.6f;
+	ball_pos_->setX(static_cast<float>(court_width_) / 2.0f);
+	ball_pos_->setY(static_cast<float>(court_height_) / 2.0f);
+	ball_pos_->setVx(kBallSpeed);
+	ball_pos_->setVy(kBallSpeed * 0.6f);
 }
 
 auto PongScene::updateBall(float dt) -> void
 {
-	ball_state_.x += ball_state_.vx * dt;
-	ball_state_.y += ball_state_.vy * dt;
+	ball_pos_->setX(ball_pos_->x() + ball_pos_->vx() * dt);
+	ball_pos_->setY(ball_pos_->y() + ball_pos_->vy() * dt);
 
-	auto half_h = static_cast<float>(kBallRadius_);
-	if (ball_state_.y - half_h <= 0.0f) {
-		ball_state_.vy = std::abs(ball_state_.vy);
-		ball_state_.y  = half_h;
+	auto half_r = ball_pos_->radius();
+	if (ball_pos_->y() - half_r <= 0.0f) {
+		ball_pos_->setVy(std::abs(ball_pos_->vy()));
+		ball_pos_->setY(half_r);
 	}
-	if (ball_state_.y + half_h >= static_cast<float>(court_height_)) {
-		ball_state_.vy = -std::abs(ball_state_.vy);
-		ball_state_.y  = static_cast<float>(court_height_) - half_h;
+	if (ball_pos_->y() + half_r >= static_cast<float>(court_height_)) {
+		ball_pos_->setVy(-std::abs(ball_pos_->vy()));
+		ball_pos_->setY(static_cast<float>(court_height_) - half_r);
 	}
 
-	if (ball_state_.x <= 0.0f) {
+	if (ball_pos_->x() <= 0.0f) {
 		enemy_score_++;
 		resetBall();
 	}
-	if (ball_state_.x >= static_cast<float>(court_width_)) {
+	if (ball_pos_->x() >= static_cast<float>(court_width_)) {
 		player_score_++;
 		resetBall();
 	}
@@ -119,70 +141,82 @@ auto PongScene::updateBall(float dt) -> void
 
 auto PongScene::updatePlayer(float dt) -> void
 {
-	if (player_.up_pressed) { player_.y -= player_.speed * dt; }
-	if (player_.down_pressed) { player_.y += player_.speed * dt; }
+	if (player_pos_->upPressed()) {
+		player_pos_->setY(player_pos_->y() - player_pos_->speed() * dt);
+	}
+	if (player_pos_->downPressed()) {
+		player_pos_->setY(player_pos_->y() + player_pos_->speed() * dt);
+	}
 
-	if (player_.y < 0.0f) { player_.y = 0.0f; }
-	if (player_.y + static_cast<float>(kPaddleHeight_) >
+	if (player_pos_->y() < 0.0f) { player_pos_->setY(0.0f); }
+	if (player_pos_->y() + static_cast<float>(kPaddleHeight_) >
 	    static_cast<float>(court_height_)) {
-		player_.y = static_cast<float>(court_height_) -
-		            static_cast<float>(kPaddleHeight_);
+		player_pos_->setY(
+		    static_cast<float>(court_height_) -
+		    static_cast<float>(kPaddleHeight_));
 	}
 }
 
 auto PongScene::updateEnemy(float dt) -> void
 {
-	float center = enemy_.y + static_cast<float>(kPaddleHeight_) / 2.0f;
-	if (center < ball_state_.y) { enemy_.y += enemy_.speed * dt; }
-	if (center > ball_state_.y) { enemy_.y -= enemy_.speed * dt; }
+	float center =
+	    enemy_pos_->y() + static_cast<float>(kPaddleHeight_) / 2.0f;
+	if (center < ball_pos_->y()) {
+		enemy_pos_->setY(enemy_pos_->y() + enemy_pos_->speed() * dt);
+	}
+	if (center > ball_pos_->y()) {
+		enemy_pos_->setY(enemy_pos_->y() - enemy_pos_->speed() * dt);
+	}
 
-	if (enemy_.y < 0.0f) { enemy_.y = 0.0f; }
-	if (enemy_.y + static_cast<float>(kPaddleHeight_) >
+	if (enemy_pos_->y() < 0.0f) { enemy_pos_->setY(0.0f); }
+	if (enemy_pos_->y() + static_cast<float>(kPaddleHeight_) >
 	    static_cast<float>(court_height_)) {
-		enemy_.y = static_cast<float>(court_height_) -
-		           static_cast<float>(kPaddleHeight_);
+		enemy_pos_->setY(
+		    static_cast<float>(court_height_) -
+		    static_cast<float>(kPaddleHeight_));
 	}
 }
 
 auto PongScene::checkCollisions() -> void
 {
-	float bx = ball_state_.x;
-	float by = ball_state_.y;
+	float bx = ball_pos_->x();
+	float by = ball_pos_->y();
 
-	constexpr float kPlayerX   = kPlayerX_;
-	float           player_top = player_.y;
-	float player_bottom = player_.y + static_cast<float>(kPaddleHeight_);
+	float player_top = player_pos_->y();
+	float player_bottom =
+	    player_pos_->y() + static_cast<float>(kPaddleHeight_);
 
 	if (bx - static_cast<float>(kBallRadius_) <=
-	        kPlayerX + static_cast<float>(kPaddleWidth_) &&
+	        kPlayerX_ + static_cast<float>(kPaddleWidth_) &&
 	    by >= player_top && by <= player_bottom) {
-		ball_state_.vx = std::abs(ball_state_.vx);
+		ball_pos_->setVx(std::abs(ball_pos_->vx()));
 	}
 
-	float enemy_top    = enemy_.y;
-	float enemy_bottom = enemy_.y + static_cast<float>(kPaddleHeight_);
+	float enemy_top = enemy_pos_->y();
+	float enemy_bottom =
+	    enemy_pos_->y() + static_cast<float>(kPaddleHeight_);
 
 	if (bx + static_cast<float>(kBallRadius_) >= enemy_x_ &&
 	    by >= enemy_top && by <= enemy_bottom) {
-		ball_state_.vx = -std::abs(ball_state_.vx);
+		ball_pos_->setVx(-std::abs(ball_pos_->vx()));
 	}
 }
 
 auto PongScene::syncViewComponents() -> void
 {
-	if (ball_ != nullptr) {
-		ball_->setPosition(
-		    Point{ static_cast<uint32_t>(ball_state_.x),
-		           static_cast<uint32_t>(ball_state_.y) });
+	if (ball_view_ != nullptr) {
+		ball_view_->setPosition(
+		    Point{ static_cast<uint32_t>(ball_pos_->x()),
+		           static_cast<uint32_t>(ball_pos_->y()) });
 	}
-	if (player_paddle_ != nullptr) {
-		player_paddle_->setPosition(
-		    Point{ 20, static_cast<uint32_t>(player_.y) });
+	if (player_view_ != nullptr) {
+		player_view_->setPosition(
+		    Point{ 20, static_cast<uint32_t>(player_pos_->y()) });
 	}
-	if (enemy_paddle_ != nullptr) {
-		enemy_paddle_->setPosition(
+	if (enemy_view_ != nullptr) {
+		enemy_view_->setPosition(
 		    Point{ static_cast<uint32_t>(enemy_x_),
-		           static_cast<uint32_t>(enemy_.y) });
+		           static_cast<uint32_t>(enemy_pos_->y()) });
 	}
 }
 

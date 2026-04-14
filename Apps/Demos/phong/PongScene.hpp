@@ -9,8 +9,10 @@
 
 #pragma once
 
-#include "CircleViewComponent.hpp"
+#include "BallPositionComponent.hpp"
+#include "ComponentFactory.hpp"
 #include "GameScene.hpp"
+#include "PaddlePositionComponent.hpp"
 #include "RectangleViewComponent.hpp"
 
 #include <SDL_events.h>
@@ -35,31 +37,16 @@ class PongScene : public GameScene
 	    -> void override;
 
     private:
-	CircleViewComponent*    ball_{ nullptr };
-	RectangleViewComponent* player_paddle_{ nullptr };
-	RectangleViewComponent* enemy_paddle_{ nullptr };
+	ComponentFactory<BallPositionComponent>   ball_pos_factory_;
+	ComponentFactory<PaddlePositionComponent> paddle_pos_factory_;
 
-	struct
-	{
-		float x{ 640.0f };
-		float y{ 360.0f };
-		float vx{ kBallSpeed };
-		float vy{ kBallSpeed * 0.6f };
-	} ball_state_;
+	BallPositionComponent*   ball_pos_{ nullptr };
+	PaddlePositionComponent* player_pos_{ nullptr };
+	PaddlePositionComponent* enemy_pos_{ nullptr };
 
-	struct
-	{
-		float y{ 296.0f };
-		float speed{ kPaddleSpeed };
-		bool  up_pressed{ false };
-		bool  down_pressed{ false };
-	} player_;
-
-	struct
-	{
-		float y{ 296.0f };
-		float speed{ kEnemySpeed };
-	} enemy_;
+	CircleViewComponent*    ball_view_{ nullptr };
+	RectangleViewComponent* player_view_{ nullptr };
+	RectangleViewComponent* enemy_view_{ nullptr };
 
 	int player_score_{ 0 };
 	int enemy_score_{ 0 };
