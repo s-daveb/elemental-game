@@ -13,6 +13,7 @@
 
 #include "IRenderer.hpp"
 #include "SDL_Memory.hpp"
+#include "types/color.hpp"
 #include "types/rendering.hpp"
 
 #include <SDL.h>
@@ -47,6 +48,13 @@ struct SdlRenderer : public IRenderer
 
 	void blit(std::shared_ptr<void> img_data, const Rectangle& placement)
 	    override;
+
+	void drawFilledCircle(
+	    int32_t      x,
+	    int32_t      y,
+	    int32_t      radius,
+	    const Color& color) override;
+	void drawFilledRect(const Rectangle& rect, const Color& color) override;
 
 	template<typename T>
 	auto get() const -> T

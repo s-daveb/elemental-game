@@ -8,6 +8,9 @@ add_library(elemental
     StateStack.cpp
     paths.cpp
     FontConfig.cpp
+    GameScene.cpp
+    ShapeDrawCommand.cpp
+    ViewComponents.cpp
 )
 
 target_include_directories(elemental

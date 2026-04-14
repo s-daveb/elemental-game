@@ -2,6 +2,7 @@ add_executable(phong
 	main.cpp
 	Phong.cpp
 	MainMenu.cpp
+	PongScene.cpp
 )
 
 target_include_directories(phong

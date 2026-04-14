@@ -156,3 +156,11 @@ neovim.json
 CMakeFiles/
 CMakeCache.txt
 build.*/*
+
+# AI Tool Metadata
+CLAUDE.md
+.claude/*
+Memory/*
+.clinerules
+.agents/
+AGENTS.md

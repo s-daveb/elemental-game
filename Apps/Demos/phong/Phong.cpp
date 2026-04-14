@@ -22,6 +22,7 @@
 #include "LoopRegulator.hpp"
 #include "MainMenu.hpp"
 #include "Observable.hpp"
+#include "PongScene.hpp"
 #include "SdlEventSource.hpp"
 #include "SdlRenderer.hpp"
 #include "Singleton.hpp"
@@ -80,7 +81,66 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	this->event_emitter.registerObserver(state_stack);
 	this->event_emitter.pollEvents();
 
-	this->state_stack.pushState(std::make_unique<MainMenu>());
+	try {
+		auto scene_config = elemental::SceneConfig{
+			"GameScene",
+			"StaticViewPort",
+			elemental::Area{ 1280, 720 },
+			{ "background", "foreground" },
+			{
+			    elemental::EntityConfig{
+			        1,
+			        "Ball",
+			        "Ball",
+			        640,
+			        360,
+			        "foreground",
+			        elemental::ViewConfig{
+			            "circle",
+			            8,
+			            0,
+			            0,
+			            elemental::Color{ 255, 255, 255, 255 } },
+			        elemental::VelocityConfig{ 300.0f, 180.0f },
+			        {} },
+			    elemental::EntityConfig{
+			        2,
+			        "Player",
+			        "Player",
+			        20,
+			        296,
+			        "foreground",
+			        elemental::ViewConfig{
+			            "rectangle",
+			            0,
+			            16,
+			            96,
+			            elemental::Color{ 255, 255, 255, 255 } },
+			        elemental::VelocityConfig{},
+			        {} },
+			    elemental::EntityConfig{
+			        3,
+			        "Enemy",
+			        "Enemy",
+			        1244,
+			        296,
+			        "foreground",
+			        elemental::ViewConfig{
+			            "rectangle",
+			            0,
+			            16,
+			            96,
+			            elemental::Color{ 255, 255, 255, 255 } },
+			        elemental::VelocityConfig{},
+			        {} },
+			}
+		};
+		this->state_stack.pushState(
+		    std::make_unique<PongScene>(scene_config));
+	} catch (const std::exception& e) {
+		DBG_PRINT("Exception creating PongScene: " << e.what());
+		throw;
+	}
 }
 Phong::~Phong()
 { video_renderer.deactivate(); }
@@ -94,7 +154,8 @@ auto Phong::run() -> int
 
 		this->event_and_rendering_loop();
 
-		// threading clean-up: wait for all child threads to finish
+		// threading clean-up: wait for all child threads to
+		// finish
 		for (auto& [key, values]: this->running_threads) {
 			values.join();
 		}
@@ -126,7 +187,7 @@ void Phong::event_and_rendering_loop()
 
 		this->event_emitter.pollEvents();
 
-		this->state_stack.draw();
+		auto cmds = this->state_stack.draw();
 
 		auto cycle_delay_ms = frame_regulator.delay();
 

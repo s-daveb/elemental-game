@@ -14,11 +14,13 @@
 #include "IOCore/types.hpp"
 
 #include "Singleton.hpp"
+#include "types/color.hpp"
 #include "types/rendering.hpp"
 
 #include <SDL.h>
 
 #include <any>
+#include <cstdint>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -65,6 +67,19 @@ struct IRenderer
 	virtual void blit(
 	    std::shared_ptr<void> image_data,
 	    const Rectangle&      placement) = 0;
+
+	/*! \name Primitive Drawing Methods
+	 * Methods for drawing primitive shapes directly without textures.
+	 * \{ */
+	virtual void drawFilledCircle(
+	    int32_t      x,
+	    int32_t      y,
+	    int32_t      radius,
+	    const Color& color) = 0;
+	virtual void drawFilledRect(
+	    const Rectangle& rect,
+	    const Color&     color) = 0;
+	/*! \} */
 
 	/*! \name DataType Conversion methods
 	 * \brief Conversion functions to convert Rectangle objects to the

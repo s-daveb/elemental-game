@@ -1,0 +1,59 @@
+{
+  "type": "GameScene",
+  "kind": "StaticViewPort",
+  "dimensions": { "width": 1280, "height": 720 },
+  "layers": [ "background", "foreground" ],
+  "entities": [
+    {
+      "entity_id": 1,
+      "name": "Ball",
+      "type": "Ball",
+      "x": 640,
+      "y": 360,
+      "layer": "foreground",
+      "view": {
+        "shape": "circle",
+        "radius": 8,
+        "width": 0,
+        "height": 0,
+        "color": { "r": 255, "g": 255, "b": 255, "a": 255 }
+      },
+      "velocity": { "vx": 300.0, "vy": 180.0 },
+      "scripts": []
+    },
+    {
+      "entity_id": 2,
+      "name": "Player",
+      "type": "Player",
+      "x": 20,
+      "y": 296,
+      "layer": "foreground",
+      "view": {
+        "shape": "rectangle",
+        "radius": 0,
+        "width": 16,
+        "height": 96,
+        "color": { "r": 255, "g": 255, "b": 255, "a": 255 }
+      },
+      "velocity": { "vx": 0.0, "vy": 0.0 },
+      "scripts": []
+    },
+    {
+      "entity_id": 3,
+      "name": "Enemy",
+      "type": "Enemy",
+      "x": 1244,
+      "y": 296,
+      "layer": "foreground",
+      "view": {
+        "shape": "rectangle",
+        "radius": 0,
+        "width": 16,
+        "height": 96,
+        "color": { "r": 255, "g": 255, "b": 255, "a": 255 }
+      },
+      "velocity": { "vx": 0.0, "vy": 0.0 },
+      "scripts": [ "Enemy.js" ]
+    }
+  ]
+}
