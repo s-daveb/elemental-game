@@ -45,6 +45,18 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		                  Rectangle&            placement)
 		{ return; }
 
+		void drawFilledCircle(int32_t      x,
+		                      int32_t      y,
+		                      int32_t      radius,
+		                      const Color& color) override
+		{
+		}
+
+		void drawFilledRect(const Rectangle& rect,
+		                    const Color&     color) override
+		{
+		}
+
 	    protected:
 		DummyRenderer() : IRenderer() {}
 	};

@@ -20,6 +20,7 @@ add_executable(test-runner
   IState.test.cpp
   StateStack.test.cpp
   Entity.test.cpp
+  ViewComponent.test.cpp
 )
 
 set_target_properties(test-runner

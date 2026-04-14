@@ -15,6 +15,8 @@
 #include "types/rendering.hpp"
 
 #include <SDL.h>
+#include <SDL2_gfxPrimitives.h>
+#include <SDL2_rotozoom.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <fmt/core.h>
@@ -205,6 +207,39 @@ void SdlRenderer::blit(
 SdlRenderer::SdlRenderer()
     : IRenderer(), sdl_window_ptr(nullptr), sdl_renderer_ptr(nullptr)
 {
+}
+
+void SdlRenderer::drawFilledCircle(
+    int32_t      x,
+    int32_t      y,
+    int32_t      radius,
+    const Color& color)
+{
+	ASSERT(this->sdl_renderer_ptr != nullptr);
+	filledCircleRGBA(
+	    this->sdl_renderer_ptr.get(),
+	    static_cast<Sint16>(x),
+	    static_cast<Sint16>(y),
+	    static_cast<Sint16>(radius),
+	    color.r,
+	    color.g,
+	    color.b,
+	    color.a);
+}
+
+void SdlRenderer::drawFilledRect(const Rectangle& rect, const Color& color)
+{
+	ASSERT(this->sdl_renderer_ptr != nullptr);
+	boxRGBA(
+	    this->sdl_renderer_ptr.get(),
+	    static_cast<Sint16>(rect.x),
+	    static_cast<Sint16>(rect.y),
+	    static_cast<Sint16>(rect.x + rect.width),
+	    static_cast<Sint16>(rect.y + rect.height),
+	    color.r,
+	    color.g,
+	    color.b,
+	    color.a);
 }
 
 // clang-format off

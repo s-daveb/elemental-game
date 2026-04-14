@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "IOCore/util/toml.hpp"
+#include "IOCore/util/serialization.hpp"
 
 #include <cstdint>
 #include <string>
@@ -20,6 +20,7 @@ struct Point
 {
 	uint32_t x, y;
 	TOML_CLASS(Point, x, y);
+	JSON_SERIALIZABLE(Point, x, y)
 };
 using Position2D = Point;
 
@@ -27,6 +28,7 @@ struct Area
 {
 	uint32_t width, height;
 	TOML_CLASS(Area, width, height);
+	JSON_SERIALIZABLE(Area, width, height)
 };
 using Resolution = Area;
 

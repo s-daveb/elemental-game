@@ -21,7 +21,7 @@ class ComponentPool
 	std::unordered_map<std::type_index, IComponentFactoryRef> factories_{};
 
     public:
-	static auto getInstance() -> ComponentPool& noexcept
+	static auto getInstance() noexcept -> ComponentPool&
 	{
 		static ComponentPool instance{};
 		return instance;
@@ -36,7 +36,10 @@ class ComponentPool
 
 	template<typename T>
 	void registerFactory(IComponentFactoryRef factory) noexcept
-	{ getInstance().factories_[typeid(T)] = std::move(factory); }
+	{
+		getInstance().factories_.insert_or_assign(
+		    typeid(T), std::move(factory));
+	}
 
 	template<typename T>
 	IComponentFactoryRef getFactory() const&
