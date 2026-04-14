@@ -41,7 +41,7 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory<TestComponent> factory;
 		REQUIRE(factory.empty());
-		REQUIRE(factory.size() == 0);
+		REQUIRE(factory.getSize() == 0);
 		REQUIRE(factory.capacity() == 256);
 	}
 
@@ -53,7 +53,7 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 
 		REQUIRE(&comp != nullptr);
 		REQUIRE(!factory.empty());
-		REQUIRE(factory.size() == 1);
+		REQUIRE(factory.getSize() == 1);
 	}
 
 	TEST_CASE("ComponentFactory::get retrieves created component by index")
@@ -81,11 +81,11 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 		ComponentFactory<TestComponent> factory;
 
 		factory.create();
-		REQUIRE(factory.size() == 1);
+		REQUIRE(factory.getSize() == 1);
 
 		factory.clear();
 		REQUIRE(factory.empty());
-		REQUIRE(factory.size() == 0);
+		REQUIRE(factory.getSize() == 0);
 	}
 
 	TEST_CASE(
