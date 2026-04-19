@@ -50,6 +50,10 @@ Note: Use -DCMAKE_BUILD_TYPE=Release to build in release mode.
     ```
     cmake --build build/debug.$(uname -m)
     ```
+5. (Optional, but useful) Link compile_commands.json to project root
+    ```
+    ln -s build/debug.$(uname -m)/compile_commands.json .
+    ```
 
 ### Running Unit Tests
 
