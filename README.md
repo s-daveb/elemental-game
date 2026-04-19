@@ -10,12 +10,16 @@ A game and custom-built game engine designed for creating simple, top-down strat
 ## Getting Started
 ### Build Tools 
 - CMake (version 3.21 or higher)
-- C++17-compatible compiler
+- C++20-compatible compiler
 
 ### Project Structure
-- src/: Contains the engine logic, defines a libray target
-- apps/: Contains the game source, as well as source for resource editors, all  consumers of the engine target
-- test/: Contains unit tests
+- Apps/: Contains subprojects that have exectuable targets
+- Modules/: Contains the engine logic, defines libray targets
+- Modules/External: Third-party modules that are tracked as git subrepositories
+- Test/: Contains unit tests
+
+Recommended: 
+- `build/debug.$(uname -m)`
 
 #### Library Dependencies
 
@@ -38,14 +42,19 @@ Note: Use -DCMAKE_BUILD_TYPE=Release to build in release mode.
     ```
     cd  elemental-game
     ```
+3. Pull submodules
+    ```
+    git submodule sync --recursive
+    git submodule update --init --recursive
+    ```
 3. Configure your build system:
     ```bash
-    cmake -B build/debug.$(uname -m) -G Unix Makefiles
+    cmake -B build/debug.$(uname -m) -G Unix Makefiles --fresh
     # or
-    cmake -B build/debug.$(uname -m) -G Ninja   # this is faster and more modern
+    cmake -B build/debug.$(uname -m) -G Ninja --fresh   # this is faster and more modern
     ```
     Optional: 
-    add `--fresh` to remove cached values.
+    remove `--fresh` to use cached configuration values.
 4. Invoke your build system
     ```
     cmake --build build/debug.$(uname -m)
@@ -60,7 +69,7 @@ Note: Use -DCMAKE_BUILD_TYPE=Release to build in release mode.
 1. After building the project, you can run the unit tests:
 
     ``` 
-    cmake --build --target ctest
+    cmake --build build/debug.$(uname -m) --target=ctest
     ```
 This will execute the Catch2 test suite.
 
