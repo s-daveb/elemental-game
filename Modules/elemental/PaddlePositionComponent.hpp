@@ -19,41 +19,41 @@ namespace elemental {
 
 class PaddlePositionComponent final : public IComponent
 {
-	IComponentFactory& factory_;
-	InstanceID         instance_id_{ 0 };
+	IComponentFactory& factory;
+	InstanceID         instance_id{ 0 };
 
-	float y_{ 0.0f };
-	float speed_{ 400.0f };
-	bool  up_pressed_{ false };
-	bool  down_pressed_{ false };
+	float pos_y{ 0.0f };
+	float paddle_speed{ 400.0f };
+	bool  up_pressed{ false };
+	bool  down_pressed{ false };
 
     public:
 	PaddlePositionComponent(
 	    IComponentFactory& f,
 	    float              y     = 0.0f,
 	    float              speed = 400.0f)
-	    : factory_(f), y_(y), speed_(speed)
+	    : factory(f), pos_y(y), paddle_speed(speed)
 	{
 	}
 
 	~PaddlePositionComponent() override = default;
 
 	[[nodiscard]] auto getInstanceId() const -> InstanceID override
-	{ return instance_id_; }
+	{ return instance_id; }
 	[[nodiscard]] auto getTypeIndex() const -> TypeInfo override
 	{ return typeid(PaddlePositionComponent); }
 	[[nodiscard]] auto getFactory() const -> IComponentFactory& override
-	{ return factory_; }
+	{ return factory; }
 
-	[[nodiscard]] auto y() const -> float { return y_; }
-	[[nodiscard]] auto speed() const -> float { return speed_; }
-	[[nodiscard]] auto upPressed() const -> bool { return up_pressed_; }
-	[[nodiscard]] auto downPressed() const -> bool { return down_pressed_; }
+	[[nodiscard]] auto y() const -> float { return pos_y; }
+	[[nodiscard]] auto speed() const -> float { return paddle_speed; }
+	[[nodiscard]] auto upPressed() const -> bool { return up_pressed; }
+	[[nodiscard]] auto downPressed() const -> bool { return down_pressed; }
 
-	auto setY(float val) -> void { y_ = val; }
-	auto setSpeed(float val) -> void { speed_ = val; }
-	auto setUpPressed(bool val) -> void { up_pressed_ = val; }
-	auto setDownPressed(bool val) -> void { down_pressed_ = val; }
+	auto setY(float val) -> void { pos_y = val; }
+	auto setSpeed(float val) -> void { paddle_speed = val; }
+	auto setUpPressed(bool val) -> void { up_pressed = val; }
+	auto setDownPressed(bool val) -> void { down_pressed = val; }
 };
 
 }  // namespace elemental

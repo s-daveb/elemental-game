@@ -37,26 +37,29 @@ class PongScene : public GameScene
 	    -> void override;
 
     private:
-	ComponentFactory<BallPositionComponent>   ball_pos_factory_;
-	ComponentFactory<PaddlePositionComponent> paddle_pos_factory_;
+	ComponentFactory<BallPositionComponent>   ball_pos_factory;
+	ComponentFactory<PaddlePositionComponent> paddle_pos_factory;
 
-	BallPositionComponent*   ball_pos_{ nullptr };
-	PaddlePositionComponent* player_pos_{ nullptr };
-	PaddlePositionComponent* enemy_pos_{ nullptr };
+	// TODO: Refactor to use references instead of raw pointers. The
+	// dynamic_cast and mutable pointer pattern violates coding standards.
+	// Components should be accessed via references from the factory.
+	const BallPositionComponent*   ball_pos_ptr{ nullptr };
+	const PaddlePositionComponent* player_pos_ptr{ nullptr };
+	const PaddlePositionComponent* enemy_pos_ptr{ nullptr };
 
-	CircleViewComponent*    ball_view_{ nullptr };
-	RectangleViewComponent* player_view_{ nullptr };
-	RectangleViewComponent* enemy_view_{ nullptr };
+	const CircleViewComponent*    ball_view_ptr{ nullptr };
+	const RectangleViewComponent* player_view_ptr{ nullptr };
+	const RectangleViewComponent* enemy_view_ptr{ nullptr };
 
-	int player_score_{ 0 };
-	int enemy_score_{ 0 };
+	int player_score{ 0 };
+	int enemy_score{ 0 };
 
-	uint32_t court_width_{ 1280 };
-	uint32_t court_height_{ 720 };
+	uint32_t court_width{ 1280 };
+	uint32_t court_height{ 720 };
 
-	static constexpr uint32_t kPaddleWidth_{ 16 };
-	static constexpr uint32_t kPaddleHeight_{ 96 };
-	static constexpr uint32_t kBallRadius_{ 8 };
+	static constexpr uint32_t kPaddleWidth  = 16;
+	static constexpr uint32_t kPaddleHeight = 96;
+	static constexpr uint32_t kBallRadius   = 8;
 
 	auto resetBall() -> void;
 	auto updateBall(float dt) -> void;
@@ -65,8 +68,8 @@ class PongScene : public GameScene
 	auto checkCollisions() -> void;
 	auto syncViewComponents() -> void;
 
-	static constexpr float kPlayerX_{ 20.0f };
-	float                  enemy_x_{ 0.0f };
+	static constexpr float kPlayerX = 20.0f;
+	float                  enemy_x{ 0.0f };
 };
 
 }  // namespace elemental

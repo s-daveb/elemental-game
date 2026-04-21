@@ -61,7 +61,7 @@ class MainMenu : public IState
 	virtual void init_textures();
 
     private:
-	TTF_Font*                font{ nullptr };
+	TTF_Font*                font_ptr{ nullptr };
 	std::size_t              selected_menu_item{ 0 };
 	std::vector<std::string> menu_items{ "Start Game", "Settings", "Exit" };
 

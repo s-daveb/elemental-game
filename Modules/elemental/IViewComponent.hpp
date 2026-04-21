@@ -26,7 +26,7 @@ struct IViewComponent : public IComponent
 {
 	virtual ~IViewComponent() = default;
 
-	[[nodiscard]] virtual auto produceDrawCommand(IRenderer& renderer)
+	[[nodiscard]] virtual auto produceDrawCommand(IRenderer& renderer) const
 	    -> std::shared_ptr<IDrawCommand> = 0;
 
 	virtual auto               setPosition(Point pos) -> void = 0;

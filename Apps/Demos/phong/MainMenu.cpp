@@ -4,7 +4,7 @@
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v.2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at https://mozilla.org/MPL/2.0/.`
+ * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 #include "MainMenu.hpp"
@@ -138,9 +138,9 @@ void MainMenu::handle_events(InputEvent& event)
 		        this->selected_menu_item));
 
 		if (this->selected_menu_item == 2) {  // index 2 = quit button
-			SDL_Event* event = new SDL_Event();
-			event->type      = SDL_QUIT;
-			SDL_PushEvent(event);
+			auto event_ptr  = std::make_unique<SDL_Event>();
+			event_ptr->type = SDL_QUIT;
+			SDL_PushEvent(event_ptr.get());
 		}
 	}
 }
@@ -152,14 +152,16 @@ void MainMenu::init_textures()
 	FontConfig& font_book = FontConfig::getInstance();
 	auto        font_path = font_book.getFont("monospace");
 
-	font = TTF_OpenFont(font_path.c_str(), 24);
+	font_ptr = TTF_OpenFont(font_path.c_str(), 24);
 
-	if (font == nullptr) { throw IOCore::Exception("Failed to load font"); }
+	if (font_ptr == nullptr) {
+		throw IOCore::Exception("Failed to load font");
+	}
 
 	for (auto& item: menu_items) {
 		// Unselected texture
 		auto surface =
-		    TTF_RenderText_Solid(font, item.c_str(), font_color);
+		    TTF_RenderText_Solid(font_ptr, item.c_str(), font_color);
 		if (surface == nullptr) {
 			throw IOCore::Exception("Failed to render text");
 		}
@@ -174,7 +176,7 @@ void MainMenu::init_textures()
 
 		// Selected texture
 		surface = TTF_RenderText_Solid(
-		    font, item.c_str(), selected_font_color);
+		    font_ptr, item.c_str(), selected_font_color);
 		if (surface == nullptr) {
 			throw IOCore::Exception("Failed to render text");
 		}

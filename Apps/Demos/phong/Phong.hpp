@@ -55,7 +55,7 @@ class Phong : public IOCore::Application, public IObserver
 	auto operator=(Phong&&) -> Phong&      = delete;
 	/// \}
 
-	bool                            is_running{ false };
+	bool                            is_running;
 	IOCore::Dictionary<std::thread> running_threads;
 
 	void event_and_rendering_loop();

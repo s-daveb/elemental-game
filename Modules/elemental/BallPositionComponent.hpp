@@ -19,14 +19,14 @@ namespace elemental {
 
 class BallPositionComponent final : public IComponent
 {
-	IComponentFactory& factory_;
-	InstanceID         instance_id_{ 0 };
+	IComponentFactory& factory;
+	InstanceID         instance_id{ 0 };
 
-	float x_{ 0.0f };
-	float y_{ 0.0f };
-	float vx_{ 0.0f };
-	float vy_{ 0.0f };
-	float radius_{ 8.0f };
+	float pos_x{ 0.0f };
+	float pos_y{ 0.0f };
+	float vel_x{ 0.0f };
+	float vel_y{ 0.0f };
+	float ball_radius{ 8.0f };
 
     public:
 	BallPositionComponent(
@@ -36,30 +36,31 @@ class BallPositionComponent final : public IComponent
 	    float              vx = 300.0f,
 	    float              vy = 180.0f,
 	    float              r  = 8.0f)
-	    : factory_(f), x_(x), y_(y), vx_(vx), vy_(vy), radius_(r)
+	    : factory(f), pos_x(x), pos_y(y), vel_x(vx), vel_y(vy),
+	      ball_radius(r)
 	{
 	}
 
 	~BallPositionComponent() override = default;
 
 	[[nodiscard]] auto getInstanceId() const -> InstanceID override
-	{ return instance_id_; }
+	{ return instance_id; }
 	[[nodiscard]] auto getTypeIndex() const -> TypeInfo override
 	{ return typeid(BallPositionComponent); }
 	[[nodiscard]] auto getFactory() const -> IComponentFactory& override
-	{ return factory_; }
+	{ return factory; }
 
-	[[nodiscard]] auto x() const -> float { return x_; }
-	[[nodiscard]] auto y() const -> float { return y_; }
-	[[nodiscard]] auto vx() const -> float { return vx_; }
-	[[nodiscard]] auto vy() const -> float { return vy_; }
-	[[nodiscard]] auto radius() const -> float { return radius_; }
+	[[nodiscard]] auto x() const -> float { return pos_x; }
+	[[nodiscard]] auto y() const -> float { return pos_y; }
+	[[nodiscard]] auto vx() const -> float { return vel_x; }
+	[[nodiscard]] auto vy() const -> float { return vel_y; }
+	[[nodiscard]] auto radius() const -> float { return ball_radius; }
 
-	auto setX(float val) -> void { x_ = val; }
-	auto setY(float val) -> void { y_ = val; }
-	auto setVx(float val) -> void { vx_ = val; }
-	auto setVy(float val) -> void { vy_ = val; }
-	auto setRadius(float val) -> void { radius_ = val; }
+	auto setX(float val) -> void { pos_x = val; }
+	auto setY(float val) -> void { pos_y = val; }
+	auto setVx(float val) -> void { vel_x = val; }
+	auto setVy(float val) -> void { vel_y = val; }
+	auto setRadius(float val) -> void { ball_radius = val; }
 };
 
 }  // namespace elemental

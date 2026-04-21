@@ -37,10 +37,10 @@ class GameScene : public IState
 
 	struct Entity
 	{
-		EntityId                     id{ 0 };
-		std::string                  name;
-		std::vector<IViewComponent*> views;
-		VelocityConfig               velocity;
+		EntityId                           id{ 0 };
+		std::string                        name;
+		std::vector<const IViewComponent*> views_ptr;
+		VelocityConfig                     velocity;
 	};
 
 	explicit GameScene(const SceneConfig& config);
@@ -56,8 +56,8 @@ class GameScene : public IState
 	auto getEntity(EntityId id) const -> const Entity&;
 	auto getEntityByName(const std::string& name) -> Entity&;
 
-	auto& getCircleFactory() { return circle_factory_; }
-	auto& getRectFactory() { return rect_factory_; }
+	auto& getCircleFactory() { return circle_factory; }
+	auto& getRectFactory() { return rect_factory; }
 
     protected:
 	virtual auto onUpdate() -> void {}
@@ -66,15 +66,15 @@ class GameScene : public IState
 	{
 	}
 
-	SceneConfig config_;
+	SceneConfig config;
 
-	ComponentFactory<CircleViewComponent>    circle_factory_;
-	ComponentFactory<RectangleViewComponent> rect_factory_;
+	ComponentFactory<CircleViewComponent>    circle_factory;
+	ComponentFactory<RectangleViewComponent> rect_factory;
 
-	std::unordered_map<EntityId, Entity> entities_;
-	EntityId                             next_entity_id_{ 1 };
+	std::unordered_map<EntityId, Entity> entities;
+	EntityId                             next_entity_id{ 1 };
 
-	IRenderer& renderer_;
+	IRenderer& renderer;
 };
 
 }  // namespace elemental
