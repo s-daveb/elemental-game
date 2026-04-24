@@ -20,6 +20,7 @@
 #include "types/id.hpp"
 
 #include <any>
+#include <functional>
 #include <list>
 #include <memory>
 #include <string>
@@ -37,10 +38,10 @@ class GameScene : public IState
 
 	struct Entity
 	{
-		EntityId                           id{ 0 };
-		std::string                        name;
-		std::vector<const IViewComponent*> views_ptr;
-		VelocityConfig                     velocity;
+		EntityId                                            id{ 0 };
+		std::string                                         name;
+		std::vector<std::reference_wrapper<IViewComponent>> views_ref;
+		VelocityConfig                                      velocity;
 	};
 
 	explicit GameScene(const SceneConfig& config);

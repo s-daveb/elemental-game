@@ -24,8 +24,8 @@ GameScene::GameScene(const SceneConfig& config)
     : config(config), renderer(IRenderer::GetInstance<SdlRenderer>())
 {
 	auto& pool = ComponentPool::getInstance();
-	pool.registerFactory<CircleViewComponent>(circle_factory);
-	pool.registerFactory<RectangleViewComponent>(rect_factory);
+	pool.registerFactory<CircleViewComponent>(std::ref(circle_factory));
+	pool.registerFactory<RectangleViewComponent>(std::ref(rect_factory));
 
 	for (const auto& entity_cfg: config.entities) {
 		Entity entity;
@@ -40,14 +40,14 @@ GameScene::GameScene(const SceneConfig& config)
 			    Point{ entity_cfg.x, entity_cfg.y },
 			    view.radius,
 			    view.color);
-			entity.views_ptr.push_back(&comp);
+			entity.views_ref.emplace_back(std::ref(comp));
 		} else if (view.shape == "rectangle") {
 			auto& comp = rect_factory.create(
 			    Point{ entity_cfg.x, entity_cfg.y },
 			    view.width,
 			    view.height,
 			    view.color);
-			entity.views_ptr.push_back(&comp);
+			entity.views_ref.emplace_back(std::ref(comp));
 		}
 
 		entities[entity.id] = std::move(entity);
@@ -61,8 +61,9 @@ auto GameScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 {
 	std::list<std::shared_ptr<IDrawCommand>> commands;
 	for (auto& [id, entity]: entities) {
-		for (auto* view: entity.views_ptr) {
-			commands.push_back(view->produceDrawCommand(renderer));
+		for (auto& view_ref: entity.views_ref) {
+			auto& view = view_ref.get();
+			commands.push_back(view.produceDrawCommand(renderer));
 		}
 	}
 	return commands;

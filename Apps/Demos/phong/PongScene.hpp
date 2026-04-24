@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include "IOCore/types/optional_ref.hpp"
+
 #include "BallPositionComponent.hpp"
 #include "ComponentFactory.hpp"
 #include "GameScene.hpp"
+#include "IViewComponent.hpp"
 #include "PaddlePositionComponent.hpp"
-#include "RectangleViewComponent.hpp"
 
 #include <SDL_events.h>
 
@@ -40,16 +42,13 @@ class PongScene : public GameScene
 	ComponentFactory<BallPositionComponent>   ball_pos_factory;
 	ComponentFactory<PaddlePositionComponent> paddle_pos_factory;
 
-	// TODO: Refactor to use references instead of raw pointers. The
-	// dynamic_cast and mutable pointer pattern violates coding standards.
-	// Components should be accessed via references from the factory.
-	const BallPositionComponent*   ball_pos_ptr{ nullptr };
-	const PaddlePositionComponent* player_pos_ptr{ nullptr };
-	const PaddlePositionComponent* enemy_pos_ptr{ nullptr };
+	IOCore::optional_ref<BallPositionComponent>   ball_pos_ref;
+	IOCore::optional_ref<PaddlePositionComponent> player_pos_ref;
+	IOCore::optional_ref<PaddlePositionComponent> enemy_pos_ref;
 
-	const CircleViewComponent*    ball_view_ptr{ nullptr };
-	const RectangleViewComponent* player_view_ptr{ nullptr };
-	const RectangleViewComponent* enemy_view_ptr{ nullptr };
+	IOCore::optional_ref<IViewComponent> ball_view_ref;
+	IOCore::optional_ref<IViewComponent> player_view_ref;
+	IOCore::optional_ref<IViewComponent> enemy_view_ref;
 
 	int player_score{ 0 };
 	int enemy_score{ 0 };

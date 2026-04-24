@@ -27,4 +27,6 @@ struct IComponent
 	[[nodiscard]] virtual auto getFactory() const -> IComponentFactory& = 0;
 };
 
+using IComponentRef = std::reference_wrapper<IComponent>;
+
 }  // namespace elemental

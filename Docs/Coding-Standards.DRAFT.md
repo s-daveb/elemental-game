@@ -599,13 +599,74 @@ Manual `delete` should never appear in application code outside of custom alloca
 void processEntity(Entity& entity);              // required (non-null) - reference, not pointer
 void processEntityPtr(std::unique_ptr<Entity> e);   // takes ownership
 auto getEntityPtr() -> const Entity*;               // optional observation (may be nullptr)
-auto getEntityRef() -> std::optional<std::reference_wrapper<Entity>>;    // optional reference (modern C++)
+auto getEntityRef() -> IOCore::optional_ref<Entity>;    // optional reference
 
 // ✗ INCORRECT
 void processEntity(Entity* entity);  // raw non-const pointer (use reference or smart pointer)
 ```
 
 **Rationale**: References cannot be null, making intent clear. Smart pointers express ownership semantics. Const raw pointers are acceptable for non-owning observation where nullptr is a valid "not found" result.
+
+### Reference Wrapper Patterns for ECS Components
+**Rule**: For component access in game scenes, use `IOCore::optional_ref` for optional references, and `std::reference_wrapper` directly for non-nullable references. Avoid raw pointers.
+
+The Elemental ECS uses `IOCore::optional_ref` to provide pointer-like access to optional references with clean semantics. It wraps `std::optional<std::reference_wrapper<T>>` with pointer-style operators (`->` and `*`).
+
+```cpp
+// ✓ CORRECT - Direct reference when component always exists
+std::reference_wrapper<BallPositionComponent> ball_pos_ref;
+
+// ✓ CORRECT - Optional reference when entity might not have component
+//             Use IOCore::optional_ref for pointer-like semantics
+IOCore::optional_ref<IViewComponent> ball_view_ref;
+
+// ✗ INCORRECT - Raw pointers for component access
+const BallPositionComponent* ball_pos_ptr;
+
+// ✗ INCORRECT - std::optional<std::reference_wrapper> (use IOCore::optional_ref instead)
+std::optional<std::reference_wrapper<IViewComponent>> ball_view_ref;
+```
+
+**Accessing values**:
+```cpp
+// Direct reference: use .get() to access the referenced object
+ball_pos_ref.get().setX(new_x);
+
+// IOCore::optional_ref: use -> for pointer-style access, or * for dereference
+ball_view_ref->setPosition({x, y});  // pointer-like access via operator->
+(*ball_view_ref).setColor({255, 0, 0});  // dereference with operator*
+
+// Check with has_value() or implicit bool
+if (ball_view_ref) {
+    ball_view_ref->setPosition({x, y});
+}
+```
+
+**Construction and assignment**:
+```cpp
+// Direct assignment from lvalue reference
+ball_pos_ref = some_ball_component;
+ball_view_ref = entity.views_ref[0].get();  // extract ref from wrapper first
+
+// Check before access
+if (ball_view_ref.has_value()) {
+    ball_view_ref->setPosition({x, y});
+}
+```
+
+**Registering factories with ComponentPool**:
+When registering a factory that is a member variable, use `std::ref()` to create the reference_wrapper:
+```cpp
+auto& pool = ComponentPool::getInstance();
+pool.registerFactory<BallPositionComponent>(std::ref(ball_pos_factory));
+```
+
+**Rationale**: `IOCore::optional_ref` provides:
+- Pointer-like operators (`->` and `*`) for clean syntax
+- Prevents binding to temporaries at compile time
+- Implicit conversion to `optional_ref<const T>` for const access
+- Type safety through the type system
+- Integration with `std::optional` semantics (has_value, operator bool)
 
 Testing Standards
 -----------------
