@@ -33,7 +33,7 @@ Implementation considerations
 - **Compile-time Component Types**: Each component type requires explicit factory registration; no runtime type discovery
 - **Fixed-capacity Factories**: ComponentFactory uses `std::array` with compile-time capacity (default 256) for simplicity
 - **Singleton ComponentPool**: Global registry ensures single point of factory access across the application
-- **Direct Component Access**: Game scenes hold direct pointers to components for performance-critical update loops
+- **Direct Component Access**: Game scenes hold `IOCore::optional_ref` references to components for safe, nullable access in performance-critical update loops
 - **View Component Pattern**: Rendering is decoupled via IViewComponent interface that produces draw commands
 
 High-level behavior
@@ -44,7 +44,7 @@ The ECS operates in three phases each frame: component creation/registration, ga
  ┌──────────────────────────────────────────────────────────────────┐
  │                        GameScene (PongScene)                     │
  │  - Holds ComponentFactory instances (BallPos, PaddlePos, etc.)   │
- │  - Direct pointers to active components (ball_pos_ptr, etc.)       │
+ │  - Uses IOCore::optional_ref for component access (ball_pos_ref, etc.)  │
  │  - onUpdate() loop: read components → compute → write back       │
  └────────────────────────┬─────────────────────────────────────────┘
                           │
@@ -193,7 +193,7 @@ class GameScene : public IState {
     struct Entity {
         EntityId                     id{ 0 };
         std::string                  name;
-        std::vector<const IViewComponent*> views_ptr;
+        std::vector<std::reference_wrapper<IViewComponent>> views_ref;
         VelocityConfig               velocity;
     };
 
@@ -248,29 +248,30 @@ PongScene::PongScene(const SceneConfig& config) : GameScene(config)
 {
     // 1. Get singleton pool and register factories
     auto& pool = ComponentPool::getInstance();
-    pool.registerFactory<BallPositionComponent>(ball_pos_factory);
-    pool.registerFactory<PaddlePositionComponent>(paddle_pos_factory);
+    pool.registerFactory<BallPositionComponent>(std::ref(ball_pos_factory));
+    pool.registerFactory<PaddlePositionComponent>(std::ref(paddle_pos_factory));
 
     // 2. Create components via factories
-    ball_pos_ptr = &ball_pos_factory.create(
+    auto& ball = ball_pos_factory.create(
         court_width / 2.0f,     // x
         court_height / 2.0f,    // y
         kBallSpeed,              // vx
         kBallSpeed * 0.6f,       // vy
         kBallRadius);            // radius
+    ball_pos_ref = ball;
 
-    player_pos_ptr = &paddle_pos_factory.create(
+    auto& player_paddle = paddle_pos_factory.create(
         court_height / 2.0f - half_paddle,  // y
         kPaddleSpeed);                       // speed
+    player_pos_ref = player_paddle;
 
     // 3. Get entity references
     auto& ball_entity   = getEntity(kBallId);
     auto& player_entity = getEntity(kPlayerId);
 
     // 4. Link view components (created by parent GameScene)
-    if (!ball_entity.views_ptr.empty()) {
-        ball_view_ptr = dynamic_cast<const CircleViewComponent*>(
-            ball_entity.views_ptr[0]);
+    if (!ball_entity.views_ref.empty()) {
+        ball_view_ref = ball_entity.views_ref[0].get();
     }
 }
 ```
@@ -293,17 +294,17 @@ auto PongScene::onUpdate() -> void
 
 auto PongScene::updateBall(float dt) -> void
 {
-    // Direct component access for performance
-    ball_pos_ptr->setX(ball_pos_ptr->x() + ball_pos_ptr->vx() * dt);
-    ball_pos_ptr->setY(ball_pos_ptr->y() + ball_pos_ptr->vy() * dt);
+    // Direct component access via IOCore::optional_ref
+    ball_pos_ref->setX(ball_pos_ref->x() + ball_pos_ref->vx() * dt);
+    ball_pos_ref->setY(ball_pos_ref->y() + ball_pos_ref->vy() * dt);
 
     // Wall collision (top/bottom)
-    if (ball_pos_ptr->y() - ball_pos_ptr->radius() <= 0.0f) {
-        ball_pos_ptr->setVy(std::abs(ball_pos_ptr->vy()));
+    if (ball_pos_ref->y() - ball_pos_ref->radius() <= 0.0f) {
+        ball_pos_ref->setVy(std::abs(ball_pos_ref->vy()));
     }
 
     // Scoring (left/right)
-    if (ball_pos_ptr->x() <= 0.0f) {
+    if (ball_pos_ref->x() <= 0.0f) {
         enemy_score++;
         resetBall();
     }
@@ -312,10 +313,10 @@ auto PongScene::updateBall(float dt) -> void
 auto PongScene::syncViewComponents() -> void
 {
     // Copy position component data to view component
-    if (ball_view_ptr != nullptr) {
-        ball_view_ptr->setPosition(
-            Point{ static_cast<uint32_t>(ball_pos_ptr->x()),
-                   static_cast<uint32_t>(ball_pos_ptr->y()) });
+    if (ball_view_ref) {
+        ball_view_ref->setPosition(
+            Point{ static_cast<uint32_t>(ball_pos_ref->x()),
+                   static_cast<uint32_t>(ball_pos_ref->y()) });
     }
     // ... (player, enemy sync)
 }
@@ -330,9 +331,9 @@ auto GameScene::getDrawCommands()
     std::list<std::shared_ptr<IDrawCommand>> commands;
 
     for (auto& [id, entity] : entities) {
-        for (auto* view : entity.views_ptr) {
+        for (auto& view_ref : entity.views_ref) {
             // Each view component produces its own draw command
-            commands.push_back(view->produceDrawCommand(renderer));
+            commands.push_back(view_ref.get().produceDrawCommand(renderer));
         }
     }
 
@@ -381,18 +382,18 @@ The ECS integrates with rendering through the View Component pattern:
 
 ```
 Component Data (Position)     View Component          Renderer
-     │                              │                     │
-     │ ball_pos_ptr->x(), y()         │                     │
-     │─────────────────────────────>│                     │
-     │                              │ produceDrawCommand()│
-     │                              │────────────────────>│
-     │                              │                     │
-     │                              │                     │ createRectangleCommand()
-     │                              │                     │
-     │                              │<────────────────────│
-     │                              │                     │
-     │                              │<────────────────────│ std::shared_ptr<IDrawCommand>
-     │                              │                     │
+      │                              │                     │
+      │ ball_pos_ref->x(), y()        │                     │
+      │─────────────────────────────>│                     │
+      │                              │ produceDrawCommand()│
+      │                              │────────────────────>│
+      │                              │                     │
+      │                              │                     │ createRectangleCommand()
+      │                              │                     │
+      │                              │<────────────────────│
+      │                              │                     │
+      │                              │<────────────────────│ std::shared_ptr<IDrawCommand>
+      │                              │                     │
 ```
 
 1. **Game Logic Update**: Position components modified by game logic
@@ -404,9 +405,8 @@ Component Data (Position)     View Component          Renderer
 Error handling and UX
 ---------------------
 - **Factory Not Registered**: `std::runtime_error` thrown if `getFactory<T>()` called for unregistered type
-- **Component Access**: No bounds checking on `getUnchecked(index)`; use `get(index)` for safety
-- **Null View Pointers**: View components may be null if entity has no views; null checks required
-- **Dynamic Cast Failures**: View component retrieval uses `dynamic_cast`; returns nullptr on mismatch
+- **Component Access**: Use `IOCore::optional_ref` with `has_value()` or implicit bool for null checks; `->` operator for pointer-like access
+- **View Component Access**: Use `IOCore::optional_ref` with `if (view_ref)` checks; operator `->` for access
 
 **Development-time Checks:**
 - Component type mismatches caught at compile-time via template constraints
