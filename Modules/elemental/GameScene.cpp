@@ -21,36 +21,36 @@
 namespace elemental {
 
 GameScene::GameScene(const SceneConfig& config)
-    : config_(config), renderer_(IRenderer::GetInstance<SdlRenderer>())
+    : config(config), renderer(IRenderer::GetInstance<SdlRenderer>())
 {
 	auto& pool = ComponentPool::getInstance();
-	pool.registerFactory<CircleViewComponent>(circle_factory_);
-	pool.registerFactory<RectangleViewComponent>(rect_factory_);
+	pool.registerFactory<CircleViewComponent>(std::ref(circle_factory));
+	pool.registerFactory<RectangleViewComponent>(std::ref(rect_factory));
 
-	for (const auto& entity_cfg: config_.entities) {
+	for (const auto& entity_cfg: config.entities) {
 		Entity entity;
 		entity.id   = entity_cfg.entity_id != 0 ? entity_cfg.entity_id
-		                                        : next_entity_id_++;
+		                                        : next_entity_id++;
 		entity.name = entity_cfg.name;
 		entity.velocity = entity_cfg.velocity;
 
 		const auto& view = entity_cfg.view;
 		if (view.shape == "circle") {
-			auto& comp = circle_factory_.create(
+			auto& comp = circle_factory.create(
 			    Point{ entity_cfg.x, entity_cfg.y },
 			    view.radius,
 			    view.color);
-			entity.views.push_back(&comp);
+			entity.views_ref.emplace_back(std::ref(comp));
 		} else if (view.shape == "rectangle") {
-			auto& comp = rect_factory_.create(
+			auto& comp = rect_factory.create(
 			    Point{ entity_cfg.x, entity_cfg.y },
 			    view.width,
 			    view.height,
 			    view.color);
-			entity.views.push_back(&comp);
+			entity.views_ref.emplace_back(std::ref(comp));
 		}
 
-		entities_[entity.id] = std::move(entity);
+		entities[entity.id] = std::move(entity);
 	}
 }
 
@@ -60,9 +60,10 @@ auto GameScene::step() -> void
 auto GameScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 {
 	std::list<std::shared_ptr<IDrawCommand>> commands;
-	for (auto& [id, entity]: entities_) {
-		for (auto* view: entity.views) {
-			commands.push_back(view->produceDrawCommand(renderer_));
+	for (auto& [id, entity]: entities) {
+		for (auto& view_ref: entity.views_ref) {
+			auto& view = view_ref.get();
+			commands.push_back(view.produceDrawCommand(renderer));
 		}
 	}
 	return commands;
@@ -72,14 +73,14 @@ void GameScene::recieveMessage(const Observable& sender, std::any message)
 { onMessage(sender, std::move(message)); }
 
 auto GameScene::getEntity(EntityId id) -> Entity&
-{ return entities_.at(id); }
+{ return entities.at(id); }
 
 auto GameScene::getEntity(EntityId id) const -> const Entity&
-{ return entities_.at(id); }
+{ return entities.at(id); }
 
 auto GameScene::getEntityByName(const std::string& name) -> Entity&
 {
-	for (auto& [id, entity]: entities_) {
+	for (auto& [id, entity]: entities) {
 		if (entity.name == name) { return entity; }
 	}
 	throw std::runtime_error("Entity not found: " + name);

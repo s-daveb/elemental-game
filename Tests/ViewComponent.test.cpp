@@ -60,7 +60,7 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 
 		CHECK(comp.getPosition().x == 100);
 		CHECK(comp.getPosition().y == 200);
-		CHECK(comp.radius() == 16);
+		CHECK(comp.getRadius() == 16);
 		CHECK(comp.getColor().r == 255);
 		CHECK(comp.getColor().g == 0);
 		CHECK(comp.getColor().b == 0);
@@ -88,7 +88,7 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 		auto& comp = factory.create(Point{ 0, 0 }, 10, Color{});
 
 		comp.setRadius(20);
-		CHECK(comp.radius() == 20);
+		CHECK(comp.getRadius() == 20);
 	}
 
 	TEST_CASE("CircleViewComponent produceDrawCommand returns FilledCircle")
@@ -115,8 +115,8 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 
 		CHECK(comp.getPosition().x == 20);
 		CHECK(comp.getPosition().y == 296);
-		CHECK(comp.width() == 16);
-		CHECK(comp.height() == 96);
+		CHECK(comp.getWidth() == 16);
+		CHECK(comp.getHeight() == 96);
 		CHECK(comp.getTypeIndex() == typeid(RectangleViewComponent));
 	}
 
@@ -131,8 +131,8 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 		CHECK(comp.getPosition().y == 100);
 
 		comp.setSize(30, 40);
-		CHECK(comp.width() == 30);
-		CHECK(comp.height() == 40);
+		CHECK(comp.getWidth() == 30);
+		CHECK(comp.getHeight() == 40);
 	}
 
 	TEST_CASE(

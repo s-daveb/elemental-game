@@ -9,9 +9,13 @@
 
 #pragma once
 
-#include "CircleViewComponent.hpp"
+#include "IOCore/types/optional_ref.hpp"
+
+#include "BallPositionComponent.hpp"
+#include "ComponentFactory.hpp"
 #include "GameScene.hpp"
-#include "RectangleViewComponent.hpp"
+#include "IViewComponent.hpp"
+#include "PaddlePositionComponent.hpp"
 
 #include <SDL_events.h>
 
@@ -35,41 +39,26 @@ class PongScene : public GameScene
 	    -> void override;
 
     private:
-	CircleViewComponent*    ball_{ nullptr };
-	RectangleViewComponent* player_paddle_{ nullptr };
-	RectangleViewComponent* enemy_paddle_{ nullptr };
+	ComponentFactory<BallPositionComponent>   ball_pos_factory;
+	ComponentFactory<PaddlePositionComponent> paddle_pos_factory;
 
-	struct
-	{
-		float x{ 640.0f };
-		float y{ 360.0f };
-		float vx{ kBallSpeed };
-		float vy{ kBallSpeed * 0.6f };
-	} ball_state_;
+	IOCore::optional_ref<BallPositionComponent>   ball_pos_ref;
+	IOCore::optional_ref<PaddlePositionComponent> player_pos_ref;
+	IOCore::optional_ref<PaddlePositionComponent> enemy_pos_ref;
 
-	struct
-	{
-		float y{ 296.0f };
-		float speed{ kPaddleSpeed };
-		bool  up_pressed{ false };
-		bool  down_pressed{ false };
-	} player_;
+	IOCore::optional_ref<IViewComponent> ball_view_ref;
+	IOCore::optional_ref<IViewComponent> player_view_ref;
+	IOCore::optional_ref<IViewComponent> enemy_view_ref;
 
-	struct
-	{
-		float y{ 296.0f };
-		float speed{ kEnemySpeed };
-	} enemy_;
+	int player_score{ 0 };
+	int enemy_score{ 0 };
 
-	int player_score_{ 0 };
-	int enemy_score_{ 0 };
+	uint32_t court_width{ 1280 };
+	uint32_t court_height{ 720 };
 
-	uint32_t court_width_{ 1280 };
-	uint32_t court_height_{ 720 };
-
-	static constexpr uint32_t kPaddleWidth_{ 16 };
-	static constexpr uint32_t kPaddleHeight_{ 96 };
-	static constexpr uint32_t kBallRadius_{ 8 };
+	static constexpr uint32_t kPaddleWidth  = 16;
+	static constexpr uint32_t kPaddleHeight = 96;
+	static constexpr uint32_t kBallRadius   = 8;
 
 	auto resetBall() -> void;
 	auto updateBall(float dt) -> void;
@@ -78,8 +67,8 @@ class PongScene : public GameScene
 	auto checkCollisions() -> void;
 	auto syncViewComponents() -> void;
 
-	static constexpr float kPlayerX_{ 20.0f };
-	float                  enemy_x_{ 0.0f };
+	static constexpr float kPlayerX = 20.0f;
+	float                  enemy_x{ 0.0f };
 };
 
 }  // namespace elemental

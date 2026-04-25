@@ -20,11 +20,11 @@ namespace elemental {
 
 class CircleViewComponent final : public IViewComponent
 {
-	IComponentFactory& factory_;
-	Point              position_{ 0, 0 };
-	uint32_t           radius_{ 16 };
-	Color              color_{ 255, 255, 255, 255 };
-	InstanceID         instance_id_{ 0 };
+	IComponentFactory& factory;
+	Point              position{ 0, 0 };
+	uint32_t           radius{ 16 };
+	Color              color{ 255, 255, 255, 255 };
+	InstanceID         instance_id{ 0 };
 
     public:
 	CircleViewComponent(
@@ -32,30 +32,30 @@ class CircleViewComponent final : public IViewComponent
 	    Point              pos = { 0, 0 },
 	    uint32_t           rad = 16,
 	    Color              col = { 255, 255, 255, 255 })
-	    : factory_(f), position_(pos), radius_(rad), color_(col)
+	    : factory(f), position(pos), radius(rad), color(col)
 	{
 	}
 
 	~CircleViewComponent() override = default;
 
 	[[nodiscard]] auto getInstanceId() const -> InstanceID override
-	{ return instance_id_; }
+	{ return instance_id; }
 	[[nodiscard]] auto getTypeIndex() const -> TypeInfo override
 	{ return typeid(CircleViewComponent); }
 	[[nodiscard]] auto getFactory() const -> IComponentFactory& override
-	{ return factory_; }
+	{ return factory; }
 
-	[[nodiscard]] auto produceDrawCommand(IRenderer& renderer)
+	[[nodiscard]] auto produceDrawCommand(IRenderer& renderer) const
 	    -> std::shared_ptr<IDrawCommand> override;
 
-	auto setPosition(Point pos) -> void override { position_ = pos; }
+	auto setPosition(Point pos) -> void override { position = pos; }
 	[[nodiscard]] auto getPosition() const -> Point override
-	{ return position_; }
-	[[nodiscard]] auto getColor() const -> Color override { return color_; }
-	auto setColor(Color col) -> void override { color_ = col; }
+	{ return position; }
+	[[nodiscard]] auto getColor() const -> Color override { return color; }
+	auto               setColor(Color col) -> void override { color = col; }
 
-	[[nodiscard]] auto radius() const -> uint32_t { return radius_; }
-	auto               setRadius(uint32_t r) -> void { radius_ = r; }
+	[[nodiscard]] auto getRadius() const -> uint32_t { return radius; }
+	auto               setRadius(uint32_t r) -> void { radius = r; }
 };
 
 }  // namespace elemental

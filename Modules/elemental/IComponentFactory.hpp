@@ -23,9 +23,10 @@ struct IComponentFactory
 	virtual ~IComponentFactory() = default;
 
 	[[nodiscard]] virtual auto getTypeID() const -> TypeInfo = 0;
-	[[nodiscard]] virtual auto size() const -> SizeType      = 0;
+	[[nodiscard]] virtual auto getSize() const -> SizeType   = 0;
 	[[nodiscard]] virtual auto capacity() const -> SizeType  = 0;
-	[[nodiscard]] virtual auto empty() const -> bool { return size() == 0; }
+	[[nodiscard]] virtual auto empty() const -> bool
+	{ return getSize() == 0; }
 
 	virtual auto clear() -> void = 0;
 };

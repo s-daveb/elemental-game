@@ -20,12 +20,12 @@ namespace elemental {
 
 class RectangleViewComponent final : public IViewComponent
 {
-	IComponentFactory& factory_;
-	Point              position_{ 0, 0 };
-	uint32_t           width_{ 64 };
-	uint32_t           height_{ 64 };
-	Color              color_{ 255, 255, 255, 255 };
-	InstanceID         instance_id_{ 0 };
+	IComponentFactory& factory;
+	Point              position{ 0, 0 };
+	uint32_t           width{ 64 };
+	uint32_t           height{ 64 };
+	Color              color{ 255, 255, 255, 255 };
+	InstanceID         instance_id{ 0 };
 
     public:
 	RectangleViewComponent(
@@ -34,34 +34,34 @@ class RectangleViewComponent final : public IViewComponent
 	    uint32_t           w   = 64,
 	    uint32_t           h   = 64,
 	    Color              col = { 255, 255, 255, 255 })
-	    : factory_(f), position_(pos), width_(w), height_(h), color_(col)
+	    : factory(f), position(pos), width(w), height(h), color(col)
 	{
 	}
 
 	~RectangleViewComponent() override = default;
 
 	[[nodiscard]] auto getInstanceId() const -> InstanceID override
-	{ return instance_id_; }
+	{ return instance_id; }
 	[[nodiscard]] auto getTypeIndex() const -> TypeInfo override
 	{ return typeid(RectangleViewComponent); }
 	[[nodiscard]] auto getFactory() const -> IComponentFactory& override
-	{ return factory_; }
+	{ return factory; }
 
-	[[nodiscard]] auto produceDrawCommand(IRenderer& renderer)
+	[[nodiscard]] auto produceDrawCommand(IRenderer& renderer) const
 	    -> std::shared_ptr<IDrawCommand> override;
 
-	auto setPosition(Point pos) -> void override { position_ = pos; }
+	auto setPosition(Point pos) -> void override { position = pos; }
 	[[nodiscard]] auto getPosition() const -> Point override
-	{ return position_; }
-	[[nodiscard]] auto getColor() const -> Color override { return color_; }
-	auto setColor(Color col) -> void override { color_ = col; }
+	{ return position; }
+	[[nodiscard]] auto getColor() const -> Color override { return color; }
+	auto               setColor(Color col) -> void override { color = col; }
 
-	[[nodiscard]] auto width() const -> uint32_t { return width_; }
-	[[nodiscard]] auto height() const -> uint32_t { return height_; }
+	[[nodiscard]] auto getWidth() const -> uint32_t { return width; }
+	[[nodiscard]] auto getHeight() const -> uint32_t { return height; }
 	auto               setSize(uint32_t w, uint32_t h) -> void
 	{
-		width_  = w;
-		height_ = h;
+		width  = w;
+		height = h;
 	}
 };
 

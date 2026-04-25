@@ -14,26 +14,26 @@
 
 namespace elemental {
 
-auto CircleViewComponent::produceDrawCommand(IRenderer& renderer)
+auto CircleViewComponent::produceDrawCommand(IRenderer& renderer) const
     -> std::shared_ptr<IDrawCommand>
 {
-	uint32_t  diameter = radius_ * 2;
-	Rectangle bounds{ position_.x > radius_ ? position_.x - radius_ : 0,
-		          position_.y > radius_ ? position_.y - radius_ : 0,
+	uint32_t  diameter = radius * 2;
+	Rectangle bounds{ position.x > radius ? position.x - radius : 0,
+		          position.y > radius ? position.y - radius : 0,
 		          diameter,
 		          diameter };
 
 	return std::make_shared<ShapeDrawCommand>(
-	    ShapeType::FilledCircle, bounds, color_, renderer);
+	    ShapeType::FilledCircle, bounds, color, renderer);
 }
 
-auto RectangleViewComponent::produceDrawCommand(IRenderer& renderer)
+auto RectangleViewComponent::produceDrawCommand(IRenderer& renderer) const
     -> std::shared_ptr<IDrawCommand>
 {
-	Rectangle bounds{ position_.x, position_.y, width_, height_ };
+	Rectangle bounds{ position.x, position.y, width, height };
 
 	return std::make_shared<ShapeDrawCommand>(
-	    ShapeType::FilledRectangle, bounds, color_, renderer);
+	    ShapeType::FilledRectangle, bounds, color, renderer);
 }
 
 }  // namespace elemental

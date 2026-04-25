@@ -13,7 +13,6 @@
 #include "IComponentFactory.hpp"
 
 #include <array>
-#include <memory>
 #include <optional>
 #include <type_traits>
 
@@ -49,21 +48,21 @@ class ComponentFactory : public IComponentFactory
 	using Components = std::array<std::optional<TComponent>, Capacity>;
 
     private:
-	Components components_{};
-	TypeInfo   type_id_;
-	size_t     size_{ 0 };
+	Components components{};
+	TypeInfo   type_id;
+	size_t     size{ 0 };
 
     public:
-	constexpr ComponentFactory() noexcept : type_id_(typeid(TComponent)) {}
+	constexpr ComponentFactory() noexcept : type_id(typeid(TComponent)) {}
 	~ComponentFactory() override = default;
 
 	[[nodiscard]] auto getTypeID() const -> TypeInfo override
-	{ return type_id_; }
-	[[nodiscard]] auto size() const -> SizeType override { return size_; }
+	{ return type_id; }
+	[[nodiscard]] auto getSize() const -> SizeType override { return size; }
 	[[nodiscard]] auto capacity() const -> SizeType override
 	{ return Capacity; }
 
-	[[nodiscard]] auto empty() const -> bool override { return size_ == 0; }
+	[[nodiscard]] auto empty() const -> bool override { return size == 0; }
 
 	auto clear() -> void override { reset(); }
 
@@ -79,13 +78,13 @@ class ComponentFactory : public IComponentFactory
 	    -> const TComponent&;
 
 	/* Iterator support */
-	auto begin() -> decltype(components_.begin())
-	{ return components_.begin(); }
-	auto end() -> decltype(components_.end()) { return components_.end(); }
-	auto begin() const -> decltype(components_.begin()) const
-	{ return components_.begin(); }
-	auto end() const -> decltype(components_.end()) const
-	{ return components_.end(); }
+	auto begin() -> decltype(components.begin())
+	{ return components.begin(); }
+	auto end() -> decltype(components.end()) { return components.end(); }
+	auto begin() const -> decltype(components.begin()) const
+	{ return components.begin(); }
+	auto end() const -> decltype(components.end()) const
+	{ return components.end(); }
 
     private:
 	void reset() noexcept;
@@ -95,4 +94,4 @@ class ComponentFactory : public IComponentFactory
 
 }  // namespace elemental
 
-#include "ComponentFactory.impl.hpp"
+#include "ComponentFactory.impl.hpp"  // IWYU pragma: export
