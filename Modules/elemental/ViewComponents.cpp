@@ -10,6 +10,7 @@
 #include "CircleViewComponent.hpp"
 #include "RectangleViewComponent.hpp"
 #include "ShapeDrawCommand.hpp"
+#include "TextViewComponent.hpp"
 #include "types/rendering.hpp"
 
 namespace elemental {
@@ -32,6 +33,16 @@ auto RectangleViewComponent::produceDrawCommand(IRenderer& renderer) const
 {
 	Rectangle bounds{ position.x, position.y, width, height };
 
+	return std::make_shared<ShapeDrawCommand>(
+	    ShapeType::FilledRectangle, bounds, color, renderer);
+}
+
+auto TextViewComponent::produceDrawCommand(IRenderer& renderer) const
+    -> std::shared_ptr<IDrawCommand>
+{
+	// TODO: Implement proper text rendering with SDL_ttf
+	// For now, return a placeholder rectangle
+	Rectangle bounds{ position, { width, 16 } };
 	return std::make_shared<ShapeDrawCommand>(
 	    ShapeType::FilledRectangle, bounds, color, renderer);
 }

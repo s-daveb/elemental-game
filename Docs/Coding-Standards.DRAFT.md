@@ -372,6 +372,114 @@ class GameScene : public IState
 
 **Rationale**: Most-commonly-used (public interface) first. Implementation details (private) last.
 
+### Component Class Structure (ECS Pattern)
+**Rule**: Component classes follow a specific structure for ECS integration
+
+```cpp
+class CircleViewComponent final : public IViewComponent
+{
+    // 1. Member variables (in order: factory, data, metadata)
+    IComponentFactory& factory;
+    Point              position{ 0, 0 };
+    uint32_t           radius{ 16 };
+    Color              color{ 255, 255, 255, 255 };
+    InstanceID         instance_id{ 0 };
+
+    public:
+    // 2. Constructor with default values
+    CircleViewComponent(
+        IComponentFactory& f,
+        Point              pos = { 0, 0 },
+        uint32_t           rad = 16,
+        Color              col = { 255, 255, 255, 255 })
+        : factory(f), position(pos), radius(rad), color(col)
+    {
+    }
+
+    // 3. Destructor (usually defaulted)
+    ~CircleViewComponent() override = default;
+
+    // 4. IComponent interface overrides (in declaration order)
+    [[nodiscard]] auto getInstanceId() const -> InstanceID override
+    { return instance_id; }
+    [[nodiscard]] auto getTypeIndex() const -> TypeInfo override
+    { return typeid(CircleViewComponent); }
+    [[nodiscard]] auto getFactory() const -> IComponentFactory& override
+    { return factory; }
+
+    // 5. Primary interface method (e.g., produceDrawCommand for views)
+    [[nodiscard]] auto produceDrawCommand(IRenderer& renderer) const
+        -> std::shared_ptr<IDrawCommand> override;
+
+    // 6. Inherited interface accessors (in logical groups)
+    auto setPosition(Point pos) -> void override { position = pos; }
+    [[nodiscard]] auto getPosition() const -> Point override
+    { return position; }
+    [[nodiscard]] auto getColor() const -> Color override { return color; }
+    auto               setColor(Color col) -> void override { color = col; }
+
+    // 7. Component-specific accessors (grouped by property)
+    [[nodiscard]] auto getRadius() const -> uint32_t { return radius; }
+    auto               setRadius(uint32_t r) -> void { radius = r; }
+};
+```
+
+**Member Variable Order**:
+1. `IComponentFactory&` reference (first, required for interface)
+2. Core data members (position, size, color, etc.)
+3. Metadata (instance_id, etc.)
+
+**Method Order within public section**:
+1. Constructor(s)
+2. Destructor
+3. `IComponent` interface overrides (`getInstanceId`, `getTypeIndex`, `getFactory`)
+4. Primary virtual method (e.g., `produceDrawCommand`)
+5. Base interface accessors (e.g., `IViewComponent` methods)
+6. Component-specific accessors
+
+**Rationale**: Consistent structure makes components easy to read and maintain. Factory reference first emphasizes ECS integration. Interface methods grouped together for clarity.
+
+### Command Class Structure (Draw Commands)
+**Rule**: Command classes use struct with public data members
+
+```cpp
+struct ShapeDrawCommand : public IDrawCommand
+{
+    ShapeType  shape_type;
+    Rectangle  bounds;
+    Color      color;
+    IRenderer& renderer;
+
+    ShapeDrawCommand(
+        ShapeType  shape_type,
+        Rectangle  bounds,
+        Color      color,
+        IRenderer& renderer)
+        : IDrawCommand(bounds, null_data), shape_type(shape_type),
+          bounds(bounds), color(color), renderer(renderer)
+    {
+    }
+
+    auto rectangle() -> Rectangle& override { return bounds; }
+    auto imageData() -> std::shared_ptr<void>& override
+    { return null_data; }
+
+    auto draw() -> ErrorFlag override;
+
+    private:
+    static std::shared_ptr<void> null_data;
+};
+```
+
+**Key Points**:
+- Use `struct` (public by default) for data-carrying commands
+- Data members first (public)
+- Constructor initializes base class and all members
+- Override methods implement IDrawCommand interface
+- Static members (like `null_data`) go in private section
+
+**Rationale**: Commands are simple data structures with behavior. Public data members reduce boilerplate. Renderer reference enables command execution without external context.
+
 ### Function Order in Classes
 **Rule**: Within each access level, order:
 1. Constructors/destructors
