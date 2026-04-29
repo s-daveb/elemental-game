@@ -16,6 +16,8 @@
 #include "types/color.hpp"
 #include "types/rendering.hpp"
 
+#include <queue>
+
 #include <SDL.h>
 #include <SDL_rect.h>
 #include <SDL_render.h>
@@ -23,7 +25,9 @@
 
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <type_traits>
+#include <unordered_map>
 
 namespace elemental {
 class SdlRenderer;
@@ -75,12 +79,40 @@ struct SdlRenderer : public IRenderer
 		    "Invalid type");
 	}
 
-    protected:
+    private:
+	struct TextureRequest
+	{
+		std::string text;
+		void*       font;
+		Color       color;
+	};
+
+	std::queue<TextureRequest> texture_queue;
+	mutable std::mutex         queue_mutex;
+
+	struct TextureCacheEntry
+	{
+		std::string         text;
+		SdlPtr<SDL_Texture> texture;
+	};
+
+	std::unordered_map<std::string, TextureCacheEntry> texture_cache;
+	mutable std::mutex                                 cache_mutex;
+
 	bool is_initialized{ false };
 	SdlRenderer();
 
 	SdlPtr<SDL_Window>   sdl_window_ptr;
 	SdlPtr<SDL_Renderer> sdl_renderer_ptr;
+
+    public:
+	void queueTextTexture(
+	    const std::string& text,
+	    void*              font,
+	    const Color&       color) override;
+	void                  processTextureQueue() override;
+	std::shared_ptr<void> getTextTexture(const std::string& text) override;
+	bool hasTextTexture(const std::string& text) const override;
 };
 
 template<>

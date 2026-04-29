@@ -36,6 +36,17 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 		auto getWindowSize() -> Area override { return { 0, 0 }; }
 		void clearScreen() override {}
 		void flip() override {}
+		void queueTextTexture(const std::string& text,
+		                      void*              font,
+		                      const Color&       color) override
+		{
+		}
+		void                  processTextureQueue() override {}
+		std::shared_ptr<void> getTextTexture(
+		    const std::string& text) override
+		{ return nullptr; }
+		bool hasTextTexture(const std::string& text) const override
+		{ return false; }
 		void blit(std::shared_ptr<void>, const Rectangle&) override {}
 		void drawFilledCircle(int32_t,
 		                      int32_t,

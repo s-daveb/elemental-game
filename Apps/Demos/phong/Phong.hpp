@@ -20,13 +20,17 @@
 #include "elemental/LoopRegulator.hpp"
 #include "elemental/Observable.hpp"
 #include "elemental/Singleton.hpp"
+#include "elemental/StateCommand.hpp"
 
 #include "./GameSettings.hpp"
 #include "./StateStack.hpp"
 
+#include <queue>
+
 #include <any>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <stack>
 #include <thread>
 
@@ -45,6 +49,9 @@ class Phong : public IOCore::Application, public IObserver
 	void recieveMessage(
 	    const Observable& sender,
 	    std::any          message = std::any()) override;
+
+	void queueStateCommand(elemental::StateCommand cmd);
+	void processPendingStateChanges();
 
     protected:
 	/// \name Deleted constructors & operators
@@ -66,8 +73,12 @@ class Phong : public IOCore::Application, public IObserver
 
 	StateStack state_stack;
 
-	GameSettings           settings;
-	IOCore::TomlConfigFile settings_file;
+	GameSettings                        settings;
+	IOCore::TomlConfigFile              settings_file;
+	std::queue<elemental::StateCommand> pending_commands;
+	std::mutex                          command_mutex;
+
+	elemental::SceneConfig game_scene_config;
 };
 
 }  // namespace elemental

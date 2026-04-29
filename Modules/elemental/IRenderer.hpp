@@ -22,6 +22,7 @@
 #include <any>
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <type_traits>
 #include <utility>
 
@@ -67,6 +68,22 @@ struct IRenderer
 	virtual void blit(
 	    std::shared_ptr<void> image_data,
 	    const Rectangle&      placement) = 0;
+
+	/*! \name Texture Queue Methods
+	 * Methods for managing a thread-safe texture queue for text rendering.
+	 * \{ */
+	virtual void queueTextTexture(
+	    const std::string& text,
+	    void*              font,
+	    const Color&       color) = 0;
+
+	virtual void processTextureQueue() = 0;
+
+	virtual std::shared_ptr<void> getTextTexture(
+	    const std::string& text) = 0;
+
+	virtual bool hasTextTexture(const std::string& text) const = 0;
+	/*! \} */
 
 	/*! \name Primitive Drawing Methods
 	 * Methods for drawing primitive shapes directly without textures.

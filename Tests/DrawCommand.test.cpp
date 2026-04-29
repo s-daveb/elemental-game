@@ -31,6 +31,16 @@ class DummyRenderer : public IRenderer
 	explicit DummyRenderer() = default;
 
 	void init(RendererSettings& settings) override {}
+	void queueTextTexture(const std::string& text,
+	                      void*              font,
+	                      const Color&       color) override
+	{
+	}
+	void                  processTextureQueue() override {}
+	std::shared_ptr<void> getTextTexture(const std::string& text) override
+	{ return nullptr; }
+	bool hasTextTexture(const std::string& text) const override
+	{ return false; }
 
 	auto isInitialized() -> bool override { return true; }
 

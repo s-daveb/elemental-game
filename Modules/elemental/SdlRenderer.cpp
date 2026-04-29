@@ -207,6 +207,8 @@ void SdlRenderer::blit(
 SdlRenderer::SdlRenderer()
     : IRenderer(), sdl_window_ptr(nullptr), sdl_renderer_ptr(nullptr)
 {
+	texture_queue{};
+	cache{} / cache{};
 }
 
 void SdlRenderer::drawFilledCircle(
@@ -240,6 +242,84 @@ void SdlRenderer::drawFilledRect(const Rectangle& rect, const Color& color)
 	    color.g,
 	    color.b,
 	    color.a);
+}
+
+void SdlRenderer::queueTextTexture(
+    const std::string& text,
+    void*              font,
+    const Color&       color)
+{
+	std::lock_guard<std::mutex> lock(queue_mutex);
+	texture_queue.push({ text, font, color });
+}
+
+void SdlRenderer::processTextureQueue()
+{
+	std::queue<TextureRequest> local_queue;
+
+	// Move all pending requests to local queue (minimize lock time)
+	{
+		std::lock_guard<std::mutex> lock(queue_mutex);
+		std::swap(local_queue, texture_queue);
+	}
+
+	// Process each request on render thread (SDL context thread)
+	while (!local_queue.empty()) {
+		auto& req = local_queue.front();
+
+		// Skip if already cached
+		{
+			std::lock_guard<std::mutex> cache_lock(cache_mutex);
+			if (texture_cache.find(req.text) !=
+			    texture_cache.end()) {
+				local_queue.pop();
+				continue;
+			}
+		}
+
+		// Create surface from text
+		SDL_Color    sdl_color = { static_cast<Uint8>(req.color.r),
+			                   static_cast<Uint8>(req.color.g),
+			                   static_cast<Uint8>(req.color.b),
+			                   static_cast<Uint8>(req.color.a) };
+		SDL_Surface* surface   = TTF_RenderText_Blended(
+		    req.font, req.text.c_str(), sdl_color);
+		if (!surface) {
+			local_queue.pop();
+			continue;
+		}
+
+		// Create texture from surface
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(
+		    this->sdl_renderer_ptr.get(), surface);
+		if (surface) { SDL_FreeSurface(surface); }
+
+		if (texture) {
+			std::lock_guard<std::mutex> cache_lock(cache_mutex);
+			texture_cache[req.text] =
+			    TextureCacheEntry{ req.text,
+				               SdlPtr<SDL_Texture>{ texture } };
+		}
+
+		local_queue.pop();
+	}
+}
+
+std::shared_ptr<void> SdlRenderer::getTextTexture(const std::string& text)
+{
+	std::lock_guard<std::mutex> lock(cache_mutex);
+	auto                        it = texture_cache.find(text);
+	if (it != texture_cache.end()) {
+		return std::shared_ptr<void>(
+		    it->second.texture.get(), [](void*) {});
+	}
+	return nullptr;
+}
+
+bool SdlRenderer::hasTextTexture(const std::string& text) const
+{
+	std::lock_guard<std::mutex> lock(cache_mutex);
+	return texture_cache.find(text) != texture_cache.end();
 }
 
 // clang-format off
