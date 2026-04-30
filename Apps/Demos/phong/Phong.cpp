@@ -77,7 +77,8 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	}
 	this->video_renderer.init(settings.renderer_settings);
 
-	this->event_emitter.registerObserver(*this);
+	this->event_emitter.registerObserver(
+	    std::ref(static_cast<IObserver&>(*this)));
 	this->event_emitter.registerObserver(state_stack);
 	this->event_emitter.pollEvents();
 

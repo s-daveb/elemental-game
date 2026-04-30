@@ -207,8 +207,6 @@ void SdlRenderer::blit(
 SdlRenderer::SdlRenderer()
     : IRenderer(), sdl_window_ptr(nullptr), sdl_renderer_ptr(nullptr)
 {
-	texture_queue{};
-	cache{} / cache{};
 }
 
 void SdlRenderer::drawFilledCircle(
@@ -246,7 +244,7 @@ void SdlRenderer::drawFilledRect(const Rectangle& rect, const Color& color)
 
 void SdlRenderer::queueTextTexture(
     const std::string& text,
-    void*              font,
+    FontHandle         font,
     const Color&       color)
 {
 	std::lock_guard<std::mutex> lock(queue_mutex);
@@ -283,7 +281,9 @@ void SdlRenderer::processTextureQueue()
 			                   static_cast<Uint8>(req.color.b),
 			                   static_cast<Uint8>(req.color.a) };
 		SDL_Surface* surface   = TTF_RenderText_Blended(
-		    req.font, req.text.c_str(), sdl_color);
+		    static_cast<TTF_Font*>(req.font.get()),
+		    req.text.c_str(),
+		    sdl_color);
 		if (!surface) {
 			local_queue.pop();
 			continue;

@@ -19,6 +19,7 @@
 #include "elemental/IRenderer.hpp"
 #include "elemental/LoopRegulator.hpp"
 #include "elemental/Observable.hpp"
+#include "elemental/SceneConfig.hpp"
 #include "elemental/Singleton.hpp"
 #include "elemental/StateCommand.hpp"
 

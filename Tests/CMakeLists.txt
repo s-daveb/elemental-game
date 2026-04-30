@@ -33,6 +33,11 @@ target_compile_definitions(test-runner PRIVATE
   -DNO_GUI=1
 )
 
+target_compile_options(test-runner
+  PUBLIC
+  -Werror
+)
+
 target_include_directories(test-runner
   #PRIVATE ${Elemental_ARTIFACT_DIR}/include/elemental
   PRIVATE ${Elemental_CMAKE_SOURCE_DIR}/Tests

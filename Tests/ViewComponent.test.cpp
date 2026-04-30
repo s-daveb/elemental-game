@@ -37,7 +37,7 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 		void clearScreen() override {}
 		void flip() override {}
 		void queueTextTexture(const std::string& text,
-		                      void*              font,
+		                      FontHandle         font,
 		                      const Color&       color) override
 		{
 		}

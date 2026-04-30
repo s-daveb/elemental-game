@@ -32,7 +32,7 @@ class DummyRenderer : public IRenderer
 
 	void init(RendererSettings& settings) override {}
 	void queueTextTexture(const std::string& text,
-	                      void*              font,
+	                      FontHandle         font,
 	                      const Color&       color) override
 	{
 	}

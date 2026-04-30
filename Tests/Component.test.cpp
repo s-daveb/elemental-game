@@ -44,7 +44,6 @@ TEST_CASE("Test IComponent Base Interface", "[component]")
 	ComponentFactory<TestComponent> factory;
 	auto&                           comp = factory.create();
 
-	REQUIRE(&comp != nullptr);
 	REQUIRE(&comp.getFactory() == &factory);
 	REQUIRE(comp.getInstanceId() >= 0);
 }

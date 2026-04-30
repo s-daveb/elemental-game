@@ -51,7 +51,6 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 
 		auto& comp = factory.create();
 
-		REQUIRE(&comp != nullptr);
 		REQUIRE(!factory.empty());
 		REQUIRE(factory.getSize() == 1);
 	}
@@ -72,8 +71,9 @@ BEGIN_TEST_SUITE("elemental::ComponentFactory")
 	{
 		ComponentFactory<TestComponent> factory;
 
-		REQUIRE_THROWS_AS([&]() -> void { factory.get(0); }(),
-		                  std::out_of_range);
+		REQUIRE_THROWS_AS(
+		    [&]() -> void { static_cast<void>(factory.get(0)); }(),
+		    std::out_of_range);
 	}
 
 	TEST_CASE("ComponentFactory::clear resets the component pool")

@@ -74,7 +74,7 @@ struct IRenderer
 	 * \{ */
 	virtual void queueTextTexture(
 	    const std::string& text,
-	    void*              font,
+	    FontHandle         font,
 	    const Color&       color) = 0;
 
 	virtual void processTextureQueue() = 0;
@@ -93,6 +93,7 @@ struct IRenderer
 	    int32_t      y,
 	    int32_t      radius,
 	    const Color& color) = 0;
+
 	virtual void drawFilledRect(
 	    const Rectangle& rect,
 	    const Color&     color) = 0;

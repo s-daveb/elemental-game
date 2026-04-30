@@ -12,9 +12,13 @@
 #include "IOCore/util/serialization.hpp"
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 namespace elemental {
+
+/// Type-safe handle for font resources (type-erased TTF_Font)
+using FontHandle = std::shared_ptr<void>;
 
 struct Point
 {

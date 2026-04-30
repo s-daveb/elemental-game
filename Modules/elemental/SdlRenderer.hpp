@@ -83,7 +83,7 @@ struct SdlRenderer : public IRenderer
 	struct TextureRequest
 	{
 		std::string text;
-		void*       font;
+		FontHandle  font;
 		Color       color;
 	};
 
@@ -108,7 +108,7 @@ struct SdlRenderer : public IRenderer
     public:
 	void queueTextTexture(
 	    const std::string& text,
-	    void*              font,
+	    FontHandle         font,
 	    const Color&       color) override;
 	void                  processTextureQueue() override;
 	std::shared_ptr<void> getTextTexture(const std::string& text) override;
