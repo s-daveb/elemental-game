@@ -14,14 +14,15 @@
 
 #include <exception>
 #include <iostream>
+#include <memory>
 
 using namespace elemental;
 
 auto main(int argc, c::const_string args[], c::const_string env[]) -> int
 {
 	try {
-		auto game_instance = Phong(argc, args, env);
-		return game_instance.run();
+		auto game_instance = std::make_unique<Phong>(argc, args, env);
+		return game_instance->run();
 	} catch (IOCore::Exception& custom_exception) {
 		std::cerr << custom_exception.what() << std::endl;
 		return 1;

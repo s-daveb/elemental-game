@@ -109,6 +109,9 @@ void SdlRenderer::init(RendererSettings& settings)
 		HANDLE_SDL_ERROR("Could not set SDL_Renderer LogicalSize");
 	}
 
+	SDL_SetRenderDrawBlendMode(
+	    this->sdl_renderer_ptr.get(), SDL_BLENDMODE_BLEND);
+
 	this->is_initialized = true;
 }
 
@@ -161,8 +164,8 @@ void SdlRenderer::clearScreen()
 {
 	ASSERT(this->sdl_renderer_ptr != nullptr);
 
-	// Set bg to black
-	SDL_SetRenderDrawColor(this->sdl_renderer_ptr.get(), 0, 0, 0, 0);
+	// Set bg to black (fully opaque)
+	SDL_SetRenderDrawColor(this->sdl_renderer_ptr.get(), 0, 0, 0, 255);
 
 	if (kError == SDL_RenderClear(this->sdl_renderer_ptr.get())) {
 		HANDLE_SDL_ERROR("Call to SDL_RenderClear failed!");

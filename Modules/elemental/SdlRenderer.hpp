@@ -79,6 +79,13 @@ struct SdlRenderer : public IRenderer
 		    "Invalid type");
 	}
 
+    protected:
+	bool is_initialized{ false };
+	SdlRenderer();
+
+	SdlPtr<SDL_Window>   sdl_window_ptr;
+	SdlPtr<SDL_Renderer> sdl_renderer_ptr;
+
     private:
 	struct TextureRequest
 	{
@@ -98,12 +105,6 @@ struct SdlRenderer : public IRenderer
 
 	std::unordered_map<std::string, TextureCacheEntry> texture_cache;
 	mutable std::mutex                                 cache_mutex;
-
-	bool is_initialized{ false };
-	SdlRenderer();
-
-	SdlPtr<SDL_Window>   sdl_window_ptr;
-	SdlPtr<SDL_Renderer> sdl_renderer_ptr;
 
     public:
 	void queueTextTexture(
