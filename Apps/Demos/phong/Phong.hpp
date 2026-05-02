@@ -29,6 +29,7 @@
 #include <queue>
 
 #include <any>
+#include <atomic>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -63,7 +64,7 @@ class Phong : public IOCore::Application, public IObserver
 	auto operator=(Phong&&) -> Phong&      = delete;
 	/// \}
 
-	bool                            is_running;
+	std::atomic<bool>               is_running{ true };
 	IOCore::Dictionary<std::thread> running_threads;
 
 	void event_and_rendering_loop();

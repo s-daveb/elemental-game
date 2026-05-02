@@ -18,6 +18,13 @@ namespace elemental {
 void Observable::registerObserver(Observable::ObserverRef observer)
 { this->observers.push_back(observer); }
 
+void Observable::deregisterObserver(Observable::ObserverRef observer)
+{
+	this->observers.remove_if([&observer](const ObserverRef& ref) {
+		return &ref.get() == &observer.get();
+	});
+}
+
 void Observable::notify_all(std::any message)
 {
 	for (auto& observer_ref: this->observers) {

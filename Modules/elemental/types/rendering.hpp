@@ -112,7 +112,7 @@ struct RendererSettings
 	WindowParameters window;
 	Resolution       resolution;
 
-	TOML_CLASS(RendererSettings, window);  // resolution);
+	TOML_CLASS(RendererSettings, window, resolution);
 };
 
 }  // namespace elemental

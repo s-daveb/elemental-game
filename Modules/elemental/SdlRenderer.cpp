@@ -47,6 +47,12 @@ SdlRenderer::~SdlRenderer()
 
 void SdlRenderer::init(RendererSettings& settings)
 {
+	if (this->is_initialized) {
+		DBG_PRINT(
+		    "SdlRenderer::init called on already-initialized renderer, "
+		    "skipping.");
+		return;
+	}
 	if (SDL_InitSubSystem(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
 		HANDLE_SDL_ERROR("Could not initialize video subsystem");
 	}
@@ -133,12 +139,16 @@ auto SdlRenderer::getResolution() -> Resolution
 {
 	int width, height;
 
-	/* SDL does not seem to catch this condition sometimes */
 	ASSERT(this->sdl_renderer_ptr.get() != nullptr)
 
-	if (kError == SDL_GetRendererOutputSize(
-	                  this->sdl_renderer_ptr.get(), &width, &height)) {
-		HANDLE_SDL_ERROR("Could not get Renderer output size");
+	SDL_RenderGetLogicalSize(this->sdl_renderer_ptr.get(), &width, &height);
+
+	if (width == 0 || height == 0) {
+		if (kError ==
+		    SDL_GetRendererOutputSize(
+		        this->sdl_renderer_ptr.get(), &width, &height)) {
+			HANDLE_SDL_ERROR("Could not get Renderer output size");
+		}
 	}
 
 	return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };

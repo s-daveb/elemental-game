@@ -26,6 +26,12 @@ PongScene::PongScene(const SceneConfig& config) : GameScene(config)
 	pool.registerFactory<PaddlePositionComponent>(
 	    std::ref(paddle_pos_factory));
 
+	// Fetch actual resolution first so all positions are correct
+	auto resolution = renderer.getResolution();
+	court_width     = resolution.width;
+	court_height    = resolution.height;
+	enemy_x         = static_cast<float>(court_width) - 36.0f;
+
 	constexpr float half_paddle = static_cast<float>(kPaddleHeight) / 2.0f;
 
 	auto& ball = ball_pos_factory.create(
@@ -58,11 +64,6 @@ PongScene::PongScene(const SceneConfig& config) : GameScene(config)
 	if (!enemy_entity.views_ref.empty()) {
 		enemy_view_ref = enemy_entity.views_ref[0].get();
 	}
-
-	auto resolution = renderer.getResolution();
-	court_width     = resolution.width;
-	court_height    = resolution.height;
-	enemy_x         = static_cast<float>(court_width) - 36.0f;
 }
 
 auto PongScene::onUpdate() -> void

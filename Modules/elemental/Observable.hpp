@@ -15,6 +15,7 @@
 #include <functional>
 #include <list>
 
+///\todo:  Move this to the unit-testing `common` header util/testing.hpp
 #ifdef UNIT_TEST
 #	define MOCKABLE virtual
 #else
@@ -43,6 +44,7 @@ class Observable
 	/**  \} */
 
 	MOCKABLE void registerObserver(ObserverRef);
+	MOCKABLE void deregisterObserver(ObserverRef);
 
     protected:
 	Observable() = default;

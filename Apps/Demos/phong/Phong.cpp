@@ -49,7 +49,7 @@ const GameSettings kDefaultSettings{ { { "Phong",
 	                                 WindowPlacement::Centered,
 	                                 Position2D({ 0, 0 }),
 	                                 { 1270_px, 720_px } },
-	                               { 1024_px, 768_px } } };
+	                               { 1280_px, 720_px } } };
 /// \name Helper Functions
 /// \{
 void print_cycle_rate(
@@ -57,6 +57,7 @@ void print_cycle_rate(
     c::const_string label = "cycle_length")
 { DBG_PRINT(label << cycle_length.count() << "ms."); }
 /// \}
+
 Phong::Phong(int argc, c::const_string args[], c::const_string env[])
     : Application(argc, args, env), IObserver(), running_threads(),
       video_renderer(IRenderer::GetInstance<SdlRenderer>()),
@@ -64,16 +65,20 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
       settings_file(
           paths::get_app_config_root() / "phong" / "settings.toml",
           CreateDirs::Enabled),
-      settings(), state_stack()
+      settings(), state_stack(), is_running(false)
 {
-	// Load settings -or- create default settings
 	try {
 		settings_file.read();
 		settings = settings_file.get<GameSettings>();
 	} catch (std::exception& except) {
+		settings = kDefaultSettings;
 		settings_file.set(kDefaultSettings);
 		settings_file.write();
-		settings = settings_file.get<GameSettings>();
+	}
+	if (settings.renderer_settings.resolution.width == 0 ||
+	    settings.renderer_settings.resolution.height == 0) {
+		settings.renderer_settings.resolution =
+		    kDefaultSettings.renderer_settings.resolution;
 	}
 	this->video_renderer.init(settings.renderer_settings);
 
@@ -144,7 +149,14 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	}
 }
 Phong::~Phong()
-{ video_renderer.deactivate(); }
+{
+	auto& thisRef = *this;
+
+	this->event_emitter.deregisterObserver(std::ref(thisRef));
+	this->event_emitter.deregisterObserver(state_stack);
+
+	video_renderer.deactivate();
+}
 
 auto Phong::run() -> int
 {
@@ -187,6 +199,7 @@ void Phong::event_and_rendering_loop()
 		this->video_renderer.clearScreen();
 
 		this->event_emitter.pollEvents();
+		this->event_emitter.sendEvents();
 
 		auto cmds = this->state_stack.draw();
 
@@ -204,8 +217,6 @@ void Phong::simulation_thread_loop()
 
 	do {
 		loop_regulator.startUpdate();
-
-		this->event_emitter.sendEvents();
 
 		state_stack.step();
 

@@ -12,7 +12,8 @@
 
 #include "IOCore/Exception.hpp"
 
-#include <fmt/format.h>
+#include "fmt/format.h"
+
 #include <fontconfig/fontconfig.h>
 
 #include <stdexcept>
