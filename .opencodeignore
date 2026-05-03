@@ -1,0 +1,71 @@
+# Build output
+build/
+build.*/
+
+# CMake artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+*.ninja
+*.ninja_deps
+*.ninja_log
+cpm-package-lock.cmake
+
+# CPM / external deps (can be large)
+CPM_modules/
+_deps/
+
+# Qt internals
+.qt/
+
+# Compiled objects & binaries
+*.o
+*.a
+*.so
+*.dylib
+*.lo
+*.la
+out/
+
+# clangd cache
+.cache/
+compile_commands.json
+
+# Test artifacts
+Testing/
+
+# macOS
+.DS_Store
+._*
+
+# Version control
+.git/
+
+# Editor metadata
+.vim/
+.vscode/
+.vscodium/
+
+# AI tool metadata
+.agents/
+AGENTS.md
+CLAUDE.md
+.claude/
+Memory/
+.clinerules
+
+# Logs & databases
+*.log
+*.sql
+*.sqlite
+
+# Docs (generated)
+docs/
+Doxyfile
+
+# Misc
+*.bak
+*.old
+neovim.json
