@@ -10,6 +10,7 @@ add_library(elemental
     FontConfig.cpp
     GameScene.cpp
     ShapeDrawCommand.cpp
+    TextDrawCommand.cpp
     ViewComponents.cpp
 )
 

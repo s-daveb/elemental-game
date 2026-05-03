@@ -196,19 +196,60 @@ void Phong::event_and_rendering_loop()
 
 	do {
 		frame_regulator.startUpdate();
+
+		// PHASE 1: State management (render thread only)
+		// Execute state changes queued by previous frame's
+		// events/simulation
+		this->processPendingStateChanges();
+
+		// PHASE 2: Texture preparation (render thread only)
+		// Create any textures needed by current state
+		this->video_renderer.processTextureQueue();
+
+		// PHASE 3: Clear and setup
 		this->video_renderer.clearScreen();
 
+		// PHASE 4: Event processing (may queue state changes for NEXT
+		// frame)
 		this->event_emitter.pollEvents();
 		this->event_emitter.sendEvents();
 
+		// PHASE 5: Draw current state (uses pre-created textures)
 		auto cmds = this->state_stack.draw();
 
+		// PHASE 6: Present and regulate
 		auto cycle_delay_ms = frame_regulator.delay();
 
 		video_renderer.flip();
 	} while (this->is_running);
 
 	this->is_running = false;
+}
+
+void Phong::processPendingStateChanges()
+{
+	std::lock_guard<std::mutex> lock(command_mutex);
+
+	while (!pending_commands.empty()) {
+		auto cmd = pending_commands.front();
+		pending_commands.pop();
+
+		switch (cmd) {
+		case StateCommand::Clear: state_stack.clear(); break;
+		case StateCommand::Pop: state_stack.pop(); break;
+		case StateCommand::PushMainMenu: {
+			this->state_stack.pushState(
+			    std::make_unique<MainMenu>());
+			break;
+		}
+		case StateCommand::PushGame: {
+			this->state_stack.pushState(
+			    std::make_unique<PongScene>(game_scene_config));
+			break;
+		}
+		default: break;
+		}
+	}
 }
 
 void Phong::simulation_thread_loop()

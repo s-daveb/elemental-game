@@ -31,6 +31,7 @@ struct StateStack : public IObserver, public IStateMachine
 
 	void step() override;
 	void pop();
+	void clear();
 
 	void pushState(std::unique_ptr<IState>& state);
 	void pushState(std::unique_ptr<IState>&& state);

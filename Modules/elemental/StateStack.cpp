@@ -32,6 +32,9 @@ auto StateStack::step() -> void
 void StateStack::pop()
 { this->stack.pop(); }
 
+void StateStack::clear()
+{ this->stack = std::stack<std::unique_ptr<IState>>(); }
+
 auto StateStack::pushState(std::unique_ptr<IState>& state) -> void
 { this->stack.push(std::move(state)); }
 

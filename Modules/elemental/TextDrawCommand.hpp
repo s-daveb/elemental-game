@@ -43,6 +43,7 @@ struct TextDrawCommand : public IDrawCommand
 	{ return null_data; }
 
 	auto draw() -> ErrorFlag override;
+	void prepare(FontHandle font);
 };
 
 }  // namespace elemental
