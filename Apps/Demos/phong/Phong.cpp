@@ -82,6 +82,14 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	}
 	this->video_renderer.init(settings.renderer_settings);
 
+	// Load menu font
+	auto* raw_font = TTF_OpenFont("fonts/monospace.ttf", 48);
+	if (!raw_font) {
+		throw IOCore::Exception(
+		    fmt::format("Failed to load font: {}", TTF_GetError()));
+	}
+	this->menu_font = SdlPtr<TTF_Font>(raw_font);
+
 	this->event_emitter.registerObserver(
 	    std::ref(static_cast<IObserver&>(*this)));
 	this->event_emitter.registerObserver(state_stack);
@@ -239,7 +247,8 @@ void Phong::processPendingStateChanges()
 		case StateCommand::Pop: state_stack.pop(); break;
 		case StateCommand::PushMainMenu: {
 			this->state_stack.pushState(
-			    std::make_unique<MainMenu>());
+			    std::make_unique<MainMenu>(
+			        video_renderer, menu_font));
 			break;
 		}
 		case StateCommand::PushGame: {

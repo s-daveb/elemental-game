@@ -1,194 +1,93 @@
-/*
- * Copyright © 2024 Saul D. Beniquez
- * License: Mozilla Public License v. 2.0
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v.2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at https://mozilla.org/MPL/2.0/.
- */
-
 #include "MainMenu.hpp"
 
-#include "util/debug.hpp"
+#include "elemental/IRenderer.hpp"
+#include "elemental/TextDrawCommand.hpp"
+#include "elemental/types/rendering.hpp"
 
-#include "IOCore/Exception.hpp"
-#include "IOCore/types/errors.hpp"
+#include "Phong.hpp"
 
-#include "DrawCommand.hpp"
-#include "FontConfig.hpp"
-#include "IDrawCommand.hpp"
-#include "IRenderer.hpp"
-#include "IState.hpp"
-#include "SdlRenderer.hpp"
-#include "types/rendering.hpp"
-
-#include <SDL.h>
-#include <fmt/core.h>
+#include <SDL_events.h>
+#include <SDL_scancode.h>
 
 #include <any>
-#include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <exception>
-#include <list>
-#include <memory>
-#include <nonstd/span.hpp>
-#include <vector>
 
-using elemental::MainMenu;
+namespace elemental {
 
-static auto font_color          = SDL_Color{ 255, 255, 255 };
-static auto selected_font_color = SDL_Color{ 255, 0, 0 };
+MainMenu::MainMenu(IRenderer& r, FontHandle f) : IState(), renderer(r), font(f)
+{ queueTextures(); }
 
-MainMenu::MainMenu() : IState()
+void MainMenu::queueTextures()
 {
-	static IRenderer& renderer = IRenderer::GetInstance<SdlRenderer>();
-
-	this->properties.screen_width  = renderer.getWindowSize().width;
-	this->properties.screen_height = renderer.getWindowSize().height;
-
-	SDL_GetKeyboardState(
-	    reinterpret_cast<int*>(&(properties.keyboard_size)));
-	init_textures();
+	for (const auto& item: menu_items) {
+		renderer.queueTextTexture(
+		    item, font, Color{ 255, 255, 255, 255 });
+		renderer.queueTextTexture(
+		    item, font, Color{ 255, 255, 0, 255 });
+	}
 }
 
 auto MainMenu::step() -> void {}
 
-auto MainMenu::recieveMessage(const Observable& sender, std::any message)
-    -> void
+void MainMenu::recieveMessage(const Observable&, std::any message)
 {
-	ASSERT_MSG(message.has_value(), "[Message : std::any] is empty");
-
-	SDL_Event event = std::any_cast<SDL_Event>(message);
-	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-		handle_events(event);
+	if (!message.has_value()) return;
+	try {
+		auto event = std::any_cast<SDL_Event>(message);
+		handleInput(event);
+	} catch (const std::bad_any_cast&) {
 	}
+}
+
+void MainMenu::handleInput(const SDL_Event& event)
+{
+	if (event.type != SDL_KEYDOWN) return;
+	switch (event.key.keysym.scancode) {
+	case SDL_SCANCODE_UP:
+		if (selected_index > 0) --selected_index;
+		break;
+	case SDL_SCANCODE_DOWN:
+		if (selected_index < menu_items.size() - 1) ++selected_index;
+		break;
+	case SDL_SCANCODE_RETURN:
+	case SDL_SCANCODE_SPACE:
+		switch (selected_index) {
+		case 0:  // Start Game
+			renderer.queueStateCommand(StateCommand::PushGame);
+			break;
+		case 1: {  // Exit
+			SDL_Event quit{};
+			quit.type = SDL_QUIT;
+			SDL_PushEvent(&quit);
+			break;
+		}
+		}
+		break;
+	default: break;
+	}
+}
+
+auto MainMenu::getItemColor(std::size_t idx) const -> Color
+{
+	return (idx == selected_index) ? Color{ 255, 255, 0, 255 }
+	                               : Color{ 255, 255, 255, 255 };
 }
 
 auto MainMenu::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
-
 {
-	static IRenderer& renderer = IRenderer::GetInstance<SdlRenderer>();
-	std::list<std::shared_ptr<IDrawCommand>> result;
-
-	for (size_t i = 0; i < menu_items.size(); i++) {
-		TextureDataPtr texture;
-
-		if (i == selected_menu_item) {
-			texture = selected_textures.at(i);
-		} else {
-			texture = unselected_textures.at(i);
-		}
-		auto sdl_texture =
-		    std::static_pointer_cast<SDL_Texture>(texture);
-
-		SDL_Rect sdl_rect = { 0, 0, 0, 0 };
-		SDL_QueryTexture(
-		    texture, nullptr, nullptr, &sdl_rect.w, &sdl_rect.h);
-
-		sdl_rect.x = (properties.screen_width / 2) - (sdl_rect.w / 2);
-		sdl_rect.y =
-		    ((properties.screen_height / 2) + (i * sdl_rect.h));
-
-		auto rect = renderer.toRectangle<SDL_Rect>(sdl_rect);
-		result.push_back(
-		    std::make_shared<DrawCommand>(renderer, rect, sdl_texture));
+	std::list<std::shared_ptr<IDrawCommand>> cmds;
+	const int                                cx = 1280 / 2;
+	int                                      y  = kMenuStartY;
+	for (std::size_t i = 0; i < menu_items.size(); ++i) {
+		Rectangle bounds{ static_cast<uint32_t>(cx - 100),
+			          static_cast<uint32_t>(y),
+			          200,
+			          50 };
+		cmds.push_back(
+		    std::make_shared<TextDrawCommand>(
+		        menu_items[i], bounds, getItemColor(i), renderer));
+		y += kMenuItemHeight + kMenuItemSpacing;
 	}
-	return result;
+	return cmds;
 }
 
-void MainMenu::handle_events(InputEvent& event)
-{
-	ASSERT(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP);
-
-	this->state.keystates = nonstd::span<const uint8_t>(
-	    SDL_GetKeyboardState(nullptr), properties.keyboard_size);
-
-	// Check for Up Arrow key
-	if (this->state.keystates[SDL_SCANCODE_UP]) {
-		DBG_PRINT(
-		    fmt::format(
-		        "Message received {} {}",
-		        "UP",
-		        this->selected_menu_item));
-		if (this->selected_menu_item == 0) {
-			this->selected_menu_item = (menu_items.size() - 1);
-		} else {
-			this->selected_menu_item--;
-		}
-	}
-	// Check for Down Arrow key
-	if (this->state.keystates[SDL_SCANCODE_DOWN]) {
-		DBG_PRINT(
-		    fmt::format(
-		        "Message received {} {}",
-		        "DOWN",
-		        this->selected_menu_item));
-		if (++this->selected_menu_item < menu_items.size()) {
-			;
-		} else {
-			this->selected_menu_item = 0;
-		}
-	}
-	if (this->state.keystates[SDL_SCANCODE_RETURN]) {
-		DBG_PRINT(
-		    fmt::format(
-		        "Message received {} {}",
-		        "RETURN",
-		        this->selected_menu_item));
-
-		if (this->selected_menu_item == 2) {  // index 2 = quit button
-			auto event_ptr  = std::make_unique<SDL_Event>();
-			event_ptr->type = SDL_QUIT;
-			SDL_PushEvent(event_ptr.get());
-		}
-	}
-}
-
-void MainMenu::init_textures()
-{
-	SdlRenderer& sdl_renderer = IRenderer::GetInstance<SdlRenderer>();
-
-	FontConfig& font_book = FontConfig::getInstance();
-	auto        font_path = font_book.getFont("monospace");
-
-	font_ptr = TTF_OpenFont(font_path.c_str(), 24);
-
-	if (font_ptr == nullptr) {
-		throw IOCore::Exception("Failed to load font");
-	}
-
-	for (auto& item: menu_items) {
-		// Unselected texture
-		auto surface =
-		    TTF_RenderText_Solid(font_ptr, item.c_str(), font_color);
-		if (surface == nullptr) {
-			throw IOCore::Exception("Failed to render text");
-		}
-		auto texture = SDL_CreateTextureFromSurface(
-		    sdl_renderer.get<SDL_Renderer*>(), surface);
-		if (texture == nullptr) {
-			throw IOCore::Exception("Failed to create texture");
-		}
-		unselected_textures.emplace_back(texture);
-
-		SDL_FreeSurface(surface);
-
-		// Selected texture
-		surface = TTF_RenderText_Solid(
-		    font_ptr, item.c_str(), selected_font_color);
-		if (surface == nullptr) {
-			throw IOCore::Exception("Failed to render text");
-		}
-		texture = SDL_CreateTextureFromSurface(
-		    sdl_renderer.get<SDL_Renderer*>(), surface);
-		if (texture == nullptr) {
-			throw IOCore::Exception("Failed to create texture");
-		}
-		selected_textures.emplace_back(texture);
-
-		SDL_FreeSurface(surface);
-	}
-}
-// clang-format off
-// vim: set foldmethod=syntax foldminlines=10 textwidth=80 ts=8 sts=0 sw=8 noexpandtab ft=cpp.doxygen :
+}  // namespace elemental

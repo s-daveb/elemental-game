@@ -44,6 +44,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #include <memory>
 
@@ -63,6 +64,7 @@ struct SdlResourceDeleter
 	{ SDL_DestroyTexture(texture_ptr); }
 	auto operator()(SDL_Joystick* joystick_ptr) -> void
 	{ SDL_JoystickClose(joystick_ptr); }
+	auto operator()(TTF_Font* font_ptr) -> void { TTF_CloseFont(font_ptr); }
 };
 
 template<typename TSdlData, typename TDeleter = SdlResourceDeleter>

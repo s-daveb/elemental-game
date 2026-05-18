@@ -47,6 +47,8 @@ struct SdlRenderer : public IRenderer
 	auto getResolution() -> Resolution override;
 	auto getWindowSize() -> Area override;
 
+	void queueStateCommand(StateCommand cmd) override;
+
 	void clearScreen() override;
 	void flip() override;
 

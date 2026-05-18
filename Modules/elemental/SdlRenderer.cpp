@@ -255,6 +255,13 @@ void SdlRenderer::drawFilledRect(const Rectangle& rect, const Color& color)
 	    color.a);
 }
 
+void SdlRenderer::queueStateCommand(StateCommand cmd)
+{
+	// SdlRenderer doesn't handle state commands - this is a placeholder
+	// Apps should cast to Phong* if they need to queue state commands
+	(void)cmd;  // Suppress unused warning
+}
+
 void SdlRenderer::queueTextTexture(
     const std::string& text,
     FontHandle         font,
@@ -294,9 +301,7 @@ void SdlRenderer::processTextureQueue()
 			                   static_cast<Uint8>(req.color.b),
 			                   static_cast<Uint8>(req.color.a) };
 		SDL_Surface* surface   = TTF_RenderText_Blended(
-		    static_cast<TTF_Font*>(req.font.get()),
-		    req.text.c_str(),
-		    sdl_color);
+		    req.font.get(), req.text.c_str(), sdl_color);
 		if (!surface) {
 			local_queue.pop();
 			continue;

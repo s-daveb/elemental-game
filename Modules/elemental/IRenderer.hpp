@@ -14,6 +14,7 @@
 #include "IOCore/types.hpp"
 
 #include "Singleton.hpp"
+#include "StateCommand.hpp"
 #include "types/color.hpp"
 #include "types/rendering.hpp"
 
@@ -53,6 +54,9 @@ struct IRenderer
 
 	//! \brief Does what it says on the tin.
 	virtual auto getWindowSize() -> Area = 0;
+
+	//! \brief Queue a state command for processing
+	virtual void queueStateCommand(StateCommand cmd) = 0;
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display

@@ -19,6 +19,7 @@
 #include "elemental/IRenderer.hpp"
 #include "elemental/LoopRegulator.hpp"
 #include "elemental/Observable.hpp"
+#include "elemental/SDL_Memory.hpp"
 #include "elemental/SceneConfig.hpp"
 #include "elemental/Singleton.hpp"
 #include "elemental/StateCommand.hpp"
@@ -27,6 +28,8 @@
 #include "./StateStack.hpp"
 
 #include <queue>
+
+#include <SDL_ttf.h>
 
 #include <any>
 #include <atomic>
@@ -81,6 +84,7 @@ class Phong : public IOCore::Application, public IObserver
 	std::mutex                          command_mutex;
 
 	elemental::SceneConfig game_scene_config;
+	FontHandle             menu_font;
 };
 
 }  // namespace elemental

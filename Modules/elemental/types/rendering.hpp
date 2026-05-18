@@ -11,14 +11,19 @@
 
 #include "IOCore/util/serialization.hpp"
 
+#include "SDL_Memory.hpp"
+
+#include <SDL_ttf.h>
+
 #include <cstdint>
 #include <memory>
 #include <string>
 
 namespace elemental {
 
-/// Type-safe handle for font resources (type-erased TTF_Font)
-using FontHandle = std::shared_ptr<void>;
+/// Type-safe handle for font resources (managed TTF_Font* with automatic
+/// cleanup)
+using FontHandle = SdlPtr<TTF_Font>;
 
 struct Point
 {
