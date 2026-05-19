@@ -28,7 +28,7 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 
 		void init(RendererSettings&) override { return; }
 		void deactivate() override { return; }
-		auto isInitialized() -> bool override { return false; }
+		auto isInitialized() -> bool override { return true; }
 
 		auto getWindowSize() -> Area override { return { 0, 0 }; }
 		auto getResolution() -> Resolution override { return { 0, 0 }; }
@@ -62,12 +62,15 @@ BEGIN_TEST_SUITE("elemental::IRenderer")
 		                      const Color&       color) override
 		{
 		}
-		void                  processTextureQueue() override {}
-		std::shared_ptr<void> getTextTexture(
-		    const std::string& text) override
+		void processTextureQueue() override {}
+
+		auto getTextTexture(const std::string& text)
+		    -> std::shared_ptr<void> override
 		{ return nullptr; }
 		bool hasTextTexture(const std::string& text) const override
 		{ return false; }
+
+		void queueStateCommand(StateCommand cmd) override { (void)cmd; }
 
 	    protected:
 		DummyRenderer() : IRenderer() {}

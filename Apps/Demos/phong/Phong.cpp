@@ -82,8 +82,35 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	}
 	this->video_renderer.init(settings.renderer_settings);
 
-	// Load menu font
-	auto* raw_font = TTF_OpenFont("fonts/monospace.ttf", 48);
+	// Load menu font — try project font first, then system fallbacks
+	const char* font_paths[] = {
+		"fonts/monospace.ttf",
+#if defined(__APPLE__)
+		// macOS
+		"/System/Library/Fonts/Menlo.ttc",
+		"/System/Library/Fonts/Monaco.ttf",
+		"/System/Library/Fonts/SFNSMono.ttf",
+		"/Library/Fonts/Courier New.ttf",
+#elif defined(_WIN32)
+		// Windows
+		"C:/Windows/Fonts/consola.ttf",
+		"C:/Windows/Fonts/cour.ttf",
+		"C:/Windows/Fonts/lucida.ttf",
+#else
+		// Linux
+		"/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+		"/usr/share/fonts/truetype/liberation/"
+		"LiberationMono-Regular.ttf",
+		"/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf",
+		"/usr/share/fonts/truetype/freefont/FreeMono.ttf",
+		"/usr/share/fonts/TTF/DejaVuSansMono.ttf",
+#endif
+	};
+	TTF_Font* raw_font = nullptr;
+	for (const auto* path: font_paths) {
+		raw_font = TTF_OpenFont(path, 48);
+		if (raw_font) break;
+	}
 	if (!raw_font) {
 		throw IOCore::Exception(
 		    fmt::format("Failed to load font: {}", TTF_GetError()));

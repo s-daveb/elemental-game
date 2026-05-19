@@ -1,12 +1,12 @@
 // clang-format off
 /*
- * Copyright © 2024 Saul D. Benitez
- * License: Mozilla Public License v. 2.0
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v.2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+  * Copyright © 2024 Saul D. Benitez
+  * License: Mozilla Public License v. 2.0
+  *
+  * This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v2.0. If a copy of the MPL was not distributed with this file,
+  * You can obtain one at https://mozilla.org/MPL/2.0/.
+  */
 // clang-format on
 
 #include "IOCore/Exception.hpp"
@@ -75,6 +75,8 @@ class DummyRenderer : public IRenderer
 	{
 		return { 0, 0 };  // Default window size
 	}
+
+	void queueStateCommand(StateCommand cmd) override { (void)cmd; }
 
 	template<typename TR>
 	static auto toRectangle(const TR& data) -> Rectangle

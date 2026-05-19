@@ -16,8 +16,11 @@
 #include "GameScene.hpp"
 #include "IViewComponent.hpp"
 #include "PaddlePositionComponent.hpp"
+#include "types/rendering.hpp"
 
 #include <SDL_events.h>
+
+#include <atomic>
 
 namespace elemental {
 
@@ -50,15 +53,12 @@ class PongScene : public GameScene
 	IOCore::optional_ref<IViewComponent> player_view_ref;
 	IOCore::optional_ref<IViewComponent> enemy_view_ref;
 
-	int player_score{ 0 };
-	int enemy_score{ 0 };
-
-	uint32_t court_width{ 1280 };
-	uint32_t court_height{ 720 };
-
-	static constexpr uint32_t kPaddleWidth  = 16;
-	static constexpr uint32_t kPaddleHeight = 96;
-	static constexpr uint32_t kBallRadius   = 8;
+	FontHandle        menu_font;
+	int               player_score{ 0 };
+	int               enemy_score{ 0 };
+	int               last_player_score{ -1 };
+	int               last_enemy_score{ -1 };
+	std::atomic<bool> is_paused{ false };
 
 	auto resetBall() -> void;
 	auto updateBall(float dt) -> void;
@@ -66,6 +66,18 @@ class PongScene : public GameScene
 	auto updateEnemy(float dt) -> void;
 	auto checkCollisions() -> void;
 	auto syncViewComponents() -> void;
+
+	auto getDrawCommands()
+	    -> std::list<std::shared_ptr<IDrawCommand>> override;
+
+	void setFont(FontHandle f);
+
+	uint32_t court_width{ 1280 };
+	uint32_t court_height{ 720 };
+
+	static constexpr uint32_t kPaddleWidth  = 16;
+	static constexpr uint32_t kPaddleHeight = 96;
+	static constexpr uint32_t kBallRadius   = 8;
 
 	static constexpr float kPlayerX = 20.0f;
 	float                  enemy_x{ 0.0f };

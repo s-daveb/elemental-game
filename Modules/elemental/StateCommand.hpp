@@ -23,11 +23,11 @@ namespace elemental {
  */
 enum class StateCommand : uint8_t
 {
-	None,          ///< No command / placeholder
-	PushMainMenu,  ///< Push MainMenu state onto stack
-	PushGame,      ///< Push PongScene/game state onto stack
-	Pop,           ///< Pop current state from stack
-	Clear,         ///< Clear all states from stack
+	Undefined = 0,  ///< No command / placeholder
+	PushMainMenu,   ///< Push MainMenu state onto stack
+	PushGame,       ///< Push PongScene/game state onto stack
+	Pop,            ///< Pop current state from stack
+	Clear,          ///< Clear all states from stack
 };
 
 }  // namespace elemental
