@@ -69,7 +69,8 @@ auto GameScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 	return commands;
 }
 
-void GameScene::recieveMessage(const Observable& sender, std::any message)
+auto GameScene::receiveMessage(const Observable& sender, std::any message)
+    -> void
 { onMessage(sender, std::move(message)); }
 
 auto GameScene::getEntity(EntityId id) -> Entity&

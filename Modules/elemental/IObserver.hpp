@@ -19,9 +19,9 @@ class Observable;
 class IObserver : INonCopyable
 {
     public:
-	virtual void recieveMessage(
+	virtual auto receiveMessage(
 	    const Observable& sender,
-	    std::any          message = std::any()) = 0;
+	    std::any          message = std::any()) -> void = 0;
 
 	virtual ~IObserver() = default;
 

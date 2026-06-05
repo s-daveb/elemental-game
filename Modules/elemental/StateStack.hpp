@@ -36,9 +36,9 @@ struct StateStack : public IObserver, public IStateMachine
 	void pushState(std::unique_ptr<IState>& state);
 	void pushState(std::unique_ptr<IState>&& state);
 
-	void recieveMessage(
+	auto receiveMessage(
 	    const Observable& sender,
-	    std::any          message = std::any()) override;
+	    std::any          message = std::any()) -> void override;
 
 	auto draw() -> ErrorFlag override;
 

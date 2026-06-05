@@ -41,13 +41,13 @@ auto StateStack::pushState(std::unique_ptr<IState>& state) -> void
 auto StateStack::pushState(std::unique_ptr<IState>&& state) -> void
 { this->stack.push(std::move(state)); }
 
-auto StateStack::recieveMessage(const Observable& sender, std::any message)
+auto StateStack::receiveMessage(const Observable& sender, std::any message)
     -> void
 {
 	ASSERT(message.has_value());
 	ASSERT(this->stack.empty() == false);
 
-	this->stack.top()->recieveMessage(sender, message);
+	this->stack.top()->receiveMessage(sender, message);
 }
 
 auto StateStack::draw() -> ErrorFlag

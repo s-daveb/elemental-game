@@ -24,9 +24,6 @@ struct IState : public IObserver
 	IState()           = default;
 	~IState() override = default;
 
-	auto recieveMessage(const Observable& sender, std::any message)
-	    -> void override = 0;
-
 	virtual auto step() -> void = 0;
 	virtual auto getDrawCommands()
 	    -> std::list<std::shared_ptr<IDrawCommand>> = 0;

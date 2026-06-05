@@ -36,7 +36,7 @@ class MainMenu : public IState
 	~MainMenu() override = default;
 
 	auto step() -> void override;
-	void recieveMessage(const Observable&, std::any) override;
+	auto receiveMessage(const Observable&, std::any) -> void override;
 
 	auto getDrawCommands()
 	    -> std::list<std::shared_ptr<IDrawCommand>> override;

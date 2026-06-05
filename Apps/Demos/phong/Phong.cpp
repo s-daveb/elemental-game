@@ -217,7 +217,7 @@ auto Phong::run() -> int
 	return kError;
 }
 
-void Phong::recieveMessage(const Observable& sender, std::any message)
+auto Phong::receiveMessage(const Observable& sender, std::any message) -> void
 {
 	ASSERT(message.has_value());
 

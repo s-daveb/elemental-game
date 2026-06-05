@@ -51,9 +51,9 @@ class Phong : public IOCore::Application, public IObserver
 	~Phong() override;
 
 	auto run() -> int override;
-	void recieveMessage(
+	auto receiveMessage(
 	    const Observable& sender,
-	    std::any          message = std::any()) override;
+	    std::any          message = std::any()) -> void override;
 
 	void queueStateCommand(elemental::StateCommand cmd);
 	void processPendingStateChanges();

@@ -50,8 +50,8 @@ class GameScene : public IState
 	auto step() -> void override;
 	auto getDrawCommands()
 	    -> std::list<std::shared_ptr<IDrawCommand>> override;
-	void recieveMessage(const Observable& sender, std::any message)
-	    override;
+	auto receiveMessage(const Observable& sender, std::any message)
+	    -> void override;
 
 	auto getEntity(EntityId id) -> Entity&;
 	auto getEntity(EntityId id) const -> const Entity&;

@@ -41,7 +41,7 @@ BEGIN_TEST_SUITE("elemental::SdlEventSource")
 	    public:
 		EventRecorder() : IObserver() {}
 
-		void recieveMessage(const Observable& sender,
+		void receiveMessage(const Observable& sender,
 		                    std::any          message) override
 		{
 			auto event = std::any_cast<SDL_Event&>(message);

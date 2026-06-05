@@ -28,7 +28,7 @@ void MainMenu::queueTextures()
 
 auto MainMenu::step() -> void {}
 
-void MainMenu::recieveMessage(const Observable&, std::any message)
+auto MainMenu::receiveMessage(const Observable&, std::any message) -> void
 {
 	if (!message.has_value()) return;
 	try {

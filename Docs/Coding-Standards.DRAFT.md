@@ -27,6 +27,8 @@ Naming Conventions
 ------------------
 
 ### Classes and Structs
+
+#### Rules
 **Rule**: `CamelCase` starting with uppercase letter
 
 ```cpp

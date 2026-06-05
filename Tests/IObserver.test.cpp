@@ -30,7 +30,7 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 		friend class IObserver;
 		virtual ~DummyObserver() override = default;
 
-		void recieveMessage(const Observable& sender,
+		void receiveMessage(const Observable& sender,
 		                    std::any message = std::any()) override
 		{ toggled = true; }
 
@@ -43,7 +43,7 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 		REQUIRE_NOTHROW([&]() { DummyObserver test; }());
 	}
 
-	TEST("recieveMessage is called correctly")
+	TEST("receiveMessage is called correctly")
 	{
 		// Create a concrete observable that uses the real
 		// implementation.
@@ -62,7 +62,7 @@ BEGIN_TEST_SUITE("elemental::IObserver")
 		// Trigger notification with any message.
 		REQUIRE(dummy.toggled == false);
 		observable.notify_all("test message");
-		// Verify that DummyObserver's recieveMessage was invoked.
+		// Verify that DummyObserver's receiveMessage was invoked.
 		REQUIRE(dummy.toggled == true);
 	}
 }

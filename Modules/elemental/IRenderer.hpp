@@ -44,19 +44,15 @@ struct IRenderer
 	/*! \name Lazy Initialization Methods
 	 * These initialize the current rendering subsystema and
 	 * de-initialize it on-demand \{ */
-	virtual void init(RendererSettings& settings) = 0;
-	virtual void deactivate()                     = 0;
-	virtual auto isInitialized() -> bool          = 0;
+	virtual auto init(RendererSettings& settings) -> void = 0;
+	virtual auto deactivate() -> void                     = 0;
+	virtual auto isInitialized() -> bool                  = 0;
 	/*! \} */
 
-	//! \brief Does what it says on the tin.
 	virtual auto getResolution() -> Resolution = 0;
+	virtual auto getWindowSize() -> Area       = 0;
 
-	//! \brief Does what it says on the tin.
-	virtual auto getWindowSize() -> Area = 0;
-
-	//! \brief Queue a state command for processing
-	virtual void queueStateCommand(StateCommand cmd) = 0;
+	virtual auto queueStateCommand(StateCommand cmd) -> void = 0;
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display

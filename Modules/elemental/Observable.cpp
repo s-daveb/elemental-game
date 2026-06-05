@@ -28,7 +28,7 @@ void Observable::deregisterObserver(Observable::ObserverRef observer)
 void Observable::notify_all(std::any message)
 {
 	for (auto& observer_ref: this->observers) {
-		observer_ref.get().recieveMessage(*this, message);
+		observer_ref.get().receiveMessage(*this, message);
 	}
 }
 }  // namespace elemental

@@ -22,7 +22,7 @@ BEGIN_TEST_SUITE("IState")
 	class TestState : public elemental::IState
 	{
 	    public:
-		void recieveMessage(const Observable& sender,
+		void receiveMessage(const Observable& sender,
 		                    std::any          message) override
 		{
 		}
@@ -59,7 +59,7 @@ BEGIN_TEST_SUITE("IState")
 		state->step();
 	}
 
-	TEST_WITH_FIXTURE(TestFixture, "recieveMessage() handles messages")
+	TEST_WITH_FIXTURE(TestFixture, "receiveMessage() handles messages")
 	{
 		// Given
 		auto&    state = fixture->state_under_test;
@@ -69,7 +69,7 @@ BEGIN_TEST_SUITE("IState")
 		auto&            sender = mock_sender.get();
 
 		REQUIRE_NOTHROW(
-		    [&]() { state->recieveMessage(sender, message); }());
+		    [&]() { state->receiveMessage(sender, message); }());
 	}
 
 	TEST_WITH_FIXTURE(TestFixture,

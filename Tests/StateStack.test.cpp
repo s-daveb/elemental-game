@@ -37,7 +37,7 @@ BEGIN_TEST_SUITE("StateStack")
 		MockState(bool& flag) : IState(), triggered(flag) {}
 		~MockState() override = default;
 
-		void recieveMessage(const Observable& sender,
+		void receiveMessage(const Observable& sender,
 		                    std::any          message) override
 		{ this->triggered = true; };
 
@@ -103,7 +103,7 @@ BEGIN_TEST_SUITE("StateStack")
 		stack.pushState(state_ptr);
 
 		CHECK(!triggered);
-		stack.recieveMessage(*this, "Test");
+		stack.receiveMessage(*this, "Test");
 		REQUIRE(triggered);
 	}
 }

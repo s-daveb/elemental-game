@@ -58,13 +58,13 @@ BEGIN_TEST_SUITE("elemental::Observable")
 
 		std::vector<std::string> buffer;
 
-		When(Method(observer_type1, recieveMessage))
+		When(Method(observer_type1, receiveMessage))
 		    .Do([&](const Observable& o, std::any m) {
 			    buffer.emplace_back("First Observer");
 		    })
 		    .AlwaysReturn();
 
-		When(Method(observer_type2, recieveMessage))
+		When(Method(observer_type2, receiveMessage))
 		    .Do([&](const Observable& o, std::any m) {
 			    buffer.emplace_back("Second Observer");
 		    })
