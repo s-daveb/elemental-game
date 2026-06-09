@@ -41,6 +41,9 @@ class PongScene : public GameScene
 	auto onMessage(const Observable& sender, std::any message)
 	    -> void override;
 
+    public:
+	void setFont(FontHandle f);
+
     private:
 	ComponentFactory<BallPositionComponent>   ball_pos_factory;
 	ComponentFactory<PaddlePositionComponent> paddle_pos_factory;
@@ -69,8 +72,6 @@ class PongScene : public GameScene
 
 	auto getDrawCommands()
 	    -> std::list<std::shared_ptr<IDrawCommand>> override;
-
-	void setFont(FontHandle f);
 
 	uint32_t court_width{ 1280 };
 	uint32_t court_height{ 720 };

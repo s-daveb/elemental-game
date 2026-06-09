@@ -178,6 +178,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 		};
 		this->state_stack.pushState(
 		    std::make_unique<PongScene>(scene_config));
+		this->video_renderer.setFont(this->menu_font);
 	} catch (const std::exception& e) {
 		DBG_PRINT("Exception creating PongScene: " << e.what());
 		throw;

@@ -303,6 +303,9 @@ void SdlRenderer::processTextureQueue()
 		SDL_Surface* surface   = TTF_RenderText_Blended(
 		    req.font.get(), req.text.c_str(), sdl_color);
 		if (!surface) {
+			DBG_PRINT(
+			    "Failed to render text '"
+			    << req.text << "': " << TTF_GetError());
 			local_queue.pop();
 			continue;
 		}
@@ -317,6 +320,10 @@ void SdlRenderer::processTextureQueue()
 			texture_cache[req.text] =
 			    TextureCacheEntry{ req.text,
 				               SdlPtr<SDL_Texture>{ texture } };
+		} else {
+			DBG_PRINT(
+			    "Failed to create texture for text '"
+			    << req.text << "': " << SDL_GetError());
 		}
 
 		local_queue.pop();
