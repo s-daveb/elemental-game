@@ -21,6 +21,7 @@
 #include <SDL.h>
 #include <SDL_rect.h>
 #include <SDL_render.h>
+#include <SDL_ttf.h>
 #include <SDL_video.h>
 
 #include <cstdint>
@@ -109,7 +110,9 @@ struct SdlRenderer : public IRenderer
 	mutable std::mutex                                 cache_mutex;
 
     public:
-	void queueTextTexture(
+	SdlPtr<TTF_Font> menu_font{};
+	void             setFont(SdlPtr<TTF_Font>&& font) override;
+	void             queueTextTexture(
 	    const std::string& text,
 	    FontHandle         font,
 	    const Color&       color) override;

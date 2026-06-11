@@ -278,6 +278,11 @@ auto PongScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 
 	const uint32_t y = 20, w = 100, h = 50;
 
+	// Queue texture before creating command to ensure draw() works
+	renderer.queueTextTexture(
+	    std::to_string(player_score),
+	    menu_font,
+	    Color{ 255, 255, 255, 255 });
 	cmds.push_back(
 	    std::make_shared<TextDrawCommand>(
 	        std::to_string(player_score),
@@ -285,6 +290,10 @@ auto PongScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 	        Color{ 255, 255, 255, 255 },
 	        renderer));
 
+	renderer.queueTextTexture(
+	    std::to_string(enemy_score),
+	    menu_font,
+	    Color{ 255, 255, 255, 255 });
 	cmds.push_back(
 	    std::make_shared<TextDrawCommand>(
 	        std::to_string(enemy_score),
@@ -302,7 +311,9 @@ auto PongScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 		        Color{ 0, 0, 0, 128 },
 		        renderer));
 
-		// PAUSED text centered on screen
+		// Queue and create PAUSED text
+		renderer.queueTextTexture(
+		    "PAUSED", menu_font, Color{ 255, 255, 255, 255 });
 		uint32_t cx = court_width / 2;
 		uint32_t cy = court_height / 2;
 		cmds.push_back(
@@ -312,7 +323,11 @@ auto PongScene::getDrawCommands() -> std::list<std::shared_ptr<IDrawCommand>>
 		        Color{ 255, 255, 255, 255 },
 		        renderer));
 
-		// Resume instruction
+		// Queue and create resume text
+		renderer.queueTextTexture(
+		    "Press P or ESC to resume",
+		    menu_font,
+		    Color{ 200, 200, 200, 255 });
 		cmds.push_back(
 		    std::make_shared<TextDrawCommand>(
 		        "Press P or ESC to resume",

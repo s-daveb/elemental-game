@@ -19,6 +19,7 @@
 #include "types/rendering.hpp"
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #include <any>
 #include <cstdint>
@@ -68,6 +69,12 @@ struct IRenderer
 	virtual void blit(
 	    std::shared_ptr<void> image_data,
 	    const Rectangle&      placement) = 0;
+
+	/** \brief Initialize the renderer with a system font for fallback
+	 * display
+	 * \param font Font handle for initialization
+	 */
+	virtual void setFont(SdlPtr<TTF_Font>&& font) = 0;
 
 	/*! \name Texture Queue Methods
 	 * Methods for managing a thread-safe texture queue for text rendering.

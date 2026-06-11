@@ -87,27 +87,22 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 		"fonts/monospace.ttf",
 #if defined(__APPLE__)
 		// macOS
-		"/System/Library/Fonts/Menlo.ttc",
 		"/System/Library/Fonts/Monaco.ttf",
 		"/System/Library/Fonts/SFNSMono.ttf",
 		"/Library/Fonts/Courier New.ttf",
 #elif defined(_WIN32)
 		// Windows
 		"C:/Windows/Fonts/consola.ttf",
-		"C:/Windows/Fonts/cour.ttf",
-		"C:/Windows/Fonts/lucida.ttf",
 #else
-		// Linux
-		"/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
-		"/usr/share/fonts/truetype/liberation/"
-		"LiberationMono-Regular.ttf",
-		"/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf",
-		"/usr/share/fonts/truetype/freefont/FreeMono.ttf",
-		"/usr/share/fonts/TTF/DejaVuSansMono.ttf",
+		// Linux & macOS fallback to monospace from project dir
+		nullptr,  // Will be provided by renderer after init
 #endif
 	};
 	TTF_Font* raw_font = nullptr;
-	for (const auto* path: font_paths) {
+
+	// Find font in app bundle first
+	for (auto* path: font_paths) {
+		if (!path) break;
 		raw_font = TTF_OpenFont(path, 48);
 		if (raw_font) break;
 	}
@@ -176,9 +171,9 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 			        {} },
 			}
 		};
+		// Initialize state stack with MainMenu instead of PongScene
 		this->state_stack.pushState(
-		    std::make_unique<PongScene>(scene_config));
-		this->video_renderer.setFont(this->menu_font);
+		    std::make_unique<MainMenu>(video_renderer, menu_font));
 	} catch (const std::exception& e) {
 		DBG_PRINT("Exception creating PongScene: " << e.what());
 		throw;

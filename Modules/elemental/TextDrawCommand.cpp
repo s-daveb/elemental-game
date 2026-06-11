@@ -17,9 +17,9 @@ auto TextDrawCommand::draw() -> ErrorFlag
 	auto texture = renderer.getTextTexture(text);
 
 	if (!texture) {
-		// Texture hasn't been created yet - skip drawing
-		// The texture should have been queued via queueTextTexture()
-		return IOCore::kSuccess;  // Not an error, just not ready yet
+		// Texture hasn't been created yet - this shouldn't happen if
+		// prepare was called
+		return IOCore::kSuccess;  // Not an error, just not ready
 	}
 
 	// Get SDL renderer from IRenderer

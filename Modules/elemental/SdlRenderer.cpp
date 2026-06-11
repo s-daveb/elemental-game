@@ -217,6 +217,9 @@ void SdlRenderer::blit(
 	}
 }
 
+void SdlRenderer::setFont(SdlPtr<TTF_Font>&& font)
+{ menu_font = std::move(font); }
+
 SdlRenderer::SdlRenderer()
     : IRenderer(), sdl_window_ptr(nullptr), sdl_renderer_ptr(nullptr)
 {
