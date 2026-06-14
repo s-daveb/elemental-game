@@ -258,11 +258,82 @@ void SdlRenderer::drawFilledRect(const Rectangle& rect, const Color& color)
 	    color.a);
 }
 
+void SdlRenderer::drawText(
+    const std::string& text,
+    const Rectangle&   bounds,
+    const Color&       color)
+{
+	ASSERT(this->sdl_renderer_ptr != nullptr);
+
+	auto texture = getTextTexture(text);
+	if (!texture) {
+		DBG_PRINT("drawText: texture not found for '" << text << "'");
+
+		switch (missing_texture_behavior_) {
+		case MissingTextureBehavior::Throw:
+			throw IOCore::Exception(
+			    fmt::format(
+			        "Missing text texture for '{}' - "
+			        "did you call queueTextTexture() before "
+			        "draw()?",
+			        text));
+		case MissingTextureBehavior::VisualFallback: {
+			// Draw bright magenta "missing texture" box
+			boxRGBA(
+			    this->sdl_renderer_ptr.get(),
+			    static_cast<Sint16>(bounds.x),
+			    static_cast<Sint16>(bounds.y),
+			    static_cast<Sint16>(bounds.x + bounds.width),
+			    static_cast<Sint16>(bounds.y + bounds.height),
+			    255,
+			    0,
+			    255,
+			    255);
+			rectangleRGBA(
+			    this->sdl_renderer_ptr.get(),
+			    static_cast<Sint16>(bounds.x),
+			    static_cast<Sint16>(bounds.y),
+			    static_cast<Sint16>(bounds.x + bounds.width),
+			    static_cast<Sint16>(bounds.y + bounds.height),
+			    255,
+			    255,
+			    0,
+			    255);
+			break;
+		}
+		default:
+		case MissingTextureBehavior::Log: break;
+		}
+		return;
+	}
+
+	auto sdl_texture = std::static_pointer_cast<SDL_Texture>(texture);
+
+	SDL_SetTextureColorMod(sdl_texture.get(), color.r, color.g, color.b);
+	SDL_SetTextureAlphaMod(sdl_texture.get(), color.a);
+
+	SDL_Rect dest_rect = { static_cast<int>(bounds.x),
+		               static_cast<int>(bounds.y),
+		               static_cast<int>(bounds.width),
+		               static_cast<int>(bounds.height) };
+
+	SDL_RenderCopy(
+	    this->sdl_renderer_ptr.get(),
+	    sdl_texture.get(),
+	    nullptr,
+	    &dest_rect);
+}
+
+void SdlRenderer::setMissingTextureBehavior(MissingTextureBehavior behavior)
+{ missing_texture_behavior_ = behavior; }
+
+void SdlRenderer::setStateCommandHandler(
+    std::function<void(StateCommand)> handler)
+{ state_command_handler_ = std::move(handler); }
+
 void SdlRenderer::queueStateCommand(StateCommand cmd)
 {
-	// SdlRenderer doesn't handle state commands - this is a placeholder
-	// Apps should cast to Phong* if they need to queue state commands
-	(void)cmd;  // Suppress unused warning
+	if (state_command_handler_) { state_command_handler_(cmd); }
 }
 
 void SdlRenderer::queueTextTexture(

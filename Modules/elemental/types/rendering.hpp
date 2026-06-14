@@ -120,6 +120,15 @@ struct RendererSettings
 	TOML_CLASS(RendererSettings, window, resolution);
 };
 
+/// Controls how the renderer behaves when a text texture is missing
+enum class MissingTextureBehavior
+{
+	Log,             ///< Log a message (default, non-breaking)
+	VisualFallback,  ///< Draw a bright magenta rectangle to highlight the
+	                 ///< issue
+	Throw            ///< Throw an exception (strict mode for debugging)
+};
+
 }  // namespace elemental
 
 // clang-format off

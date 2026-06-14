@@ -106,6 +106,19 @@ BEGIN_TEST_SUITE("elemental::SdlRenderer")
 	}
 
 #if !defined(NO_GUI) || defined(VIM_LSP)
+	FIXTURE_TEST(
+	    "elemental::SdlRenderer - drawText throws on missing texture when "
+	    "behavior is Throw")
+	{
+		test_renderer.init(settings);
+		test_renderer.setMissingTextureBehavior(
+		    MissingTextureBehavior::Throw);
+
+		Rectangle bounds{ 10, 10, 100, 50 };
+		REQUIRE_THROWS([&]() {
+			test_renderer.drawText("missing_text", bounds, Color{});
+		}());
+	}
 	FIXTURE_TEST("elemental::SdlRenderer - Initialize Renderer")
 	{
 		// 1. Default initialization does not throw errors

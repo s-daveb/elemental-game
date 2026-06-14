@@ -82,6 +82,11 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	}
 	this->video_renderer.init(settings.renderer_settings);
 
+	this->video_renderer.setStateCommandHandler([this](StateCommand cmd) {
+		std::lock_guard<std::mutex> lock(this->command_mutex);
+		this->pending_commands.push(cmd);
+	});
+
 	// Load menu font — try project font first, then system fallbacks
 	const char* font_paths[] = {
 		"fonts/monospace.ttf",
@@ -118,7 +123,7 @@ Phong::Phong(int argc, c::const_string args[], c::const_string env[])
 	this->event_emitter.pollEvents();
 
 	try {
-		auto scene_config = elemental::SceneConfig{
+		this->game_scene_config = elemental::SceneConfig{
 			"GameScene",
 			"StaticViewPort",
 			elemental::Area{ 1280, 720 },
@@ -275,8 +280,10 @@ void Phong::processPendingStateChanges()
 			break;
 		}
 		case StateCommand::PushGame: {
-			this->state_stack.pushState(
-			    std::make_unique<PongScene>(game_scene_config));
+			auto pongScene =
+			    std::make_unique<PongScene>(game_scene_config);
+			pongScene->setFont(menu_font);
+			this->state_stack.pushState(std::move(pongScene));
 			break;
 		}
 		default: break;

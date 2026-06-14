@@ -25,6 +25,7 @@
 #include <SDL_video.h>
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <type_traits>
@@ -62,6 +63,14 @@ struct SdlRenderer : public IRenderer
 	    int32_t      radius,
 	    const Color& color) override;
 	void drawFilledRect(const Rectangle& rect, const Color& color) override;
+
+	void drawText(
+	    const std::string& text,
+	    const Rectangle&   bounds,
+	    const Color&       color) override;
+
+	void setMissingTextureBehavior(
+	    MissingTextureBehavior behavior) override;
 
 	template<typename T>
 	auto get() const -> T
@@ -109,10 +118,17 @@ struct SdlRenderer : public IRenderer
 	std::unordered_map<std::string, TextureCacheEntry> texture_cache;
 	mutable std::mutex                                 cache_mutex;
 
+	std::function<void(StateCommand)> state_command_handler_;
+	MissingTextureBehavior            missing_texture_behavior_{
+		MissingTextureBehavior::Log
+	};
+
     public:
 	SdlPtr<TTF_Font> menu_font{};
 	void             setFont(SdlPtr<TTF_Font>&& font) override;
-	void             queueTextTexture(
+	void             setStateCommandHandler(
+	    std::function<void(StateCommand)> handler) override;
+	void queueTextTexture(
 	    const std::string& text,
 	    FontHandle         font,
 	    const Color&       color) override;

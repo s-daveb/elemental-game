@@ -17,8 +17,6 @@
 #include "elemental/types/color.hpp"
 #include "elemental/types/rendering.hpp"
 
-#include <SDL_events.h>
-
 #include <any>
 #include <list>
 #include <memory>
@@ -51,7 +49,7 @@ class MainMenu : public IState
 	static constexpr int kMenuItemHeight  = 60;
 	static constexpr int kMenuItemSpacing = 20;
 
-	void handleInput(const SDL_Event& event);
+	void handleInput(std::any message);
 	void queueTextures();
 	auto getItemColor(std::size_t index) const -> Color;
 };

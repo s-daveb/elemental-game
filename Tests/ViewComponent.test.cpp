@@ -61,6 +61,21 @@ BEGIN_TEST_SUITE("elemental::ViewComponents")
 		{ ++rect_draw_count; }
 
 		void queueStateCommand(StateCommand cmd) override { (void)cmd; }
+		void setStateCommandHandler(
+		    std::function<void(StateCommand)> handler) override
+		{ (void)handler; }
+		void setFont(SdlPtr<TTF_Font>&& font) override { (void)font; }
+		void drawText(const std::string& text,
+		              const Rectangle&   bounds,
+		              const Color&       color) override
+		{
+			(void)text;
+			(void)bounds;
+			(void)color;
+		}
+		void setMissingTextureBehavior(
+		    MissingTextureBehavior behavior) override
+		{ (void)behavior; }
 
 		static int circle_draw_count;
 		static int rect_draw_count;

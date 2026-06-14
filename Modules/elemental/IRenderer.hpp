@@ -23,6 +23,7 @@
 
 #include <any>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -54,6 +55,8 @@ struct IRenderer
 	virtual auto getWindowSize() -> Area       = 0;
 
 	virtual auto queueStateCommand(StateCommand cmd) -> void = 0;
+	virtual void setStateCommandHandler(
+	    std::function<void(StateCommand)> handler) = 0;
 
 	/** \name Screen Management Methods
 	 * Methods used to clear and update the game display
@@ -104,6 +107,18 @@ struct IRenderer
 	virtual void drawFilledRect(
 	    const Rectangle& rect,
 	    const Color&     color) = 0;
+	/*! \} */
+
+	/*! \name Text Drawing Methods
+	 * Methods for drawing text using pre-cached textures.
+	 * \{ */
+	virtual void drawText(
+	    const std::string& text,
+	    const Rectangle&   bounds,
+	    const Color&       color) = 0;
+
+	virtual void setMissingTextureBehavior(
+	    MissingTextureBehavior behavior) = 0;
 	/*! \} */
 
 	/*! \name DataType Conversion methods

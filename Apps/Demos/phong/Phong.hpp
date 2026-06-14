@@ -29,8 +29,6 @@
 
 #include <queue>
 
-#include <SDL_ttf.h>
-
 #include <any>
 #include <atomic>
 #include <functional>

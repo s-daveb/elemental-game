@@ -31,38 +31,41 @@ auto MainMenu::step() -> void {}
 auto MainMenu::receiveMessage(const Observable&, std::any message) -> void
 {
 	if (!message.has_value()) return;
-	try {
-		auto event = std::any_cast<SDL_Event>(message);
-		handleInput(event);
-	} catch (const std::bad_any_cast&) {
-	}
+	handleInput(std::move(message));
 }
 
-void MainMenu::handleInput(const SDL_Event& event)
+void MainMenu::handleInput(std::any message)
 {
-	if (event.type != SDL_KEYDOWN) return;
-	switch (event.key.keysym.scancode) {
-	case SDL_SCANCODE_UP:
-		if (selected_index > 0) --selected_index;
-		break;
-	case SDL_SCANCODE_DOWN:
-		if (selected_index < menu_items.size() - 1) ++selected_index;
-		break;
-	case SDL_SCANCODE_RETURN:
-	case SDL_SCANCODE_SPACE:
-		switch (selected_index) {
-		case 0:  // Start Game
-			renderer.queueStateCommand(StateCommand::PushGame);
+	try {
+		auto event = std::any_cast<SDL_Event>(message);
+
+		if (event.type != SDL_KEYDOWN) return;
+		switch (event.key.keysym.scancode) {
+		case SDL_SCANCODE_UP:
+			if (selected_index > 0) --selected_index;
 			break;
-		case 1: {  // Exit
-			SDL_Event quit{};
-			quit.type = SDL_QUIT;
-			SDL_PushEvent(&quit);
+		case SDL_SCANCODE_DOWN:
+			if (selected_index < menu_items.size() - 1)
+				++selected_index;
 			break;
+		case SDL_SCANCODE_RETURN:
+		case SDL_SCANCODE_SPACE:
+			switch (selected_index) {
+			case 0:  // Start Game
+				renderer.queueStateCommand(
+				    StateCommand::PushGame);
+				break;
+			case 1: {  // Exit
+				SDL_Event quit{};
+				quit.type = SDL_QUIT;
+				SDL_PushEvent(&quit);
+				break;
+			}
+			}
+			break;
+		default: break;
 		}
-		}
-		break;
-	default: break;
+	} catch (const std::bad_any_cast&) {
 	}
 }
 
