@@ -132,7 +132,8 @@ struct SdlRenderer : public IRenderer
 	    const std::string& text,
 	    FontHandle         font,
 	    const Color&       color) override;
-	void                  processTextureQueue() override;
+	virtual Size getTextSize(const std::string& text, FontHandle font)
+	    override;
 	std::shared_ptr<void> getTextTexture(const std::string& text) override;
 	bool hasTextTexture(const std::string& text) const override;
 };

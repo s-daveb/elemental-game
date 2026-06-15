@@ -89,56 +89,56 @@ struct IRenderer
 
 	virtual void processTextureQueue() = 0;
 
-	virtual std::shared_ptr<void> getTextTexture(
+	virtual Size getTextSize(const std::string& text, FontHandle font) = 0;
 	    const std::string& text) = 0;
 
-	virtual bool hasTextTexture(const std::string& text) const = 0;
-	/*! \} */
+	    virtual bool hasTextTexture(const std::string& text) const = 0;
+	    /*! \} */
 
-	/*! \name Primitive Drawing Methods
-	 * Methods for drawing primitive shapes directly without textures.
-	 * \{ */
-	virtual void drawFilledCircle(
-	    int32_t      x,
-	    int32_t      y,
-	    int32_t      radius,
-	    const Color& color) = 0;
+	    /*! \name Primitive Drawing Methods
+	     * Methods for drawing primitive shapes directly without textures.
+	     * \{ */
+	    virtual void drawFilledCircle(
+	        int32_t      x,
+	        int32_t      y,
+	        int32_t      radius,
+	        const Color& color) = 0;
 
-	virtual void drawFilledRect(
-	    const Rectangle& rect,
-	    const Color&     color) = 0;
-	/*! \} */
+	    virtual void drawFilledRect(
+	        const Rectangle& rect,
+	        const Color&     color) = 0;
+	    /*! \} */
 
-	/*! \name Text Drawing Methods
-	 * Methods for drawing text using pre-cached textures.
-	 * \{ */
-	virtual void drawText(
-	    const std::string& text,
-	    const Rectangle&   bounds,
-	    const Color&       color) = 0;
+	    /*! \name Text Drawing Methods
+	     * Methods for drawing text using pre-cached textures.
+	     * \{ */
+	    virtual void drawText(
+	        const std::string& text,
+	        const Rectangle&   bounds,
+	        const Color&       color) = 0;
 
-	virtual void setMissingTextureBehavior(
-	    MissingTextureBehavior behavior) = 0;
-	/*! \} */
+	    virtual void setMissingTextureBehavior(
+	        MissingTextureBehavior behavior) = 0;
+	    /*! \} */
 
-	/*! \name DataType Conversion methods
-	 * \brief Conversion functions to convert Rectangle objects to the
-	 * types used by native APIs to update blocks of the screen.
-	 *
-	 * Template method bodies shall be  defined by child classes.
-	 * \note These are only exposed on the public interface for test
-	 * builds
-	 */
-	/*! \{ */
-	template<typename TR>
-	auto static toRectangle(const TR& data) -> Rectangle;
+	    /*! \name DataType Conversion methods
+	     * \brief Conversion functions to convert Rectangle objects to the
+	     * types used by native APIs to update blocks of the screen.
+	     *
+	     * Template method bodies shall be  defined by child classes.
+	     * \note These are only exposed on the public interface for test
+	     * builds
+	     */
+	    /*! \{ */
+	    template<typename TR>
+	    auto static toRectangle(const TR& data) -> Rectangle;
 
-	template<typename TR>
-	auto static fromRectangle(const Rectangle& rectangle) -> TR;
-	/*! \}  */
+	    template<typename TR>
+	    auto static fromRectangle(const Rectangle& rectangle) -> TR;
+	    /*! \}  */
 
-    protected:
-	IRenderer() = default;
+	protected:
+	    IRenderer() = default;
 };
 }  // namespace elemental
 

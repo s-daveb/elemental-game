@@ -404,6 +404,18 @@ void SdlRenderer::processTextureQueue()
 	}
 }
 
+Size SdlRenderer::getTextSize(const std::string& text, FontHandle font)
+{
+	int w, h;
+	if (TTF_SizeText(font.get(), text.c_str(), &w, &h) != 0) {
+		DBG_PRINT(
+		    "Failed to measure text '" << text
+		                               << "': " << TTF_GetError());
+		return { 0, 0 };
+	}
+	return { static_cast<uint32_t>(w), static_cast<uint32_t>(h) };
+}
+
 std::shared_ptr<void> SdlRenderer::getTextTexture(const std::string& text)
 {
 	std::lock_guard<std::mutex> lock(cache_mutex);
